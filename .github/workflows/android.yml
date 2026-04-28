@@ -24,7 +24,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Generate App Icons
         run: npx @capacitor/assets generate --android
