@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "254962709268",
+    "project_id": "ume-mmobe",
+    "storage_bucket": "ume-mmobe.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254962709268:android:1c43713f4d19ddf29cc801",
+        "android_client_info": {
+          "package_name": "volume.v2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3eA7V5i2_7YAAPfWspvTqAcOka_02FTA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
