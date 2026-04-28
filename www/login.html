@@ -13,9 +13,6 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     
     <style>
-        /* =========================================
-           1. ROOT VARIABLES & RESET
-        ========================================= */
         :root {
             --primary: #0d9488; 
             --primary-hover: #0f766e;
@@ -45,9 +42,6 @@
             padding: 20px;
         }
 
-        /* =========================================
-           2. CONTAINER & BRANDING
-        ========================================= */
         .auth-container {
             background: var(--surface);
             width: 100%;
@@ -67,9 +61,6 @@
         .brand-header h1 { font-size: 24px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
         .brand-header p { font-size: 14px; color: var(--text-muted); }
 
-        /* =========================================
-           3. TABS & INPUTS
-        ========================================= */
         .auth-tabs { display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; margin-bottom: 24px; }
         .tab-btn { flex: 1; padding: 10px; text-align: center; font-size: 14px; font-weight: 600; color: var(--text-muted); border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
         .tab-btn.active { background: var(--surface); color: var(--text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -93,9 +84,6 @@
         .forgot-password { display: block; text-align: right; font-size: 13px; color: var(--primary); text-decoration: none; font-weight: 500; margin-top: 8px; }
         .forgot-password:hover { text-decoration: underline; }
 
-        /* =========================================
-           4. BUTTONS & DIVIDERS
-        ========================================= */
         .btn-primary {
             width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px;
             font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s ease;
@@ -115,9 +103,6 @@
         }
         .btn-google:hover { background: #f8fafc; border-color: #cbd5e1; }
 
-        /* =========================================
-           5. STATUS & SECURITY
-        ========================================= */
         .cf-turnstile-wrapper { margin: 20px 0; display: flex; justify-content: center; min-height: 65px; }
         .status-message { margin-top: 16px; font-size: 13px; text-align: center; font-weight: 500; color: var(--error); transition: 0.3s opacity; }
         .trust-footer { margin-top: 24px; text-align: center; font-size: 12px; color: var(--text-muted); }
@@ -129,9 +114,6 @@
             background: #f1f5f9; color: var(--text-muted);
         }
 
-        /* =========================================
-           6. LOADERS
-        ========================================= */
         .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         
@@ -277,7 +259,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithCredential, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
@@ -299,7 +281,6 @@
         window.currentAuthMode = 'login';
         let globalCountriesData = [];
 
-        // Fail-safe to hide loader if Firebase is extremely slow (e.g. bad network)
         const loaderTimeout = setTimeout(() => {
             hidePageLoader();
         }, 5000);
@@ -310,7 +291,6 @@
             clearTimeout(loaderTimeout);
         }
 
-        // --- 1. SUPER FAST SESSION MANAGEMENT ---
         onAuthStateChanged(auth, async (user) => {
             const authView = document.getElementById('auth-view');
             const profileView = document.getElementById('profile-view');
@@ -319,7 +299,6 @@
                 try {
                     const snap = await getDoc(doc(db, "users", user.uid));
                     if (snap.exists()) { 
-                        // Redirecting instantly if profile exists
                         window.location.replace("index.html"); 
                     } else { 
                         hidePageLoader();
@@ -327,7 +306,6 @@
                         profileView.classList.remove('hidden');
                         
                         window.renderDynamicFields('candidate');
-                        // Load APIs without blocking UI
                         fetchCountriesApi();
                         detectLocation();
                     }
@@ -342,7 +320,6 @@
             }
         });
 
-        // --- 2. AUTHENTICATION LOGIC ---
         window.switchMode = function(mode) {
             window.currentAuthMode = mode;
             const isLogin = mode === 'login';
@@ -367,7 +344,6 @@
             document.getElementById('submit-text').style.display = isLoading ? 'none' : 'block';
             document.getElementById('submit-loader').style.display = isLoading ? 'block' : 'none';
             
-            // Subtle transition for Google button
             document.getElementById('google-btn').style.opacity = isLoading ? '0.5' : '1';
             document.getElementById('google-btn').style.pointerEvents = isLoading ? 'none' : 'auto';
         }
@@ -385,7 +361,6 @@
             msgBox.innerText = "";
 
             try {
-                // Background security verification
                 const verifyRes = await fetch('https://full-finla-trunsplit.vercel.app/api/verify-turnstile', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -399,7 +374,6 @@
                 msgBox.style.color = "var(--success-text)";
                 msgBox.innerText = "Authenticating...";
 
-                // Firebase Auth execution
                 if(window.currentAuthMode === 'login') {
                     await signInWithEmailAndPassword(auth, email, pass);
                 } else {
@@ -416,17 +390,26 @@
         window.handleGoogleAuth = async function() {
             const msgBox = document.getElementById('status-msg');
             msgBox.innerText = "";
+            setAuthLoader(true); 
+
             try { 
-                await signInWithPopup(auth, provider); 
+                if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+                    const googleUser = await Capacitor.Plugins.GoogleAuth.signIn();
+                    const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
+                    await signInWithCredential(auth, credential);
+                } 
+                else {
+                    await signInWithPopup(auth, provider); 
+                }
                 msgBox.style.color = "var(--success-text)";
                 msgBox.innerText = "Authenticating...";
             } catch (error) { 
                 msgBox.style.color = "var(--error)";
-                msgBox.innerText = error.message.replace("Firebase: ", ""); 
+                msgBox.innerText = error.message ? error.message.replace("Firebase: ", "") : "Google Login Cancelled";
+                setAuthLoader(false);
             }
         };
 
-        // --- 3. DYNAMIC PROFILE SETUP ---
         window.renderDynamicFields = function(role) {
             const div = document.getElementById('dynamic-fields');
             if(role === 'candidate') {
@@ -455,7 +438,6 @@
             }
         };
 
-        // Non-blocking APIs
         async function fetchCountriesApi() {
             try {
                 const res = await fetch("https://countriesnow.space/api/v0.1/countries/states");
@@ -512,7 +494,6 @@
                             }
                         }
 
-                        // Delay state assignment to ensure dropdown populated
                         setTimeout(() => {
                             const stateSelect = document.getElementById('setup-state');
                             if(state) {
@@ -543,13 +524,12 @@
                     locStatus.style.color = "var(--error)";
                     locStatus.style.background = "#fee2e2";
                     locStatus.style.borderColor = "#fca5a5";
-                }, { timeout: 10000 }); // Avoid hanging if GPS is stuck
+                }, { timeout: 10000 }); 
             } else {
                 locStatus.style.display = "none";
             }
         }
 
-        // --- 4. FAST PROFILE SAVING & STRICT EMAIL AWAIT ---
         window.handleProfileSave = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('save-btn');
@@ -579,10 +559,8 @@
             };
 
             try {
-                // 1. Save to Firestore
                 await setDoc(doc(db, "users", auth.currentUser.uid), userData);
                 
-                // 2. 🔥 AUTO-SYNC TO REALTIME DATABASE (Search Index) 🔥
                 await set(ref(rtdb, 'search_index/' + auth.currentUser.uid), {
                     id: auth.currentUser.uid,
                     t: nameInput,
@@ -592,7 +570,6 @@
                     type: 'profile'
                 });
                 
-                // 3. Welcome Email (Strict Await lagaya hai taake cancel na ho)
                 try {
                     const mailResponse = await fetch('https://nodemails.vercel.app/api/send-welcome', {
                         method: 'POST',
@@ -607,7 +584,6 @@
                     console.error("Mail trigger error:", mailErr);
                 }
                 
-                // 4. Sab kuch hone ke baad Dashboard par redirect karein
                 window.location.replace("index.html");
                 
             } catch(error) { 
