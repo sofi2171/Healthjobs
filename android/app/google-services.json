@@ -1,26 +1,82 @@
 {
   "project_info": {
-    "project_number": "254962709268",
-    "project_id": "ume-mmobe",
-    "storage_bucket": "ume-mmobe.firebasestorage.app"
+    "project_number": "21065686301",
+    "firebase_url": "https://jobs-45cc9-default-rtdb.firebaseio.com",
+    "project_id": "jobs-45cc9",
+    "storage_bucket": "jobs-45cc9.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:254962709268:android:1c43713f4d19ddf29cc801",
+        "mobilesdk_app_id": "1:21065686301:android:76eb6052043d63315895f4",
         "android_client_info": {
-          "package_name": "volume.v2"
+          "package_name": "com.healthcare.hub"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "21065686301-if8f85rubqtugt7av992helujgu3609s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.healthcare.hub",
+            "certificate_hash": "a10a98b4aef7dd133c91695f6110eae01774b6ed"
+          }
+        },
+        {
+          "client_id": "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyB3eA7V5i2_7YAAPfWspvTqAcOka_02FTA"
+          "current_key": "AIzaSyAQvcZzE0f6a6AGao8QuL-Ono_40KONB_4"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21065686301:android:27acf044f8f5d8705895f4",
+        "android_client_info": {
+          "package_name": "com.sufian.healthjobs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "21065686301-bvo6bj8qo7b472okqu5tmjd572i0534h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sufian.healthjobs",
+            "certificate_hash": "8e2da5f54a8f2be7e5aa7df49bea31712b18ea9d"
+          }
+        },
+        {
+          "client_id": "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQvcZzE0f6a6AGao8QuL-Ono_40KONB_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
