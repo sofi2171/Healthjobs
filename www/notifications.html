@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Notifications | Health Jobs</title>
+    
+    <style>
+        :root { 
+            --primary-blue: #0a66c2; 
+            --bg-body: #f3f2ef; 
+            --bg-white: #ffffff; 
+            --text-main: #000000e6; 
+            --text-secondary: #00000099; 
+            --border-color: #e0dfdc; 
+            --notif-bubble: #e8f3ff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        
+        body { background-color: var(--bg-body); color: var(--text-main); padding-top: 60px; min-height: 100vh; }
+        
+        /* HEADER STYLE */
+        header { background-color: var(--bg-white); padding: 0 15px; display: flex; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 60px; z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .back-btn { background: none; border: none; font-size: 24px; color: var(--text-secondary); margin-right: 15px; cursor: pointer; display: flex; align-items: center; transition: 0.2s;}
+        .back-btn:hover { color: var(--primary-blue); }
+        .page-title { font-size: 18px; font-weight: 700; color: var(--text-main); }
+
+        /* CONTAINER */
+        main { max-width: 580px; margin: 0 auto; background: var(--bg-white); min-height: calc(100vh - 60px); box-shadow: 0 0 10px rgba(0,0,0,0.02); }
+        
+        /* NOTIFICATION ITEMS */
+        .notif-item { display: flex; padding: 16px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: 0.2s; align-items: center; position: relative; text-decoration: none;}
+        .notif-item:hover { background: #f9fafb; }
+        
+        /* Unread State */
+        .notif-item.unread { background: var(--notif-bubble); }
+        
+        .notif-icon { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 1px solid #eee; background: #fff;}
+        .notif-content { flex: 1; padding-right: 40px; } /* Space for badge */
+        .notif-text { font-size: 14px; color: #333; line-height: 1.4;}
+        .notif-text span { font-weight: 700; color: var(--text-main);}
+        .notif-time { font-size: 11.5px; color: var(--text-secondary); margin-top: 4px; font-weight: 500;}
+
+        /* 🔥 PROFESSIONAL NEW BUBBLE BADGE */
+        .new-badge { 
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            background: var(--primary-blue); color: white; padding: 4px 10px; 
+            border-radius: 20px; font-size: 10px; font-weight: 800; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(10, 102, 194, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.05); }
+            100% { transform: translateY(-50%) scale(1); }
+        }
+        
+        /* EMPTY STATE */
+        .empty-state { text-align: center; padding: 80px 20px; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; justify-content: center;}
+        .empty-state svg { width: 64px; height: 64px; fill: #d1d5db; margin-bottom: 20px; }
+        .empty-state p { font-size: 16px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="back-btn" onclick="location.href='index.html'">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <div class="page-title">Notifications</div>
+    </header>
+
+    <main id="notif-container">
+        </main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const CACHE_KEY = "health_jobs_hybrid_cache";
+        const container = document.getElementById('notif-container');
+        
+        // 🔥 UID-BASED MEMORY (Taake ek account dusre ki ghanti clear na kare)
+        const myUid = localStorage.getItem('my_uid') || 'guest'; 
+        const readKey = 'last_notif_read_time_' + myUid;
+        const installKey = 'app_install_time_' + myUid;
+
+        const cachedDataStr = localStorage.getItem(CACHE_KEY);
+        const lastReadTime = parseInt(localStorage.getItem(readKey)) || (Date.now() - 86400000);
+        const installTime = parseInt(localStorage.getItem(installKey)) || 0;
+
+        if (!cachedDataStr) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                    <p>No notifications yet.</p>
+                </div>`;
+            return;
+        }
+
+        let postsArr = JSON.parse(cachedDataStr);
+        postsArr.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+        let html = '';
+        let found = 0;
+
+        postsArr.forEach(p => {
+            // 🔥 MAIN FIX: Meri post na ho (authorId & posterId dono check kiye hain)
+            let postOwnerId = p.posterId || p.authorId;
+
+            if (postOwnerId !== myUid && p.createdAt > installTime) {
+                found++;
+                const isUnread = p.createdAt > lastReadTime;
+                
+                let timeAgo = calculateTime(p.createdAt);
+                const finalName = p.posterName || p.authorName || 'Healthcare Professional';
+                const posterPic = p.posterPic || p.authorPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(finalName)}`;
+                const pType = p.type || 'unknown';
+                const link = pType === 'general_post' ? `details.html?id=${p.id}` : `posts.html?id=${p.id}`;
+
+                html += `
+                    <div class="notif-item ${isUnread ? 'unread' : ''}" onclick="openNotif('${link}', ${isUnread}, '${readKey}')">
+                        <img src="${posterPic}" class="notif-icon" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                        <div class="notif-content">
+                            <div class="notif-text"><span>${finalName}</span> uploaded a new update in <b>${p.location || 'Pakistan'}</b>.</div>
+                            <div class="notif-time">${timeAgo}</div>
+                        </div>
+                        ${isUnread ? '<div class="new-badge">New</div>' : ''}
+                    </div>
+                `;
+            }
+        });
+
+        if(found > 0) {
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                    <p>No new updates recently.</p>
+                </div>`;
+        }
+
+        // 🕒 Page kholne ke 2 second baad is specific user ka read time update hoga
+        setTimeout(() => {
+            localStorage.setItem(readKey, Date.now());
+        }, 2000);
+    });
+
+    window.openNotif = (url, isUnread, readKey) => {
+        // Agar unread thi, to link kholne se pehle turant read time lock kar do
+        if(isUnread && readKey) {
+            localStorage.setItem(readKey, Date.now());
+        }
+        location.href = url;
+    };
+
+    function calculateTime(ts) {
+        const diff = Date.now() - ts;
+        if(diff < 60000) return "Just now";
+        if(diff < 3600000) return Math.floor(diff/60000) + "m ago";
+        if(diff < 86400000) return Math.floor(diff/3600000) + "h ago";
+        return Math.floor(diff/86400000) + "d ago";
+    }
+</script>
+
+</body>
+</html>

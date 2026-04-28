@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Private Pages - Do not index
+Disallow: /chat.html
+Disallow: /profile.html
+Disallow: /my-posts.html
+Disallow: /login.html
+Disallow: /chats-request.html
+Disallow: /admin/
+
+# Sitemap Link
+Sitemap: https://healthjobs-portal.web.app/sitemap.xml

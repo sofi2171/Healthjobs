@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Health Jobs | Support & Feedback</title>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // آپ کی پبلک کی (Public Key) یہاں لگا دی گئی ہے
+            emailjs.init("Rr88IrZ8s69Qyj8DS");
+        })();
+    </script>
+
+    <style>
+        :root {
+            --primary-blue: #0a66c2;
+            --bg-body: #f8fafc;
+            --text-main: #0f172a;
+            --border-color: #cbd5e1;
+            --green: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-body); color: var(--text-main); padding-top: 80px; display: flex; justify-content: center; }
+
+        /* Header */
+        header { background-color: #fff; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; width: 100%; height: 65px; z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.03);}
+        .back-btn { background: transparent; border: 1px solid #cbd5e1; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; color: #334155;}
+        .back-btn:active { background: #f1f5f9; }
+        .logo-img { height: 35px; }
+
+        .container { width: 100%; max-width: 600px; padding: 15px; }
+
+        /* Form Card */
+        .card { background: #fff; padding: 30px 25px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+        .card-header { text-align: center; margin-bottom: 25px; }
+        .card-title { font-size: 24px; font-weight: 800; color: var(--primary-blue); margin-bottom: 8px; }
+        .card-subtitle { font-size: 14.5px; color: #64748b; line-height: 1.5;}
+
+        /* Form Elements */
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 8px; color: #334155; }
+        .form-control { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; transition: 0.2s; background: #fff; color: #0f172a;}
+        .form-control:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(10,102,194,0.1);}
+        textarea.form-control { resize: vertical; min-height: 140px; line-height: 1.5; }
+
+        /* Button */
+        .btn { width: 100%; padding: 16px; background: var(--primary-blue); color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px;}
+        .btn:active { transform: scale(0.98); background: #004182;}
+        .btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
+
+        /* Loader Overaly */
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); z-index: 3000; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { width: 45px; height: 45px; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Success Message */
+        .success-box { display: none; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px;}
+        .success-box svg { width: 40px; height: 40px; fill: var(--green); margin-bottom: 10px;}
+        .success-box h3 { color: var(--green); margin-bottom: 5px;}
+        .success-box p { color: #065f46; font-size: 14px;}
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="back-btn" onclick="location.href='index.html'">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <img src="images/logo.png" class="logo-img" alt="Health Jobs Logo" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
+        <div style="width:40px;"></div>
+    </header>
+
+    <div class="container">
+        <div class="card" id="form-card">
+            <div class="card-header">
+                <div class="card-title">Support & Feedback</div>
+                <div class="card-subtitle">Having a problem or want to give feedback? Send us a message and our team will get back to you.</div>
+            </div>
+
+            <div class="form-group">
+                <label>Your Full Name</label>
+                <input type="text" id="user-name" class="form-control" placeholder="Enter your name">
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="user-email" class="form-control" placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label>Explain your Problem / Feedback</label>
+                <textarea id="user-msg" class="form-control" placeholder="Write your message here in detail..."></textarea>
+            </div>
+
+            <button class="btn" id="submit-btn" onclick="sendFeedback()">
+                <svg viewBox="0 0 24 24" width="20" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                Send Message
+            </button>
+        </div>
+
+        <div class="success-box" id="success-box">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <h3>Message Sent!</h3>
+            <p>Thank you for reaching out. We have received your message and will respond shortly.</p>
+            <button class="btn" style="background:#f1f5f9; color:var(--primary-blue); box-shadow:none; margin-top:15px; padding:12px;" onclick="location.reload()">Send Another Message</button>
+        </div>
+    </div>
+
+    <div id="loader" class="loader-overlay">
+        <div class="spinner"></div>
+        <div style="margin-top:15px; font-weight:700; color:var(--primary-blue);">Sending Message...</div>
+    </div>
+
+    <script>
+        function sendFeedback() {
+            const name = document.getElementById('user-name').value.trim();
+            const email = document.getElementById('user-email').value.trim();
+            const msg = document.getElementById('user-msg').value.trim();
+
+            if (!name || !email || !msg) {
+                alert("Please fill in all fields before sending.");
+                return;
+            }
+
+            // Show Loader
+            document.getElementById('loader').style.display = 'flex';
+            document.getElementById('submit-btn').disabled = true;
+
+            // 🚀 IMPORTANT: Apni Service ID yahan dalen
+            const serviceID = "service_gnjsdvm"; // مثال: "service_abc123"
+            const templateID = "template_e3xm1lj"; // آپ نے جو دی ہے
+
+            const templateParams = {
+                from_name: name,
+                reply_to: email,
+                message: msg
+            };
+
+            emailjs.send(serviceID, templateID, templateParams)
+                .then(function(response) {
+                    // Hide Loader & Form, Show Success Message
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('form-card').style.display = 'none';
+                    document.getElementById('success-box').style.display = 'block';
+                }, function(error) {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('submit-btn').disabled = false;
+                    alert("Failed to send message. Please check your internet connection and try again.\nError: " + JSON.stringify(error));
+                });
+        }
+    </script>
+</body>
+</html>

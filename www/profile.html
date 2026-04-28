@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>My Profile | Health Jobs Portal</title>
+    <meta name="robots" content="noindex, nofollow"> 
+    <meta name="description" content="Manage your healthcare professional profile or facility details on Health Jobs Portal.">
+    <link rel="canonical" href="https://healthjobs-portal.web.app/profile.html">
+
+    <meta property="og:title" content="My Profile - Health Jobs Portal">
+    <meta property="og:description" content="Dashboard for healthcare professionals and medical staff.">
+    <meta property="og:image" content="https://healthjobs-portal.web.app/images/logo.png">
+    
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --hover-blue: #1e40af;
+            --bg-white: #ffffff;
+            --bg-body: #f1f5f9;
+            --text-main: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #cbd5e1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; }
+        
+        body { background-color: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; padding-top: 70px; padding-bottom: 70px; }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--bg-white); padding: 0 15px; display: flex; justify-content: space-between;
+            align-items: center; position: fixed; top: 0; width: 100%; height: 65px; z-index: 1000;
+            border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .back-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; color: var(--text-secondary); transition: 0.2s; text-decoration: none;}
+        .back-btn:hover { color: var(--primary-blue); }
+        .back-btn svg { width: 22px; height: 22px; fill: currentColor; }
+        
+        .logo-container { text-decoration: none; display: flex; align-items: center; }
+        .logo-img { height: 35px; width: auto; max-width: 120px; object-fit: contain; }
+        .logo-text { font-size: 18px; font-weight: 800; color: var(--primary-blue); display: none; }
+
+        /* --- Main Profile Container --- */
+        main { flex: 1; max-width: 600px; width: 100%; margin: 15px auto; padding: 0 15px; }
+
+        /* --- Clean Profile Card --- */
+        .profile-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow: hidden; position: relative; margin-bottom: 20px;}
+
+        .cover-photo { width: 100%; height: 110px; background: linear-gradient(135deg, #94a3b8, #cbd5e1); }
+
+        .profile-header { padding: 0 20px 20px; position: relative; margin-top: -55px; display: flex; flex-direction: column; }
+        
+        .top-actions { display: flex; justify-content: flex-end; width: 100%; margin-bottom: -30px; z-index: 10;}
+        .btn-edit-profile { background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 16px; border-radius: 16px; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.2s; margin-top: 65px;}
+        .btn-edit-profile:hover { background: #f8fafc; border-color: var(--primary-blue); color: var(--primary-blue);}
+
+        /* GUARANTEED CIRCLE PIC CONTAINER */
+        .pic-container { position: relative; display: inline-block; width: 110px; height: 110px; align-self: flex-start;}
+        .profile-pic { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--bg-white); object-fit: cover; background-color: #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: block; }
+        
+        /* Image Actions */
+        .img-actions { position: absolute; bottom: 0; right: -5px; display: flex; gap: 4px; z-index: 5;}
+        .icon-btn { width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 2px solid white; transition: 0.2s; color: white;}
+        .edit-pic-btn { background: var(--primary-blue); }
+        .edit-pic-btn:hover { background: var(--hover-blue); transform: scale(1.05); }
+        .del-pic-btn { background: #ef4444; }
+        .del-pic-btn:hover { background: #dc2626; transform: scale(1.05); }
+        .icon-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+        .user-name { font-size: 22px; font-weight: 800; margin-top: 15px; color: var(--text-main); }
+        .user-role { font-size: 15px; color: var(--primary-blue); margin-top: 2px; font-weight: 600; }
+        .user-location { font-size: 13px; color: var(--text-secondary); margin-top: 6px; display: flex; align-items: center; gap: 4px;}
+
+        /* --- Info Section --- */
+        .info-section { padding: 20px; border-top: 1px solid var(--border-color); }
+        .info-block { margin-bottom: 20px; }
+        .info-label { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; gap: 8px;}
+        .info-label svg { width: 16px; height: 16px; fill: var(--text-secondary);}
+        .info-value { font-size: 14px; color: var(--text-secondary); line-height: 1.5; white-space: pre-wrap;}
+        
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .info-badge { background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .badge-label { font-size: 11px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;}
+        .badge-value { font-size: 13px; font-weight: 600; color: var(--text-main); }
+
+        /* --- Edit Form Section --- */
+        .edit-section { padding: 20px; border-top: 1px solid var(--border-color); background: #f8fafc;}
+        .form-group { margin-bottom: 15px; }
+        .form-row { display: flex; gap: 12px; margin-bottom: 15px; }
+        .form-row .form-group { flex: 1; margin-bottom: 0; }
+        .form-label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 5px; }
+        .form-input { width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 14px; outline: none; transition: 0.2s; background: white;}
+        .form-input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1); }
+        
+        .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0;}
+        .btn-cancel { background: white; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;}
+        .btn-save { background: var(--primary-blue); border: none; color: white; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;}
+        .btn-save:hover { background: var(--hover-blue); }
+
+        /* --- Actions & App Settings --- */
+        .app-settings { padding: 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: center;}
+        .btn-install { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; padding: 12px 24px; border-radius: 24px; font-weight: 700; cursor: pointer; font-size: 14px; width: 100%; max-width: 250px; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s;}
+        .btn-install:hover { background: #dcfce7; transform: translateY(-1px);}
+        .btn-install svg { width: 18px; height: 18px; fill: currentColor; }
+
+        .action-section { padding: 0 20px 20px; display: flex; justify-content: center; }
+        .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 10px 24px; border-radius: 24px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px; width: 100%; max-width: 250px;}
+        .btn-logout:hover { background: #fef2f2; }
+
+        /* --- Bottom Nav --- */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-white); display: flex; justify-content: space-around; align-items: center; padding: 8px 0 10px; border-top: 1px solid var(--border-color); z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-secondary); flex: 1; transition: 0.1s; cursor: pointer; background: none; border: none;}
+        .nav-item.active { color: var(--primary-blue); }
+        .nav-item.active svg { fill: var(--primary-blue); }
+        .nav-item svg { width: 22px; height: 22px; fill: currentColor; margin-bottom: 3px; }
+        .nav-item span { font-size: 10px; font-weight: 600; }
+
+        /* Loaders */
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { width: 35px; height: 35px; border: 3px solid #e2e8f0; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .loader-text { margin-top: 12px; font-weight: 600; font-size: 14px; color: var(--text-secondary); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .hidden { display: none !important; }
+
+        @media (max-width: 480px) { .form-row { flex-direction: column; gap: 0; } .form-row .form-group { margin-bottom: 15px; } }
+        @media (min-width: 768px) { body { padding-bottom: 0; padding-top: 75px; } header { height: 70px; padding: 0 50px; } .bottom-nav { display: none; } main { padding: 0; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <a href="index.html" class="back-btn" title="Back to Feed">
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
+            </a>
+            <a href="index.html" class="logo-container">
+                <img src="images/logo.png" alt="Health Jobs Portal" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+                <span id="logo-fallback" class="logo-text">Health Jobs Portal</span>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="profile-card">
+            <div class="cover-photo"></div>
+            
+            <div class="profile-header">
+                <div class="top-actions" id="top-action-bar">
+                    <button class="btn-edit-profile" onclick="toggleEditMode(true)">Edit Profile</button>
+                </div>
+
+                <div class="pic-container">
+                    <img src="https://ui-avatars.com/api/?name=U&background=e2e8f0&color=64748b&size=150" id="profile-img" class="profile-pic" alt="Profile" onerror="this.src='https://ui-avatars.com/api/?name=U&background=e2e8f0&color=64748b&size=150'">
+                    
+                    <div class="img-actions">
+                        <div class="icon-btn del-pic-btn" onclick="deleteProfilePic()" title="Remove Photo">
+                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
+                        </div>
+                        <div class="icon-btn edit-pic-btn" onclick="document.getElementById('image-upload').click()" title="Upload Photo">
+                            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg>
+                        </div>
+                    </div>
+                    <input type="file" id="image-upload" accept="image/png, image/jpeg" class="hidden">
+                </div>
+
+                <div id="display-name" class="user-name">Loading...</div>
+                <div id="display-role" class="user-role">Fetching Data</div>
+                <div class="user-location">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
+                    <span id="display-location">Please wait...</span>
+                </div>
+            </div>
+
+            <div id="view-mode" class="info-section">
+                <div id="view-candidate-info" class="info-grid hidden" style="margin-bottom: 20px;">
+                    <div class="info-badge">
+                        <div class="badge-label">Qualification</div>
+                        <div class="badge-value" id="display-qualification">...</div>
+                    </div>
+                    <div class="info-badge">
+                        <div class="badge-label">Experience</div>
+                        <div class="badge-value" id="display-experience">...</div>
+                    </div>
+                </div>
+
+                <div id="view-employer-info" class="info-grid hidden" style="margin-bottom: 20px;">
+                    <div class="info-badge">
+                        <div class="badge-label">Facility Type</div>
+                        <div class="badge-value" id="display-fac-type">...</div>
+                    </div>
+                    <div class="info-badge">
+                        <div class="badge-label">Contact Number</div>
+                        <div class="badge-value" id="display-fac-phone">...</div>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <div class="info-label">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
+                        Full Address
+                    </div>
+                    <div class="info-value" id="display-full-address">...</div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-badge">
+                        <div class="badge-label">Email Address</div>
+                        <div class="badge-value" id="display-email">...</div>
+                    </div>
+                    <div class="info-badge">
+                        <div class="badge-label">Account Role</div>
+                        <div class="badge-value" id="display-acc-type" style="text-transform: capitalize;">...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="edit-mode" class="edit-section hidden">
+                <h3 style="margin-bottom: 20px; color: var(--text-main); font-size: 16px;">Update Details</h3>
+                
+                <div id="edit-dynamic-fields"></div>
+
+                <hr style="border: 0; height: 1px; background: #e2e8f0; margin: 20px 0;">
+                <h4 style="font-size: 14px; margin-bottom: 15px; color: var(--text-main);">Location Details</h4>
+
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Country</label><input type="text" id="input-country" class="form-input"></div>
+                    <div class="form-group"><label class="form-label">City</label><input type="text" id="input-city" class="form-input"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address Line 1</label>
+                    <input type="text" id="input-addr1" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address Line 2</label>
+                    <input type="text" id="input-addr2" class="form-input">
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-cancel" onclick="toggleEditMode(false)">Cancel</button>
+                    <button class="btn-save" onclick="saveProfileChanges()">Save Changes</button>
+                </div>
+            </div>
+
+            <div class="app-settings" id="install-container">
+                <button class="btn-install" id="btn-install-app">
+                    <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    Install Health Jobs App
+                </button>
+            </div>
+
+            <div class="action-section" id="logout-bar">
+                <button class="btn-logout" onclick="logoutUser()">Sign Out Account</button>
+            </div>
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="window.location.href='index.html'">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+            <span>Home</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='my-posts.html'">
+            <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>
+            <span>My Posts</span>
+        </button>
+        <button class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"></path></svg>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <div id="upload-loader" class="loader-overlay hidden">
+        <div class="spinner"></div>
+        <div class="loader-text" id="loader-msg">Processing...</div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+        const installBtn = document.getElementById('btn-install-app');
+
+        // Jab browser install prompt ready karega to hum use save kar lenge
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+
+        // Button click hone par kya hoga
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Agar direct popup ready hai to wo dikhao (Android)
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User installed the app');
+                }
+                deferredPrompt = null;
+            } else {
+                // Agar popup ready nahi hai (iPhone ya pehle se install hai) to guide karo
+                alert("To install the app on your phone:\n\n📱 ANDROID: Tap the browser menu (⋮) at the top right and select 'Add to Home screen'.\n\n🍏 iPhone (iOS): Tap the Share icon at the bottom and select 'Add to Home Screen'.");
+            }
+        });
+
+        // Agar app properly install ho jaye
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed successfully!');
+            installBtn.innerHTML = "✅ App Installed Successfully";
+            installBtn.style.background = "#eef2ff";
+            installBtn.style.color = "#4f46e5";
+            installBtn.style.borderColor = "#c7d2fe";
+            installBtn.disabled = true; // Button ko disable kar do
+        });
+
+        // Check karo agar app pehle se hi app ban kar chal rahi hai (Standalone mode)
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            installBtn.innerHTML = "✅ App is Installed";
+            installBtn.style.background = "#f1f5f9";
+            installBtn.style.color = "#94a3b8";
+            installBtn.style.borderColor = "#e2e8f0";
+            installBtn.disabled = true;
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        // Use setDoc instead of updateDoc to prevent errors if doc doesn't exist yet
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+            authDomain: "jobs-45cc9.firebaseapp.com",
+            projectId: "jobs-45cc9",
+            storageBucket: "jobs-45cc9.firebasestorage.app",
+            messagingSenderId: "21065686301",
+            appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const CLOUD_NAME = "Dr06qkbaa"; 
+        const UPLOAD_PRESET = "nearjobs_profiles"; 
+
+        let currentUser = null;
+        let globalUserData = null; 
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) { window.location.href = "login.html"; return; }
+            currentUser = user;
+            loadUserProfileFast(user.uid, user.email);
+        });
+
+        async function loadUserProfileFast(uid, email) {
+            const cacheKey = `healthCareHub_profile_${uid}`;
+            const cachedData = localStorage.getItem(cacheKey);
+            
+            if (cachedData) {
+                globalUserData = JSON.parse(cachedData);
+                populateUI(globalUserData, email);
+            } else {
+                try {
+                    const userDoc = await getDoc(doc(db, "users", uid));
+                    if (userDoc.exists()) {
+                        globalUserData = userDoc.data();
+                    } else {
+                        // FIX: If document doesn't exist, create a blank template so UI doesn't stuck
+                        globalUserData = { role: 'candidate', fullName: 'New User' };
+                    }
+                    localStorage.setItem(cacheKey, JSON.stringify(globalUserData));
+                    populateUI(globalUserData, email);
+                } catch (error) { 
+                    console.error("Fetch Error:", error);
+                    document.getElementById('display-name').innerText = "Error Loading Profile";
+                    document.getElementById('display-role').innerText = "Check your connection";
+                    document.getElementById('display-location').innerText = "";
+                }
+            }
+        }
+
+        function populateUI(data, email) {
+            // Safety check for empty data
+            data = data || {};
+            const role = data.role || 'candidate';
+
+            document.getElementById('display-email').innerText = email;
+            document.getElementById('display-acc-type').innerText = role;
+            
+            const locString = [data.city, data.country].filter(Boolean).join(", ");
+            document.getElementById('display-location').innerText = locString || "Location not set";
+            
+            const fullAddr = [data.address1, data.address2, data.city, data.country].filter(Boolean).join(", ");
+            document.getElementById('display-full-address').innerText = fullAddr || "Address not provided.";
+
+            document.getElementById('input-country').value = data.country || "";
+            document.getElementById('input-city').value = data.city || "";
+            document.getElementById('input-addr1').value = data.address1 || "";
+            document.getElementById('input-addr2').value = data.address2 || "";
+
+            const editDynamicFields = document.getElementById('edit-dynamic-fields');
+            let initialLetter = "U";
+
+            if (role === 'employer') {
+                const fName = data.facilityName || "Facility Name";
+                initialLetter = fName.charAt(0).toUpperCase();
+                document.getElementById('display-name').innerText = fName;
+                document.getElementById('display-role').innerText = "Healthcare Facility";
+                
+                document.getElementById('view-employer-info').classList.remove('hidden');
+                document.getElementById('view-candidate-info').classList.add('hidden');
+                
+                document.getElementById('display-fac-type').innerText = data.facilityType || "N/A";
+                document.getElementById('display-fac-phone').innerText = data.phone || "N/A";
+
+                editDynamicFields.innerHTML = `
+                    <div class="form-group"><label class="form-label">Facility Name</label><input type="text" id="input-facName" class="form-input" value="${data.facilityName || ''}"></div>
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label">Facility Type</label>
+                            <select id="input-facType" class="form-input">
+                                <option ${data.facilityType === 'Hospital (Private/Govt)' ? 'selected' : ''}>Hospital (Private/Govt)</option>
+                                <option ${data.facilityType === 'Pharmacy / Medical Store' ? 'selected' : ''}>Pharmacy / Medical Store</option>
+                                <option ${data.facilityType === 'Diagnostic Lab' ? 'selected' : ''}>Diagnostic Lab</option>
+                                <option ${data.facilityType === 'Clinic' ? 'selected' : ''}>Clinic</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label class="form-label">Contact Number</label><input type="tel" id="input-facPhone" class="form-input" value="${data.phone || ''}"></div>
+                    </div>
+                `;
+            } else {
+                const cName = data.fullName || "Candidate Name";
+                initialLetter = cName.charAt(0).toUpperCase();
+                document.getElementById('display-name').innerText = cName;
+                document.getElementById('display-role').innerText = "Healthcare Professional";
+                
+                document.getElementById('view-candidate-info').classList.remove('hidden');
+                document.getElementById('view-employer-info').classList.add('hidden');
+
+                document.getElementById('display-qualification').innerText = data.qualification || "N/A";
+                document.getElementById('display-experience').innerText = data.experience || "N/A";
+
+                editDynamicFields.innerHTML = `
+                    <div class="form-group"><label class="form-label">Full Name</label><input type="text" id="input-canName" class="form-input" value="${data.fullName || ''}"></div>
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label">Degree / Qualification</label>
+                            <select id="input-qualification" class="form-input">
+                                <optgroup label="Medical Degrees">
+                                    <option ${data.qualification === 'MBBS (General Physician)' ? 'selected' : ''}>MBBS (General Physician)</option>
+                                    <option ${data.qualification === 'BDS (Dentist)' ? 'selected' : ''}>BDS (Dentist)</option>
+                                    <option ${data.qualification === 'MD (Cardiologist)' ? 'selected' : ''}>MD (Cardiologist)</option>
+                                    <option ${data.qualification === 'DPT (Physiotherapist)' ? 'selected' : ''}>DPT (Physiotherapist)</option>
+                                    <option ${data.qualification === 'Pharm-D (Pharmacist)' ? 'selected' : ''}>Pharm-D (Pharmacist)</option>
+                                </optgroup>
+                                <optgroup label="Nursing & Allied Health">
+                                    <option ${data.qualification === 'BSc Nursing' ? 'selected' : ''}>BSc Nursing</option>
+                                    <option ${data.qualification === 'Medical Lab Technology (MLT)' ? 'selected' : ''}>Medical Lab Technology (MLT)</option>
+                                </optgroup>
+                                <optgroup label="Medical Diplomas">
+                                    <option ${data.qualification === 'Dispenser Diploma' ? 'selected' : ''}>Dispenser Diploma</option>
+                                    <option ${data.qualification === 'Pharmacy Technician (B-Category)' ? 'selected' : ''}>Pharmacy Technician (B-Category)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group"><label class="form-label">Experience</label>
+                            <select id="input-exp" class="form-input">
+                                <option ${data.experience === 'Fresher' ? 'selected' : ''}>Fresher</option>
+                                <option ${data.experience === '1-2 Years' ? 'selected' : ''}>1-2 Years</option>
+                                <option ${data.experience === '3-5 Years' ? 'selected' : ''}>3-5 Years</option>
+                                <option ${data.experience === '5+ Years' ? 'selected' : ''}>5+ Years</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            let picToUse = data.profilePicUrl ? data.profilePicUrl : `https://ui-avatars.com/api/?name=${initialLetter}&background=e2e8f0&color=64748b&size=150`;
+            document.getElementById('profile-img').src = picToUse;
+        }
+
+        window.toggleEditMode = (isEditing) => {
+            if (isEditing) {
+                document.getElementById('view-mode').classList.add('hidden'); 
+                document.getElementById('logout-bar').classList.add('hidden'); 
+                document.getElementById('install-container').classList.add('hidden'); // Hide install btn while editing
+                document.getElementById('top-action-bar').classList.add('hidden');
+                document.getElementById('edit-mode').classList.remove('hidden');
+            } else {
+                document.getElementById('view-mode').classList.remove('hidden'); 
+                document.getElementById('logout-bar').classList.remove('hidden'); 
+                document.getElementById('install-container').classList.remove('hidden'); // Show install btn on view
+                document.getElementById('top-action-bar').classList.remove('hidden');
+                document.getElementById('edit-mode').classList.add('hidden');
+                if(globalUserData) populateUI(globalUserData, currentUser.email);
+            }
+        };
+
+        window.saveProfileChanges = async () => {
+            if(!currentUser) return;
+            showLoader("Saving...");
+
+            const role = globalUserData.role || 'candidate';
+            let newData = {
+                country: document.getElementById('input-country').value.trim(),
+                city: document.getElementById('input-city').value.trim(),
+                address1: document.getElementById('input-addr1').value.trim(),
+                address2: document.getElementById('input-addr2').value.trim()
+            };
+
+            if (role === 'employer') {
+                newData.facilityName = document.getElementById('input-facName').value.trim();
+                newData.facilityType = document.getElementById('input-facType').value;
+                newData.phone = document.getElementById('input-facPhone').value.trim();
+            } else {
+                newData.fullName = document.getElementById('input-canName').value.trim();
+                newData.qualification = document.getElementById('input-qualification').value;
+                newData.experience = document.getElementById('input-exp').value;
+            }
+
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                // FIX: Used setDoc with merge:true instead of updateDoc to avoid error if doc missing
+                await setDoc(userRef, newData, { merge: true });
+                
+                globalUserData = { ...globalUserData, ...newData };
+                localStorage.setItem(`healthCareHub_profile_${currentUser.uid}`, JSON.stringify(globalUserData));
+                
+                populateUI(globalUserData, currentUser.email);
+                hideLoader();
+                toggleEditMode(false); 
+            } catch (error) { 
+                hideLoader(); 
+                console.error(error);
+                alert("Error saving details."); 
+            }
+        };
+
+        // Profile Pic Upload
+        document.getElementById('image-upload').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file || !currentUser) return;
+            if (file.size > 5 * 1024 * 1024) { alert("Max 5MB allowed."); return; }
+
+            showLoader("Uploading...");
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', UPLOAD_PRESET);
+            
+            try {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+                const cloudData = await response.json();
+
+                if (cloudData.secure_url) {
+                    const newPicUrl = cloudData.secure_url;
+                    
+                    // FIX: setDoc with merge:true
+                    await setDoc(doc(db, "users", currentUser.uid), { profilePicUrl: newPicUrl }, { merge: true });
+
+                    globalUserData.profilePicUrl = newPicUrl;
+                    localStorage.setItem(`healthCareHub_profile_${currentUser.uid}`, JSON.stringify(globalUserData));
+                    document.getElementById('profile-img').src = newPicUrl;
+                    
+                    hideLoader();
+                } else throw new Error();
+            } catch (error) { hideLoader(); alert("Upload failed."); }
+        });
+
+        // Delete Pic
+        window.deleteProfilePic = async () => {
+            if(!currentUser || !globalUserData.profilePicUrl) return;
+            if(confirm("Remove profile picture?")) {
+                showLoader("Removing...");
+                try {
+                    // FIX: setDoc with merge:true
+                    await setDoc(doc(db, "users", currentUser.uid), { profilePicUrl: null }, { merge: true });
+                    
+                    globalUserData.profilePicUrl = null;
+                    localStorage.setItem(`healthCareHub_profile_${currentUser.uid}`, JSON.stringify(globalUserData));
+                    
+                    const nameStr = globalUserData.role === 'employer' ? globalUserData.facilityName : globalUserData.fullName;
+                    const initial = (nameStr || "U").charAt(0).toUpperCase();
+                    document.getElementById('profile-img').src = `https://ui-avatars.com/api/?name=${initial}&background=e2e8f0&color=64748b&size=150`;
+                    
+                    hideLoader();
+                } catch (error) { hideLoader(); alert("Failed to remove."); }
+            }
+        };
+
+        window.logoutUser = () => {
+            if(confirm("Are you sure you want to log out?")) {
+                if(currentUser) localStorage.removeItem(`healthCareHub_profile_${currentUser.uid}`);
+                signOut(auth).then(() => { window.location.href = "login.html"; });
+            }
+        };
+
+        function showLoader(msg) { document.getElementById('loader-msg').innerText = msg; document.getElementById('upload-loader').classList.remove('hidden'); }
+        function hideLoader() { document.getElementById('upload-loader').classList.add('hidden'); document.getElementById('image-upload').value = ""; }
+    </script>
+</body>
+</html>

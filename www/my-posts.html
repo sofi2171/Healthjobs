@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Manage My Posts | Health Jobs Portal</title>
+    <meta name="description" content="Manage all your job postings, availability profiles, and general updates.">
+    
+    <style>
+        :root {
+            --primary-blue: #0a66c2;
+            --hover-blue: #004182;
+            --bg-white: #ffffff;
+            --bg-body: #f3f2ef;
+            --text-main: #000000e6;
+            --text-secondary: #00000099;
+            --border-color: #e0dfdc;
+            --danger: #d93025;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        html, body { height: 100%; }
+
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            display: flex; flex-direction: column; 
+            min-height: 100vh; padding-top: 70px;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--bg-white); padding: 0 15px; display: flex; justify-content: space-between;
+            align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 65px; z-index: 1000;
+            border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; height: 100%; }
+        .back-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; color: var(--text-secondary); transition: 0.2s; text-decoration: none;}
+        .back-btn:hover { color: var(--primary-blue); }
+        .back-btn svg { width: 24px; height: 24px; fill: currentColor; }
+        
+        .logo-container { text-decoration: none; display: flex; align-items: center; height: 100%; }
+        .logo-img { height: 35px !important; max-height: 35px !important; width: auto !important; max-width: 140px !important; object-fit: contain !important; display: block; }
+
+        /* --- Main Content Area --- */
+        main { flex: 1 0 auto; padding: 20px 15px 80px; max-width: 650px; width: 100%; margin: 0 auto; }
+        .page-title { font-size: 20px; font-weight: 700; color: var(--primary-blue); margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;}
+
+        /* --- Post Card --- */
+        .my-post-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); position: relative; transition: 0.2s; }
+        .my-post-card.inactive { opacity: 0.6; background: #f9f9f9; border-color: #eee; }
+        
+        .post-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;}
+        .post-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 5px; padding-right: 30px;}
+        .post-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;}
+        .post-desc { font-size: 14px; color: var(--text-main); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px; white-space: pre-wrap;}
+        
+        /* Badges */
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .badge.active { background: #e6f4ea; color: #137333; }
+        .badge.inactive { background: #fce8e6; color: #c5221f; }
+        .badge.role-employer { background: #e8f0fe; color: #1967d2; }
+        .badge.role-candidate { background: #f3e8fd; color: #681da8; }
+        .badge.role-general { background: #fff3e0; color: #e65100; }
+
+        /* --- Link Preview --- */
+        .post-link { display: inline-flex; align-items: center; gap: 5px; color: var(--primary-blue); font-size: 13px; font-weight: 600; text-decoration: none; margin-bottom: 15px; background: #f3f8fe; padding: 8px 12px; border-radius: 6px; word-break: break-all;}
+        .post-link:hover { text-decoration: underline; }
+        .post-link svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0;}
+
+        /* --- Multi-Media Collage Grid --- */
+        .media-grid { display: grid; gap: 4px; border-radius: 8px; overflow: hidden; margin-bottom: 15px; background: #f8fafc; border: 1px solid var(--border-color);}
+        .grid-1 { grid-template-columns: 1fr; }
+        .grid-1 .media-item { height: 250px; }
+        .grid-2 { grid-template-columns: 1fr 1fr; }
+        .grid-2 .media-item { height: 200px; }
+        .grid-3 { grid-template-columns: 1fr 1fr; grid-template-rows: 150px 150px; }
+        .grid-3 .media-item:first-child { grid-column: span 2; }
+        .grid-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 150px 150px; }
+        
+        .media-item { width: 100%; height: 100%; position: relative; background: #e2e8f0; display: flex; justify-content: center; align-items: center;}
+        .media-item img, .media-item video { width: 100%; height: 100%; object-fit: cover; }
+        .media-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); color: white; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; }
+        
+        .doc-item { display: flex; align-items: center; gap: 10px; background: #f1f5f9; padding: 10px; border-radius: 6px; margin-bottom: 5px; border: 1px solid var(--border-color);}
+        .doc-item svg { width: 24px; height: 24px; fill: var(--primary-blue); flex-shrink: 0;}
+        .doc-item span { font-size: 13px; color: var(--text-main); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+
+        /* --- Three Dot Menu --- */
+        .menu-container { position: absolute; top: 15px; right: 15px; }
+        .menu-btn { background: none; border: none; font-size: 20px; font-weight: bold; color: var(--text-secondary); cursor: pointer; padding: 5px 10px; border-radius: 50%; transition: 0.2s;}
+        .menu-btn:hover { background: #f1f5f9; color: var(--text-main); }
+        
+        .dropdown-menu { display: none; position: absolute; right: 0; top: 35px; width: 160px; background: white; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; overflow: hidden; }
+        .dropdown-menu.show { display: flex; flex-direction: column; }
+        .dropdown-item { padding: 12px 15px; font-size: 13px; font-weight: 600; color: var(--text-main); cursor: pointer; border-bottom: 1px solid #f1f5f9; text-align: left; background: none; transition: 0.2s; display: flex; align-items: center; gap: 8px;}
+        .dropdown-item:last-child { border-bottom: none; }
+        .dropdown-item:hover { background: #f8fafc; color: var(--primary-blue); }
+        .dropdown-item.delete { color: var(--danger); }
+        .dropdown-item.delete:hover { background: #fef2f2; color: #b31404; }
+
+        /* --- Stats Row --- */
+        .post-stats { display: flex; gap: 15px; border-top: 1px solid var(--border-color); padding-top: 15px; font-size: 13px; color: var(--text-secondary); font-weight: 500;}
+        .stat-item { display: flex; align-items: center; gap: 5px; }
+        .stat-item svg { width: 16px; height: 16px; fill: currentColor; }
+
+        /* --- Empty State --- */
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
+        .empty-state svg { width: 60px; height: 60px; fill: #cbd5e1; margin-bottom: 15px; }
+        .empty-state h3 { font-size: 18px; color: var(--text-main); margin-bottom: 10px; }
+        .empty-state p { font-size: 14px; margin-bottom: 25px; line-height: 1.5;}
+        .btn-create { background: var(--primary-blue); color: white; padding: 12px 24px; border-radius: 24px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-block; border: none; cursor: pointer; transition: 0.2s;}
+        .btn-create:hover { background: var(--hover-blue); }
+
+        /* --- Edit Modal --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px; }
+        .modal-content { background: var(--bg-white); width: 100%; max-width: 500px; border-radius: 12px; padding: 25px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2);}
+        .modal-header { font-size: 18px; font-weight: 700; color: var(--primary-blue); margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;}
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-main);}
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; outline: none; background: #fafafa;}
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary-blue); background: white;}
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-row { display: flex; gap: 15px; }
+        @media (max-width: 480px) { .form-row { flex-direction: column; gap: 0; } }
+        
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .btn-cancel { background: white; border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; color: var(--text-secondary);}
+        .btn-save { background: var(--primary-blue); border: none; color: white; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer;}
+        .btn-save:hover { background: var(--hover-blue); }
+
+        /* Create Selection Modal */
+        .option-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; border: 2px solid var(--border-color); border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; background: #fafafa; text-decoration: none;}
+        .option-btn:hover { border-color: var(--primary-blue); background: #f3f8fe; }
+        .option-btn h4 { font-size: 15px; color: var(--primary-blue); margin-bottom: 5px; }
+        .option-btn p { font-size: 12px; color: var(--text-secondary); text-align: center; }
+
+        /* --- Footer & Nav --- */
+        footer { flex-shrink: 0; background-color: var(--bg-white); padding: 30px 20px 80px; border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600; }
+        .footer-links a:hover { color: var(--primary-blue); }
+        .footer-copy { font-size: 14px; color: var(--text-main); font-weight: 500; }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-white); display: flex; justify-content: space-around; align-items: center; padding: 8px 0 10px; border-top: 1px solid var(--border-color); z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-secondary); flex: 1; transition: 0.1s; cursor: pointer; background: none; border: none;}
+        .nav-item.active { color: var(--primary-blue); }
+        .nav-item.active svg { fill: var(--primary-blue); }
+        .nav-item:hover:not(.active) { color: var(--primary-blue); }
+        .nav-item svg { width: 24px; height: 24px; fill: currentColor; margin-bottom: 3px; }
+        .nav-item span { font-size: 11px; font-weight: 500; }
+
+        /* Loader */
+        .loader { text-align: center; padding: 40px; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e0dfdc; border-top: 4px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .hidden { display: none !important; }
+
+        @media (min-width: 768px) { body { padding-bottom: 0; padding-top: 75px; } header { height: 70px; padding: 0 50px; } .bottom-nav { display: none; } footer { padding-bottom: 30px; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <a href="index.html" class="back-btn" title="Back to Feed">
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
+            </a>
+            <a href="index.html" class="logo-container">
+                <img src="images/logo.png" alt="Near Jobs" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+                <span id="logo-fallback" style="font-size: 20px; font-weight: 700; color: var(--primary-blue); display: none;">Near Jobs</span>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="page-title">Manage My Posts</h1>
+        
+        <div id="loader" class="loader"><div class="spinner"></div></div>
+        
+        <div id="empty-state" class="empty-state hidden">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-8-2h2v-4h4v-2h-4V7h-2v4H7v2h4z"></path></svg>
+            <h3>No Active Posts</h3>
+            <p>You haven't published any jobs or posts yet. Let's create your first post!</p>
+            <button class="btn-create" onclick="document.getElementById('create-options-modal').style.display='flex'">Create a Post</button>
+        </div>
+
+        <div id="posts-container"></div>
+    </main>
+
+    <div class="modal-overlay" id="create-options-modal">
+        <div class="modal-content" style="max-width: 400px; padding: 20px;">
+            <div class="modal-header" style="border:none; text-align:center; margin-bottom: 15px;">What would you like to post?</div>
+            
+            <a href="simple.html" class="option-btn">
+                <h4>📝 Share an Update</h4>
+                <p>Post a photo, video, article, or general discussion.</p>
+            </a>
+
+            <a href="employer.html" class="option-btn">
+                <h4>💼 Post a Healthcare Job</h4>
+                <p>Hire doctors, nurses, or technicians for your facility.</p>
+            </a>
+            
+            <a href="candidate.html" class="option-btn">
+                <h4>👤 Post Availability Profile</h4>
+                <p>Find a job or share your professional availability.</p>
+            </a>
+
+            <button class="btn-cancel" style="width: 100%; border: none; background: none; color: var(--text-secondary); margin-top: 5px;" onclick="document.getElementById('create-options-modal').style.display='none'">Cancel</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">Edit Post Details</div>
+            
+            <input type="hidden" id="edit-post-id">
+            <input type="hidden" id="edit-post-type">
+            
+            <div class="form-group">
+                <label id="title-label">Title / Headline</label>
+                <input type="text" id="edit-title">
+            </div>
+
+            <div class="form-group hidden" id="general-specific-fields">
+                <label>External Link (URL)</label>
+                <input type="url" id="edit-link" placeholder="https://...">
+            </div>
+            
+            <div id="job-specific-fields">
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Category / Profession</label>
+                        <input type="text" id="edit-category">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Experience</label>
+                        <input type="text" id="edit-exp">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Salary (PKR)</label>
+                        <input type="text" id="edit-salary">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Shift / Timing</label>
+                        <input type="text" id="edit-shift">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label>WhatsApp Number</label>
+                        <input type="text" id="edit-whatsapp">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Location</label>
+                        <input type="text" id="edit-location">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="edit-desc"></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button class="btn-save" onclick="saveEditedPost()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="employer.html">Post a Job</a>
+            <a href="profile.html">My Profile</a>
+            <a href="privcy.html">Privacy Policy</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2026 powered by Health jobs | All rights reserved
+        </div>
+    </footer>
+
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="window.location.href='index.html'">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+            <span>Home</span>
+        </button>
+        <button class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>
+            <span>My Posts</span>
+        </button>
+        <button class="nav-item" onclick="document.getElementById('create-options-modal').style.display='flex'">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
+            <span>Post</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='profile.html'">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+            authDomain: "jobs-45cc9.firebaseapp.com",
+            projectId: "jobs-45cc9",
+            storageBucket: "jobs-45cc9.firebasestorage.app",
+            messagingSenderId: "21065686301",
+            appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let myPostsArray = []; 
+        let currentDisplayIndex = 0;
+        const POSTS_PER_PAGE = 5;
+
+        const CACHE_KEY = "health_jobs_hybrid_cache"; 
+        const BACKEND_URL = "https://backend-posts-details.vercel.app/api/update-post";
+
+        // --- Cache Helpers ---
+        function removePostFromLocalCache(postId) {
+            try {
+                let cachedDataStr = localStorage.getItem(CACHE_KEY);
+                if (cachedDataStr) {
+                    let cachedData = JSON.parse(cachedDataStr).filter(p => p.id !== postId);
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(cachedData));
+                }
+            } catch (error) { console.error("Cache remove error:", error); }
+        }
+
+        function updatePostInLocalCache(postId, newData) {
+            try {
+                let cachedDataStr = localStorage.getItem(CACHE_KEY);
+                if (cachedDataStr) {
+                    let cachedData = JSON.parse(cachedDataStr);
+                    let index = cachedData.findIndex(p => p.id === postId);
+                    if (index !== -1) {
+                        cachedData[index] = { ...cachedData[index], ...newData };
+                        localStorage.setItem(CACHE_KEY, JSON.stringify(cachedData));
+                    }
+                }
+            } catch (error) { console.error("Cache update error:", error); }
+        }
+
+        // --- Close Modals on Outside Click ---
+        document.addEventListener('click', function(e) {
+            if(!e.target.closest('.menu-container')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+            }
+            if(e.target.classList.contains('modal-overlay') && e.target.id !== 'loader') {
+                e.target.style.display = 'none';
+            }
+        });
+
+        // --- Auth Guard ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                fetchMyPosts();
+            } else {
+                sessionStorage.setItem('redirectAfterLogin', 'my-posts.html');
+                window.location.href = "login.html";
+            }
+        });
+
+        // --- Fetch All Posts & Start Pagination ---
+        async function fetchMyPosts() {
+            const container = document.getElementById('posts-container');
+            const loader = document.getElementById('loader');
+            const emptyState = document.getElementById('empty-state');
+            
+            container.innerHTML = '';
+            loader.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            try {
+                const qPoster = query(collection(db, "posts"), where("posterId", "==", currentUser.uid));
+                const qAuthor = query(collection(db, "posts"), where("authorId", "==", currentUser.uid));
+                
+                const [snapPoster, snapAuthor] = await Promise.all([getDocs(qPoster), getDocs(qAuthor)]);
+                
+                const postsMap = new Map();
+                snapPoster.forEach(doc => postsMap.set(doc.id, { id: doc.id, ...doc.data() }));
+                snapAuthor.forEach(doc => postsMap.set(doc.id, { id: doc.id, ...doc.data() }));
+
+                myPostsArray = Array.from(postsMap.values());
+                loader.classList.add('hidden');
+
+                if (myPostsArray.length === 0) {
+                    emptyState.classList.remove('hidden');
+                } else {
+                    // Sort latest posts first
+                    myPostsArray.sort((a, b) => {
+                        const dateA = a.createdAt ? a.createdAt.toMillis() : 0;
+                        const dateB = b.createdAt ? b.createdAt.toMillis() : 0;
+                        return dateB - dateA;
+                    });
+                    
+                    currentDisplayIndex = 0;
+                    window.loadMorePosts(); // Start showing first 5 posts
+                }
+            } catch (error) {
+                console.error(error);
+                loader.innerHTML = "<p style='color:red;'>Error loading posts.</p>";
+            }
+        }
+
+        // --- Load More Posts Logic (5 by 5) ---
+        window.loadMorePosts = () => {
+            const container = document.getElementById('posts-container');
+            const existingBtn = document.getElementById('load-more-btn');
+            if (existingBtn) existingBtn.remove(); // Hata dein pehle wala button
+
+            const endIndex = Math.min(currentDisplayIndex + POSTS_PER_PAGE, myPostsArray.length);
+            const postsToRender = myPostsArray.slice(currentDisplayIndex, endIndex);
+
+            postsToRender.forEach(post => renderPost(post));
+
+            currentDisplayIndex = endIndex;
+
+            // Agar aur posts baqi hain, toh naya button dikhayen
+            if (currentDisplayIndex < myPostsArray.length) {
+                const btn = document.createElement('button');
+                btn.id = 'load-more-btn';
+                btn.className = 'btn-create';
+                btn.style.width = '100%';
+                btn.style.marginTop = '20px';
+                btn.innerText = 'Load More Posts';
+                btn.onclick = window.loadMorePosts;
+                container.appendChild(btn);
+            }
+        };
+
+        // --- UI Renders ---
+        function generateMediaHTML(mediaArray) {
+            if (!mediaArray || mediaArray.length === 0) return '';
+            const visualMedia = mediaArray.filter(m => m.type === 'image' || m.type === 'video');
+            const docs = mediaArray.filter(m => m.type === 'pdf' || m.type === 'other');
+            let html = '';
+
+            if (visualMedia.length > 0) {
+                let gridClass = `grid-${Math.min(visualMedia.length, 4)}`;
+                html += `<div class="media-grid ${gridClass}">`;
+                for(let i=0; i < Math.min(visualMedia.length, 4); i++) {
+                    const media = visualMedia[i];
+                    html += `<div class="media-item">`;
+                    if(media.type === 'video') {
+                        html += `<video src="${media.url}" muted loop playsinline></video>
+                                 <div style="position:absolute; width:40px; height:40px; background:rgba(0,0,0,0.6); border-radius:50%; display:flex; justify-content:center; align-items:center;"><svg style="width:20px; height:20px; fill:white; margin-left:3px;" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></div>`;
+                    } else {
+                        html += `<img src="${media.url}">`;
+                    }
+                    if(i === 3 && visualMedia.length > 4) html += `<div class="media-overlay">+${visualMedia.length - 4}</div>`;
+                    html += `</div>`;
+                }
+                html += `</div>`;
+            }
+
+            if (docs.length > 0) {
+                docs.forEach(doc => {
+                    html += `
+                        <div class="doc-item">
+                            <svg viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"></path></svg>
+                            <span>${doc.name || 'Document'}</span>
+                        </div>`;
+                });
+            }
+            return html;
+        }
+
+        function renderPost(post) {
+            const container = document.getElementById('posts-container');
+            const isInactive = post.status === 'inactive';
+            const likesCount = post.likes ? post.likes.length : 0;
+            const commentsCount = post.commentsCount || 0;
+            const isGeneralPost = post.type === 'general_post';
+            
+            let roleBadgeClass = isGeneralPost ? 'role-general' : (post.posterRole === 'employer' ? 'role-employer' : 'role-candidate');
+            let roleBadgeText = isGeneralPost ? 'General Update' : (post.posterRole === 'employer' ? 'Hiring Job' : 'Candidate Profile');
+
+            let mediaData = post.media || [];
+            if(mediaData.length === 0 && post.postMediaUrl) mediaData = [{url: post.postMediaUrl, type: post.postMediaType || 'image', name: 'File'}];
+            
+            const mediaHTML = generateMediaHTML(mediaData);
+            
+            let linkHTML = '';
+            if(post.externalLink) {
+                linkHTML = `<a href="${post.externalLink}" target="_blank" class="post-link">
+                    <svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>
+                    ${post.externalLink}
+                </a>`;
+            }
+
+            const card = document.createElement('div');
+            card.className = `my-post-card ${isInactive ? 'inactive' : ''}`;
+            card.id = `post-${post.id}`;
+
+            card.innerHTML = `
+                <div class="post-header">
+                    <div>
+                        ${post.title ? `<div class="post-title">${post.title}</div>` : ''}
+                        <div class="post-meta">
+                            <span class="badge ${roleBadgeClass}">${roleBadgeText}</span>
+                            <span class="badge ${isInactive ? 'inactive' : 'active'}">${isInactive ? 'Inactive' : 'Active'}</span>
+                            ${post.category && !isGeneralPost ? `<span style="color: var(--text-secondary); font-weight: 500;">${post.category}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="menu-container">
+                        <button class="menu-btn" onclick="toggleMenu('${post.id}')">⋮</button>
+                        <div id="menu-${post.id}" class="dropdown-menu">
+                            <button class="dropdown-item" onclick="openEditModal('${post.id}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg> Edit Post
+                            </button>
+                            <button class="dropdown-item" onclick="togglePostStatus('${post.id}', '${post.status || 'active'}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg> ${isInactive ? 'Mark as Active' : 'Mark as Inactive'}
+                            </button>
+                            <button class="dropdown-item delete" onclick="deletePost('${post.id}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg> Delete Post
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-desc">${post.desc || ''}</div>
+                ${linkHTML}
+                ${mediaHTML}
+                <div class="post-stats">
+                    <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg> ${likesCount} Likes</div>
+                    <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"></path></svg> ${commentsCount} Comments</div>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+
+        // --- Global Actions (Attached to window) ---
+        window.toggleMenu = (postId) => {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                if(menu.id !== `menu-${postId}`) menu.classList.remove('show');
+            });
+            document.getElementById(`menu-${postId}`).classList.toggle('show');
+        };
+
+        window.deletePost = async (postId) => {
+            if(confirm("Permanently delete this post everywhere?")) {
+                try {
+                    // Backend sync to notify global users
+                    await fetch(BACKEND_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ postId: postId, updatedData: { status: 'deleted' } })
+                    });
+
+                    await deleteDoc(doc(db, "posts", postId));
+                    
+                    document.getElementById(`post-${postId}`).remove();
+                    myPostsArray = myPostsArray.filter(p => p.id !== postId);
+                    removePostFromLocalCache(postId);
+
+                    if(myPostsArray.length === 0) document.getElementById('empty-state').classList.remove('hidden');
+                } catch (error) { 
+                    alert("Failed to delete post."); 
+                }
+            }
+        };
+
+        window.togglePostStatus = async (postId, currentStatus) => {
+            const newStatus = currentStatus === 'inactive' ? 'active' : 'inactive';
+            document.getElementById(`menu-${postId}`).classList.remove('show'); // Hide menu immediately
+            
+            try {
+                // Backend Sync
+                await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ postId: postId, updatedData: { status: newStatus } })
+                });
+
+                if (newStatus === 'inactive') removePostFromLocalCache(postId);
+                else localStorage.removeItem(CACHE_KEY);
+                
+                fetchMyPosts(); 
+            } catch (error) {
+                alert("Status sync failed.");
+            }
+        };
+
+        window.openEditModal = (postId) => {
+            const post = myPostsArray.find(p => p.id === postId);
+            if(!post) return;
+
+            document.getElementById(`menu-${postId}`).classList.remove('show');
+
+            const isGeneral = post.type === 'general_post';
+            
+            document.getElementById('edit-post-id').value = post.id;
+            document.getElementById('edit-post-type').value = post.type || 'job';
+            document.getElementById('edit-title').value = post.title || "";
+            document.getElementById('edit-desc').value = post.desc || "";
+
+            if (isGeneral) {
+                document.getElementById('job-specific-fields').classList.add('hidden');
+                document.getElementById('general-specific-fields').classList.remove('hidden');
+                document.getElementById('edit-link').value = post.externalLink || "";
+            } else {
+                document.getElementById('job-specific-fields').classList.remove('hidden');
+                document.getElementById('general-specific-fields').classList.add('hidden');
+                document.getElementById('edit-category').value = post.category || "";
+                document.getElementById('edit-exp').value = post.experience || "";
+                document.getElementById('edit-salary').value = post.salary || "";
+                document.getElementById('edit-shift').value = post.shift || "";
+                document.getElementById('edit-whatsapp').value = post.whatsapp || "";
+                document.getElementById('edit-location').value = post.location || "";
+            }
+
+            document.getElementById('edit-modal').style.display = 'flex';
+        };
+
+        window.closeEditModal = () => { 
+            document.getElementById('edit-modal').style.display = 'none'; 
+        };
+
+        window.saveEditedPost = async () => {
+            const postId = document.getElementById('edit-post-id').value;
+            const postType = document.getElementById('edit-post-type').value;
+            const newTitle = document.getElementById('edit-title').value.trim();
+            const newDesc = document.getElementById('edit-desc').value.trim();
+
+            if(!newDesc && !newTitle) { 
+                alert("Post needs content."); 
+                return; 
+            }
+
+            const btn = document.querySelector('.btn-save');
+            btn.innerText = "Syncing..."; 
+            btn.disabled = true;
+
+            try {
+                let updateData = { title: newTitle, desc: newDesc };
+
+                if (postType === 'general_post') {
+                    updateData.externalLink = document.getElementById('edit-link').value.trim();
+                } else {
+                    updateData.category = document.getElementById('edit-category').value.trim();
+                    updateData.experience = document.getElementById('edit-exp').value.trim();
+                    updateData.salary = document.getElementById('edit-salary').value.trim();
+                    updateData.shift = document.getElementById('edit-shift').value.trim();
+                    updateData.whatsapp = document.getElementById('edit-whatsapp').value.trim();
+                    updateData.location = document.getElementById('edit-location').value.trim();
+                }
+
+                // Backend Sync Call
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ postId, updatedData: updateData })
+                });
+
+                if (response.ok) {
+                    updatePostInLocalCache(postId, updateData);
+                    closeEditModal();
+                    fetchMyPosts(); 
+                    alert("Updated & Synced Successfully!");
+                } else {
+                    throw new Error("Backend sync failed");
+                }
+            } catch (error) {
+                alert("Sync Error: " + error.message);
+            } finally {
+                btn.innerText = "Save Changes"; 
+                btn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>

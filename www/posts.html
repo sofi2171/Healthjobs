@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Job Details | Health Jobs Portal</title>
+    <meta name="description" content="View full details for this healthcare opportunity. Apply now and connect with medical professionals instantly on Health Jobs Portal.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://healthjobs-portal.web.app/posts.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Medical Job Opportunity - Health Jobs Portal">
+    <meta property="og:description" content="Click to view full details and contact the employer directly via WhatsApp or Chat.">
+    <meta property="og:image" content="https://healthjobs-portal.web.app/images/logo.png">
+    <meta property="og:url" content="https://healthjobs-portal.web.app/posts.html">
+
+    <style>
+        :root {
+            --primary-blue: #0a66c2;
+            --hover-blue: #004182;
+            --bg-white: #ffffff;
+            --bg-body: #f3f2ef;
+            --text-main: #000000e6;
+            --text-secondary: #00000099;
+            --border-color: #e0dfdc;
+            --wa-green: #25D366; 
+            --call-blue: #0078FF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); padding-top: 70px; padding-bottom: 100px; }
+
+        /* --- Header --- */
+        header { 
+            background-color: var(--bg-white); padding: 0 15px; display: flex; align-items: center; gap: 15px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 65px; 
+            z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+        }
+        .back-btn { background: none; border: none; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; padding: 5px;}
+        .back-btn:hover { color: var(--primary-blue); }
+        .back-btn svg { width: 26px; height: 26px; fill: currentColor; }
+        .logo-text { font-size: 18px; font-weight: 700; color: var(--text-main); }
+
+        /* --- Main Content --- */
+        main { max-width: 700px; width: 100%; margin: 0 auto; padding: 0 10px; }
+
+        .details-card { 
+            background: var(--bg-white); border-radius: 12px; border: 1px solid var(--border-color); 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); padding: 25px; margin-top: 10px;
+        }
+
+        /* User Info Section */
+        .user-section { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #f1f1f1; }
+        .user-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
+        .user-details { flex: 1; }
+        .user-name { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; display: flex; align-items: center; gap: 8px;}
+        .role-badge { font-size: 10px; padding: 4px 8px; border-radius: 12px; text-transform: uppercase; font-weight: 800; }
+        .badge-employer { background: #f0f7ff; color: #1967d2; border: 1px solid #d0e1fd; }
+        .badge-candidate { background: #faf5ff; color: #681da8; border: 1px solid #e9d5ff; }
+        .post-time { font-size: 13px; color: var(--text-secondary); font-weight: 500;}
+
+        /* Job Title & Highlights */
+        .job-title { font-size: 24px; font-weight: 800; color: var(--primary-blue); line-height: 1.3; margin-bottom: 20px; }
+
+        .highlights-box { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; 
+            background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 25px;
+        }
+        .highlight-item { display: flex; flex-direction: column; gap: 5px; }
+        .hl-label { font-size: 12px; text-transform: uppercase; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px;}
+        .hl-value { font-size: 15px; font-weight: 600; color: var(--text-main); }
+
+        /* Description Area */
+        .desc-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+        .job-desc { font-size: 15px; line-height: 1.7; color: #333; white-space: pre-wrap; margin-bottom: 30px; }
+
+        /* Media Gallery */
+        .media-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+        .media-item img { width: 100%; border-radius: 8px; border: 1px solid var(--border-color); object-fit: cover; max-height: 400px; }
+
+        /* --- Fixed Bottom Actions (Circle Buttons) --- */
+        .action-bar { 
+            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-white); 
+            padding: 15px 20px; border-top: 1px solid var(--border-color); box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
+            display: flex; justify-content: center; z-index: 1000;
+        }
+        .action-bar-inner { max-width: 450px; width: 100%; display: flex; justify-content: space-around; align-items: center; }
+        
+        .circle-btn-wrapper { display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; }
+        
+        .circle-btn { 
+            width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: 0.3s; border: none; cursor: pointer;
+        }
+        .circle-btn svg { width: 24px; height: 24px; fill: currentColor; }
+        
+        .btn-label { font-size: 12px; font-weight: 700; color: var(--text-main); }
+
+        .btn-wa { background: var(--wa-green); }
+        .btn-wa:hover { background: #1DA851; transform: translateY(-3px); box-shadow: 0 6px 12px rgba(37, 211, 102, 0.3); }
+        
+        .btn-call { background: var(--call-blue); }
+        .btn-call:hover { background: #005bb5; transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0, 120, 255, 0.3); }
+        
+        .btn-chat { background: var(--primary-blue); }
+        .btn-chat:hover { background: var(--hover-blue); transform: translateY(-3px); box-shadow: 0 6px 12px rgba(10, 102, 194, 0.3); }
+
+        /* Loader */
+        .loader { display: flex; justify-content: center; align-items: center; height: 50vh; }
+        .spinner { width: 40px; height: 40px; border: 3px solid #e0dfdc; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <header>
+<button class="back-btn" onclick="location.href='index.html'">
+            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
+        </button>
+        <div class="logo-text">Post Details</div>
+    </header>
+
+    <main>
+        <div id="loader" class="loader"><div class="spinner"></div></div>
+        
+        <div id="post-content" class="details-card hidden">
+            </div>
+    </main>
+
+    <div id="action-bar" class="action-bar hidden">
+        <div class="action-bar-inner" id="buttons-container">
+            </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        // Auth Imports add kiye gaye hain
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Your Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+            authDomain: "jobs-45cc9.firebaseapp.com",
+            projectId: "jobs-45cc9"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+
+        // SILENT BACKGROUND AUTHENTICATION CHECK
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Agar user logged in nahi hai, to exact URL save karein aur login par bhej dein
+                // Is se user login ke baad wapas direct is job post par hi aayega
+                sessionStorage.setItem('next', window.location.pathname + window.location.search);
+                window.location.replace("login.html");
+            }
+        });
+
+        function formatDate(dateString) {
+            if (!dateString) return "Recently";
+            const date = dateString.toDate ? dateString.toDate() : new Date(dateString);
+            return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        async function loadPostDetails() {
+            if (!postId) {
+                document.getElementById('loader').innerHTML = "<p style='text-align:center;'>Post ID missing.</p>";
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "posts", postId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const post = docSnap.data();
+                    renderPost(post);
+                } else {
+                    document.getElementById('loader').innerHTML = "<p style='text-align:center;'>Post not found or deleted.</p>";
+                }
+            } catch (error) {
+                console.error("Error fetching document:", error);
+                document.getElementById('loader').innerHTML = "<p style='text-align:center;'>Error loading details.</p>";
+            }
+        }
+
+        function renderPost(post) {
+            document.getElementById('loader').classList.add('hidden');
+            const contentDiv = document.getElementById('post-content');
+            const actionDiv = document.getElementById('action-bar');
+            
+            contentDiv.classList.remove('hidden');
+            actionDiv.classList.remove('hidden');
+
+            const roleClass = post.posterRole === 'employer' ? 'badge-employer' : 'badge-candidate';
+            const roleText = post.posterRole === 'employer' ? 'Hiring' : 'Candidate';
+
+            // Media HTML
+            let mediaHtml = '';
+            if (post.media && post.media.length > 0) {
+                mediaHtml = '<div class="media-container">';
+                post.media.forEach(item => {
+                    if (item.type === 'image') {
+                        mediaHtml += `<div class="media-item"><img src="${item.url}" alt="Attachment"></div>`;
+                    }
+                });
+                mediaHtml += '</div>';
+            }
+
+            contentDiv.innerHTML = `
+                <div class="user-section">
+                    <img src="${post.posterPic || 'https://via.placeholder.com/80'}" class="user-avatar" onerror="this.src='https://via.placeholder.com/80'">
+                    <div class="user-details">
+                        <div class="user-name">${post.posterName} <span class="role-badge ${roleClass}">${roleText}</span></div>
+                        <div class="post-time">${post.location || 'Location Not Provided'} • Posted on ${formatDate(post.createdAt)}</div>
+                    </div>
+                </div>
+
+                <div class="job-title">${post.title}</div>
+
+                <div class="highlights-box">
+                    <div class="highlight-item">
+                        <span class="hl-label">Category</span>
+                        <span class="hl-value">${post.category}</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="hl-label">Salary Package</span>
+                        <span class="hl-value">${post.salary || 'Negotiable'}</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="hl-label">Job Shift</span>
+                        <span class="hl-value">${post.shift || 'Flexible'}</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="hl-label">Required Experience</span>
+                        <span class="hl-value">${post.experience || 'Any'}</span>
+                    </div>
+                </div>
+
+                <div class="desc-title">Detail Description:</div>
+                <div class="job-desc">${post.desc}</div>
+
+                ${mediaHtml}
+            `;
+
+            // WhatsApp formatting
+            let waNumber = post.whatsapp ? post.whatsapp.replace(/[^0-9]/g, '') : '';
+            if(waNumber.startsWith('0')) waNumber = '92' + waNumber.substring(1);
+
+            // Three Circular Buttons
+            document.getElementById('buttons-container').innerHTML = `
+                ${waNumber ? `
+                <a href="https://wa.me/${waNumber}" target="_blank" class="circle-btn-wrapper">
+                    <div class="circle-btn btn-wa">
+                        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                    </div>
+                    <span class="btn-label">WhatsApp</span>
+                </a>` : ''}
+                
+                ${post.localNum || post.whatsapp ? `
+                <a href="tel:${post.localNum || post.whatsapp}" class="circle-btn-wrapper">
+                    <div class="circle-btn btn-call">
+                        <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    </div>
+                    <span class="btn-label">Call</span>
+                </a>` : ''}
+
+                <a href="chat.html?uid=${post.posterId}" class="circle-btn-wrapper">
+                    <div class="circle-btn btn-chat">
+                        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                    </div>
+                    <span class="btn-label">Web Chat</span>
+                </a>
+            `;
+        }
+
+        // Script run hotay hi post details load karna shuru kar dega
+        window.onload = loadPostDetails;
+    </script>
+</body>
+</html>

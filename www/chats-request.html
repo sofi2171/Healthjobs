@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | Healthjobs Portal</title>
+    <style>
+        :root {
+            --primary-blue: #0a66c2;
+            --hover-blue: #004182;
+            --bg-white: #ffffff;
+            --bg-body: #f3f2ef;
+            --text-main: #000000e6;
+            --text-secondary: #00000099;
+            --border-color: #e0dfdc;
+            --notif-red: #e11d48;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent;}
+        body { background-color: var(--bg-white); color: var(--text-main); padding-top: 75px; padding-bottom: 80px; min-height: 100vh; overflow-x: hidden; }
+
+        /* --- Header --- */
+        header { 
+            background-color: var(--bg-white); padding: 0 15px; display: flex; 
+            align-items: center; position: fixed; top: 0; left:0; width: 100%; height: 70px; 
+            z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+        }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .back-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; color: var(--text-secondary); transition: 0.2s; padding: 5px; border-radius: 50%;}
+        .back-btn:active { background-color: #f3f4f6; color: var(--primary-blue); }
+        .back-btn svg { width: 28px; height: 28px; fill: currentColor; }
+        .header-title { font-size: 20px; font-weight: 800; color: var(--text-main); margin-left: 5px;}
+
+        /* --- Main Chat List --- */
+        main { max-width: 600px; width: 100%; margin: 0 auto; }
+        
+        .chat-list { display: flex; flex-direction: column; }
+        
+        .chat-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #f1f1f1; cursor: pointer; transition: background 0.2s; background: var(--bg-white); position: relative;}
+        .chat-item:active { background-color: #f8fafc; }
+        
+        .chat-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; background: #e2e8f0; border: 1px solid var(--border-color); margin-right: 15px; flex-shrink: 0;}
+        
+        .chat-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: center;}
+        
+        .chat-header-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+        .chat-name { font-size: 16px; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chat-time { font-size: 12px; color: var(--text-secondary); font-weight: 500; flex-shrink: 0; margin-left: 10px;}
+        
+        .chat-preview-row { display: flex; justify-content: space-between; align-items: center; }
+        .chat-preview { font-size: 14.5px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+        
+        /* Unread Dot/Badge */
+        .unread-dot { width: 12px; height: 12px; background-color: var(--primary-blue); border-radius: 50%; margin-left: 10px; flex-shrink: 0; display: none; box-shadow: 0 1px 3px rgba(10, 102, 194, 0.3);}
+        .chat-item.unread .chat-name { color: var(--text-main); font-weight: 800; }
+        .chat-item.unread .chat-preview { color: var(--text-main); font-weight: 700; }
+        .chat-item.unread .chat-time { color: var(--primary-blue); font-weight: 700;}
+        .chat-item.unread .unread-dot { display: block; }
+
+        /* Skeleton Loaders */
+        .skeleton-wrapper { display: flex; flex-direction: column; width: 100%; }
+        .skeleton-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #f1f1f1; }
+        .skeleton-avatar { width: 55px; height: 55px; border-radius: 50%; background: #e0e0e0; margin-right: 15px; flex-shrink: 0; animation: shimmer 1.5s infinite linear; }
+        .skeleton-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .skeleton-line { height: 14px; background: #e0e0e0; border-radius: 4px; animation: shimmer 1.5s infinite linear; }
+        .skeleton-line.short { width: 40%; }
+        .skeleton-line.long { width: 80%; }
+        
+        @keyframes shimmer { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
+        .empty-state svg { width: 70px; height: 70px; fill: #cbd5e1; margin-bottom: 15px; }
+        .empty-state h3 { color: var(--text-main); font-size: 18px; margin-bottom: 8px;}
+        .empty-state p { font-size: 14px; line-height: 1.5; max-width: 300px; margin: 0 auto; }
+
+        .hidden { display: none !important; }
+
+        /* --- Bottom Nav --- */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-white); display: flex; justify-content: space-around; padding: 8px 0 10px; border-top: 1px solid var(--border-color); z-index: 1000; box-shadow: 0 -1px 3px rgba(0,0,0,0.03); }
+        .nav-link { position: relative; text-decoration: none; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; flex: 1; border: none; background: none; cursor: pointer; transition: 0.2s;}
+        .nav-link.active { color: var(--primary-blue); }
+        .nav-link svg { width: 24px; height: 24px; fill: currentColor; }
+        .nav-link span { font-size: 10px; font-weight: 600; margin-top: 3px;}
+        
+        /* Nav Badge */
+        .chat-badge { position: absolute; top: -4px; right: calc(50% - 20px); background-color: var(--notif-red); color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-white); display: none; pointer-events: none;}
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <button class="back-btn" onclick="location.href='index.html'">
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
+            </button>
+            <div class="header-title">Messages</div>
+        </div>
+    </header>
+
+    <main>
+        <div id="loader" class="skeleton-wrapper">
+            <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-info"><div class="skeleton-line short"></div><div class="skeleton-line long"></div></div></div>
+            <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-info"><div class="skeleton-line short"></div><div class="skeleton-line long"></div></div></div>
+            <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-info"><div class="skeleton-line short"></div><div class="skeleton-line long"></div></div></div>
+        </div>
+
+        <div id="empty-state" class="empty-state hidden">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg>
+            <h3>No Messages Yet</h3>
+            <p>Your active conversations with healthcare professionals will appear here.</p>
+        </div>
+
+        <div id="chat-list" class="chat-list hidden"></div>
+    </main>
+
+    <div class="bottom-nav">
+        <button class="nav-link" onclick="location.href='index.html'"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></button>
+        <button class="nav-link" onclick="location.href='my-posts.html'"><svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>My Posts</span></button>
+        <button class="nav-link" onclick="location.href='employer.html'"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg><span>Post</span></button>
+        <button class="nav-link active" onclick="location.href='chats.html'">
+            <div id="nav-chat-badge" class="chat-badge">0</div>
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+            <span>Chats</span>
+        </button>
+        <button class="nav-link" onclick="location.href='profile.html'"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Profile</span></button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        // 🚀 CORRECTED IMPORTS
+        import { getDatabase, ref as dbRef, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // MAIN DB FOR PROFILES (Firestore)
+        const mainConfig = { 
+            apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk", 
+            authDomain: "jobs-45cc9.firebaseapp.com", 
+            projectId: "jobs-45cc9" 
+        };
+        const mainApp = initializeApp(mainConfig);
+        const auth = getAuth(mainApp);
+        const dbMain = getFirestore(mainApp);
+
+        // CHAT DB FOR MESSAGES (Realtime Database)
+        const chatConfig = { 
+            apiKey: "AIzaSyASgMlWAUfFFOl-pApiUEB__XAHzlo-9iI", 
+            authDomain: "chat-jobs.firebaseapp.com", 
+            databaseURL: "https://chat-jobs-default-rtdb.asia-southeast1.firebasedatabase.app", 
+            projectId: "chat-jobs"
+        };
+        const chatApp = initializeApp(chatConfig, "ChatApp");
+        const dbChatRT = getDatabase(chatApp);
+
+        let currentUser = null;
+        let CACHE_KEY = "";
+        let profileCache = JSON.parse(localStorage.getItem('user_profiles_cache') || '{}'); 
+        let globalUnreadCount = 0; // Local counter
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { location.href = 'login.html'; return; }
+            currentUser = user;
+            CACHE_KEY = `chats_cache_${currentUser.uid}`;
+            loadFromCache();
+            listenToRealtimeRooms(); 
+        });
+
+        function formatTime(msTimestamp) {
+            if (!msTimestamp) return "";
+            const date = new Date(msTimestamp);
+            const today = new Date();
+            if (date.toDateString() === today.toDateString()) {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+            return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+        }
+
+        function loadFromCache() {
+            const cachedData = localStorage.getItem(CACHE_KEY);
+            if (cachedData) {
+                const parsed = JSON.parse(cachedData);
+                renderUI(parsed);
+                const unreadCount = parsed.filter(c => c.isUnread).length;
+                updateBadge(unreadCount);
+            }
+        }
+
+        function listenToRealtimeRooms() {
+            const chatRoomsRef = dbRef(dbChatRT, 'chatRooms');
+            
+            onValue(chatRoomsRef, async (snapshot) => {
+                if (!snapshot.exists()) {
+                    renderUI([]);
+                    updateBadge(0);
+                    return;
+                }
+
+                let roomsArray = [];
+                const allRooms = snapshot.val();
+
+                for (const roomId in allRooms) {
+                    const data = allRooms[roomId];
+                    
+                    if (data.participants && data.participants.includes(currentUser.uid)) {
+                        const targetUid = data.participants.find(uid => uid !== currentUser.uid);
+                        if(targetUid) {
+                            roomsArray.push({
+                                id: roomId,
+                                targetUid: targetUid,
+                                lastMessage: data.lastMessage || "Started a conversation",
+                                lastSenderId: data.lastSenderId,
+                                readBy: data.readBy || [],
+                                updatedAtMs: data.updatedAt || Date.now()
+                            });
+                        }
+                    }
+                }
+
+                // 🚀 NAYA MESSAGE SAB SE UPAR (Top sorting)
+                roomsArray.sort((a, b) => b.updatedAtMs - a.updatedAtMs);
+
+                const finalData = [];
+                globalUnreadCount = 0;
+
+                for (let room of roomsArray) {
+                    let profile = profileCache[room.targetUid];
+
+                    if (!profile) {
+                        try {
+                            const userSnap = await getDoc(doc(dbMain, "users", room.targetUid));
+                            if (userSnap.exists()) {
+                                const u = userSnap.data();
+                                profile = {
+                                    name: u.fullName || u.facilityName || "Professional",
+                                    pic: u.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullName || u.facilityName || "U")}`
+                                };
+                                profileCache[room.targetUid] = profile;
+                                localStorage.setItem('user_profiles_cache', JSON.stringify(profileCache));
+                            } else {
+                                profile = { name: "Healthcare User", pic: "https://ui-avatars.com/api/?name=U" };
+                            }
+                        } catch (err) {
+                            profile = { name: "User", pic: "https://ui-avatars.com/api/?name=U" };
+                        }
+                    }
+
+                    // UNREAD LOGIC: If last message is NOT from me, and my ID is NOT in readBy array
+                    const isUnread = room.lastSenderId !== currentUser.uid && !room.readBy.includes(currentUser.uid);
+                    if(isUnread) globalUnreadCount++;
+
+                    finalData.push({
+                        roomId: room.id,
+                        targetUid: room.targetUid,
+                        name: profile.name,
+                        pic: profile.pic,
+                        previewText: (room.lastSenderId === currentUser.uid ? "You: " : "") + room.lastMessage,
+                        timeStr: formatTime(room.updatedAtMs),
+                        isUnread: isUnread,
+                        updatedAtMs: room.updatedAtMs // Added for tracking
+                    });
+                }
+
+                renderUI(finalData);
+                updateBadge(globalUnreadCount); 
+                localStorage.setItem(CACHE_KEY, JSON.stringify(finalData));
+            });
+        }
+
+        function renderUI(chatList) {
+            const listContainer = document.getElementById('chat-list');
+            const loader = document.getElementById('loader');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (loader) loader.classList.add('hidden');
+            
+            if (!chatList || chatList.length === 0) {
+                emptyState.classList.remove('hidden');
+                listContainer.innerHTML = "";
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            listContainer.classList.remove('hidden');
+            
+            // 🚀 ONCLICK CALLS WINDOW FUNCTION
+            listContainer.innerHTML = chatList.map(chat => `
+                <div class="chat-item ${chat.isUnread ? 'unread' : ''}" id="chat-${chat.roomId}" onclick="openRequest('${chat.targetUid}', '${chat.roomId}')">
+                    <img src="${chat.pic}" class="chat-avatar" onerror="this.src='https://ui-avatars.com/api/?name=User'">
+                    <div class="chat-info">
+                        <div class="chat-header-row">
+                            <div class="chat-name">${chat.name}</div>
+                            <div class="chat-time">${chat.timeStr}</div>
+                        </div>
+                        <div class="chat-preview-row">
+                            <div class="chat-preview">${chat.previewText}</div>
+                            <div class="unread-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- 🚀 THE MAGIC FUNCTION: INSTANT READ & SYNC ---
+        window.openRequest = async (targetUid, roomId) => {
+            if ("vibrate" in navigator) navigator.vibrate(50);
+            
+            // 1. Instantly remove unread UI styling locally so user doesn't see lag
+            const chatDiv = document.getElementById(`chat-${roomId}`);
+            if(chatDiv && chatDiv.classList.contains('unread')) {
+                chatDiv.classList.remove('unread');
+                
+                // Instantly update badge globally
+                globalUnreadCount = Math.max(0, globalUnreadCount - 1);
+                updateBadge(globalUnreadCount);
+            }
+
+            // 2. Mark as read in Database (Realtime DB)
+            if (roomId && currentUser) {
+                try {
+                    const roomRef = dbRef(dbChatRT, `chatRooms/${roomId}`);
+                    const snap = await get(roomRef);
+                    if (snap.exists()) {
+                        let data = snap.val();
+                        let readBy = data.readBy || [];
+                        
+                        // If my UID is not in readBy, add it and update!
+                        if (!readBy.includes(currentUser.uid)) {
+                            readBy.push(currentUser.uid);
+                            await update(roomRef, { readBy: readBy });
+                        }
+                    }
+                } catch(e) { console.error("Error marking as read:", e); }
+            }
+            
+            // 3. Navigate to chat screen
+            location.href = `chat.html?uid=${targetUid}`;
+        };
+
+        function updateBadge(count) {
+            const badge = document.getElementById('nav-chat-badge');
+            if (badge) {
+                badge.innerText = count > 9 ? "9+" : count;
+                badge.style.display = count > 0 ? 'block' : 'none';
+            }
+            
+            // 🚀 FIRE THIS EVENT SO index.html UPDATES INSTANTLY 
+            localStorage.setItem('global_unread_chats', count);
+            window.dispatchEvent(new Event('storage'));
+        }
+    </script>
+</body>
+</html>

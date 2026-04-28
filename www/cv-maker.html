@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Free Professional CV Maker for Healthcare Jobs | Health Jobs Portal</title>
+    <meta name="description" content="Create your professional medical CV in minutes. Choose from 5+ premium templates. Perfect for Nurses, Pharmacists, and Doctors. Create, Download as PDF, and Apply for jobs in Pakistan with confidence.">
+    <meta name="keywords" content="cv template, cv maker, cv maker free, cv format, cv template word, cv design, cv maker.com, flowcv.com, cv maker online, cv maker ai, cv maker app, cv builder,  Professional Medical Resume">
+    <link rel="canonical" href="https://healthjobs-portal.web.app/cv-maker.html">
+
+    <meta property="og:title" content="Create Your Professional Medical CV for Free | Health Jobs Portal">
+    <meta property="og:description" content="Build a professional healthcare CV in minutes. Choose your template and download as PDF.">
+    <meta property="og:image" content="https://healthjobs-portal.web.app/images/logo.png">
+    <meta property="og:url" content="https://healthjobs-portal.web.app/cv-maker.html">
+    <meta property="og:type" content="website">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Health Jobs Portal CV Maker",
+      "url": "https://healthjobs-portal.web.app/cv-maker.html",
+      "description": "An online free CV maker tool specifically for healthcare professionals (Nurses, Pharmacists, Doctors) to create professional resumes.",
+      "applicationCategory": "Utilities",
+      "operatingSystem": "Web Browser",
+      "author": {
+        "@type": "Organization",
+        "name": "Health Jobs Portal"
+      }
+    }
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #0a66c2;
+            --bg-body: #f8fafc;
+            --text-main: #0f172a;
+            --border-color: #cbd5e1;
+            --orange-theme: #f97316;
+            --teal-theme: #0d9488;
+            --dark-theme: #0f172a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-body); color: var(--text-main); padding-top: 70px; }
+
+        /* Header */
+        header { background-color: #fff; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; width: 100%; height: 65px; z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 5px rgba(0,0,0,0.02);}
+        .back-btn { background: transparent; border: 1px solid #cbd5e1; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; color: #334155;}
+        .back-btn:active { background: #f1f5f9; }
+        .logo-img { height: 35px; }
+
+        .container { max-width: 850px; margin: 0 auto; padding: 15px; }
+
+        /* Form Card */
+        .card { background: #fff; padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .card-title { font-size: 18px; font-weight: 700; color: var(--primary-blue); margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: 0.2s; background: #fff;}
+        .form-control:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(10,102,194,0.1);}
+        textarea.form-control { resize: vertical; min-height: 80px; }
+        .form-row { display: flex; gap: 10px; flex-wrap: wrap;}
+        .form-row .form-group { flex: 1; min-width: 45%; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #475569; }
+
+        .pic-upload-wrap { display: flex; align-items: center; gap: 15px; margin-bottom: 20px;}
+        .pic-preview { width: 70px; height: 70px; border-radius: 50%; background: #e2e8f0; object-fit: cover; border: 1px solid #cbd5e1; }
+
+        /* 5 Templates Grid */
+        .template-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .tpl-item { border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.2s; position: relative; background: #fff; }
+        .tpl-item.active { border-color: var(--primary-blue); box-shadow: 0 0 0 2px var(--primary-blue); }
+        .tpl-item.active::after { content: 'Selected'; position: absolute; bottom: 0; left: 0; width: 100%; background: var(--primary-blue); color: white; text-align: center; font-size: 11px; font-weight: bold; padding: 4px 0; }
+        .tpl-thumb { height: 80px; display: flex; background: #f8fafc; }
+
+        /* Primary Action Button */
+        .btn-done { width: 100%; padding: 15px; background: var(--primary-blue); color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.2s; margin-top: 10px;}
+        .btn-done:active { transform: scale(0.98); background: #004182;}
+
+        /* ========================================================
+           CV PREVIEW SECTION (FIXED AUTO-SCALING)
+           ======================================================== */
+        #cv-preview-section { display: none; margin-top: 20px; padding-bottom: 50px; }
+        
+        #preview-wrapper { 
+            width: 100%; 
+            background: #e2e8f0; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            position: relative; 
+            transition: height 0.3s;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 20px;
+        }
+
+        /* Force Absolute Width to Prevent Squishing */
+        .a4-page { 
+            width: 794px !important; 
+            min-width: 794px !important;
+            max-width: 794px !important;
+            height: 1123px !important; 
+            min-height: 1123px !important;
+            background: white; 
+            position: relative; 
+            box-sizing: border-box; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Action Buttons Area (Colorless & Professional) */
+        .actions-area { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;}
+        .dropdown { position: relative; flex: 1; min-width: 45%;}
+        
+        .action-btn { 
+            width: 100%; 
+            padding: 14px; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            font-size: 14.5px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            background: #ffffff; 
+            color: #334155; 
+            transition: 0.2s; 
+        }
+        .action-btn:active { background: #f1f5f9; border-color: var(--primary-blue); color: var(--primary-blue);}
+        .action-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        .dropdown-content { display: none; position: absolute; bottom: 105%; left: 0; width: 100%; background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #cbd5e1; z-index: 100; overflow: hidden; }
+        .dropdown-content.active { display: block; }
+        .dropdown-item { padding: 14px; font-size: 14px; font-weight: 500; color: #334155; display: block; text-align: center; cursor: pointer; border-bottom: 1px solid #f1f5f9;}
+        .dropdown-item:hover, .dropdown-item:active { background: #f8fafc; color: var(--primary-blue);}
+
+        /* Secret A4 Wrapper for actual generation */
+        #cv-render-wrapper { position: fixed; top: 0; left: 0; z-index: -9999; opacity: 0; pointer-events: none; }
+
+        /* CV Footer Watermark */
+        .cv-footer-watermark { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: bold; color: #64748b; font-family: Arial, sans-serif; border-top: 1px solid #cbd5e1; padding-top: 10px; width: 85%; text-align: center; }
+        .cv-footer-watermark span { color: var(--primary-blue); }
+
+        /* ========================================================
+           🔥 THE 5 CV TEMPLATES CSS 🔥
+           ======================================================== */
+        
+        /* T1: Local Standard Orange */
+        .cv-t1-render { padding: 45px 55px; font-family: Arial, Helvetica, sans-serif; color: #000; background: #fff; height: 100%; }
+        .cv-t1-render::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 25px; background: var(--orange-theme); }
+        .cv-t1-render::after { content: ""; position: absolute; top: 0; left: 0; width: 25px; height: 100%; background: var(--orange-theme); }
+        .cv-t1-render .header-row { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;}
+        .cv-t1-render .name { font-family: "Times New Roman", Times, serif; font-size: 40px; font-weight: bold; }
+        .cv-t1-render .cv-pic { width: 100px; height: 100px; object-fit: cover; border: 2px solid var(--orange-theme); border-radius: 8px; }
+        .cv-t1-render .section-title { font-size: 16px; font-weight: bold; text-transform: uppercase; text-decoration: underline; margin: 15px 0 8px; color: #000;}
+        .cv-t1-render .content { font-size: 14px; font-weight: bold; line-height: 1.6;}
+
+        /* T2: Executive Dark */
+        .cv-t2-render { padding: 0; font-family: 'Segoe UI', sans-serif; color: #1e293b; height: 100%;}
+        .cv-t2-render .header { background: var(--dark-theme); color: white; padding: 40px 50px; text-align: center; }
+        .cv-t2-render .cv-pic { width: 110px; height: 110px; border-radius: 50%; border: 3px solid white; object-fit: cover; margin-bottom: 15px;}
+        .cv-t2-render .name { font-size: 38px; font-weight: bold; margin-bottom: 5px;}
+        .cv-t2-render .content { padding: 30px 50px; font-size: 14.5px; line-height: 1.6;}
+        .cv-t2-render .section-title { font-size: 18px; color: var(--dark-theme); font-weight: bold; border-bottom: 2px solid var(--border-color); padding-bottom: 5px; margin: 20px 0 10px; text-transform: uppercase;}
+
+        /* T3: Clean Minimalist */
+        .cv-t3-render { padding: 50px; font-family: Georgia, serif; color: #000; text-align: center; height: 100%;}
+        .cv-t3-render .cv-pic { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px;}
+        .cv-t3-render .name { font-size: 42px; font-weight: bold; border-bottom: 1px solid #000; display: inline-block; padding-bottom: 5px; margin-bottom: 10px;}
+        .cv-t3-render .contact { font-size: 13px; color: #555; margin-bottom: 30px;}
+        .cv-t3-render .content { text-align: left; font-size: 14.5px; line-height: 1.6; font-family: Arial, sans-serif;}
+        .cv-t3-render .section-title { font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin: 25px 0 10px; text-align: left;}
+
+        /* T4: Modern Sidebar */
+        .cv-t4-render { display: flex; height: 100%; font-family: 'Segoe UI', sans-serif;}
+        .cv-t4-render .left-col { width: 35%; background: var(--dark-theme); color: #f8fafc; padding: 40px 25px; }
+        .cv-t4-render .right-col { width: 65%; padding: 40px 35px; color: #1e293b;}
+        .cv-t4-render .cv-pic { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; margin-bottom: 20px;}
+        .cv-t4-render .name { font-size: 34px; font-weight: bold; color: var(--primary-blue); margin-bottom: 20px; line-height: 1.1;}
+        .cv-t4-render .section-title { font-size: 17px; font-weight: bold; border-bottom: 2px solid var(--primary-blue); padding-bottom: 5px; margin: 20px 0 10px; text-transform: uppercase;}
+        .cv-t4-render .left-col .section-title { border-bottom-color: #475569; color: #fff;}
+        .cv-t4-render .content { font-size: 14px; line-height: 1.6;}
+
+        /* T5: Medical Teal */
+        .cv-t5-render { padding: 40px 50px; font-family: 'Segoe UI', sans-serif; border-top: 15px solid var(--teal-theme); color: #1e293b; height: 100%;}
+        .cv-t5-render .header-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--teal-theme); padding-bottom: 20px; margin-bottom: 20px;}
+        .cv-t5-render .name { font-size: 40px; font-weight: 800; color: var(--dark-theme);}
+        .cv-t5-render .cv-pic { width: 110px; height: 110px; border-radius: 8px; object-fit: cover; border: 2px solid var(--teal-theme);}
+        .cv-t5-render .section-title { font-size: 16px; font-weight: bold; background: var(--teal-theme); color: white; padding: 6px 12px; display: inline-block; border-radius: 4px; margin: 20px 0 10px;}
+        .cv-t5-render .content { font-size: 14.5px; line-height: 1.6;}
+
+        /* Loader */
+        .cv-loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        .spinner { width: 45px; height: 45px; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        ul { margin-left: 20px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="back-btn" onclick="location.href='index.html'">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <img src="images/logo.png" class="logo-img" alt="Logo" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
+        <div style="width:40px;"></div>
+    </header>
+
+    <div class="container">
+        
+        <div class="card" id="form-card">
+            
+            <div class="card-title">Select Template</div>
+            <div class="template-grid">
+                <div class="tpl-item active" onclick="selectTpl(1)">
+                    <div class="tpl-thumb" style="border-left: 8px solid #f97316; border-top: 8px solid #f97316;"></div>
+                    <div style="padding:6px;text-align:center;font-size:11px;color:#475569;">Standard</div>
+                </div>
+                <div class="tpl-item" onclick="selectTpl(2)">
+                    <div class="tpl-thumb" style="background: #0f172a;"></div>
+                    <div style="padding:6px;text-align:center;font-size:11px;color:#475569;">Dark Header</div>
+                </div>
+                <div class="tpl-item" onclick="selectTpl(3)">
+                    <div class="tpl-thumb" style="flex-direction:column; align-items:center; padding-top:10px;"><div style="width:30px;height:30px;border-radius:50%;background:#cbd5e1;"></div><div style="width:60%;height:3px;background:#cbd5e1;margin-top:5px;"></div></div>
+                    <div style="padding:6px;text-align:center;font-size:11px;color:#475569;">Minimalist</div>
+                </div>
+                <div class="tpl-item" onclick="selectTpl(4)">
+                    <div class="tpl-thumb"><div style="width:35%; background:#0f172a; height:100%;"></div><div style="width:65%; background:#fff;"></div></div>
+                    <div style="padding:6px;text-align:center;font-size:11px;color:#475569;">Sidebar</div>
+                </div>
+                <div class="tpl-item" onclick="selectTpl(5)">
+                    <div class="tpl-thumb" style="border-top: 8px solid #0d9488;"></div>
+                    <div style="padding:6px;text-align:center;font-size:11px;color:#475569;">Medical Teal</div>
+                </div>
+            </div>
+
+            <div class="card-title">Personal Details</div>
+            
+            <div class="pic-upload-wrap">
+                <img src="https://ui-avatars.com/api/?name=U" id="form-pic-preview" class="pic-preview">
+                <div style="flex:1;">
+                    <label>Profile Picture</label>
+                    <input type="file" id="cv-pic" accept="image/*" class="form-control" style="padding: 6px;" onchange="previewPic(event)">
+                </div>
+            </div>
+
+            <div class="form-group"><label>Full Name</label><input type="text" id="cv-name" class="form-control" placeholder="e.g. Maryam Siddique"></div>
+            
+            <div class="form-row">
+                <div class="form-group"><label>Father Name</label><input type="text" id="cv-fname" class="form-control" placeholder="Father's Name"></div>
+                <div class="form-group"><label>CNIC</label><input type="text" id="cv-cnic" class="form-control" placeholder="35401-0000000-0"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>DOB</label><input type="text" id="cv-dob" class="form-control" placeholder="12-06-2001"></div>
+                <div class="form-group"><label>Gender</label><input type="text" id="cv-gender" class="form-control" placeholder="Male / Female"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Religion</label><input type="text" id="cv-religion" class="form-control" placeholder="Islam"></div>
+                <div class="form-group"><label>Marital Status</label><input type="text" id="cv-marital" class="form-control" placeholder="Single"></div>
+            </div>
+
+            <div class="form-group"><label>Contact / Phone</label><input type="text" id="cv-phone" class="form-control" placeholder="+92 313 0000000"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="cv-email" class="form-control" placeholder="user@gmail.com"></div>
+            <div class="form-group"><label>Full Address</label><input type="text" id="cv-loc" class="form-control" placeholder="Lahore, Pakistan"></div>
+            <div class="form-group"><label>Objective / Summary</label><textarea id="cv-sum" class="form-control" placeholder="To find a position where I may utilize my skills..."></textarea></div>
+
+            <div class="card-title" style="margin-top:30px;">Qualifications & Experience</div>
+            <div class="form-group"><label>Qualifications (Degree - Year - Board)</label><textarea id="cv-edu" class="form-control" placeholder="F.S.C (Pre-Medical) - 2022 - BISE Lahore"></textarea></div>
+            <div class="form-group"><label>Diplomas / Certifications</label><textarea id="cv-dip" class="form-control" placeholder="2 Year Diploma of LHV"></textarea></div>
+            <div class="form-group"><label>Work Experience</label><textarea id="cv-exp" class="form-control" placeholder="Staff Nurse at XYZ Hospital"></textarea></div>
+            
+            <div class="form-row">
+                <div class="form-group"><label>Soft Skills</label><textarea id="cv-skills" class="form-control" placeholder="Team Work&#10;Time Management"></textarea></div>
+                <div class="form-group"><label>Languages</label><textarea id="cv-lang" class="form-control" placeholder="Urdu&#10;English"></textarea></div>
+            </div>
+            <div class="form-group"><label>References</label><input type="text" id="cv-ref" class="form-control" value="Will be furnished on demand"></div>
+
+            <button class="btn-done" onclick="showCVPreview()">GENERATE CV</button>
+        </div>
+
+        <div id="cv-preview-section">
+            <div class="card-title" style="text-align: center;">Live CV Preview</div>
+            
+            <div id="preview-wrapper">
+                <div id="cv-canvas" class="a4-page"></div>
+            </div>
+
+            <div class="actions-area">
+                <div class="dropdown">
+                    <button class="action-btn" onclick="toggleDropdown('download-drop')">
+                        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        Download
+                    </button>
+                    <div class="dropdown-content" id="download-drop">
+                        <div class="dropdown-item" onclick="generateCV('pdf')">Download as PDF</div>
+                        <div class="dropdown-item" onclick="generateCV('png')">Download as Image (PNG)</div>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <button class="action-btn" onclick="toggleDropdown('share-drop')">
+                        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                        Share
+                    </button>
+                    <div class="dropdown-content" id="share-drop">
+                        <div class="dropdown-item" onclick="postToWeb()">Post on Portal</div>
+                        <div class="dropdown-item" onclick="shareOthers()">Share to Others</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-done" style="background:#f1f5f9; color:#334155; box-shadow:none; margin-top:0;" onclick="document.getElementById('form-card').scrollIntoView({behavior:'smooth'})">Edit Details</button>
+        </div>
+    </div>
+
+    <div class="cv-loader" id="loader"><div class="spinner"></div><h3 style="margin-top:15px; color:var(--text-main);">Processing...</h3></div>
+
+    <div id="cv-render-wrapper">
+        <div class="a4-page" id="cv-actual-render"></div>
+    </div>
+
+    <script>
+        let currentTemplate = 1;
+        let base64Pic = "";
+
+        function selectTpl(num) {
+            currentTemplate = num;
+            document.querySelectorAll('.tpl-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tpl-item')[num - 1].classList.add('active');
+        }
+
+        function previewPic(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => { base64Pic = ev.target.result; document.getElementById('form-pic-preview').src = base64Pic; }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function formatList(text, isGrid = false) {
+            if(!text) return "";
+            const lines = text.split('\n').filter(l => l.trim() !== "");
+            if(isGrid) {
+                return lines.map(l => {
+                    let parts = l.split('-');
+                    if(parts.length >= 3) return `<div style="display:grid; grid-template-columns: 1.5fr 100px 1.5fr; gap:10px; margin-bottom:5px;"><span>${parts[0].trim()}</span><span>${parts[1].trim()}</span><span>${parts[2].trim()}</span></div>`;
+                    return `<p style="margin-bottom:5px;">${l}</p>`;
+                }).join('');
+            }
+            return lines.map(s => `<li style="margin-bottom:6px;">${s.trim()}</li>`).join('');
+        }
+
+        function toggleDropdown(id) {
+            document.querySelectorAll('.dropdown-content').forEach(d => { if(d.id !== id) d.classList.remove('active'); });
+            document.getElementById(id).classList.toggle('active');
+        }
+        window.onclick = (e) => { if (!e.target.closest('.dropdown')) { document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('active')); } };
+
+        // 🚀 PERFECT AUTO-FIT CANVAS LOGIC
+        function scalePreview() {
+            const section = document.getElementById('cv-preview-section');
+            if(section.style.display === 'none' || section.style.display === '') return;
+            
+            const wrapper = document.getElementById('preview-wrapper');
+            const canvas = document.getElementById('cv-canvas');
+            
+            // Available width with padding consideration
+            const availableWidth = wrapper.clientWidth - 30; 
+            const scale = availableWidth / 794; 
+            
+            canvas.style.transform = `scale(${scale})`;
+            canvas.style.transformOrigin = 'top left';
+            canvas.style.left = '15px'; // Matches padding
+            canvas.style.top = '15px';
+            
+            // Adjust wrapper height exactly to the scaled canvas size
+            wrapper.style.height = `${(1123 * scale) + 30}px`; 
+        }
+
+        window.addEventListener('resize', scalePreview);
+
+        function buildHTML() {
+            const v = (id) => document.getElementById(id).value || '';
+            const n = v('cv-name') || 'Your Name';
+            const sum = v('cv-sum') || 'To find a position where I may utilize my skills, develop them further and excel in my career.';
+            const ref = v('cv-ref') || 'Will be furnished on demand';
+            const picHTML = base64Pic ? `<img src="${base64Pic}" class="cv-pic">` : '';
+            const cvFooter = `<div class="cv-footer-watermark">Created via <span>Health Jobs Portal</span> | www.healthjobs-portal.web.app</div>`;
+            
+            const personalInfoHTML = `
+                <div>Father Name:</div><div>${v('cv-fname') || '-'}</div>
+                <div>CNIC:</div><div>${v('cv-cnic') || '-'}</div>
+                <div>DOB:</div><div>${v('cv-dob') || '-'}</div>
+                <div>Gender:</div><div>${v('cv-gender') || '-'}</div>
+                <div>Religion:</div><div>${v('cv-religion') || '-'}</div>
+                <div>Nationality:</div><div>Pakistani</div>
+                <div>Marital Status:</div><div>${v('cv-marital') || '-'}</div>
+            `;
+            const contactHTML = `${v('cv-phone') || 'Phone'} <br> ${v('cv-email') || 'Email'}<br>${v('cv-loc') || 'Address'}`;
+
+            let html = "";
+
+            if(currentTemplate === 1) {
+                html = `
+                <div class="cv-t1-render">
+                    <div class="content">
+                        <div class="header-row"><div class="name">${n}</div>${picHTML}</div>
+                        <div style="margin-bottom: 20px;"><b>Address:</b> ${v('cv-loc') || '-'}<br><b>Contact:</b> ${v('cv-phone') || '-'}<br><b>Email:</b> ${v('cv-email') || '-'}</div>
+                        <div class="section-title">OBJECTIVE:</div><div style="margin-bottom:15px;">${sum}</div>
+                        <div class="section-title">PERSONNEL INFORMATION:</div>
+                        <div style="display:grid; grid-template-columns:150px 1fr; gap:6px; margin-bottom:15px;">${personalInfoHTML}</div>
+                        ${v('cv-edu') ? `<div class="section-title">QUALIFICATION:</div>${formatList(v('cv-edu'), true)}` : ''}
+                        ${v('cv-dip') ? `<div class="section-title" style="text-decoration:none;"><u>Diploma:</u></div><ul>${formatList(v('cv-dip'))}</ul>` : ''}
+                        ${v('cv-exp') ? `<div class="section-title">WORK EXPERIENCE:</div><ul>${formatList(v('cv-exp'))}</ul>` : ''}
+                        ${v('cv-skills') ? `<div class="section-title" style="text-decoration:none;"><u>Soft Skills:</u></div><ul>${formatList(v('cv-skills'))}</ul>` : ''}
+                        ${v('cv-lang') ? `<div class="section-title">LANGUAGES:</div><ul>${formatList(v('cv-lang'))}</ul>` : ''}
+                        <div class="section-title">REFERENCE:</div><ul><li>${ref}</li></ul>
+                    </div>
+                </div>`;
+            } else if (currentTemplate === 2) {
+                html = `
+                <div class="cv-t2-render">
+                    <div class="header">${picHTML}<div class="name">${n}</div><div style="font-size:14px; opacity:0.9;">${contactHTML.replace(/<br>/g, ' | ')}</div></div>
+                    <div class="content">
+                        <div class="section-title">Objective</div><p style="margin-bottom:20px;">${sum}</p>
+                        <div class="section-title">Personal Details</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+                            <div><b>Father Name:</b> ${v('cv-fname')}</div><div><b>CNIC:</b> ${v('cv-cnic')}</div>
+                            <div><b>DOB:</b> ${v('cv-dob')}</div><div><b>Marital Status:</b> ${v('cv-marital')}</div>
+                        </div>
+                        ${v('cv-edu') ? `<div class="section-title">Education & Diplomas</div><ul>${formatList(v('cv-edu'))}${formatList(v('cv-dip'))}</ul>` : ''}
+                        ${v('cv-exp') ? `<div class="section-title">Experience</div><ul>${formatList(v('cv-exp'))}</ul>` : ''}
+                        ${v('cv-skills') ? `<div class="section-title">Skills & Languages</div><ul>${formatList(v('cv-skills'))}${formatList(v('cv-lang'))}</ul>` : ''}
+                    </div>
+                </div>`;
+            } else if (currentTemplate === 3) {
+                html = `
+                <div class="cv-t3-render">
+                    ${picHTML}<div class="name">${n}</div><div class="contact">${contactHTML.replace(/<br>/g, ' | ')}</div>
+                    <div class="content">
+                        <div class="section-title">Objective</div><p style="margin-bottom:20px;">${sum}</p>
+                        <div class="section-title">Personal Info</div>
+                        <p style="margin-bottom:20px;"><b>Father Name:</b> ${v('cv-fname')} | <b>CNIC:</b> ${v('cv-cnic')} | <b>DOB:</b> ${v('cv-dob')}</p>
+                        ${v('cv-edu') ? `<div class="section-title">Education</div><ul>${formatList(v('cv-edu'))}${formatList(v('cv-dip'))}</ul>` : ''}
+                        ${v('cv-exp') ? `<div class="section-title">Experience</div><ul>${formatList(v('cv-exp'))}</ul>` : ''}
+                        ${v('cv-skills') ? `<div class="section-title">Expertise</div><ul>${formatList(v('cv-skills'))}${formatList(v('cv-lang'))}</ul>` : ''}
+                    </div>
+                </div>`;
+            } else if (currentTemplate === 4) {
+                html = `
+                <div class="cv-t4-render">
+                    <div class="left-col">
+                        <div style="text-align:center">${picHTML}</div>
+                        <div class="section-title">Contact</div><p style="margin-bottom:20px;">${contactHTML}</p>
+                        <div class="section-title">Personal</div>
+                        <p style="margin-bottom:20px;"><b>DOB:</b><br>${v('cv-dob')}<br><br><b>CNIC:</b><br>${v('cv-cnic')}<br><br><b>Marital:</b><br>${v('cv-marital')}</p>
+                        ${v('cv-skills') ? `<div class="section-title">Skills</div><ul>${formatList(v('cv-skills'))}</ul>` : ''}
+                    </div>
+                    <div class="right-col">
+                        <div class="name">${n}</div>
+                        <div class="section-title">Profile</div><p class="content" style="margin-bottom:20px;">${sum}</p>
+                        ${v('cv-exp') ? `<div class="section-title">Experience</div><ul class="content">${formatList(v('cv-exp'))}</ul>` : ''}
+                        ${v('cv-edu') ? `<div class="section-title">Education & Diplomas</div><ul class="content">${formatList(v('cv-edu'))}${formatList(v('cv-dip'))}</ul>` : ''}
+                    </div>
+                </div>`;
+            } else if (currentTemplate === 5) {
+                html = `
+                <div class="cv-t5-render">
+                    <div class="header-row">
+                        <div><div class="name">${n}</div><div style="color:#64748b; margin-top:5px;">${contactHTML.replace(/<br>/g, ' • ')}</div></div>
+                        ${picHTML}
+                    </div>
+                    <div class="content">
+                        <div style="font-size:15px; font-weight:500; margin-bottom:20px;">${sum}</div>
+                        <div class="section-title">Personal Details</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; font-weight:500;">
+                            <div><b>Father Name:</b> ${v('cv-fname')}</div><div><b>CNIC:</b> ${v('cv-cnic')}</div>
+                            <div><b>DOB:</b> ${v('cv-dob')}</div><div><b>Religion:</b> ${v('cv-religion')}</div>
+                        </div>
+                        ${v('cv-edu') ? `<div class="section-title">Education & Diplomas</div><ul>${formatList(v('cv-edu'))}${formatList(v('cv-dip'))}</ul>` : ''}
+                        ${v('cv-exp') ? `<div class="section-title">Experience</div><ul>${formatList(v('cv-exp'))}</ul>` : ''}
+                        ${v('cv-skills') ? `<div class="section-title">Skills & Languages</div><ul>${formatList(v('cv-skills'))}${formatList(v('cv-lang'))}</ul>` : ''}
+                    </div>
+                </div>`;
+            }
+
+            document.getElementById('cv-canvas').innerHTML = html + cvFooter;
+            document.getElementById('cv-actual-render').innerHTML = html + cvFooter;
+        }
+
+        function showCVPreview() {
+            buildHTML();
+            document.getElementById('cv-preview-section').style.display = 'block';
+            scalePreview(); // Trigger auto-scaling for mobile perfect view
+            window.scrollTo({ top: document.getElementById('cv-preview-section').offsetTop - 80, behavior: 'smooth' });
+        }
+
+        async function generateCV(format) {
+            const loader = document.getElementById('loader');
+            const element = document.getElementById('cv-actual-render'); 
+            loader.style.display = 'flex';
+            
+            const currentScroll = window.scrollY;
+            window.scrollTo(0, 0); 
+            await new Promise(r => setTimeout(r, 500));
+
+            if (format === 'pdf') {
+                const opt = { margin: 0, filename: 'Professional_CV.pdf', image: { type: 'jpeg', quality: 1 }, html2canvas: { scale: 2, scrollY: 0, useCORS: true }, jsPDF: { unit: 'px', format: [794, 1123] } };
+                await html2pdf().set(opt).from(element).save();
+            } else {
+                const canvas = await html2canvas(element, { scale: 2, scrollY: 0, useCORS: true });
+                const link = document.createElement('a');
+                link.download = 'Professional_CV.png'; link.href = canvas.toDataURL('image/png'); link.click();
+            }
+            
+            loader.style.display = 'none';
+            window.scrollTo(0, currentScroll);
+            document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('active'));
+        }
+
+        async function postToWeb() {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+            const element = document.getElementById('cv-actual-render');
+            
+            window.scrollTo(0, 0);
+            const canvas = await html2canvas(element, { scale: 2, scrollY: 0, useCORS: true });
+            const dataUrl = canvas.toDataURL('image/png');
+            
+            localStorage.setItem('post_cv_img', dataUrl);
+            localStorage.setItem('post_cv_desc', "Assalam-o-Alaikum! Maine Health Jobs Portal se apni professional CV banayi hai. Please meri CV check karein aur agar کوئی مناسب نوکری ہو تو رابطہ کریں۔");
+            
+            window.location.href = 'simple.html?source=cv_maker';
+        }
+
+        // 🚀 ADVANCED PNG SHARE LOGIC
+        async function shareOthers() {
+            document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('active'));
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+            
+            try {
+                const element = document.getElementById('cv-actual-render');
+                const currentScroll = window.scrollY;
+                window.scrollTo(0, 0);
+                
+                const canvas = await html2canvas(element, { scale: 2, scrollY: 0, useCORS: true });
+                window.scrollTo(0, currentScroll);
+                
+                // Convert canvas to image file for sharing
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], 'Professional_CV.png', { type: 'image/png' });
+                    
+                    const shareData = {
+                        title: 'Professional CV',
+                        text: 'Check out my professional CV created via Health Jobs Portal!\n\nCreate yours for free: https://healthjobs-portal.web.app',
+                        files: [file]
+                    };
+
+                    // Check if browser supports direct file sharing (mostly Mobile Browsers)
+                    if (navigator.canShare && navigator.canShare(shareData)) {
+                        await navigator.share(shareData);
+                    } else {
+                        // Fallback for laptops or unsupported browsers
+                        await navigator.share({
+                            title: 'Professional CV',
+                            text: 'Check out my professional CV created via Health Jobs Portal!\nhttps://healthjobs-portal.web.app',
+                        });
+                    }
+                    loader.style.display = 'none';
+                }, 'image/png');
+                
+            } catch(e) {
+                loader.style.display = 'none';
+                alert("Image sharing is not supported by your browser. Please download the PNG and share it manually.");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>About Us | Health Jobs</title>
+    <style>
+        /* =========================================
+           1. ROOT VARIABLES & RESET
+        ========================================= */
+        :root { 
+            --primary-blue: #0a66c2; 
+            --hover-blue: #004182; 
+            --bg-white: #ffffff; 
+            --bg-body: #f3f2ef; 
+            --text-main: #000000e6; 
+            --text-secondary: #00000099; 
+            --border-color: #e0dfdc; 
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+        }
+
+        /* =========================================
+           2. MAIN LAYOUT
+        ========================================= */
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            padding-top: 80px; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        main { 
+            flex: 1 0 auto; 
+            max-width: 800px; 
+            width: 100%; 
+            margin: 0 auto; 
+            padding: 0 15px 40px; 
+        }
+
+        /* =========================================
+           3. HEADER
+        ========================================= */
+        header { 
+            background-color: var(--bg-white); 
+            padding: 0 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 70px; 
+            z-index: 1000; 
+            border-bottom: 1px solid var(--border-color); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+        }
+
+        .back-btn { background: none; border: none; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; }
+        .back-btn:hover { color: var(--primary-blue); }
+        .back-btn svg { width: 28px; height: 28px; fill: currentColor; }
+        .header-title { font-size: 18px; font-weight: 700; color: var(--primary-blue); }
+
+        /* =========================================
+           4. ABOUT CONTENT STYLING
+        ========================================= */
+        .about-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 35px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .about-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+        .about-header img { width: 80px; height: auto; margin-bottom: 10px; }
+        .about-header h1 { font-size: 26px; color: var(--primary-blue); margin-bottom: 5px; font-weight: 800; }
+        .about-header p { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+        
+        .about-card h2 { font-size: 19px; color: var(--text-main); margin: 25px 0 10px; display: flex; align-items: center; gap: 8px;}
+        .about-card p { font-size: 15px; line-height: 1.7; color: #444; margin-bottom: 15px; }
+        
+        .about-card ul { margin-left: 20px; margin-bottom: 20px; }
+        .about-card li { font-size: 15px; line-height: 1.7; color: #444; margin-bottom: 10px; }
+        .about-card li strong { color: var(--primary-blue); }
+
+        .mission-box { background: #f0f7ff; border-left: 4px solid var(--primary-blue); padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0; }
+        .mission-box p { margin: 0; font-size: 15px; font-weight: 600; color: var(--hover-blue); font-style: italic; line-height: 1.6;}
+
+        .founder-box { background: #fafafa; border: 1px solid #eee; padding: 20px; border-radius: 8px; margin-top: 30px; text-align: center; }
+        .founder-box h3 { font-size: 16px; color: var(--text-main); margin-bottom: 5px; }
+        .founder-box p { font-size: 14px; color: var(--text-secondary); margin: 0; }
+
+        /* =========================================
+           5. APP FOOTER
+        ========================================= */
+        footer { 
+            flex-shrink: 0; 
+            margin-top: auto; 
+            background-color: var(--bg-white); 
+            padding: 30px 20px; 
+            border-top: 1px solid var(--border-color); 
+            text-align: center; 
+        }
+        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        .footer-links a:hover { color: var(--primary-blue); }
+        .footer-copy { font-size: 14px; color: var(--text-main); font-weight: 500; }
+
+        @media (max-width: 600px) {
+            .about-card { padding: 20px; }
+            .about-header h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="back-btn" onclick="history.back()">
+            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
+        </button>
+        <div class="header-title">About Us</div>
+    </header>
+
+    <main>
+        <div class="about-card">
+            
+            <div class="about-header">
+                <h1>Health Jobs</h1>
+                <p>Connecting Healthcare Professionals, Everywhere.</p>
+            </div>
+
+            <p>Welcome to <strong>Health Jobs</strong>, a dedicated digital networking and recruitment platform built exclusively for the healthcare and medical sector. Whether you are a hospital administrator looking for urgent staff or a fresh medical graduate seeking your first opportunity, you are in the right place.</p>
+
+            <div class="mission-box">
+                <p>"Our mission is to bridge the gap between healthcare facilities and medical professionals by providing a fast, secure, and location-based platform where talent meets opportunity instantly."</p>
+            </div>
+
+            <h2>What We Do</h2>
+            <p>Traditional job hunting in the medical field can be slow and disconnected. Health Jobs solves this by providing a real-time, interactive feed where users can post requirements or availability. We cater to a wide range of professionals, including:</p>
+            <ul>
+                <li><strong>Doctors & Surgeons:</strong> From General Physicians to Specialists.</li>
+                <li><strong>Nursing Staff:</strong> ICU Nurses, Midwives, and Ward Caretakers.</li>
+                <li><strong>Allied Health:</strong> Pharmacists, Physiotherapists, and Lab Technologists.</li>
+                <li><strong>Support Staff:</strong> Dispensers, Receptionists, and Ambulance Drivers.</li>
+            </ul>
+
+            <h2>Why Choose Health Jobs?</h2>
+            <p>We have designed our platform keeping the specific needs of the medical community in mind:</p>
+            <ul>
+                <li><strong>📍 Location-Based Matching:</strong> Our smart system prioritizes job posts from your city, so you find opportunities right next to you.</li>
+                <li><strong>⚡ Direct Communication:</strong> No more waiting for emails. Connect instantly via WhatsApp, Direct Call, or our built-in Web Chat.</li>
+                <li><strong>🖼️ Media Rich Profiles:</strong> Upload your degrees, clinic photos, or video introductions directly to your posts.</li>
+                <li><strong>🔒 Secure & Fast:</strong> Powered by modern cloud technology to ensure your data is safe and the app runs smoothly.</li>
+            </ul>
+
+            <div class="founder-box">
+                <h3>Built with ❤️ for the Medical Community</h3>
+                <p>Health Jobs is proudly developed and maintained by <strong>Sufian</strong>. The vision behind this platform is to digitalize and simplify the recruitment process for hospitals, pharmacies, and healthcare workers across the region.</p>
+            </div>
+
+            <h2 style="margin-top: 30px;">Get In Touch</h2>
+            <p>We are always looking to improve. If you have suggestions, feedback, or need support, please reach out to us:</p>
+            <p>
+                <strong>WhatsApp:</strong> +92 344 7814644<br>
+                <strong>Email:</strong> support@healthjobs.com
+            </p>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="employer.html">Post a Job</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="privcy.html">Privacy Policy</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2026 Health Jobs. Built for Healthcare Professionals.
+        </div>
+    </footer>
+
+</body>
+</html>
