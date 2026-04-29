@@ -276,14 +276,16 @@
         const userName = currentUser.email ? currentUser.email.split('@')[0] : "User";
 
         try {
-            // Null ki jagah chatId use kiya gaya hai taake crash na ho
             const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, chatId, userID, userName);
             zp = ZegoUIKitPrebuilt.create(kitToken);
+
+            // ZIM Plugin Zaroori hai call invitation bhejne ke liye
+            zp.addPlugins({ ZIM });
 
             zp.addCallInvitation({
                 calleeIDs: [], 
                 ringtoneConfig: {
-                    incomingCallUrl: '', // Add your mp3 link here later
+                    incomingCallUrl: '', 
                     outgoingCallUrl: ''
                 }
             });
