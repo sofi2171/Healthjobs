@@ -4,4 +4,5 @@
     <string name="title_activity_main">Healthjobs</string>
     <string name="package_name">com.sufian.healthjobs</string>
     <string name="custom_url_scheme">com.sufian.healthjobs</string>
+    <string name="server_client_id">21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com</string>
 </resources>
