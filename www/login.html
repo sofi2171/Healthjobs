@@ -279,7 +279,6 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        /* 🔥 Added signOut to imports for Account Picker Fix */
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithCredential, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -328,7 +327,7 @@
                         
                         window.renderDynamicFields('candidate');
                         fetchCountriesApi();
-                        window.detectLocation(); // Setup location
+                        window.detectLocation();
                     }
                 } catch(e) {
                     console.error("Firestore Error:", e);
@@ -409,7 +408,7 @@
         };
 
         /* =========================================
-           🔥 CRASH & ACCOUNT PICKER FIX YAHAN HAI
+           🔥 THE REAL CRASH FIX IS HERE
         ========================================= */
         window.handleGoogleAuth = async function() {
             const msgBox = document.getElementById('status-msg');
@@ -419,17 +418,17 @@
             try { 
                 if (window.Capacitor && window.Capacitor.isNativePlatform()) {
                     
-                    // 1. Pehle SignOut karein taake hamesha Accounts ki list aaye
-                    try { await Capacitor.Plugins.GoogleAuth.signOut(); } catch(e){}
-
-                    // 2. Initialize lazmi karein taake App crash na ho
+                    // 1. PEHLE INITIALIZE KAREIN (Taa ke crash na ho!)
                     await Capacitor.Plugins.GoogleAuth.initialize({
                         clientId: "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
                         scopes: ["profile", "email"],
                         grantOfflineAccess: true
                     });
 
-                    // 3. Login shuru karein
+                    // 2. PHIR SIGNOUT KAREIN (Taa ke account list aaye!)
+                    try { await Capacitor.Plugins.GoogleAuth.signOut(); } catch(e){}
+
+                    // 3. LOGIN SHURU KAREIN
                     const googleUser = await Capacitor.Plugins.GoogleAuth.signIn();
                     const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
                     await signInWithCredential(auth, credential);
@@ -507,7 +506,6 @@
             }
         };
 
-        /* 🔥 LOCATION DENY OVERRIDE YAHAN HAI */
         window.detectLocation = function() {
             const locStatus = document.getElementById('loc-status');
             locStatus.innerHTML = "📍 Requesting location...";
@@ -561,7 +559,6 @@
                         locStatus.style.borderColor = "var(--warn-border)";
                     }
                 }, () => {
-                    // Yahan humne Button add kar diya hai
                     locStatus.innerHTML = "✋ <b>Location denied. <button type='button' class='btn-retry-loc' onclick='detectLocation()'>Retry</button> or select manually.</b>";
                     locStatus.style.color = "var(--error)";
                     locStatus.style.background = "#fee2e2";
