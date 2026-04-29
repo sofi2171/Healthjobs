@@ -293,11 +293,17 @@
         if (!targetUid) return location.href = 'chats-request.html';
         chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
         
-        setupPushNotifications(); // 👈 Ask for Notification Permission (For APK)
-        initZegoCloud();          // 👈 Initialize Ringing system
-        
+        // 1. SABSE PEHLE USER DATA AUR CHAT LOAD KAREIN (Taake loading na atkay)
         loadTargetUser();
         listenToRTDB();      
+        
+        // 2. ZEGO AUR NOTIFICATIONS KO BAAD MEIN BACKGROUND MEIN START KAREIN
+        try {
+            setupPushNotifications(); // 👈 Ask for Notification Permission (For APK)
+            initZegoCloud();          // 👈 Initialize Ringing system
+        } catch (error) {
+            console.error("Call system load hone mein masla:", error);
+        }
     });
 
     async function loadTargetUser() {
