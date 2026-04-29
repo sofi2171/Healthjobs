@@ -23,11 +23,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Use Termux Keystore
-        run: |
-          mkdir -p ~/.android
-          cp debug.keystore ~/.android/
-
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
@@ -40,6 +35,9 @@ jobs:
       - name: Build Debug APK
         working-directory: android
         run: ./gradlew assembleDebug
+
+      - name: Print APK SHA-1 (MAGIC STEP)
+        run: keytool -printcert -jarfile android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
