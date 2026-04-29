@@ -3,265 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
     <title>Health Jobs | Secure Portal</title>
-    
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="preconnect" href="https://challenges.cloudflare.com">
-    <link rel="preconnect" href="https://full-finla-trunsplit.vercel.app">
-    
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    
     <style>
-        :root {
-            --primary: #0d9488; 
-            --primary-hover: #0f766e;
-            --bg-color: #f8fafc;
-            --surface: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --error: #ef4444;
-            --success-bg: #dcfce7;
-            --success-text: #059669;
-            --success-border: #86efac;
-            --warn-bg: #fef3c7;
-            --warn-text: #d97706;
-            --warn-border: #fcd34d;
-            --focus-ring: rgba(13, 148, 136, 0.2);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-
-        body {
-            background-color: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .auth-container {
-            background: var(--surface);
-            width: 100%;
-            max-width: 450px;
-            padding: 40px 32px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-            border: 1px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
-            animation: fadeIn 0.4s ease-out;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        :root { --primary: #0d9488; --surface: #ffffff; --text-main: #0f172a; --text-muted: #64748b; --border-color: #e2e8f0; --error: #ef4444; --success-text: #059669; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+        body { background-color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .auth-container { background: var(--surface); width: 100%; max-width: 450px; padding: 40px 32px; border-radius: 16px; border: 1px solid var(--border-color); position: relative; }
         .brand-header { text-align: center; margin-bottom: 32px; }
         .brand-header img { height: 48px; margin-bottom: 16px; }
-        .brand-header h1 { font-size: 24px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
-        .brand-header p { font-size: 14px; color: var(--text-muted); }
-
-        .auth-tabs { display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; margin-bottom: 24px; }
-        .tab-btn { flex: 1; padding: 10px; text-align: center; font-size: 14px; font-weight: 600; color: var(--text-muted); border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
-        .tab-btn.active { background: var(--surface); color: var(--text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-
         .form-group { margin-bottom: 18px; }
-        .form-row { display: flex; gap: 15px; margin-bottom: 18px; }
-        @media (max-width: 480px) { .form-row { flex-direction: column; gap: 0; } .form-row .form-group { margin-bottom: 18px; } }
-        
-        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
-        
-        .input-wrapper input, .input-wrapper select {
-            width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px;
-            font-size: 14px; color: var(--text-main); transition: all 0.2s ease; background-color: #f8fafc;
-            outline: none;
-        }
-        .input-wrapper input:focus, .input-wrapper select:focus {
-            border-color: var(--primary); background-color: var(--surface); box-shadow: 0 0 0 4px var(--focus-ring);
-        }
-        .input-wrapper select { cursor: pointer; appearance: auto; }
-
-        .forgot-password { display: block; text-align: right; font-size: 13px; color: var(--primary); text-decoration: none; font-weight: 500; margin-top: 8px; }
-        .forgot-password:hover { text-decoration: underline; }
-
-        .btn-primary {
-            width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px;
-            font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s ease;
-            display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px;
-        }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
-
-        .divider { display: flex; align-items: center; text-align: center; margin: 24px 0; color: var(--text-muted); font-size: 13px; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-color); }
-        .divider span { padding: 0 16px; }
-
-        .btn-google {
-            width: 100%; padding: 12px; background: var(--surface); border: 1px solid var(--border-color); border-radius: 8px;
-            color: var(--text-main); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-        }
-        .btn-google:hover { background: #f8fafc; border-color: #cbd5e1; }
-
-        .cf-turnstile-wrapper { margin: 20px 0; display: flex; justify-content: center; min-height: 65px; }
-        .status-message { margin-top: 16px; font-size: 13px; text-align: center; font-weight: 500; color: var(--error); transition: 0.3s opacity; }
-        .trust-footer { margin-top: 24px; text-align: center; font-size: 12px; color: var(--text-muted); }
-        .trust-footer a { color: var(--text-muted); text-decoration: underline; }
-
-        .loc-status-box { 
-            font-size: 12px; text-align: center; margin-bottom: 16px; font-weight: 500; 
-            padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);
-            background: #f1f5f9; color: var(--text-muted);
-        }
-
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+        .input-wrapper input, .input-wrapper select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; }
+        .btn-primary { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-google { width: 100%; padding: 12px; background: var(--surface); border: 1px solid var(--border-color); border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px;}
+        .status-message { margin-top: 16px; font-size: 13px; text-align: center; font-weight: 500; color: var(--error); }
+        .hidden { display: none !important; }
         .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        
-        .page-loader {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--surface);
-            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10;
-            transition: opacity 0.3s ease;
-        }
-        .page-loader .spinner { display: block; border-color: var(--border-color); border-top-color: var(--primary); width: 35px; height: 35px; margin-bottom: 12px;}
-        
-        .hidden { display: none !important; opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
 
     <div class="auth-container">
-        <div id="page-loader" class="page-loader">
-            <div class="spinner"></div>
-            <div style="color: var(--text-main); font-size: 14px; font-weight: 500;">Connecting securely...</div>
-        </div>
-
-        <div id="auth-view" class="hidden">
+        <div id="auth-view">
             <div class="brand-header">
-                <img src="images/logo.png" alt="Health Jobs Logo" onerror="this.src='https://via.placeholder.com/150x48?text=Logo'">
-                <h1 id="view-title">Welcome Back</h1>
-                <p id="view-subtitle">Securely access your professional dashboard</p>
-            </div>
-
-            <div class="auth-tabs">
-                <div class="tab-btn active" id="tab-login" onclick="switchMode('login')">Sign In</div>
-                <div class="tab-btn" id="tab-signup" onclick="switchMode('signup')">Create Account</div>
+                <h1>Healthjobs Login</h1>
+                <p>Securely access your professional dashboard</p>
             </div>
 
             <form id="auth-form" onsubmit="handleAuth(event)">
-                <div class="form-group">
-                    <label for="email">Work Email</label>
-                    <div class="input-wrapper">
-                        <input type="email" id="email" required autocomplete="email" placeholder="name@company.com">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••">
-                    </div>
-                    <a href="#" class="forgot-password" id="forgot-pass-link">Forgot password?</a>
-                </div>
-
-                <div class="cf-turnstile-wrapper">
-                    <div class="cf-turnstile" data-sitekey="0x4AAAAAAC1zxwRphxDm96iX" data-callback="onTurnstileSuccess"></div>
-                </div>
-                <input type="hidden" id="cf-token" name="cf-turnstile-response">
-
-                <button type="submit" class="btn-primary" id="submit-btn">
-                    <span id="submit-text">Sign In</span>
-                    <div class="spinner" id="submit-loader"></div>
-                </button>
-                <div id="status-msg" class="status-message"></div>
+                <div class="form-group"><label>Work Email</label><div class="input-wrapper"><input type="email" id="email" required></div></div>
+                <div class="form-group"><label>Password</label><div class="input-wrapper"><input type="password" id="password" required></div></div>
+                <button type="submit" class="btn-primary">Sign In</button>
             </form>
-
-            <div class="divider"><span>Or continue securely with</span></div>
 
             <button type="button" class="btn-google" id="google-btn" onclick="handleGoogleAuth()">
                 <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path></svg>
-                Google
+                Sign in with Google
             </button>
-            
-            <div class="trust-footer">
-                Protected by standard encryption. <br>
-                By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-            </div>
-        </div>
-
-        <div id="profile-view" class="hidden">
-            <div class="brand-header" style="margin-bottom: 24px;">
-                <h1>Complete Profile</h1>
-                <p>Tell us a bit about yourself to get started</p>
-            </div>
-
-            <form id="profile-form" onsubmit="handleProfileSave(event)">
-                <div class="form-group">
-                    <label>I am a:</label>
-                    <div class="input-wrapper">
-                        <select id="role-select" onchange="renderDynamicFields(this.value)">
-                            <option value="candidate">Candidate (Doctor, Nurse, Staff)</option>
-                            <option value="employer">Employer (Hospital, Clinic, Lab)</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div id="dynamic-fields"></div>
-
-                <div style="border-top: 1px solid var(--border-color); margin: 24px 0; padding-top: 24px;">
-                    <div id="loc-status" class="loc-status-box">
-                        📍 Waiting for location permission...
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group" style="flex: 1; margin-bottom:0;">
-                            <label>Country</label>
-                            <div class="input-wrapper">
-                                <select id="setup-country" required onchange="populateStates(this.value)">
-                                    <option value="">Loading Countries...</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group" style="flex: 1; margin-bottom:0;">
-                            <label>State / Province</label>
-                            <div class="input-wrapper">
-                                <select id="setup-state" required>
-                                    <option value="">Select State</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group" style="margin-top: 18px;">
-                        <label>City</label>
-                        <div class="input-wrapper">
-                            <input type="text" id="setup-city" required placeholder="E.g. Lahore">
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-primary" id="save-btn">
-                    <span id="save-text">Complete Registration</span>
-                    <div class="spinner" id="save-loader"></div>
-                </button>
-            </form>
+            <div id="status-msg" class="status-message"></div>
         </div>
     </div>
 
-    <script>
-        window.onTurnstileSuccess = function(token) {
-            document.getElementById('cf-token').value = token;
-            const msgBox = document.getElementById('status-msg');
-            if (msgBox.innerText === "Please complete the security check.") {
-                msgBox.innerText = "";
-            }
-        };
-    </script>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithCredential, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithCredential } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
@@ -274,324 +63,40 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
-        const rtdb = getDatabase(app);
-
-        window.currentAuthMode = 'login';
-        let globalCountriesData = [];
-
-        const loaderTimeout = setTimeout(() => {
-            hidePageLoader();
-        }, 5000);
-
-        function hidePageLoader() {
-            const loader = document.getElementById('page-loader');
-            if(loader) loader.classList.add('hidden');
-            clearTimeout(loaderTimeout);
-        }
-
-        onAuthStateChanged(auth, async (user) => {
-            const authView = document.getElementById('auth-view');
-            const profileView = document.getElementById('profile-view');
-
-            if (user) {
-                try {
-                    const snap = await getDoc(doc(db, "users", user.uid));
-                    if (snap.exists()) { 
-                        window.location.replace("index.html"); 
-                    } else { 
-                        hidePageLoader();
-                        authView.classList.add('hidden');
-                        profileView.classList.remove('hidden');
-                        
-                        window.renderDynamicFields('candidate');
-                        fetchCountriesApi();
-                        detectLocation();
-                    }
-                } catch(e) {
-                    console.error("Firestore Error:", e);
-                    hidePageLoader();
-                }
-            } else {
-                hidePageLoader();
-                authView.classList.remove('hidden');
-                profileView.classList.add('hidden');
-            }
-        });
-
-        window.switchMode = function(mode) {
-            window.currentAuthMode = mode;
-            const isLogin = mode === 'login';
-            
-            document.getElementById('tab-login').classList.toggle('active', isLogin);
-            document.getElementById('tab-signup').classList.toggle('active', !isLogin);
-            
-            document.getElementById('view-title').innerText = isLogin ? "Welcome Back" : "Create Account";
-            document.getElementById('view-subtitle').innerText = isLogin ? "Securely access your professional dashboard" : "Join the healthcare professional network";
-            document.getElementById('submit-text').innerText = isLogin ? "Sign In" : "Register Account";
-            
-            document.getElementById('forgot-pass-link').style.display = isLogin ? 'block' : 'none';
-            document.getElementById('password').autocomplete = isLogin ? 'current-password' : 'new-password';
-            
-            document.getElementById('status-msg').innerText = "";
-            if (window.turnstile) { window.turnstile.reset(); document.getElementById('cf-token').value = ''; }
-        };
-
-        function setAuthLoader(isLoading) {
-            const btn = document.getElementById('submit-btn');
-            btn.disabled = isLoading;
-            document.getElementById('submit-text').style.display = isLoading ? 'none' : 'block';
-            document.getElementById('submit-loader').style.display = isLoading ? 'block' : 'none';
-            
-            document.getElementById('google-btn').style.opacity = isLoading ? '0.5' : '1';
-            document.getElementById('google-btn').style.pointerEvents = isLoading ? 'none' : 'auto';
-        }
-
-        window.handleAuth = async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const pass = document.getElementById('password').value.trim();
-            const cfToken = document.getElementById('cf-token').value; 
-            const msgBox = document.getElementById('status-msg');
-            
-            if (!cfToken) return msgBox.innerText = "Please complete the security check.";
-
-            setAuthLoader(true);
-            msgBox.innerText = "";
-
-            try {
-                const verifyRes = await fetch('https://full-finla-trunsplit.vercel.app/api/verify-turnstile', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: cfToken })
-                });
-
-                if (!verifyRes.ok) throw new Error("Security verification service unavailable.");
-                const verifyData = await verifyRes.json();
-                if (!verifyData.success) throw new Error("Security verification failed.");
-
-                msgBox.style.color = "var(--success-text)";
-                msgBox.innerText = "Authenticating...";
-
-                if(window.currentAuthMode === 'login') {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                } else {
-                    await createUserWithEmailAndPassword(auth, email, pass);
-                }
-            } catch (error) { 
-                msgBox.style.color = "var(--error)";
-                msgBox.innerText = error.message.replace("Firebase: ", "");
-                if (window.turnstile) { window.turnstile.reset(); document.getElementById('cf-token').value = ''; }
-                setAuthLoader(false);
-            }
-        };
 
         window.handleGoogleAuth = async function() {
             const msgBox = document.getElementById('status-msg');
-            msgBox.innerText = "";
-            setAuthLoader(true); 
-
+            msgBox.innerText = "Starting Google Login...";
+            msgBox.style.color = "var(--text-main)";
+            
             try { 
                 if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+                    // 🔥 MAGIC FIX: Force Client ID into the plugin before it runs! 🔥
+                    await Capacitor.Plugins.GoogleAuth.initialize({
+                        clientId: "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
+                        scopes: ["profile", "email"],
+                        grantOfflineAccess: true
+                    });
+
                     const googleUser = await Capacitor.Plugins.GoogleAuth.signIn();
                     const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
                     await signInWithCredential(auth, credential);
+                    
+                    msgBox.style.color = "var(--success-text)";
+                    msgBox.innerText = "Login Success! Redirecting...";
+                    setTimeout(() => { window.location.replace("index.html"); }, 1000);
                 } 
                 else {
                     await signInWithPopup(auth, provider); 
+                    window.location.replace("index.html");
                 }
-                msgBox.style.color = "var(--success-text)";
-                msgBox.innerText = "Authenticating...";
             } catch (error) { 
+                // Agar native crash hone ki koshish bhi karega to catch ho jayega!
                 msgBox.style.color = "var(--error)";
-                msgBox.innerText = error.message ? error.message.replace("Firebase: ", "") : "Google Login Cancelled";
-                setAuthLoader(false);
+                msgBox.innerText = "Error: " + (error.message || JSON.stringify(error));
             }
         };
-
-        window.renderDynamicFields = function(role) {
-            const div = document.getElementById('dynamic-fields');
-            if(role === 'candidate') {
-                div.innerHTML = `
-                    <div class="form-group"><label>Your Full Name</label><div class="input-wrapper"><input type="text" id="setup-name" required placeholder="E.g. Dr. John Doe"></div></div>
-                    <div class="form-group"><label>Profession / Qualification</label>
-                        <div class="input-wrapper">
-                            <select id="setup-qual" required>
-                                <option value="MBBS / Doctor">MBBS / Doctor</option><option value="BSc Nursing / Nurse">BSc Nursing / Nurse</option>
-                                <option value="Pharmacist">Pharmacist</option><option value="Lab Technician">Lab Technician</option>
-                                <option value="Dispenser">Dispenser</option><option value="Medical Student">Medical Student</option>
-                            </select>
-                        </div>
-                    </div>`;
-            } else {
-                div.innerHTML = `
-                    <div class="form-group"><label>Facility Name</label><div class="input-wrapper"><input type="text" id="setup-name" required placeholder="E.g. City Care Hospital"></div></div>
-                    <div class="form-group"><label>Facility Type</label>
-                        <div class="input-wrapper">
-                            <select id="setup-qual" required>
-                                <option value="Hospital">Hospital (Private/Govt)</option><option value="Clinic">Clinic</option>
-                                <option value="Pharmacy">Pharmacy</option><option value="Diagnostic Lab">Diagnostic Lab</option>
-                            </select>
-                        </div>
-                    </div>`;
-            }
-        };
-
-        async function fetchCountriesApi() {
-            try {
-                const res = await fetch("https://countriesnow.space/api/v0.1/countries/states");
-                const data = await res.json();
-                globalCountriesData = data.data;
-
-                const countrySelect = document.getElementById('setup-country');
-                countrySelect.innerHTML = '<option value="">Select Country</option>';
-                
-                globalCountriesData.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.name; opt.innerText = c.name;
-                    countrySelect.appendChild(opt);
-                });
-            } catch(e) { 
-                console.error("API Load Error", e); 
-                document.getElementById('setup-country').innerHTML = '<option value="">Error loading countries</option>';
-            }
-        }
-
-        window.populateStates = function(countryName) {
-            const stateSelect = document.getElementById('setup-state');
-            stateSelect.innerHTML = '<option value="">Select State</option>'; 
-            const country = globalCountriesData.find(c => c.name.toLowerCase() === countryName.toLowerCase());
-            if(country && country.states) {
-                country.states.forEach(s => {
-                    const opt = document.createElement('option');
-                    opt.value = s.name; opt.innerText = s.name;
-                    stateSelect.appendChild(opt);
-                });
-            }
-        };
-
-        function detectLocation() {
-            const locStatus = document.getElementById('loc-status');
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    try {
-                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
-                        const d = await res.json();
-                        
-                        const country = d.address.country;
-                        const state = d.address.state;
-                        const city = d.address.city || d.address.town || d.address.county || "";
-
-                        const countrySelect = document.getElementById('setup-country');
-                        if(country) {
-                            for(let i=0; i<countrySelect.options.length; i++) {
-                                if(countrySelect.options[i].value.toLowerCase() === country.toLowerCase()) {
-                                    countrySelect.selectedIndex = i;
-                                    window.populateStates(country); 
-                                    break;
-                                }
-                            }
-                        }
-
-                        setTimeout(() => {
-                            const stateSelect = document.getElementById('setup-state');
-                            if(state) {
-                                for(let i=0; i<stateSelect.options.length; i++) {
-                                    if(stateSelect.options[i].value.toLowerCase().includes(state.toLowerCase()) || state.toLowerCase().includes(stateSelect.options[i].value.toLowerCase())) {
-                                        stateSelect.selectedIndex = i;
-                                        break;
-                                    }
-                                }
-                            }
-                        }, 200);
-
-                        document.getElementById('setup-city').value = city;
-
-                        locStatus.innerHTML = "✅ <b>Location auto-filled successfully!</b>";
-                        locStatus.style.color = "var(--success-text)";
-                        locStatus.style.background = "var(--success-bg)";
-                        locStatus.style.borderColor = "var(--success-border)";
-                        
-                    } catch(e) { 
-                        locStatus.innerHTML = "⚠️ <b>Auto-detect failed. Please select manually.</b>"; 
-                        locStatus.style.color = "var(--warn-text)";
-                        locStatus.style.background = "var(--warn-bg)";
-                        locStatus.style.borderColor = "var(--warn-border)";
-                    }
-                }, () => {
-                    locStatus.innerHTML = "✋ <b>Location permission denied. Please select manually.</b>";
-                    locStatus.style.color = "var(--error)";
-                    locStatus.style.background = "#fee2e2";
-                    locStatus.style.borderColor = "#fca5a5";
-                }, { timeout: 10000 }); 
-            } else {
-                locStatus.style.display = "none";
-            }
-        }
-
-        window.handleProfileSave = async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('save-btn');
-            const text = document.getElementById('save-text');
-            const loader = document.getElementById('save-loader');
-            
-            btn.disabled = true; text.style.display = 'none'; loader.style.display = 'block';
-
-            const role = document.getElementById('role-select').value;
-            const nameInput = document.getElementById('setup-name').value.trim();
-            const countryInput = document.getElementById('setup-country').value;
-            const stateInput = document.getElementById('setup-state').value;
-            const cityInput = document.getElementById('setup-city').value.trim();
-            const profession = document.getElementById('setup-qual').value; 
-            
-            const userData = {
-                uid: auth.currentUser.uid,
-                email: auth.currentUser.email,
-                role: role,
-                [role === 'employer' ? 'facilityName' : 'fullName']: nameInput,
-                qualification: profession,
-                country: countryInput,
-                state: stateInput,
-                city: cityInput,
-                address: `${cityInput}, ${stateInput}, ${countryInput}`,
-                createdAt: serverTimestamp()
-            };
-
-            try {
-                await setDoc(doc(db, "users", auth.currentUser.uid), userData);
-                
-                await set(ref(rtdb, 'search_index/' + auth.currentUser.uid), {
-                    id: auth.currentUser.uid,
-                    t: nameInput,
-                    p: profession,
-                    loc: cityInput || countryInput,
-                    pic: `https://ui-avatars.com/api/?name=${encodeURIComponent(nameInput)}&background=random`,
-                    type: 'profile'
-                });
-                
-                try {
-                    const mailResponse = await fetch('https://nodemails.vercel.app/api/send-welcome', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: auth.currentUser.email, name: nameInput })
-                    }); 
-                    
-                    const mailData = await mailResponse.json(); 
-                    console.log("Email Status:", mailData);
-                    
-                } catch(mailErr) {
-                    console.error("Mail trigger error:", mailErr);
-                }
-                
-                window.location.replace("index.html");
-                
-            } catch(error) { 
-                alert("Error saving profile: " + error.message); 
-                btn.disabled = false; text.style.display = 'block'; loader.style.display = 'none'; 
-            }
-        };
-
     </script>
 </body>
 </html>
