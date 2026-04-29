@@ -23,6 +23,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Use Termux Keystore
+        run: |
+          mkdir -p ~/.android
+          cp debug.keystore ~/.android/
+
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
