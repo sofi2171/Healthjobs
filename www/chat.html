@@ -275,16 +275,22 @@
         const userID = currentUser.uid;
         const userName = currentUser.email ? currentUser.email.split('@')[0] : "User";
 
-        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, null, userID, userName);
-        zp = ZegoUIKitPrebuilt.create(kitToken);
+        try {
+            // Null ki jagah chatId use kiya gaya hai taake crash na ho
+            const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, chatId, userID, userName);
+            zp = ZegoUIKitPrebuilt.create(kitToken);
 
-        zp.addCallInvitation({
-            calleeIDs: [], 
-            ringtoneConfig: {
-                incomingCallUrl: '', // Add your mp3 link here later
-                outgoingCallUrl: ''
-            }
-        });
+            zp.addCallInvitation({
+                calleeIDs: [], 
+                ringtoneConfig: {
+                    incomingCallUrl: '', // Add your mp3 link here later
+                    outgoingCallUrl: ''
+                }
+            });
+            console.log("Zego System Successfully Started!");
+        } catch (err) {
+            console.error("Zego initialization masla:", err);
+        }
     }
 
     onAuthStateChanged(auth, async (user) => {
@@ -398,39 +404,47 @@
 
     // 📞 ================= ZEGOCLOUD CALL INVITATION SYSTEM ================= 📞
     window.startZegoCall = async (type, isInitiator = false) => {
-        if(!zp) { alert("Call system is initializing, please wait a moment..."); return; }
+        if(!zp) { 
+            alert("⚠️ Call system load nahi hua. Ya toh internet slow hai ya background error hai. Page refresh karein."); 
+            return; 
+        }
 
         const targetUserName = document.getElementById('target-name').innerText;
 
-        zp.sendCallInvitation({
-            callees: [{ userID: targetUid, userName: targetUserName }],
-            callType: type === 'video' ? ZegoUIKitPrebuilt.InvitationTypeVideoCall : ZegoUIKitPrebuilt.InvitationTypeVoiceCall,
-            timeout: 60, // Rings for 60 seconds
-        }).then(async (res) => {
-            console.log("Call Invitation Sent successfully", res);
-            
-            // Push message to chat history
-            if (isInitiator) {
-                let msgPayload = { 
-                    senderId: currentUser.uid, 
-                    status: 'sent', 
-                    timestamp: serverTimestamp(), 
-                    isCall: true, 
-                    callType: type,
-                    text: type === 'video' ? '🎥 Video Call Started' : '📞 Audio Call Started'
-                };
-                await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), msgPayload);
-                await update(dbRef(dbChatRT, `chatRooms/${chatId}`), {
-                    participants: [currentUser.uid, targetUid], 
-                    lastMessage: type === 'video' ? '🎥 Video Call' : '📞 Audio Call',
-                    lastSenderId: currentUser.uid, 
-                    readBy: [currentUser.uid], 
-                    updatedAt: serverTimestamp()
-                });
-            }
-        }).catch((err) => {
-            console.error("Call Failed to send", err);
-        });
+        try {
+            zp.sendCallInvitation({
+                callees: [{ userID: targetUid, userName: targetUserName }],
+                callType: type === 'video' ? ZegoUIKitPrebuilt.InvitationTypeVideoCall : ZegoUIKitPrebuilt.InvitationTypeVoiceCall,
+                timeout: 60, 
+            }).then(async (res) => {
+                console.log("Call Invitation Sent successfully", res);
+                
+                // Push message to chat history
+                if (isInitiator) {
+                    let msgPayload = { 
+                        senderId: currentUser.uid, 
+                        status: 'sent', 
+                        timestamp: serverTimestamp(), 
+                        isCall: true, 
+                        callType: type,
+                        text: type === 'video' ? '🎥 Video Call Started' : '📞 Audio Call Started'
+                    };
+                    await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), msgPayload);
+                    await update(dbRef(dbChatRT, `chatRooms/${chatId}`), {
+                        participants: [currentUser.uid, targetUid], 
+                        lastMessage: type === 'video' ? '🎥 Video Call' : '📞 Audio Call',
+                        lastSenderId: currentUser.uid, 
+                        readBy: [currentUser.uid], 
+                        updatedAt: serverTimestamp()
+                    });
+                }
+            }).catch((err) => {
+                alert("Call fail ho gayi: " + JSON.stringify(err));
+                console.error("Call Failed", err);
+            });
+        } catch (e) {
+            alert("Code mein masla: " + e.message);
+        }
     };
 
     // --- CONTEXT MENU & ACTIONS ---
