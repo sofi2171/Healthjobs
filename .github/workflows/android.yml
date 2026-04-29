@@ -32,12 +32,17 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Build Debug APK
-        working-directory: android
-        run: ./gradlew assembleDebug
+      - name: Generate Keystore & Print SHA-1 (MAGIC KEY)
+        run: |
+          keytool -genkey -v -keystore $GITHUB_WORKSPACE/gh-actions.keystore -alias mykey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+          echo "========================================="
+          echo "FIREBASE KE LIYE SHA-1 CHABI YAHAN HAI:"
+          keytool -list -v -keystore $GITHUB_WORKSPACE/gh-actions.keystore -alias mykey -storepass android | grep SHA1
+          echo "========================================="
 
-      - name: Print APK SHA-1 (MAGIC STEP)
-        run: keytool -printcert -jarfile android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Build & Force Sign APK
+        working-directory: android
+        run: ./gradlew assembleDebug -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/gh-actions.keystore -Pandroid.injected.signing.store.password=android -Pandroid.injected.signing.key.alias=mykey -Pandroid.injected.signing.key.password=android
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
