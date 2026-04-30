@@ -249,26 +249,18 @@
             const PushNotifications = window.Capacitor.Plugins.PushNotifications;
             try {
                 let permStatus = await PushNotifications.checkPermissions();
-
                 if (permStatus.receive === 'prompt') {
                     permStatus = await PushNotifications.requestPermissions();
                 }
-
-                if (permStatus.receive !== 'granted') {
-                    console.warn('Push notification permission denied by user.');
-                } else {
+                if (permStatus.receive === 'granted') {
                     await PushNotifications.register();
                     console.log("Push notifications system is active!");
                 }
-            } catch (error) {
-                console.error("Push Notification Error: ", error);
-            }
-        } else {
-            console.log("Not running on mobile app or Push plugin missing (Normal for web browser testing).");
+            } catch (error) { console.error("Push Notification Error: ", error); }
         }
     }
 
-    // ZegoCloud Initialization Function (Ringing Screen Setup)
+    // ZegoCloud Initialization Function
     function initZegoCloud() {
         const appID = 349685482;
         const serverSecret = "2fda23cba27417a8e245c163c7536a13";
@@ -276,20 +268,18 @@
         const userName = currentUser.email ? currentUser.email.split('@')[0] : "User";
 
         try {
+            // Must use valid strings. Using chatId ensures connection.
             const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, chatId, userID, userName);
             zp = ZegoUIKitPrebuilt.create(kitToken);
 
-            // ZIM Plugin Zaroori hai call invitation bhejne ke liye
+            // ZIM Plugin is vital for Call Invitations
             zp.addPlugins({ ZIM });
 
             zp.addCallInvitation({
                 calleeIDs: [], 
-                ringtoneConfig: {
-                    incomingCallUrl: '', 
-                    outgoingCallUrl: ''
-                }
+                ringtoneConfig: { incomingCallUrl: '', outgoingCallUrl: '' }
             });
-            console.log("Zego System Successfully Started!");
+            console.log("Zego System Successfully Started & ZIM Loaded.");
         } catch (err) {
             console.error("Zego initialization masla:", err);
         }
@@ -301,14 +291,13 @@
         if (!targetUid) return location.href = 'chats-request.html';
         chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
         
-        // 1. SABSE PEHLE USER DATA AUR CHAT LOAD KAREIN (Taake loading na atkay)
         loadTargetUser();
         listenToRTDB();      
         
-        // 2. ZEGO AUR NOTIFICATIONS KO BAAD MEIN BACKGROUND MEIN START KAREIN
+        // Load Call systems seamlessly
         try {
-            setupPushNotifications(); // 👈 Ask for Notification Permission (For APK)
-            initZegoCloud();          // 👈 Initialize Ringing system
+            setupPushNotifications(); 
+            initZegoCloud();          
         } catch (error) {
             console.error("Call system load hone mein masla:", error);
         }
@@ -354,7 +343,7 @@
         if (msg.isDeletedEveryone) {
             innerHTML = `<div class="msg-bubble" id="bubble-${id}"><div class="deleted-msg">🚫 This message was deleted</div><div class="msg-meta"><span class="msg-time">${timeStr}</span></div></div>`;
         } else if (msg.isCall) {
-            // 📞 CALL MESSAGE RENDER (For Chat History)
+            // CALL MESSAGE
             const callTitle = msg.callType === 'video' ? '🎥 Video Call' : '📞 Audio Call';
             innerHTML = `<div class="msg-bubble" id="bubble-${id}" style="background:transparent; border:none; box-shadow:none; padding:0;">
                 <div class="call-msg-box">
@@ -394,7 +383,6 @@
             setTimeout(() => { document.getElementById('chat-area').scrollTop = document.getElementById('chat-area').scrollHeight; }, 50);
         }
 
-        // Long press context menu
         if (!isMe && !msg.isDeletedEveryone && !msg.isCall) {
             const bubble = document.getElementById(`bubble-${id}`);
             bubble.addEventListener('touchstart', (e) => { longPressTimer = setTimeout(() => openMenu(e, id), 500); });
@@ -404,10 +392,10 @@
         }
     }
 
-    // 📞 ================= ZEGOCLOUD CALL INVITATION SYSTEM ================= 📞
+    // 📞 ================= ZEGOCLOUD CALL SYSTEM ================= 📞
     window.startZegoCall = async (type, isInitiator = false) => {
         if(!zp) { 
-            alert("⚠️ Call system load nahi hua. Ya toh internet slow hai ya background error hai. Page refresh karein."); 
+            alert("⚠️ Call system is connecting... Please wait a few seconds and try again."); 
             return; 
         }
 
@@ -419,33 +407,31 @@
                 callType: type === 'video' ? ZegoUIKitPrebuilt.InvitationTypeVideoCall : ZegoUIKitPrebuilt.InvitationTypeVoiceCall,
                 timeout: 60, 
             }).then(async (res) => {
+                // Check if user is offline
+                if(res.errorInvitees && res.errorInvitees.length > 0) {
+                    alert("User is currently offline. They must open the app to receive calls.");
+                    return;
+                }
+                
                 console.log("Call Invitation Sent successfully", res);
                 
-                // Push message to chat history
                 if (isInitiator) {
                     let msgPayload = { 
-                        senderId: currentUser.uid, 
-                        status: 'sent', 
-                        timestamp: serverTimestamp(), 
-                        isCall: true, 
-                        callType: type,
-                        text: type === 'video' ? '🎥 Video Call Started' : '📞 Audio Call Started'
+                        senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), 
+                        isCall: true, callType: type, text: type === 'video' ? '🎥 Video Call Started' : '📞 Audio Call Started'
                     };
                     await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), msgPayload);
                     await update(dbRef(dbChatRT, `chatRooms/${chatId}`), {
-                        participants: [currentUser.uid, targetUid], 
-                        lastMessage: type === 'video' ? '🎥 Video Call' : '📞 Audio Call',
-                        lastSenderId: currentUser.uid, 
-                        readBy: [currentUser.uid], 
-                        updatedAt: serverTimestamp()
+                        participants: [currentUser.uid, targetUid], lastMessage: type === 'video' ? '🎥 Video Call' : '📞 Audio Call',
+                        lastSenderId: currentUser.uid, readBy: [currentUser.uid], updatedAt: serverTimestamp()
                     });
                 }
             }).catch((err) => {
-                alert("Call fail ho gayi: " + JSON.stringify(err));
                 console.error("Call Failed", err);
+                alert("Network error. Could not connect call.");
             });
         } catch (e) {
-            alert("Code mein masla: " + e.message);
+            alert("Code error: " + e.message);
         }
     };
 
@@ -481,15 +467,12 @@
     };
 
     window.prepareAction = (type, id) => {
-        closeMenu();
-        const msg = window.chatMessages[id];
-        actionType = type;
+        closeMenu(); const msg = window.chatMessages[id]; actionType = type;
         actionData = { id: id, text: msg.text || (msg.mediaType === 'audio' ? 'Voice Message' : 'Media Attachment') };
 
         if(type === 'forward') {
             document.getElementById('msg-input').value = actionData.text;
-            window.toggleSendBtn();
-            actionType = null;
+            window.toggleSendBtn(); actionType = null;
             alert("Ready to forward. You can edit text before sending.");
             return;
         }
@@ -513,11 +496,7 @@
     window.handleFileSelect = (e) => {
         const file = e.target.files[0];
         if(file) {
-            if (file.size > 10 * 1024 * 1024) {
-                alert("File is too large! Maximum allowed size is 10MB.");
-                e.target.value = "";
-                return;
-            }
+            if (file.size > 10 * 1024 * 1024) { alert("File is too large! Maximum allowed size is 10MB."); e.target.value = ""; return; }
             selectedFile = file;
             document.getElementById('action-preview').style.display = 'block';
             document.getElementById('preview-title').innerText = "📎 Attachment Ready";
@@ -532,7 +511,6 @@
         document.getElementById('send-btn').style.display = (val || selectedFile) ? 'flex' : 'none';
     };
 
-    // --- SEND TEXT & MEDIA ---
     window.sendMessage = async () => {
         const text = document.getElementById('msg-input').value.trim();
         if(!text && !selectedFile) return;
@@ -550,8 +528,7 @@
             const formData = new FormData(); formData.append('file', selectedFile); formData.append('upload_preset', UPLOAD_PRESET);
             try {
                 const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, { method: 'POST', body: formData });
-                const data = await res.json();
-                mediaUrl = data.secure_url;
+                const data = await res.json(); mediaUrl = data.secure_url;
             } catch(e) { alert("Upload failed."); document.getElementById('upload-loader').style.display='none'; return; }
         }
 
@@ -577,8 +554,7 @@
 
     const startRecording = async (e) => {
         if (e) e.preventDefault(); if (isRecording) return;
-        isRecordingCancelled = false;
-        if ("vibrate" in navigator) navigator.vibrate(50); 
+        isRecordingCancelled = false; if ("vibrate" in navigator) navigator.vibrate(50); 
         try {
             currentMicStream = await navigator.mediaDevices.getUserMedia({ audio: true });
             let mimeType = 'audio/webm';
@@ -601,12 +577,10 @@
 
             mediaRecorder.start(200); isRecording = true;
             micBtn.classList.add('recording');
-            document.getElementById('msg-input').style.display = 'none';
-            document.getElementById('attach-btn').style.display = 'none';
+            document.getElementById('msg-input').style.display = 'none'; document.getElementById('attach-btn').style.display = 'none';
             document.getElementById('recording-ui').style.display = 'flex';
             
-            recordSeconds = 0;
-            document.getElementById('record-timer').innerText = `🔴 00:00`;
+            recordSeconds = 0; document.getElementById('record-timer').innerText = `🔴 00:00`;
             recordInterval = setInterval(() => {
                 recordSeconds++;
                 document.getElementById('record-timer').innerText = `🔴 ${String(Math.floor(recordSeconds/60)).padStart(2,'0')}:${String(recordSeconds%60).padStart(2,'0')}`;
@@ -620,12 +594,9 @@
         if (mediaRecorder && isRecording) { isRecordingCancelled = true; mediaRecorder.stop(); if ("vibrate" in navigator) navigator.vibrate([50, 50]); }
     };
 
-    micBtn.addEventListener('mousedown', startRecording);
-    micBtn.addEventListener('touchstart', startRecording, {passive: false});
-    micBtn.addEventListener('mouseup', stopAndSendRecording);
-    micBtn.addEventListener('touchend', stopAndSendRecording);
-    micBtn.addEventListener('mouseleave', cancelRecordingAction);
-    micBtn.addEventListener('touchcancel', cancelRecordingAction);
+    micBtn.addEventListener('mousedown', startRecording); micBtn.addEventListener('touchstart', startRecording, {passive: false});
+    micBtn.addEventListener('mouseup', stopAndSendRecording); micBtn.addEventListener('touchend', stopAndSendRecording);
+    micBtn.addEventListener('mouseleave', cancelRecordingAction); micBtn.addEventListener('touchcancel', cancelRecordingAction);
     micBtn.addEventListener('touchmove', (e) => {
         if (!isRecording) return;
         const touch = e.touches[0]; const btnRect = micBtn.getBoundingClientRect();
@@ -633,27 +604,21 @@
     });
 
     function resetRecordingUI() {
-        clearInterval(recordInterval);
-        micBtn.classList.remove('recording');
-        document.getElementById('msg-input').style.display = 'block';
-        document.getElementById('attach-btn').style.display = 'block';
+        clearInterval(recordInterval); micBtn.classList.remove('recording');
+        document.getElementById('msg-input').style.display = 'block'; document.getElementById('attach-btn').style.display = 'block';
         document.getElementById('recording-ui').style.display = 'none';
     }
 
     async function sendVoiceMessage(audioBlob, mimeType) {
-        document.getElementById('upload-loader').style.display = 'flex';
-        document.getElementById('loader-text').innerText = "Sending Voice...";
+        document.getElementById('upload-loader').style.display = 'flex'; document.getElementById('loader-text').innerText = "Sending Voice...";
         let ext = mimeType.includes('mp4') || mimeType.includes('m4a') ? 'mp4' : 'webm';
-        
         const formData = new FormData();
         formData.append('file', new File([audioBlob], `voice_${Date.now()}.${ext}`, { type: mimeType })); 
-        formData.append('upload_preset', UPLOAD_PRESET);
-        formData.append('resource_type', 'video'); 
+        formData.append('upload_preset', UPLOAD_PRESET); formData.append('resource_type', 'video'); 
         
         try {
             const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: 'POST', body: formData });
             const data = await res.json();
-            
             let msgPayload = { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), mediaUrl: data.secure_url, mediaType: 'audio' };
             if(actionType === 'reply' && actionData) msgPayload.replyText = actionData.text;
 
@@ -669,14 +634,8 @@
 
     // 🚀 MEDIA VIEWER & DOWNLOADER
     window.openMediaViewer = (url, type) => {
-        let content = type === 'video' 
-            ? `<video src="${url}" controls autoplay style="max-width:95%; max-height:75vh; border-radius:8px;"></video>` 
-            : `<img src="${url}" style="max-width:95%; max-height:75vh; border-radius:8px;">`;
-        
-        let downloadBtn = `<a href="${url}" download="media" target="_blank" class="download-btn">
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-            Download File</a>`;
-            
+        let content = type === 'video' ? `<video src="${url}" controls autoplay style="max-width:95%; max-height:75vh; border-radius:8px;"></video>` : `<img src="${url}" style="max-width:95%; max-height:75vh; border-radius:8px;">`;
+        let downloadBtn = `<a href="${url}" download="media" target="_blank" class="download-btn"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Download File</a>`;
         document.getElementById('viewer-content-box').innerHTML = content + downloadBtn;
         document.getElementById('media-viewer').style.display = 'flex';
     };
