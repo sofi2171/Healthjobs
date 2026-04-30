@@ -291,23 +291,27 @@
     const remoteCamOffScreen = document.getElementById('remote-cam-off-screen');
     const incomingControls = document.getElementById('incoming-controls');
 
-    onAuthStateChanged(auth, async (user) => {
-        if (!user) return location.href = 'login.html';
-        currentUser = user;
-        if (!targetUid) return location.href = 'chats-request.html';
-        chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
-        
-        loadTargetUser(); 
-        managePresence(); 
-        listenToRTDB(); 
-        listenForCalls(); 
-        setupPushNotifications(); // 🔔 Initialize Background Push Notifications
-        
-        // Auto show incoming call if opened from Notification
-        if(autoStartCall === 'true') {
-            setTimeout(() => { showCallUI(targetPic, targetName, "INCOMING CALL...", true); playIncomingRing(); }, 1500);
-        }
-    });
+    
+onAuthStateChanged(auth, async (user) => {
+    if (!user) return location.href = 'login.html';
+    currentUser = user;
+    chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
+    
+    loadTargetUser(); 
+    managePresence(); 
+    listenToRTDB(); 
+    listenForCalls(); 
+    setupPushNotifications(); 
+    
+    // Redirect handling from background push
+    if(autoStartCall === 'true') {
+        setTimeout(() => { 
+            incomingCallPrompted = true;
+            showCallUI(targetPic, targetName, "INCOMING CALL...", true); 
+            playIncomingRing(); 
+        }, 1500);
+    }
+});
 
     async function loadTargetUser() { try { const snap = await getDoc(doc(dbMain, "users", targetUid)); if(snap.exists()){ targetName = snap.data().facilityName || snap.data().fullName || "User"; targetPic = snap.data().profilePicUrl || `https://ui-avatars.com/api/?name=${targetName}`; document.getElementById('target-name').innerText = targetName; document.getElementById('target-pic').src = targetPic; } } catch(e) {} }
 
@@ -468,21 +472,61 @@
             update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { [`micMuted_${currentUser.uid}`]: false, [`camMuted_${currentUser.uid}`]: false }); return true;
         } catch(e) { document.getElementById('permission-modal').style.display = 'flex'; closeWebRTC(); return false; }
     }
+window.startMyCall = async (type) => {
+    isVideoCall = type === 'video'; 
+    const hasMedia = await setupMediaSources(); 
+    if(!hasMedia) return;
+    
+    showCallUI(targetPic, targetName, "CALLING...", false); 
+    playOutgoingRing();
 
-    window.startMyCall = async (type) => {
-        isVideoCall = type === 'video'; const hasMedia = await setupMediaSources(); if(!hasMedia) return;
-        showCallUI(targetPic, targetName, "CALLING...", false); playOutgoingRing();
+    peerConnection = new RTCPeerConnection(servers);
+    localStream.getTracks().forEach(track => { peerConnection.addTrack(track, localStream); });
 
-        peerConnection = new RTCPeerConnection(servers);
-        localStream.getTracks().forEach(track => { peerConnection.addTrack(track, localStream); });
-
-        peerConnection.ontrack = (event) => { handleCallConnected(); event.streams[0].getTracks().forEach(track => { remoteStream.addTrack(track); }); remoteVideo.srcObject = remoteStream; };
-        peerConnection.onicecandidate = (event) => { if (event.candidate) { push(dbRef(dbChatRT, `chats/${chatId}/webrtc/iceCandidates`), { candidate: event.candidate.toJSON(), senderId: currentUser.uid }); } };
-
-        const offerDescription = await peerConnection.createOffer(); await peerConnection.setLocalDescription(offerDescription);
-        await set(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { offer: { type: offerDescription.type, sdp: offerDescription.sdp }, callerId: currentUser.uid, type: type, status: 'calling', timestamp: serverTimestamp(), [`micMuted_${currentUser.uid}`]: false, [`camMuted_${currentUser.uid}`]: false });
-        push(dbRef(dbChatRT, `chats/${chatId}/messages`), { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), isCall: true, callType: type });
+    peerConnection.ontrack = (event) => { 
+        handleCallConnected(); 
+        event.streams[0].getTracks().forEach(track => { remoteStream.addTrack(track); }); 
+        remoteVideo.srcObject = remoteStream; 
     };
+    
+    peerConnection.onicecandidate = (event) => { 
+        if (event.candidate) { push(dbRef(dbChatRT, `chats/${chatId}/webrtc/iceCandidates`), { candidate: event.candidate.toJSON(), senderId: currentUser.uid }); } 
+    };
+
+    const offerDescription = await peerConnection.createOffer(); 
+    await peerConnection.setLocalDescription(offerDescription);
+    
+    await set(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { 
+        offer: { type: offerDescription.type, sdp: offerDescription.sdp }, 
+        callerId: currentUser.uid, 
+        type: type, 
+        status: 'calling', 
+        timestamp: serverTimestamp(), 
+        [`micMuted_${currentUser.uid}`]: false, 
+        [`camMuted_${currentUser.uid}`]: false 
+    });
+    push(dbRef(dbChatRT, `chats/${chatId}/messages`), { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), isCall: true, callType: type });
+
+    // 🔥 SECURE WAKE-UP SIGNAL VIA VERCEL
+    try {
+        const targetUserSnap = await getDoc(doc(dbMain, "users", targetUid));
+        if (targetUserSnap.exists() && targetUserSnap.data().fcmToken) {
+            await fetch('https://my-jobs-backend.vercel.app/api', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    targetToken: targetUserSnap.data().fcmToken,
+                    callerName: targetName, 
+                    callerUid: currentUser.uid,
+                    callType: type
+                })
+            });
+            console.log("Secure wake-up signal sent via Vercel!");
+        }
+    } catch (e) {
+        console.error("Backend Push Error:", e);
+    }
+};
 
     window.acceptCall = async () => {
         stopRings(); const hasMedia = await setupMediaSources(); if(!hasMedia) return;
