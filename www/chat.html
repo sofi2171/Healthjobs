@@ -74,7 +74,7 @@
         .btn-mic { background-color: #0ea5e9; user-select: none; touch-action: none; }
         .btn-mic.recording { background-color: #ef4444; transform: scale(1.15); }
 
-        /* 🎥 PREMIUM WEBRTC UI OVERLAY */
+        /* 🎥 PREMIUM WEBRTC UI OVERLAY (WhatsApp Style) */
         #call-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #111; z-index: 5000; display: none; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         
         .video-wrapper { position: absolute; top:0; left:0; width: 100%; height: 100%; background: #1a1a1a; display: flex; justify-content: center; align-items: center; }
@@ -85,31 +85,47 @@
 
         #local-video { position: absolute; top: 20px; right: 20px; width: 90px; height: 130px; object-fit: cover; border-radius: 12px; border: 2px solid rgba(255,255,255,0.4); background: #000; box-shadow: 0 8px 20px rgba(0,0,0,0.5); z-index: 5001;}
         
-        /* Incoming / Ringing Screen */
-        #call-overlay-screen { position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 15vh; color: white; z-index: 5002; transition: opacity 0.3s; }
+        /* Incoming / Audio Ringing Screen (Enhanced) */
+        #call-overlay-screen { position: absolute; top:0; left:0; width:100%; height:100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 15vh; color: white; z-index: 5002; transition: opacity 0.3s; overflow: hidden; background: #0f172a;}
         
-        .call-avatar-container { position: relative; margin-bottom: 20px; }
-        #call-overlay-pic { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; position: relative; z-index: 2; box-shadow: 0 0 0 3px rgba(255,255,255,0.15);}
-        #call-overlay-name { font-size: 26px; font-weight: 500; margin-bottom: 8px; letter-spacing: 0.5px;}
-        #call-status-text { font-size: 14px; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase;}
+        /* Glassmorphism Blurred Background for DP */
+        .call-bg-blur { position: absolute; top: -10%; left: -10%; width: 120%; height: 120%; background-size: cover; background-position: center; filter: blur(30px) brightness(0.4); z-index: 1; }
+        
+        .call-content-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
+        
+        .call-avatar-container { position: relative; margin-bottom: 25px; display: flex; justify-content: center; align-items: center;}
+        
+        /* Premium DP Styling & Pulsing Animation */
+        #call-overlay-pic { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; position: relative; z-index: 3; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.5);}
+        #call-overlay-pic.pulsing { animation: pulseRing 2s infinite; }
+        
+        @keyframes pulseRing {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3), 0 0 0 10px rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0.1), 0 0 0 40px rgba(255, 255, 255, 0.05); }
+            100% { box-shadow: 0 0 0 40px rgba(255, 255, 255, 0), 0 0 0 60px rgba(255, 255, 255, 0); }
+        }
+
+        #call-overlay-name { font-size: 28px; font-weight: 500; margin-bottom: 10px; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);}
+        #call-status-text { font-size: 15px; opacity: 0.8; letter-spacing: 1px; font-weight: 400;}
         
         /* Smaller Controls */
-        #incoming-controls { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: space-around; padding: 0 60px; }
-        .action-wrapper { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-        .action-label { font-size: 12px; opacity: 0.8; font-weight: 500; }
+        #incoming-controls { position: absolute; bottom: 60px; width: 100%; display: flex; justify-content: space-around; padding: 0 50px; z-index: 3;}
+        .action-wrapper { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .action-label { font-size: 13px; opacity: 0.9; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.5);}
         
         /* Active Controls (Flexible Grid) */
-        #active-controls { position: absolute; bottom: 20px; width: 100%; display: none; flex-direction: column; align-items: center; gap: 15px; z-index: 5003; }
-        .call-controls-bar { width: 90%; max-width: 320px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 20px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 5px 20px rgba(0,0,0,0.3);}
+        #active-controls { position: absolute; bottom: 25px; width: 100%; display: none; flex-direction: column; align-items: center; gap: 15px; z-index: 5003; }
+        .call-controls-bar { width: 92%; max-width: 340px; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 24px; padding: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
         
         .control-grid { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;}
         .grid-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; opacity: 0.9; transition: 0.2s;}
         .grid-item:active { transform: scale(0.9); opacity: 1;}
-        .grid-icon { width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .grid-icon { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; transition: 0.2s;}
         .grid-icon.active { background: white; color: #111; }
         
-        .end-btn { width: 55px; height: 55px; border-radius: 50%; background: #ef4444; border: none; color: white; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4); cursor: pointer;}
-        .accept-btn { width: 55px; height: 55px; border-radius: 50%; background: #22c55e; border: none; color: white; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4); cursor: pointer; animation: bounce 2s infinite;}
+        .end-btn { width: 60px; height: 60px; border-radius: 50%; background: #ef4444; border: none; color: white; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.5); cursor: pointer; transition: 0.2s;}
+        .end-btn:active { transform: scale(0.9); }
+        .accept-btn { width: 60px; height: 60px; border-radius: 50%; background: #22c55e; border: none; color: white; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(34, 197, 94, 0.5); cursor: pointer; animation: bounce 2s infinite;}
 
         #remote-mute-indicator { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.65); color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; display: none; align-items: center; gap: 6px; z-index: 5002; backdrop-filter: blur(4px); }
 
@@ -213,11 +229,15 @@
         <video id="local-video" autoplay playsinline muted></video>
         
         <div id="call-overlay-screen">
-            <div class="call-avatar-container">
-                <img src="" id="call-overlay-pic">
+            <div class="call-bg-blur" id="call-bg-blur"></div>
+            
+            <div class="call-content-wrapper">
+                <div class="call-avatar-container">
+                    <img src="" id="call-overlay-pic" class="pulsing">
+                </div>
+                <h2 id="call-overlay-name">Unknown</h2>
+                <div id="call-status-text" style="animation: pulse 1.5s infinite;">Calling...</div>
             </div>
-            <h2 id="call-overlay-name">Unknown</h2>
-            <div id="call-status-text" style="animation: pulse 1.5s infinite;">Calling...</div>
             
             <div id="incoming-controls">
                 <div class="action-wrapper">
@@ -287,14 +307,11 @@
     let targetName = "User", targetPic = "https://ui-avatars.com/api/?name=User";
     window.chatMessages = {}; 
 
-    // 🔊 AUDIO & VIBRATION (Fixes Overlapping & Call-Pick Bug via Promises)
+    // 🔊 AUDIO & VIBRATION
     const audioRingingOut = new Audio('audio/ringing.mp3'); audioRingingOut.loop = true; audioRingingOut.preload = 'auto';
     const audioRingingIn = new Audio('audio/incoming.mp3'); audioRingingIn.loop = true; audioRingingIn.preload = 'auto';
-    let hasUserInteracted = false;
-    let isRingingActive = false; 
-    let incomingCallPrompted = false; 
-    let ringInPromise = null;
-    let ringOutPromise = null;
+    let hasUserInteracted = false, isRingingActive = false, incomingCallPrompted = false, ringInPromise = null, ringOutPromise = null;
+    let callTimerInterval = null;
 
     const unlockAudio = () => {
         hasUserInteracted = true;
@@ -317,6 +334,7 @@
     const activeControls = document.getElementById('active-controls');
     const remoteMuteIndicator = document.getElementById('remote-mute-indicator');
     const remoteCamOffScreen = document.getElementById('remote-cam-off-screen');
+    const incomingControls = document.getElementById('incoming-controls');
 
     onAuthStateChanged(auth, async (user) => {
         if (!user) return location.href = 'login.html';
@@ -376,7 +394,7 @@
             }
 
             if (data.answer && data.callerId === currentUser.uid && peerConnection && peerConnection.signalingState !== "stable") {
-                stopRings(); // Stop outgoing ring guaranteed!
+                stopRings(); 
                 await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
             }
 
@@ -393,14 +411,51 @@
     }
 
     function showCallUI(img, name, status, isIncoming) {
-        document.getElementById('call-overlay-pic').src = img; document.getElementById('call-overlay-name').innerText = name; document.getElementById('call-status-text').innerText = status; acceptBtnWrapper.style.display = isIncoming ? 'flex' : 'none'; 
+        document.getElementById('call-overlay-pic').src = img;
+        document.getElementById('call-bg-blur').style.backgroundImage = `url('${img}')`; // Premium Blur BG
+        document.getElementById('call-overlay-name').innerText = name; 
+        document.getElementById('call-status-text').innerText = status; 
         
-        // Show/Hide specific buttons for Audio vs Video Call
+        document.getElementById('call-overlay-pic').classList.add('pulsing');
+        document.getElementById('call-status-text').style.animation = 'pulse 1.5s infinite';
+        
+        acceptBtnWrapper.style.display = isIncoming ? 'flex' : 'none'; 
+        incomingControls.style.display = 'flex';
+        
         document.getElementById('ctrl-video').style.display = isVideoCall ? 'flex' : 'none'; 
         document.getElementById('ctrl-flip').style.display = isVideoCall ? 'flex' : 'none';
-        document.getElementById('ctrl-speaker').style.display = 'flex'; // Speaker always available
+        document.getElementById('ctrl-speaker').style.display = 'flex'; 
 
         callScreenOverlay.style.display = 'flex'; activeControls.style.display = 'none'; callUI.style.display = 'flex'; localVideo.style.display = 'none'; remoteMuteIndicator.style.display = 'none'; remoteCamOffScreen.style.display = 'none';
+    }
+
+    function startCallTimer() {
+        let seconds = 0;
+        const statusText = document.getElementById('call-status-text');
+        statusText.style.animation = 'none';
+        statusText.innerText = '00:00';
+        clearInterval(callTimerInterval);
+        callTimerInterval = setInterval(() => {
+            seconds++;
+            const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+            const s = String(seconds % 60).padStart(2, '0');
+            statusText.innerText = `${m}:${s}`;
+        }, 1000);
+    }
+
+    function handleCallConnected() {
+        stopRings(); 
+        document.getElementById('call-overlay-pic').classList.remove('pulsing');
+        incomingControls.style.display = 'none'; // Hide ringing actions
+        activeControls.style.display = 'flex';   // Show main controls
+        
+        if (isVideoCall) {
+            callScreenOverlay.style.display = 'none'; // Hide DP overlay for video
+            localVideo.style.display = 'block';
+        } else {
+            callScreenOverlay.style.display = 'flex'; // Keep DP overlay for audio!
+            startCallTimer();
+        }
     }
 
     window.closePermissionModal = () => { document.getElementById('permission-modal').style.display = 'none'; };
@@ -428,7 +483,7 @@
         localStream.getTracks().forEach(track => { peerConnection.addTrack(track, localStream); });
 
         peerConnection.ontrack = (event) => {
-            stopRings(); callScreenOverlay.style.display = 'none'; activeControls.style.display = 'flex'; localVideo.style.display = isVideoCall ? 'block' : 'none';
+            handleCallConnected();
             event.streams[0].getTracks().forEach(track => { remoteStream.addTrack(track); }); remoteVideo.srcObject = remoteStream;
         };
 
@@ -441,7 +496,7 @@
 
     window.acceptCall = async () => {
         stopRings(); const hasMedia = await setupMediaSources(); if(!hasMedia) return;
-        callScreenOverlay.style.display = 'none'; activeControls.style.display = 'flex'; localVideo.style.display = isVideoCall ? 'block' : 'none';
+        handleCallConnected();
 
         peerConnection = new RTCPeerConnection(servers);
         localStream.getTracks().forEach(track => { peerConnection.addTrack(track, localStream); });
@@ -502,7 +557,6 @@
         else { icon.classList.remove('active'); remoteVideo.volume = 0.2; }
     };
 
-    // Safely Play & Stop Ringtones using Promises
     function playIncomingRing() {
         if (isRingingActive) return; isRingingActive = true;
         ringInPromise = audioRingingIn.play();
@@ -530,7 +584,7 @@
     window.endCall = () => { update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { status: 'ended' }); closeWebRTC(); };
     
     function closeWebRTC() { 
-        stopRings(); incomingCallPrompted = false;
+        stopRings(); incomingCallPrompted = false; clearInterval(callTimerInterval);
         if(peerConnection) { peerConnection.close(); peerConnection = null; } 
         if(localStream) { localStream.getTracks().forEach(track => track.stop()); localStream = null; } 
         remoteVideo.srcObject = null; localVideo.srcObject = null; 
