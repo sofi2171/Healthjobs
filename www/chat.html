@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Health Jobs | Fast Custom Call</title>
+    <title>Health Jobs | WebRTC Chat & Call</title>
     <meta name="robots" content="noindex, nofollow">
 
     <style>
@@ -22,10 +22,11 @@
         .back-btn svg { width: 28px; height: 28px; fill: currentColor; }
         .chat-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: #fff; margin-right: 12px; border: 2px solid rgba(255,255,255,0.3);}
         .chat-name { font-size: 16.5px; font-weight: 700; letter-spacing: 0.3px;}
-        .chat-status { font-size: 12px; opacity: 0.9;}
+        .chat-status { font-size: 12px; opacity: 0.9; color: #e2e8f0;}
+        .status-online { color: #86efac !important; font-weight: bold; } /* Green color for online */
         
         .header-actions { margin-left: auto; display: flex; gap: 15px; align-items: center; }
-        .header-actions button { background: none; border: none; color: white; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
+        .header-actions button { background: none; border: none; color: white; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; font-size: 20px;}
 
         /* Chat Area */
         main#chat-area { flex: 1 1 auto; overflow-y: auto; padding: 15px 12px; display: flex; flex-direction: column; gap: 8px; background: var(--bg-body); }
@@ -47,6 +48,8 @@
         .msg-tick svg { width: 17px; height: 17px; fill: var(--tick-gray); }
         .msg-tick.read svg { fill: var(--tick-blue); }
 
+        .call-msg-box { background: var(--primary-blue); color: white; padding: 10px 15px; border-radius: 8px; text-align: center; min-width: 180px; }
+
         /* Bottom Input Area */
         .bottom-container { flex: 0 0 auto; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; flex-direction: column; z-index: 10; position: relative;}
         .preview-box { display: none; padding: 12px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; position: relative; border-left: 4px solid var(--primary-blue); font-size: 14px;}
@@ -59,29 +62,25 @@
         .recording-ui { display: none; flex: 1; background: #fef2f2; border: 1px solid #fecaca; border-radius: 22px; padding: 12px 16px; align-items: center; justify-content: space-between; font-weight: bold; }
         .record-timer { color: #ef4444; animation: pulse 1.5s infinite; }
         .slide-cancel { font-size: 13.5px; color: #ef4444; font-weight: normal; animation: slideLeft 1.5s infinite alternate;}
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        @keyframes slideLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-10px); } }
-
+        
         .action-circle-btn { width: 44px; height: 44px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; color: white; cursor: pointer; flex-shrink: 0; }
         .btn-send { background-color: var(--primary-blue); display: none; }
         .btn-mic { background-color: #0ea5e9; user-select: none; touch-action: none; }
         .btn-mic.recording { background-color: #ef4444; transform: scale(1.3); }
 
-        /* Custom Call Ringing UI */
-        #call-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 102, 194, 0.95); z-index: 5000; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; }
-        #call-overlay img { width: 110px; height: 110px; border-radius: 50%; border: 4px solid white; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
-        #call-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
-        #call-status-text { font-size: 16px; opacity: 0.8; margin-bottom: 50px; animation: pulse 1.5s infinite; }
-        .call-buttons { display: flex; gap: 40px; }
-        .call-btn { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.2s;}
-        .call-btn:active { transform: scale(0.9); }
-        .btn-reject { background: #ef4444; color: white; font-size: 30px;}
-        .btn-accept { background: #22c55e; color: white; font-size: 30px;}
+        /* 🎥 CUSTOM WEBRTC CALL UI */
+        #call-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #111; z-index: 5000; display: none; flex-direction: column; }
+        #remote-video { width: 100%; height: 100%; object-fit: cover; background: #222; }
+        #local-video { position: absolute; bottom: 100px; right: 20px; width: 100px; height: 150px; object-fit: cover; border-radius: 12px; border: 2px solid white; background: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 5001;}
+        #incoming-screen { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(10, 102, 194, 0.95); display: none; flex-direction: column; justify-content: center; align-items: center; color: white; z-index: 5002; }
+        #incoming-screen img { width: 110px; height: 110px; border-radius: 50%; border: 4px solid white; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+        #call-status-text { font-size: 18px; opacity: 0.9; margin-bottom: 50px; animation: pulse 1.5s infinite; }
+        .call-controls { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 40px; z-index: 5003; }
+        .call-btn { width: 65px; height: 65px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
+        .btn-reject { background: #ef4444; color: white; }
+        .btn-accept { background: #22c55e; color: white; }
 
-        /* Video Container */
-        #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 6000; display: none; background: #111; }
-
-        /* Modals & Overlays */
+        /* Modals */
         #context-menu { position: absolute; background: white; border-radius: 14px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); display: none; z-index: 1000; overflow: hidden; width: 180px; border: 1px solid #e2e8f0;}
         .ctx-item { padding: 14px 20px; font-size: 15px; color: #1e293b; cursor: pointer; font-weight: 500;}
         .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); z-index: 3000; display: none; justify-content: center; align-items: center; flex-direction: column; }
@@ -90,7 +89,14 @@
         .btn-del-me { background: #f1f5f9; color: #334155; }
         .btn-del-all { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca;}
         .btn-cancel { background: white; border: 1px solid #cbd5e1; color: #333; margin-top: 15px;}
+        
+        #upload-loader { background: rgba(255,255,255,0.85); }
+        .spinner { width: 45px; height: 45px; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite; }
+
         .hidden { display: none !important; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        @keyframes slideLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-10px); } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
         .double-tick path { d: path("M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"); }
     </style>
 </head>
@@ -105,17 +111,13 @@
             <img src="https://ui-avatars.com/api/?name=User" id="target-pic" class="chat-avatar">
             <div>
                 <div id="target-name" class="chat-name">Loading...</div>
-                <div class="chat-status" id="chat-status">Online</div>
+                <div class="chat-status" id="chat-status">Connecting...</div>
             </div>
         </div>
         
         <div class="header-actions">
-            <button onclick="initiateFirebaseCall('audio')" title="Audio Call">
-                <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-            </button>
-            <button onclick="initiateFirebaseCall('video')" title="Video Call">
-                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
-            </button>
+            <button onclick="startMyCall('audio')" title="Audio Call">📞</button>
+            <button onclick="startMyCall('video')" title="Video Call">🎥</button>
         </div>
     </header>
 
@@ -133,7 +135,6 @@
                 <svg viewBox="0 0 24 24"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5a2.5 2.5 0 015 0v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5a2.5 2.5 0 005 0V5c0-3.31-2.69-6-6-6S3 1.69 3 5v11.5c0 3.86 3.14 7 7 7s7-3.14 7-7V6h-1.5z"/></svg>
             </button>
             <input type="file" id="file-input" accept="image/*,video/*" class="hidden" onchange="handleFileSelect(event)">
-            
             <textarea id="msg-input" class="input-box" placeholder="Write a message..." rows="1" oninput="toggleSendBtn()"></textarea>
             
             <div id="recording-ui" class="recording-ui">
@@ -144,24 +145,30 @@
             <button id="mic-btn" class="action-circle-btn btn-mic">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.39-.9.88 0 2.76-2.24 5-5 5s-5-2.24-5-5c0-.49-.41-.88-.9-.88s-.9.39-.9.88c0 3.38 2.51 6.18 5.8 6.72V22h2v-3.32c3.29-.54 5.8-3.34 5.8-6.72 0-.49-.41-.88-.9-.88z"/></svg>
             </button>
-            
             <button id="send-btn" class="action-circle-btn btn-send" onclick="sendMessage()">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
             </button>
         </div>
     </div>
 
-    <div id="call-overlay">
-        <img src="" id="call-overlay-pic">
-        <div id="call-title">Unknown</div>
-        <div id="call-status-text">Incoming Call...</div>
-        <div class="call-buttons">
-            <button class="call-btn btn-reject" onclick="rejectFirebaseCall()">✖</button>
-            <button class="call-btn btn-accept" id="btn-accept-call" onclick="acceptFirebaseCall()">✔</button>
+    <div id="call-ui">
+        <video id="remote-video" autoplay playsinline></video>
+        <video id="local-video" autoplay playsinline muted></video>
+        
+        <div id="incoming-screen">
+            <img src="" id="caller-pic">
+            <h2 id="caller-name">Unknown</h2>
+            <div id="call-status-text">Incoming Call...</div>
+            <div class="call-controls" id="incoming-controls" style="position:relative; margin-top:20px; bottom:0;">
+                <button class="call-btn btn-reject" onclick="endCall()">✖</button>
+                <button class="call-btn btn-accept" id="accept-btn" onclick="acceptCall()">✔</button>
+            </div>
+        </div>
+
+        <div class="call-controls" id="active-controls" style="display:none;">
+            <button class="call-btn btn-reject" onclick="endCall()">✖</button>
         </div>
     </div>
-
-    <div id="video-container"></div>
 
     <div id="context-menu"></div>
     <div id="delete-modal" class="modal-overlay">
@@ -172,17 +179,19 @@
             <button class="modal-btn btn-cancel" onclick="closeDeleteModal()">Cancel</button>
         </div>
     </div>
+    <div id="upload-loader" class="modal-overlay">
+        <div class="spinner"></div>
+        <div style="margin-top:15px; font-weight:700; color:var(--primary-blue);" id="loader-text">Sending...</div>
+    </div>
 </div>
-
-<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getDatabase, ref as dbRef, push, set, update, onChildAdded, onChildChanged, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref as dbRef, push, set, update, remove, onChildAdded, onChildChanged, onValue, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Configurations
+    // App Config
     const CLOUD_NAME = "dr06qkbaa"; 
     const UPLOAD_PRESET = "nearjobs_profiles"; 
     const mainConfig = { apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk", authDomain: "jobs-45cc9.firebaseapp.com", projectId: "jobs-45cc9" };
@@ -195,11 +204,21 @@
     const dbChatRT = getDatabase(chatApp); 
 
     let currentUser = null, targetUid = new URLSearchParams(window.location.search).get('uid'), chatId = null;
-    let selectedFile = null, actionType = null, actionData = null, longPressTimer = null, activeMsgId = null;
-    let currentCallRoom = null, currentCallType = null, zpInstance = null;
     let targetName = "User", targetPic = "https://ui-avatars.com/api/?name=User";
-
+    
+    let selectedFile = null, actionType = null, actionData = null, activeMsgId = null, longPressTimer = null;
     window.chatMessages = {}; 
+
+    // WebRTC Variables
+    const servers = { iceServers: [{ urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'] }] };
+    let peerConnection = null, localStream = null, remoteStream = null, isVideoCall = true;
+
+    const callUI = document.getElementById('call-ui');
+    const localVideo = document.getElementById('local-video');
+    const remoteVideo = document.getElementById('remote-video');
+    const incomingScreen = document.getElementById('incoming-screen');
+    const acceptBtn = document.getElementById('accept-btn');
+    const activeControls = document.getElementById('active-controls');
 
     onAuthStateChanged(auth, async (user) => {
         if (!user) return location.href = 'login.html';
@@ -208,131 +227,72 @@
         chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
         
         loadTargetUser();
-        listenToRTDB();
-        listenToFirebaseCallSignal(); // 👈 New Fast Call Listener
+        managePresence();       // Online/Offline Logic Start
+        listenToRTDB();         // Chat Messages Start
+        listenForCalls();       // WebRTC Calls Start
     });
 
+    // ==========================================
+    // 🟢 REAL-TIME PRESENCE (Online/Offline Status)
+    // ==========================================
+    function managePresence() {
+        // Meri apni status manage karna
+        const myStatusRef = dbRef(dbChatRT, `presence/${currentUser.uid}`);
+        const connectedRef = dbRef(dbChatRT, ".info/connected");
+        
+        onValue(connectedRef, (snap) => {
+            if (snap.val() === true) {
+                const con = onDisconnect(myStatusRef);
+                con.set({ state: 'offline', last_changed: serverTimestamp() }).then(() => {
+                    set(myStatusRef, { state: 'online', last_changed: serverTimestamp() });
+                });
+            }
+        });
+
+        // Doosre ki status dekhna
+        onValue(dbRef(dbChatRT, `presence/${targetUid}`), (snap) => {
+            const data = snap.val();
+            const statusEl = document.getElementById('chat-status');
+            
+            if(data && data.state === 'online') {
+                statusEl.innerText = 'Online';
+                statusEl.classList.add('status-online');
+            } else {
+                statusEl.classList.remove('status-online');
+                if (data && data.last_changed) {
+                    const date = new Date(data.last_changed);
+                    const timeString = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const dateString = date.toLocaleDateString();
+                    
+                    // Check if today
+                    const today = new Date();
+                    if(date.toDateString() === today.toDateString()) {
+                        statusEl.innerText = `Last seen today at ${timeString}`;
+                    } else {
+                        statusEl.innerText = `Last seen ${dateString} ${timeString}`;
+                    }
+                } else {
+                    statusEl.innerText = 'Offline';
+                }
+            }
+        });
+    }
+
+    // ==========================================
+    // 💬 CHAT LOGIC & ACCURATE BLUE TICKS
+    // ==========================================
     async function loadTargetUser() {
         try {
             const snap = await getDoc(doc(dbMain, "users", targetUid));
             if(snap.exists()){
-                const u = snap.data();
-                targetName = u.facilityName || u.fullName || "User";
-                targetPic = u.profilePicUrl || `https://ui-avatars.com/api/?name=${targetName}`;
+                targetName = snap.data().facilityName || snap.data().fullName || "User";
+                targetPic = snap.data().profilePicUrl || `https://ui-avatars.com/api/?name=${targetName}`;
                 document.getElementById('target-name').innerText = targetName;
                 document.getElementById('target-pic').src = targetPic;
             }
         } catch(e) {}
     }
 
-    // ==========================================
-    // 🚀 NEW FAST FIREBASE CALLING SYSTEM
-    // ==========================================
-    function listenToFirebaseCallSignal() {
-        const signalRef = dbRef(dbChatRT, `chats/${chatId}/callSignal`);
-        onValue(signalRef, (snapshot) => {
-            const data = snapshot.val();
-            if (!data) return;
-
-            currentCallRoom = data.roomID;
-            currentCallType = data.type;
-
-            // 1. If someone is calling ME
-            if (data.callerId === targetUid && data.status === 'calling') {
-                showCallUI(targetPic, targetName, "Incoming " + (data.type==='video'?'Video':'Audio') + " Call...", true);
-            }
-            
-            // 2. If I called them, and they ACCEPTED
-            if (data.callerId === currentUser.uid && data.status === 'accepted') {
-                document.getElementById('call-overlay').style.display = 'none';
-                joinZegoRoom(currentCallRoom, currentCallType);
-            }
-
-            // 3. If call is REJECTED or ENDED
-            if (data.status === 'ended' || data.status === 'rejected') {
-                document.getElementById('call-overlay').style.display = 'none';
-                if(zpInstance) { zpInstance.destroy(); zpInstance = null; document.getElementById('video-container').style.display = 'none'; }
-                if (data.status === 'rejected' && data.callerId === currentUser.uid) {
-                    alert("Call was declined.");
-                }
-            }
-        });
-    }
-
-    window.initiateFirebaseCall = async (type) => {
-        const roomID = `room_${Date.now()}_${Math.floor(Math.random()*1000)}`;
-        currentCallRoom = roomID;
-        currentCallType = type;
-
-        // Show my own outgoing UI
-        showCallUI(targetPic, targetName, "Ringing...", false);
-
-        // Send signal via Firebase
-        await update(dbRef(dbChatRT, `chats/${chatId}/callSignal`), {
-            callerId: currentUser.uid,
-            roomID: roomID,
-            type: type,
-            status: 'calling',
-            timestamp: serverTimestamp()
-        });
-
-        // Add message to chat history
-        let msgPayload = { 
-            senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), 
-            isCall: true, callType: type, text: type === 'video' ? '🎥 Video Call' : '📞 Audio Call'
-        };
-        push(dbRef(dbChatRT, `chats/${chatId}/messages`), msgPayload);
-        update(dbRef(dbChatRT, `chatRooms/${chatId}`), {
-            participants: [currentUser.uid, targetUid], lastMessage: msgPayload.text,
-            lastSenderId: currentUser.uid, readBy: [currentUser.uid], updatedAt: serverTimestamp()
-        });
-    };
-
-    window.acceptFirebaseCall = () => {
-        document.getElementById('call-overlay').style.display = 'none';
-        update(dbRef(dbChatRT, `chats/${chatId}/callSignal`), { status: 'accepted' });
-        joinZegoRoom(currentCallRoom, currentCallType);
-    };
-
-    window.rejectFirebaseCall = () => {
-        document.getElementById('call-overlay').style.display = 'none';
-        update(dbRef(dbChatRT, `chats/${chatId}/callSignal`), { status: 'rejected' });
-    };
-
-    function showCallUI(img, name, statusText, isIncoming) {
-        document.getElementById('call-overlay-pic').src = img;
-        document.getElementById('call-title').innerText = name;
-        document.getElementById('call-status-text').innerText = statusText;
-        document.getElementById('btn-accept-call').style.display = isIncoming ? 'flex' : 'none';
-        document.getElementById('call-overlay').style.display = 'flex';
-    }
-
-    function joinZegoRoom(roomID, type) {
-        document.getElementById('video-container').style.display = 'block';
-        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(349685482, "2fda23cba27417a8e245c163c7536a13", roomID, currentUser.uid, currentUser.email ? currentUser.email.split('@')[0] : "User");
-        
-        zpInstance = ZegoUIKitPrebuilt.create(kitToken);
-        zpInstance.joinRoom({
-            container: document.getElementById('video-container'),
-            showPreJoinView: false,
-            turnOnMicrophoneWhenJoining: true,
-            turnOnCameraWhenJoining: type === 'video',
-            showMyCameraToggleButton: true,
-            showMyMicrophoneToggleButton: true,
-            showAudioVideoSettingsButton: true,
-            showScreenSharingButton: false,
-            onLeaveRoom: () => {
-                document.getElementById('video-container').style.display = 'none';
-                update(dbRef(dbChatRT, `chats/${chatId}/callSignal`), { status: 'ended' });
-                zpInstance.destroy();
-                zpInstance = null;
-            }
-        });
-    }
-    // ==========================================
-
-
-    // --- NORMAL CHAT LOGIC (Messages, Voice, Delete) ---
     function listenToRTDB() {
         const messagesRef = dbRef(dbChatRT, `chats/${chatId}/messages`);
         onChildAdded(messagesRef, (snapshot) => { processMsg(snapshot.key, snapshot.val()); });
@@ -343,10 +303,27 @@
         window.chatMessages[id] = msg;
         if (msg[`deletedFor_${currentUser.uid}`]) { let el = document.getElementById(`msg-${id}`); if(el) el.remove(); return; }
         renderMessage(msg, id);
+
+        // 🔵 ACCURATE READ RECEIPT LOGIC
+        // Sirf tab 'read' mark karein jab mera screen open (visible) ho
         if (msg.senderId !== currentUser.uid && msg.status !== 'read' && !msg.isDeletedEveryone) {
-            update(dbRef(dbChatRT, `chats/${chatId}/messages/${id}`), { status: 'read' });
+            if (document.visibilityState === 'visible') {
+                update(dbRef(dbChatRT, `chats/${chatId}/messages/${id}`), { status: 'read' });
+            }
         }
     }
+
+    // Jab user phone lock karke wapas open kare
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === 'visible') {
+            for(let id in window.chatMessages) {
+                let msg = window.chatMessages[id];
+                if (msg.senderId !== currentUser.uid && msg.status !== 'read' && !msg.isDeletedEveryone) {
+                    update(dbRef(dbChatRT, `chats/${chatId}/messages/${id}`), { status: 'read' });
+                }
+            }
+        }
+    });
 
     function renderMessage(msg, id) {
         const isMe = msg.senderId === currentUser.uid;
@@ -366,12 +343,15 @@
             let mediaHtml = "", replyHtml = "";
             if(msg.mediaUrl) {
                 if(msg.mediaType === 'audio') mediaHtml = `<audio src="${msg.mediaUrl}" class="msg-audio" controls></audio>`;
-                else if(msg.mediaType === 'video') mediaHtml = `<video src="${msg.mediaUrl}" class="msg-media"></video>`;
+                else if(msg.mediaType === 'video') mediaHtml = `<video src="${msg.mediaUrl}" class="msg-media" controls></video>`;
                 else mediaHtml = `<img src="${msg.mediaUrl}" class="msg-media">`;
             }
             if(msg.replyText) replyHtml = `<div class="reply-quote">${msg.replyText}</div>`;
 
-            const tickHtml = isMe ? `<span class="msg-tick ${msg.status==='read'?'read':''} double-tick"><svg viewBox="0 0 24 24"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></svg></span>` : "";
+            // Blue tick logic
+            const tickClass = msg.status === 'read' ? 'read' : '';
+            const tickHtml = isMe ? `<span class="msg-tick ${tickClass} double-tick"><svg viewBox="0 0 24 24"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></svg></span>` : "";
+            
             const editHtml = msg.isEdited ? `<span class="msg-edited">(edited)</span>` : "";
             const optsBtn = isMe ? `<div class="msg-opts-btn" onclick="openMenu(event, '${id}')">⋮</div>` : '';
 
@@ -390,16 +370,21 @@
             setTimeout(() => { document.getElementById('chat-area').scrollTop = document.getElementById('chat-area').scrollHeight; }, 50);
         }
 
+        // Long press for Context Menu
         if (!isMe && !msg.isDeletedEveryone && !msg.isCall) {
             const bubble = document.getElementById(`bubble-${id}`);
-            bubble.addEventListener('touchstart', (e) => { longPressTimer = setTimeout(() => openMenu(e, id), 500); });
-            bubble.addEventListener('touchend', () => clearTimeout(longPressTimer));
-            bubble.addEventListener('touchmove', () => clearTimeout(longPressTimer));
-            bubble.addEventListener('contextmenu', (e) => { e.preventDefault(); openMenu(e, id); });
+            if(bubble) {
+                bubble.addEventListener('touchstart', (e) => { longPressTimer = setTimeout(() => openMenu(e, id), 500); });
+                bubble.addEventListener('touchend', () => clearTimeout(longPressTimer));
+                bubble.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+                bubble.addEventListener('contextmenu', (e) => { e.preventDefault(); openMenu(e, id); });
+            }
         }
     }
 
-    // Context Menu & Sending logic remains unchanged (Voice notes, images, etc.)
+    // ==========================================
+    // 📎 ATTACHMENTS, VOICE & ACTIONS
+    // ==========================================
     window.openMenu = (e, id) => {
         e.preventDefault(); e.stopPropagation(); closeMenu(); activeMsgId = id;
         const msg = window.chatMessages[id]; const isMe = msg.senderId === currentUser.uid;
@@ -463,10 +448,14 @@
 
         let mediaUrl = null, mediaType = null;
         if(selectedFile) {
+            document.getElementById('upload-loader').style.display = 'flex';
+            document.getElementById('loader-text').innerText = "Uploading Media...";
             mediaType = selectedFile.type.startsWith('video') ? 'video' : 'image';
             const formData = new FormData(); formData.append('file', selectedFile); formData.append('upload_preset', UPLOAD_PRESET);
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, { method: 'POST', body: formData });
-            const data = await res.json(); mediaUrl = data.secure_url;
+            try {
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, { method: 'POST', body: formData });
+                const data = await res.json(); mediaUrl = data.secure_url;
+            } catch(e) { alert("Upload failed."); document.getElementById('upload-loader').style.display='none'; return; }
         }
 
         let msgPayload = { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp() };
@@ -474,7 +463,7 @@
         if(mediaUrl) { msgPayload.mediaUrl = mediaUrl; msgPayload.mediaType = mediaType; }
         if(actionType === 'reply' && actionData) msgPayload.replyText = actionData.text;
 
-        document.getElementById('msg-input').value = ""; cancelAction();
+        document.getElementById('msg-input').value = ""; document.getElementById('upload-loader').style.display = 'none'; cancelAction();
         await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), msgPayload);
         await update(dbRef(dbChatRT, `chatRooms/${chatId}`), {
             participants: [currentUser.uid, targetUid], lastMessage: text || (mediaType === 'video' ? '🎥 Video' : '📷 Photo'),
@@ -482,44 +471,182 @@
         });
     };
 
-    let mediaRecorder = null, audioChunks = [], isRecording = false;
+    // Voice Note Logic
+    let mediaRecorder = null, audioChunks = [], isRecording = false, recordInterval = null, recordSeconds = 0;
     const micBtn = document.getElementById('mic-btn');
     const startRecording = async (e) => {
         if (e) e.preventDefault(); if (isRecording) return;
-        currentMicStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(currentMicStream);
-        audioChunks = []; mediaRecorder.ondataavailable = e => { audioChunks.push(e.data); };
-        mediaRecorder.onstop = async () => {
-            currentMicStream.getTracks().forEach(t => t.stop());
-            if (audioChunks.length > 0) {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                const formData = new FormData();
-                formData.append('file', new File([audioBlob], `voice_${Date.now()}.webm`, { type: 'audio/webm' })); 
-                formData.append('upload_preset', UPLOAD_PRESET); formData.append('resource_type', 'video'); 
-                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: 'POST', body: formData });
-                const data = await res.json();
-                let msgPayload = { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), mediaUrl: data.secure_url, mediaType: 'audio' };
-                await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), msgPayload);
-            }
-            isRecording = false; micBtn.classList.remove('recording');
-        };
-        mediaRecorder.start(); isRecording = true; micBtn.classList.add('recording');
+        try {
+            const currentMicStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(currentMicStream);
+            audioChunks = []; mediaRecorder.ondataavailable = e => { audioChunks.push(e.data); };
+            mediaRecorder.onstop = async () => {
+                currentMicStream.getTracks().forEach(t => t.stop());
+                clearInterval(recordInterval); micBtn.classList.remove('recording');
+                document.getElementById('msg-input').style.display = 'block'; document.getElementById('attach-btn').style.display = 'block';
+                document.getElementById('recording-ui').style.display = 'none';
+
+                if (audioChunks.length > 0) {
+                    document.getElementById('upload-loader').style.display = 'flex'; document.getElementById('loader-text').innerText = "Sending Voice...";
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const formData = new FormData();
+                    formData.append('file', new File([audioBlob], `voice_${Date.now()}.webm`, { type: 'audio/webm' })); 
+                    formData.append('upload_preset', UPLOAD_PRESET); formData.append('resource_type', 'video'); 
+                    try {
+                        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: 'POST', body: formData });
+                        const data = await res.json();
+                        let msgPayload = { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), mediaUrl: data.secure_url, mediaType: 'audio' };
+                        await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), msgPayload);
+                    } catch(e) { alert("Voice failed."); }
+                    document.getElementById('upload-loader').style.display = 'none';
+                }
+                isRecording = false; 
+            };
+            mediaRecorder.start(); isRecording = true; micBtn.classList.add('recording');
+            document.getElementById('msg-input').style.display = 'none'; document.getElementById('attach-btn').style.display = 'none';
+            document.getElementById('recording-ui').style.display = 'flex';
+            recordSeconds = 0; document.getElementById('record-timer').innerText = `🔴 00:00`;
+            recordInterval = setInterval(() => { recordSeconds++; document.getElementById('record-timer').innerText = `🔴 ${String(Math.floor(recordSeconds/60)).padStart(2,'0')}:${String(recordSeconds%60).padStart(2,'0')}`; }, 1000);
+        } catch(e) { alert("Mic permission needed."); }
     };
     const stopAndSendRecording = (e) => { if (e) e.preventDefault(); if (mediaRecorder && isRecording) mediaRecorder.stop(); };
 
     micBtn.addEventListener('mousedown', startRecording); micBtn.addEventListener('touchstart', startRecording, {passive: false});
     micBtn.addEventListener('mouseup', stopAndSendRecording); micBtn.addEventListener('touchend', stopAndSendRecording);
 
-    // DELETE LOGIC
+    // Delete Logic
     let deleteTargetId = null;
     window.showDeleteModal = (id, isMe) => { closeMenu(); deleteTargetId = id; document.getElementById('delete-modal').style.display = 'flex'; document.getElementById('btn-del-all').style.display = isMe ? 'block' : 'none'; };
     window.closeDeleteModal = () => { document.getElementById('delete-modal').style.display = 'none'; };
     window.executeDelete = async (type) => {
-        if(!deleteTargetId) return;
-        const id = deleteTargetId; closeDeleteModal();
+        if(!deleteTargetId) return; const id = deleteTargetId; closeDeleteModal();
         if (type === 'me') { await update(dbRef(dbChatRT, `chats/${chatId}/messages/${id}`), { [`deletedFor_${currentUser.uid}`]: true }); document.getElementById(`msg-${id}`)?.remove(); } 
         else if (type === 'everyone') { await update(dbRef(dbChatRT, `chats/${chatId}/messages/${id}`), { isDeletedEveryone: true, text: null, mediaUrl: null, replyText: null, isCall: null }); }
     };
+
+    // ========================================================
+    // 🎥 WEBRTC CALL ENGINE (OWN SYSTEM)
+    // ========================================================
+    function listenForCalls() {
+        const callDocRef = dbRef(dbChatRT, `chats/${chatId}/webrtc`);
+        onValue(callDocRef, async (snapshot) => {
+            const data = snapshot.val();
+            if (!data) return;
+
+            if (data.offer && data.callerId === targetUid && !peerConnection) {
+                isVideoCall = data.type === 'video';
+                document.getElementById('caller-pic').src = targetPic;
+                document.getElementById('caller-name').innerText = targetName;
+                document.getElementById('call-status-text').innerText = isVideoCall ? "Incoming Video Call..." : "Incoming Audio Call...";
+                acceptBtn.style.display = 'flex';
+                incomingScreen.style.display = 'flex';
+                activeControls.style.display = 'none';
+                callUI.style.display = 'flex';
+            }
+
+            if (data.answer && data.callerId === currentUser.uid && peerConnection && peerConnection.signalingState !== "stable") {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+            }
+
+            if (data.iceCandidates) {
+                Object.values(data.iceCandidates).forEach(async candidateData => {
+                    if (candidateData.senderId !== currentUser.uid && peerConnection) {
+                        try { await peerConnection.addIceCandidate(new RTCIceCandidate(candidateData.candidate)); } catch (e) { }
+                    }
+                });
+            }
+
+            if (data.status === 'ended') closeWebRTC();
+        });
+    }
+
+    window.startMyCall = async (type) => {
+        isVideoCall = type === 'video';
+        await setupMediaSources();
+        document.getElementById('caller-pic').src = targetPic;
+        document.getElementById('caller-name').innerText = targetName;
+        document.getElementById('call-status-text').innerText = "Calling...";
+        acceptBtn.style.display = 'none'; 
+        incomingScreen.style.display = 'flex';
+        activeControls.style.display = 'none';
+        callUI.style.display = 'flex';
+
+        peerConnection = new RTCPeerConnection(servers);
+        localStream.getTracks().forEach(track => { peerConnection.addTrack(track, localStream); });
+
+        peerConnection.ontrack = (event) => {
+            incomingScreen.style.display = 'none'; 
+            activeControls.style.display = 'flex'; 
+            event.streams[0].getTracks().forEach(track => { remoteStream.addTrack(track); });
+            remoteVideo.srcObject = remoteStream;
+        };
+
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate) {
+                push(dbRef(dbChatRT, `chats/${chatId}/webrtc/iceCandidates`), { candidate: event.candidate.toJSON(), senderId: currentUser.uid });
+            }
+        };
+
+        const offerDescription = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(offerDescription);
+
+        await set(dbRef(dbChatRT, `chats/${chatId}/webrtc`), {
+            offer: { type: offerDescription.type, sdp: offerDescription.sdp },
+            callerId: currentUser.uid, type: type, status: 'calling', timestamp: serverTimestamp()
+        });
+
+        push(dbRef(dbChatRT, `chats/${chatId}/messages`), { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), isCall: true, callType: type });
+    };
+
+    window.acceptCall = async () => {
+        await setupMediaSources();
+        incomingScreen.style.display = 'none';
+        activeControls.style.display = 'flex';
+
+        peerConnection = new RTCPeerConnection(servers);
+        localStream.getTracks().forEach(track => { peerConnection.addTrack(track, localStream); });
+
+        peerConnection.ontrack = (event) => {
+            event.streams[0].getTracks().forEach(track => { remoteStream.addTrack(track); });
+            remoteVideo.srcObject = remoteStream;
+        };
+
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate) { push(dbRef(dbChatRT, `chats/${chatId}/webrtc/iceCandidates`), { candidate: event.candidate.toJSON(), senderId: currentUser.uid }); }
+        };
+
+        onValue(dbRef(dbChatRT, `chats/${chatId}/webrtc`), async (snap) => {
+            const data = snap.val();
+            if(data && data.offer && peerConnection.signalingState === "stable") {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+                const answerDescription = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answerDescription);
+                await update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { answer: { type: answerDescription.type, sdp: answerDescription.sdp }, status: 'active' });
+            }
+        }, { onlyOnce: true });
+    };
+
+    async function setupMediaSources() {
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({ video: isVideoCall, audio: true });
+            remoteStream = new MediaStream();
+            localVideo.srcObject = localStream;
+            localVideo.style.display = isVideoCall ? 'block' : 'none';
+        } catch(e) { alert("Camera ya Mic ki ijazat nahi mili!"); throw e; }
+    }
+
+    window.endCall = () => {
+        update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { status: 'ended' });
+        closeWebRTC();
+    };
+
+    function closeWebRTC() {
+        if(peerConnection) { peerConnection.close(); peerConnection = null; }
+        if(localStream) { localStream.getTracks().forEach(track => track.stop()); localStream = null; }
+        remoteVideo.srcObject = null; localVideo.srcObject = null;
+        callUI.style.display = 'none'; incomingScreen.style.display = 'none'; activeControls.style.display = 'none';
+        remove(dbRef(dbChatRT, `chats/${chatId}/webrtc`)); 
+    }
 </script>
 </body>
 </html>
