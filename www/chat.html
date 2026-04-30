@@ -40,7 +40,6 @@
         .call-msg-box { background: linear-gradient(135deg, #ffffff, #f1f5f9); border: 1px solid #cbd5e1; color: #0f172a; padding: 14px 16px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 220px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .call-msg-header { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--primary-blue); font-size: 15.5px; }
         .call-msg-box button { background: var(--primary-blue); color: white; border: none; padding: 10px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; width: 100%; display: flex; justify-content: center; align-items: center; gap: 6px; box-shadow: 0 3px 8px rgba(10,102,194,0.3); transition: 0.2s;}
-        .call-msg-box button:active { transform: scale(0.95); }
         .call-msg-time { font-size: 11px; opacity: 0.6; align-self: flex-end; margin-top: -2px; font-weight: 500;}
 
         .deleted-msg { font-style: italic; color: #64748b; display: flex; align-items: center; gap: 6px; font-size: 14px; }
@@ -50,7 +49,6 @@
         .msg-audio { width: 220px; height: 40px; margin-bottom: 6px; outline: none; }
         .msg-meta { display: flex; justify-content: flex-end; align-items: center; gap: 4px; margin-top: 4px; align-self: flex-end; }
         .msg-time { font-size: 10.5px; color: #64748b; font-weight: 500;}
-        .msg-edited { font-size: 10.5px; color: #64748b; font-style: italic; margin-right: 3px; }
         .msg-tick svg { width: 17px; height: 17px; fill: var(--tick-gray); }
         .msg-tick.read svg { fill: var(--tick-blue); }
 
@@ -85,17 +83,13 @@
 
         #local-video { position: absolute; top: 20px; right: 20px; width: 90px; height: 130px; object-fit: cover; border-radius: 12px; border: 2px solid rgba(255,255,255,0.4); background: #000; box-shadow: 0 8px 20px rgba(0,0,0,0.5); z-index: 5001;}
         
-        /* Incoming / Audio Ringing Screen (Enhanced) */
+        /* Incoming / Audio Ringing Screen */
         #call-overlay-screen { position: absolute; top:0; left:0; width:100%; height:100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 15vh; color: white; z-index: 5002; transition: opacity 0.3s; overflow: hidden; background: #0f172a;}
         
-        /* Glassmorphism Blurred Background for DP */
         .call-bg-blur { position: absolute; top: -10%; left: -10%; width: 120%; height: 120%; background-size: cover; background-position: center; filter: blur(30px) brightness(0.4); z-index: 1; }
-        
         .call-content-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
-        
         .call-avatar-container { position: relative; margin-bottom: 25px; display: flex; justify-content: center; align-items: center;}
         
-        /* Premium DP Styling & Pulsing Animation */
         #call-overlay-pic { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; position: relative; z-index: 3; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.5);}
         #call-overlay-pic.pulsing { animation: pulseRing 2s infinite; }
         
@@ -108,23 +102,19 @@
         #call-overlay-name { font-size: 28px; font-weight: 500; margin-bottom: 10px; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);}
         #call-status-text { font-size: 15px; opacity: 0.8; letter-spacing: 1px; font-weight: 400;}
         
-        /* Smaller Controls */
         #incoming-controls { position: absolute; bottom: 60px; width: 100%; display: flex; justify-content: space-around; padding: 0 50px; z-index: 3;}
         .action-wrapper { display: flex; flex-direction: column; align-items: center; gap: 8px; }
         .action-label { font-size: 13px; opacity: 0.9; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.5);}
         
-        /* Active Controls (Flexible Grid) */
         #active-controls { position: absolute; bottom: 25px; width: 100%; display: none; flex-direction: column; align-items: center; gap: 15px; z-index: 5003; }
         .call-controls-bar { width: 92%; max-width: 340px; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 24px; padding: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
         
         .control-grid { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;}
         .grid-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; opacity: 0.9; transition: 0.2s;}
-        .grid-item:active { transform: scale(0.9); opacity: 1;}
         .grid-icon { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; transition: 0.2s;}
         .grid-icon.active { background: white; color: #111; }
         
         .end-btn { width: 60px; height: 60px; border-radius: 50%; background: #ef4444; border: none; color: white; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.5); cursor: pointer; transition: 0.2s;}
-        .end-btn:active { transform: scale(0.9); }
         .accept-btn { width: 60px; height: 60px; border-radius: 50%; background: #22c55e; border: none; color: white; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(34, 197, 94, 0.5); cursor: pointer; animation: bounce 2s infinite;}
 
         #remote-mute-indicator { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.65); color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; display: none; align-items: center; gap: 6px; z-index: 5002; backdrop-filter: blur(4px); }
@@ -213,78 +203,42 @@
     </div>
 
     <div id="call-ui">
-        <div id="remote-mute-indicator">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
-            Muted
-        </div>
-
+        <div id="remote-mute-indicator"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>Muted</div>
         <div class="video-wrapper">
-            <div id="remote-cam-off-screen">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/><line x1="2" y1="2" x2="22" y2="22" stroke="white" stroke-width="2"/></svg>
-                <p>Camera Off</p>
-            </div>
+            <div id="remote-cam-off-screen"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/><line x1="2" y1="2" x2="22" y2="22" stroke="white" stroke-width="2"/></svg><p>Camera Off</p></div>
             <video id="remote-video" autoplay playsinline></video>
         </div>
-        
         <video id="local-video" autoplay playsinline muted></video>
         
         <div id="call-overlay-screen">
             <div class="call-bg-blur" id="call-bg-blur"></div>
-            
             <div class="call-content-wrapper">
-                <div class="call-avatar-container">
-                    <img src="" id="call-overlay-pic" class="pulsing">
-                </div>
+                <div class="call-avatar-container"><img src="" id="call-overlay-pic" class="pulsing"></div>
                 <h2 id="call-overlay-name">Unknown</h2>
                 <div id="call-status-text" style="animation: pulse 1.5s infinite;">Calling...</div>
             </div>
-            
             <div id="incoming-controls">
-                <div class="action-wrapper">
-                    <button class="end-btn" onclick="endCall()"><svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></button>
-                    <span class="action-label">Decline</span>
-                </div>
-                <div class="action-wrapper" id="accept-wrapper" style="display:none;">
-                    <button class="accept-btn" onclick="acceptCall()"><svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button>
-                    <span class="action-label">Accept</span>
-                </div>
+                <div class="action-wrapper"><button class="end-btn" onclick="endCall()"><svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></button><span class="action-label">Decline</span></div>
+                <div class="action-wrapper" id="accept-wrapper" style="display:none;"><button class="accept-btn" onclick="acceptCall()"><svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button><span class="action-label">Accept</span></div>
             </div>
         </div>
 
         <div id="active-controls">
             <div class="call-controls-bar">
                 <div class="control-grid">
-                    <div class="grid-item" onclick="toggleMic()">
-                        <div class="grid-icon" id="icon-mic"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.39-.9.88 0 2.76-2.24 5-5 5s-5-2.24-5-5c0-.49-.41-.88-.9-.88s-.9.39-.9.88c0 3.38 2.51 6.18 5.8 6.72V22h2v-3.32c3.29-.54 5.8-3.34 5.8-6.72 0-.49-.41-.88-.9-.88z"/></svg></div>
-                    </div>
-                    <div class="grid-item" onclick="toggleSpeaker()" id="ctrl-speaker" style="display:none;">
-                        <div class="grid-icon active" id="icon-speaker"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></div>
-                    </div>
-                    <div class="grid-item" onclick="toggleCamera()" id="ctrl-video">
-                        <div class="grid-icon" id="icon-cam"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg></div>
-                    </div>
-                    <div class="grid-item" onclick="flipCamera()" id="ctrl-flip">
-                        <div class="grid-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8l-1.25 2.75L8 12l2.75 1.25L12 16l1.25-2.75L16 12l-2.75-1.25z"/></svg></div>
-                    </div>
+                    <div class="grid-item" onclick="toggleMic()"><div class="grid-icon" id="icon-mic"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.39-.9.88 0 2.76-2.24 5-5 5s-5-2.24-5-5c0-.49-.41-.88-.9-.88s-.9.39-.9.88c0 3.38 2.51 6.18 5.8 6.72V22h2v-3.32c3.29-.54 5.8-3.34 5.8-6.72 0-.49-.41-.88-.9-.88z"/></svg></div></div>
+                    <div class="grid-item" onclick="toggleSpeaker()" id="ctrl-speaker" style="display:none;"><div class="grid-icon active" id="icon-speaker"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></div></div>
+                    <div class="grid-item" onclick="toggleCamera()" id="ctrl-video"><div class="grid-icon" id="icon-cam"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg></div></div>
+                    <div class="grid-item" onclick="flipCamera()" id="ctrl-flip"><div class="grid-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8l-1.25 2.75L8 12l2.75 1.25L12 16l1.25-2.75L16 12l-2.75-1.25z"/></svg></div></div>
                 </div>
-                
                 <button class="end-btn" onclick="endCall()" title="End Call"><svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></button>
             </div>
         </div>
     </div>
 
-    <div id="permission-modal" class="modal-overlay">
-        <div class="modal-box">
-            <h3 style="margin-bottom:10px; color:#ef4444;">Permission Required</h3>
-            <p style="font-size:14px; color:#475569; line-height:1.5;">Microphone/Camera access is blocked. Please allow permissions to make a call.</p>
-            <button class="modal-btn btn-primary" onclick="closePermissionModal()">Got it</button>
-        </div>
-    </div>
-    
+    <div id="permission-modal" class="modal-overlay"><div class="modal-box"><h3 style="margin-bottom:10px; color:#ef4444;">Permission Required</h3><p style="font-size:14px; color:#475569;">Microphone/Camera access is blocked. Please allow permissions to make a call.</p><button class="modal-btn btn-primary" onclick="closePermissionModal()">Got it</button></div></div>
     <div id="context-menu"></div>
-    <div id="delete-modal" class="modal-overlay">
-        <div class="modal-box"><h3 style="margin-bottom:15px; color:#0f172a;">Delete Message?</h3><button class="modal-btn btn-del-me" onclick="executeDelete('me')">Delete for me</button><button class="modal-btn btn-del-all" id="btn-del-all" onclick="executeDelete('everyone')">Delete for everyone</button><button class="modal-btn btn-cancel" onclick="closeDeleteModal()">Cancel</button></div>
-    </div>
+    <div id="delete-modal" class="modal-overlay"><div class="modal-box"><h3 style="margin-bottom:15px; color:#0f172a;">Delete Message?</h3><button class="modal-btn btn-del-me" onclick="executeDelete('me')">Delete for me</button><button class="modal-btn btn-del-all" id="btn-del-all" onclick="executeDelete('everyone')">Delete for everyone</button><button class="modal-btn btn-cancel" onclick="closeDeleteModal()">Cancel</button></div></div>
     <div id="media-viewer" class="viewer"><button class="viewer-close" onclick="closeViewer()">×</button><div id="viewer-content-box" style="display:flex; flex-direction:column; align-items:center;"></div></div>
     <div id="upload-loader" class="modal-overlay" style="background: rgba(255,255,255,0.85);"><div class="spinner"></div><div style="margin-top:15px; font-weight:700; color:var(--primary-blue);" id="loader-text">Processing...</div></div>
 </div>
@@ -292,7 +246,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getDatabase, ref as dbRef, push, set, update, remove, onChildAdded, onChildChanged, onValue, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const CLOUD_NAME = "dr06qkbaa"; const UPLOAD_PRESET = "nearjobs_profiles"; 
@@ -303,6 +257,7 @@
     const auth = getAuth(mainApp); const dbMain = getFirestore(mainApp); const dbChatRT = getDatabase(chatApp); 
 
     let currentUser = null, targetUid = new URLSearchParams(window.location.search).get('uid'), chatId = null;
+    let autoStartCall = new URLSearchParams(window.location.search).get('startCall'); // Check if opened from Push Notification
     let selectedFile = null, actionType = null, actionData = null, longPressTimer = null, activeMsgId = null;
     let targetName = "User", targetPic = "https://ui-avatars.com/api/?name=User";
     window.chatMessages = {}; 
@@ -341,7 +296,17 @@
         currentUser = user;
         if (!targetUid) return location.href = 'chats-request.html';
         chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
-        loadTargetUser(); managePresence(); listenToRTDB(); listenForCalls(); 
+        
+        loadTargetUser(); 
+        managePresence(); 
+        listenToRTDB(); 
+        listenForCalls(); 
+        setupPushNotifications(); // 🔔 Initialize Background Push Notifications
+        
+        // Auto show incoming call if opened from Notification
+        if(autoStartCall === 'true') {
+            setTimeout(() => { showCallUI(targetPic, targetName, "INCOMING CALL...", true); playIncomingRing(); }, 1500);
+        }
     });
 
     async function loadTargetUser() { try { const snap = await getDoc(doc(dbMain, "users", targetUid)); if(snap.exists()){ targetName = snap.data().facilityName || snap.data().fullName || "User"; targetPic = snap.data().profilePicUrl || `https://ui-avatars.com/api/?name=${targetName}`; document.getElementById('target-name').innerText = targetName; document.getElementById('target-pic').src = targetPic; } } catch(e) {} }
@@ -351,6 +316,54 @@
         const myStatusRef = dbRef(dbChatRT, `presence/${currentUser.uid}`);
         onValue(dbRef(dbChatRT, ".info/connected"), (snap) => { if (snap.val() === true) { onDisconnect(myStatusRef).set({ state: 'offline', last_changed: serverTimestamp() }).then(() => { set(myStatusRef, { state: 'online', last_changed: serverTimestamp() }); }); } });
         onValue(dbRef(dbChatRT, `presence/${targetUid}`), (snap) => { const data = snap.val(); const statusEl = document.getElementById('chat-status'); if(data && data.state === 'online') { statusEl.innerText = 'Online'; statusEl.classList.add('status-online'); } else { statusEl.classList.remove('status-online'); if (data && data.last_changed) { const date = new Date(data.last_changed); const timeStr = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); if(date.toDateString() === new Date().toDateString()) statusEl.innerText = `Last seen today at ${timeStr}`; else statusEl.innerText = `Last seen ${date.toLocaleDateString()} ${timeStr}`; } else { statusEl.innerText = 'Offline'; } } });
+    }
+
+    // 🔔 BACKGROUND PUSH NOTIFICATION & FULL SCREEN INTENT LOGIC
+    async function setupPushNotifications() {
+        if (!window.Capacitor || !window.Capacitor.Plugins.PushNotifications) return; // Only run inside App
+
+        try {
+            const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
+
+            let permStatus = await PushNotifications.requestPermissions();
+            if (permStatus.receive !== 'granted') return;
+
+            await PushNotifications.register();
+
+            PushNotifications.addListener('registration', async (token) => {
+                await updateDoc(doc(dbMain, "users", currentUser.uid), { fcmToken: token.value });
+            });
+
+            // Triggered when push is received in background
+            PushNotifications.addListener('pushNotificationReceived', async (notification) => {
+                await LocalNotifications.schedule({
+                    notifications: [{
+                        title: notification.title || "Incoming Call",
+                        body: notification.body || "Tap to answer",
+                        id: 1001,
+                        schedule: { at: new Date(Date.now() + 500) }, // Trigger almost immediately
+                        sound: "ringing.mp3",
+                        actionTypeId: "CALL_ACTIONS",
+                        extra: { isCall: true, callerUid: notification.data?.callerUid || targetUid },
+                        android: {
+                            channelId: "high_importance_channel",
+                            importance: 5,
+                            visibility: 1, 
+                            fullScreenIntent: true // This wakes up the screen!
+                        }
+                    }]
+                });
+            });
+
+            LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+                if (notification.actionId === 'tap' || (notification.notification.extra && notification.notification.extra.isCall)) {
+                    let cUid = notification.notification.extra.callerUid || targetUid;
+                    window.location.href = `chat.html?uid=${cUid}&startCall=true`;
+                }
+            });
+        } catch (error) {
+            console.error("Push Setup Error:", error);
+        }
     }
 
     // 💬 CHAT RENDERING
@@ -412,7 +425,7 @@
 
     function showCallUI(img, name, status, isIncoming) {
         document.getElementById('call-overlay-pic').src = img;
-        document.getElementById('call-bg-blur').style.backgroundImage = `url('${img}')`; // Premium Blur BG
+        document.getElementById('call-bg-blur').style.backgroundImage = `url('${img}')`;
         document.getElementById('call-overlay-name').innerText = name; 
         document.getElementById('call-status-text').innerText = status; 
         
@@ -430,32 +443,17 @@
     }
 
     function startCallTimer() {
-        let seconds = 0;
-        const statusText = document.getElementById('call-status-text');
-        statusText.style.animation = 'none';
-        statusText.innerText = '00:00';
-        clearInterval(callTimerInterval);
-        callTimerInterval = setInterval(() => {
-            seconds++;
-            const m = String(Math.floor(seconds / 60)).padStart(2, '0');
-            const s = String(seconds % 60).padStart(2, '0');
-            statusText.innerText = `${m}:${s}`;
-        }, 1000);
+        let seconds = 0; const statusText = document.getElementById('call-status-text');
+        statusText.style.animation = 'none'; statusText.innerText = '00:00'; clearInterval(callTimerInterval);
+        callTimerInterval = setInterval(() => { seconds++; statusText.innerText = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`; }, 1000);
     }
 
     function handleCallConnected() {
         stopRings(); 
         document.getElementById('call-overlay-pic').classList.remove('pulsing');
-        incomingControls.style.display = 'none'; // Hide ringing actions
-        activeControls.style.display = 'flex';   // Show main controls
-        
-        if (isVideoCall) {
-            callScreenOverlay.style.display = 'none'; // Hide DP overlay for video
-            localVideo.style.display = 'block';
-        } else {
-            callScreenOverlay.style.display = 'flex'; // Keep DP overlay for audio!
-            startCallTimer();
-        }
+        incomingControls.style.display = 'none'; activeControls.style.display = 'flex';   
+        if (isVideoCall) { callScreenOverlay.style.display = 'none'; localVideo.style.display = 'block'; } 
+        else { callScreenOverlay.style.display = 'flex'; startCallTimer(); }
     }
 
     window.closePermissionModal = () => { document.getElementById('permission-modal').style.display = 'none'; };
@@ -463,15 +461,11 @@
     async function setupMediaSources() {
         try {
             const constraints = { video: isVideoCall ? { facingMode: currentFacingMode } : false, audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } };
-            localStream = await navigator.mediaDevices.getUserMedia(constraints);
-            remoteStream = new MediaStream();
+            localStream = await navigator.mediaDevices.getUserMedia(constraints); remoteStream = new MediaStream();
             localVideo.muted = true; localVideo.srcObject = localStream;
-            
             isMicMuted = false; isVideoMuted = false; isSpeakerOn = true;
             document.getElementById('icon-mic').classList.remove('active'); document.getElementById('icon-cam').classList.remove('active'); document.getElementById('icon-speaker').classList.add('active');
-            
-            update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { [`micMuted_${currentUser.uid}`]: false, [`camMuted_${currentUser.uid}`]: false });
-            return true;
+            update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { [`micMuted_${currentUser.uid}`]: false, [`camMuted_${currentUser.uid}`]: false }); return true;
         } catch(e) { document.getElementById('permission-modal').style.display = 'flex'; closeWebRTC(); return false; }
     }
 
@@ -482,11 +476,7 @@
         peerConnection = new RTCPeerConnection(servers);
         localStream.getTracks().forEach(track => { peerConnection.addTrack(track, localStream); });
 
-        peerConnection.ontrack = (event) => {
-            handleCallConnected();
-            event.streams[0].getTracks().forEach(track => { remoteStream.addTrack(track); }); remoteVideo.srcObject = remoteStream;
-        };
-
+        peerConnection.ontrack = (event) => { handleCallConnected(); event.streams[0].getTracks().forEach(track => { remoteStream.addTrack(track); }); remoteVideo.srcObject = remoteStream; };
         peerConnection.onicecandidate = (event) => { if (event.candidate) { push(dbRef(dbChatRT, `chats/${chatId}/webrtc/iceCandidates`), { candidate: event.candidate.toJSON(), senderId: currentUser.uid }); } };
 
         const offerDescription = await peerConnection.createOffer(); await peerConnection.setLocalDescription(offerDescription);
@@ -514,150 +504,38 @@
         }, { onlyOnce: true });
     };
 
-    // --- CALL CONTROLS ---
-    window.toggleMic = () => {
-        if(!localStream) return;
-        const audioTrack = localStream.getAudioTracks()[0];
-        if(audioTrack) {
-            isMicMuted = !isMicMuted; audioTrack.enabled = !isMicMuted; 
-            const icon = document.getElementById('icon-mic');
-            if(isMicMuted) icon.classList.add('active'); else icon.classList.remove('active');
-            if(peerConnection && peerConnection.signalingState !== 'closed') { update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { [`micMuted_${currentUser.uid}`]: isMicMuted }); }
-        }
-    };
+    window.toggleMic = () => { if(!localStream) return; const audioTrack = localStream.getAudioTracks()[0]; if(audioTrack) { isMicMuted = !isMicMuted; audioTrack.enabled = !isMicMuted; const icon = document.getElementById('icon-mic'); if(isMicMuted) icon.classList.add('active'); else icon.classList.remove('active'); if(peerConnection && peerConnection.signalingState !== 'closed') { update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { [`micMuted_${currentUser.uid}`]: isMicMuted }); } } };
+    window.toggleCamera = () => { if(!localStream || !isVideoCall) return; const videoTrack = localStream.getVideoTracks()[0]; if(videoTrack) { isVideoMuted = !isVideoMuted; videoTrack.enabled = !isVideoMuted; const icon = document.getElementById('icon-cam'); if(isVideoMuted) icon.classList.add('active'); else icon.classList.remove('active'); if(peerConnection && peerConnection.signalingState !== 'closed') { update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { [`camMuted_${currentUser.uid}`]: isVideoMuted }); } } };
+    window.flipCamera = async () => { if(!localStream || !isVideoCall) return; currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user'; try { const oldVideoTrack = localStream.getVideoTracks()[0]; oldVideoTrack.stop(); localStream.removeTrack(oldVideoTrack); const newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode }, audio: false }); const newVideoTrack = newStream.getVideoTracks()[0]; localStream.addTrack(newVideoTrack); localVideo.srcObject = localStream; const sender = peerConnection.getSenders().find(s => s.track && s.track.kind === 'video'); if (sender) { sender.replaceTrack(newVideoTrack); } newVideoTrack.enabled = !isVideoMuted; } catch (e) { alert("Flip camera not supported."); } };
+    window.toggleSpeaker = () => { if(!remoteVideo) return; isSpeakerOn = !isSpeakerOn; const icon = document.getElementById('icon-speaker'); if(isSpeakerOn) { icon.classList.add('active'); remoteVideo.volume = 1.0; } else { icon.classList.remove('active'); remoteVideo.volume = 0.2; } };
 
-    window.toggleCamera = () => {
-        if(!localStream || !isVideoCall) return;
-        const videoTrack = localStream.getVideoTracks()[0];
-        if(videoTrack) {
-            isVideoMuted = !isVideoMuted; videoTrack.enabled = !isVideoMuted; 
-            const icon = document.getElementById('icon-cam');
-            if(isVideoMuted) icon.classList.add('active'); else icon.classList.remove('active');
-            if(peerConnection && peerConnection.signalingState !== 'closed') { update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { [`camMuted_${currentUser.uid}`]: isVideoMuted }); }
-        }
-    };
-
-    window.flipCamera = async () => {
-        if(!localStream || !isVideoCall) return;
-        currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-        try {
-            const oldVideoTrack = localStream.getVideoTracks()[0]; oldVideoTrack.stop(); localStream.removeTrack(oldVideoTrack);
-            const newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode }, audio: false });
-            const newVideoTrack = newStream.getVideoTracks()[0]; localStream.addTrack(newVideoTrack); localVideo.srcObject = localStream;
-            const sender = peerConnection.getSenders().find(s => s.track && s.track.kind === 'video'); if (sender) { sender.replaceTrack(newVideoTrack); }
-            newVideoTrack.enabled = !isVideoMuted;
-        } catch (e) { alert("Flip camera not supported."); }
-    };
-
-    window.toggleSpeaker = () => {
-        if(!remoteVideo) return;
-        isSpeakerOn = !isSpeakerOn;
-        const icon = document.getElementById('icon-speaker');
-        if(isSpeakerOn) { icon.classList.add('active'); remoteVideo.volume = 1.0; } 
-        else { icon.classList.remove('active'); remoteVideo.volume = 0.2; }
-    };
-
-    function playIncomingRing() {
-        if (isRingingActive) return; isRingingActive = true;
-        ringInPromise = audioRingingIn.play();
-        ringInPromise.catch(e => { if (hasUserInteracted && "vibrate" in navigator) { ringVibrateInterval = setInterval(() => { navigator.vibrate([1000, 500, 1000]); }, 2500); } });
-    }
-
-    function playOutgoingRing() {
-        if (isRingingActive) return; isRingingActive = true;
-        ringOutPromise = audioRingingOut.play();
-        ringOutPromise.catch(e => {});
-    }
-
-    function stopRings() {
-        isRingingActive = false;
-        try {
-            if (ringInPromise !== null) { ringInPromise.then(() => { audioRingingIn.pause(); audioRingingIn.currentTime = 0; }).catch(e => {}); } 
-            else { audioRingingIn.pause(); audioRingingIn.currentTime = 0; }
-            if (ringOutPromise !== null) { ringOutPromise.then(() => { audioRingingOut.pause(); audioRingingOut.currentTime = 0; }).catch(e => {}); } 
-            else { audioRingingOut.pause(); audioRingingOut.currentTime = 0; }
-        } catch(e){}
-        if(ringVibrateInterval) { clearInterval(ringVibrateInterval); ringVibrateInterval = null; } 
-        if("vibrate" in navigator) navigator.vibrate(0);
-    }
+    function playIncomingRing() { if (isRingingActive) return; isRingingActive = true; ringInPromise = audioRingingIn.play(); ringInPromise.catch(e => { if (hasUserInteracted && "vibrate" in navigator) { ringVibrateInterval = setInterval(() => { navigator.vibrate([1000, 500, 1000]); }, 2500); } }); }
+    function playOutgoingRing() { if (isRingingActive) return; isRingingActive = true; ringOutPromise = audioRingingOut.play(); ringOutPromise.catch(e => {}); }
+    function stopRings() { isRingingActive = false; try { if (ringInPromise !== null) { ringInPromise.then(() => { audioRingingIn.pause(); audioRingingIn.currentTime = 0; }).catch(e => {}); } else { audioRingingIn.pause(); audioRingingIn.currentTime = 0; } if (ringOutPromise !== null) { ringOutPromise.then(() => { audioRingingOut.pause(); audioRingingOut.currentTime = 0; }).catch(e => {}); } else { audioRingingOut.pause(); audioRingingOut.currentTime = 0; } } catch(e){} if(ringVibrateInterval) { clearInterval(ringVibrateInterval); ringVibrateInterval = null; } if("vibrate" in navigator) navigator.vibrate(0); }
 
     window.endCall = () => { update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { status: 'ended' }); closeWebRTC(); };
-    
-    function closeWebRTC() { 
-        stopRings(); incomingCallPrompted = false; clearInterval(callTimerInterval);
-        if(peerConnection) { peerConnection.close(); peerConnection = null; } 
-        if(localStream) { localStream.getTracks().forEach(track => track.stop()); localStream = null; } 
-        remoteVideo.srcObject = null; localVideo.srcObject = null; 
-        callUI.style.display = 'none'; callScreenOverlay.style.display = 'none'; activeControls.style.display = 'none'; 
-        remove(dbRef(dbChatRT, `chats/${chatId}/webrtc`)); 
-    }
+    function closeWebRTC() { stopRings(); incomingCallPrompted = false; clearInterval(callTimerInterval); if(peerConnection) { peerConnection.close(); peerConnection = null; } if(localStream) { localStream.getTracks().forEach(track => track.stop()); localStream = null; } remoteVideo.srcObject = null; localVideo.srcObject = null; callUI.style.display = 'none'; callScreenOverlay.style.display = 'none'; activeControls.style.display = 'none'; remove(dbRef(dbChatRT, `chats/${chatId}/webrtc`)); }
 
     // ==============================================================================================
-    // ⚙️ CHAT ACTIONS (Send, Attach, Delete, Preview)
-    
-    window.handleFileSelect = (e) => { 
-        const file = e.target.files[0]; 
-        if(file) { 
-            if (file.size > 10 * 1024 * 1024) { alert("Max 10MB allowed."); e.target.value = ""; return; } 
-            selectedFile = file; document.getElementById('action-preview').style.display = 'flex'; 
-            const thumb = document.getElementById('preview-img-thumb');
-            if (file.type.startsWith('image/')) { thumb.src = URL.createObjectURL(file); thumb.style.display = 'block'; } else { thumb.style.display = 'none'; }
-            document.getElementById('preview-title').innerText = "📎 Attachment Ready"; document.getElementById('preview-text').innerText = selectedFile.name; 
-            window.toggleSendBtn(); 
-        } 
-    };
-
+    // ⚙️ CHAT ACTIONS (Send, Attach, Voice, Delete)
+    window.handleFileSelect = (e) => { const file = e.target.files[0]; if(file) { if (file.size > 10 * 1024 * 1024) { alert("Max 10MB allowed."); e.target.value = ""; return; } selectedFile = file; document.getElementById('action-preview').style.display = 'flex'; const thumb = document.getElementById('preview-img-thumb'); if (file.type.startsWith('image/')) { thumb.src = URL.createObjectURL(file); thumb.style.display = 'block'; } else { thumb.style.display = 'none'; } document.getElementById('preview-title').innerText = "📎 Attachment Ready"; document.getElementById('preview-text').innerText = selectedFile.name; window.toggleSendBtn(); } };
     window.toggleSendBtn = () => { const val = document.getElementById('msg-input').value.trim(); document.getElementById('mic-btn').style.display = (val || selectedFile) ? 'none' : 'flex'; document.getElementById('send-btn').style.display = (val || selectedFile) ? 'flex' : 'none'; };
-
     window.openMenu = (e, id) => { e.preventDefault(); e.stopPropagation(); if (hasUserInteracted && "vibrate" in navigator) navigator.vibrate(50); closeMenu(); activeMsgId = id; const msg = window.chatMessages[id]; const isMe = msg.senderId === currentUser.uid; const menu = document.getElementById('context-menu'); let html = `<div class="ctx-item" onclick="prepareAction('reply', '${id}')">↩️ Reply</div><div class="ctx-item" onclick="prepareAction('forward', '${id}')">↪️ Forward</div>`; if(isMe && msg.text && !msg.mediaUrl && !msg.isCall) html += `<div class="ctx-item" onclick="prepareAction('edit', '${id}')">✏️ Edit</div>`; html += `<div class="ctx-item" style="color:red;" onclick="showDeleteModal('${id}', ${isMe})">🗑️ Delete</div>`; menu.innerHTML = html; const appRect = document.getElementById('app-container').getBoundingClientRect(); let posX = (e.touches ? e.touches[0].clientX : e.clientX) - appRect.left; let posY = (e.touches ? e.touches[0].clientY : e.clientY) - appRect.top; menu.style.left = `${Math.min(posX, appRect.width - 190)}px`; menu.style.top = `${Math.min(posY, appRect.height - 230)}px`; menu.style.display = 'block'; document.getElementById(`bubble-${id}`).classList.add('active'); };
     window.closeMenu = () => { document.getElementById('context-menu').style.display = 'none'; if(activeMsgId) { let el = document.getElementById(`bubble-${activeMsgId}`); if(el) el.classList.remove('active'); } };
     window.prepareAction = (type, id) => { closeMenu(); const msg = window.chatMessages[id]; actionType = type; actionData = { id: id, text: msg.text || (msg.mediaType === 'audio' ? 'Voice Message' : 'Media Attachment') }; if(type === 'forward') { document.getElementById('msg-input').value = actionData.text; window.toggleSendBtn(); actionType = null; alert("Ready to forward."); return; } document.getElementById('action-preview').style.display = 'flex'; document.getElementById('preview-img-thumb').style.display = 'none'; document.getElementById('preview-title').innerText = type === 'edit' ? "✏️ Edit Message" : "↩️ Replying to..."; document.getElementById('preview-text').innerText = actionData.text; if(type === 'edit') document.getElementById('msg-input').value = actionData.text; document.getElementById('msg-input').focus(); window.toggleSendBtn(); };
     window.cancelAction = () => { actionType = null; actionData = null; selectedFile = null; document.getElementById('action-preview').style.display = 'none'; document.getElementById('preview-img-thumb').style.display = 'none'; if(actionType === 'edit') document.getElementById('msg-input').value = ""; window.toggleSendBtn(); };
     
-    window.sendMessage = async () => {
-        const text = document.getElementById('msg-input').value.trim(); if(!text && !selectedFile) return;
-        if(actionType === 'edit' && actionData && !selectedFile) { await update(dbRef(dbChatRT, `chats/${chatId}/messages/${actionData.id}`), { text: text, isEdited: true }); document.getElementById('msg-input').value = ""; cancelAction(); return; }
-        let mediaUrl = null, mediaType = null;
-        if(selectedFile) { document.getElementById('upload-loader').style.display = 'flex'; mediaType = selectedFile.type.startsWith('video') ? 'video' : 'image'; const formData = new FormData(); formData.append('file', selectedFile); formData.append('upload_preset', UPLOAD_PRESET); try { const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, { method: 'POST', body: formData }); const data = await res.json(); mediaUrl = data.secure_url; } catch(e) { alert("Upload failed."); document.getElementById('upload-loader').style.display='none'; return; } }
-        let msgPayload = { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp() }; if(text) msgPayload.text = text; if(mediaUrl) { msgPayload.mediaUrl = mediaUrl; msgPayload.mediaType = mediaType; } if(actionType === 'reply' && actionData) msgPayload.replyText = actionData.text;
-        document.getElementById('msg-input').value = ""; document.getElementById('upload-loader').style.display = 'none'; cancelAction();
-        await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), msgPayload); await update(dbRef(dbChatRT, `chatRooms/${chatId}`), { participants: [currentUser.uid, targetUid], lastMessage: text || (mediaType === 'video' ? '🎥 Video' : '📷 Photo'), lastSenderId: currentUser.uid, readBy: [currentUser.uid], updatedAt: serverTimestamp() });
-    };
+    window.sendMessage = async () => { const text = document.getElementById('msg-input').value.trim(); if(!text && !selectedFile) return; if(actionType === 'edit' && actionData && !selectedFile) { await update(dbRef(dbChatRT, `chats/${chatId}/messages/${actionData.id}`), { text: text, isEdited: true }); document.getElementById('msg-input').value = ""; cancelAction(); return; } let mediaUrl = null, mediaType = null; if(selectedFile) { document.getElementById('upload-loader').style.display = 'flex'; mediaType = selectedFile.type.startsWith('video') ? 'video' : 'image'; const formData = new FormData(); formData.append('file', selectedFile); formData.append('upload_preset', UPLOAD_PRESET); try { const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, { method: 'POST', body: formData }); const data = await res.json(); mediaUrl = data.secure_url; } catch(e) { alert("Upload failed."); document.getElementById('upload-loader').style.display='none'; return; } } let msgPayload = { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp() }; if(text) msgPayload.text = text; if(mediaUrl) { msgPayload.mediaUrl = mediaUrl; msgPayload.mediaType = mediaType; } if(actionType === 'reply' && actionData) msgPayload.replyText = actionData.text; document.getElementById('msg-input').value = ""; document.getElementById('upload-loader').style.display = 'none'; cancelAction(); await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), msgPayload); await update(dbRef(dbChatRT, `chatRooms/${chatId}`), { participants: [currentUser.uid, targetUid], lastMessage: text || (mediaType === 'video' ? '🎥 Video' : '📷 Photo'), lastSenderId: currentUser.uid, readBy: [currentUser.uid], updatedAt: serverTimestamp() }); };
 
-    // 🎤 VOICE NOTES
-    let mediaRecorder = null, audioChunks = [], recordInterval = null, recordSeconds = 0, isRecording = false, isRecordingCancelled = false, globalMicStream = null; 
-    const micBtn = document.getElementById('mic-btn'); let touchStartX = 0;
-    
-    const startRecording = async (e) => { 
-        if (e) e.preventDefault(); if (isRecording) return; isRecordingCancelled = false; if (hasUserInteracted && "vibrate" in navigator) navigator.vibrate(50); 
-        try { 
-            if (!globalMicStream) { globalMicStream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
-            document.getElementById('msg-input').style.display = 'none'; document.getElementById('attach-btn').style.display = 'none'; document.getElementById('recording-ui').style.display = 'flex'; document.querySelector('.slide-cancel').innerText = 'Slide to cancel 👈'; document.querySelector('.slide-cancel').style.color = '#ef4444';
-            
-            let mimeType = 'audio/webm'; if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) mimeType = 'audio/webm;codecs=opus'; else if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4'; 
-            mediaRecorder = new MediaRecorder(globalMicStream, { mimeType: mimeType }); audioChunks = []; 
-            mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) audioChunks.push(e.data); }; 
-            mediaRecorder.onstop = async () => { if (audioChunks.length > 0 && !isRecordingCancelled) { await new Promise(r => setTimeout(r, 100)); const audioBlob = new Blob(audioChunks, { type: mimeType }); await sendVoiceMessage(audioBlob, mimeType); } isRecording = false; resetRecordingUI(); }; 
-            mediaRecorder.start(200); isRecording = true; micBtn.classList.add('recording'); recordSeconds = 0; document.getElementById('record-timer').innerText = `🔴 00:00`; recordInterval = setInterval(() => { recordSeconds++; document.getElementById('record-timer').innerText = `🔴 ${String(Math.floor(recordSeconds/60)).padStart(2,'0')}:${String(recordSeconds%60).padStart(2,'0')}`; }, 1000); 
-        } catch (err) { alert("Microphone permission blocked."); resetRecordingUI(); } 
-    };
-    
-    const stopAndSendRecording = (e) => { if (e) e.preventDefault(); if (mediaRecorder && isRecording && !isRecordingCancelled) mediaRecorder.stop(); };
-    const cancelRecordingAction = (e) => { if (e) e.preventDefault(); if (mediaRecorder && isRecording && !isRecordingCancelled) { isRecordingCancelled = true; document.querySelector('.slide-cancel').innerText = '🗑️ Cancelled!'; document.querySelector('.slide-cancel').style.color = '#64748b'; mediaRecorder.stop(); if (hasUserInteracted && "vibrate" in navigator) navigator.vibrate([50, 50]); setTimeout(resetRecordingUI, 600); } };
-    
-    micBtn.addEventListener('mousedown', startRecording); micBtn.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; startRecording(e); }, {passive: false}); 
-    micBtn.addEventListener('mouseup', stopAndSendRecording); micBtn.addEventListener('touchend', stopAndSendRecording); 
-    micBtn.addEventListener('mouseleave', cancelRecordingAction); micBtn.addEventListener('touchcancel', cancelRecordingAction); 
-    micBtn.addEventListener('touchmove', (e) => { if (!isRecording || isRecordingCancelled) return; const currentX = e.touches[0].clientX; if (touchStartX - currentX > 45) { cancelRecordingAction(e); } });
-    
+    let mediaRecorder = null, audioChunks = [], recordInterval = null, recordSeconds = 0, isRecording = false, isRecordingCancelled = false, globalMicStream = null; const micBtn = document.getElementById('mic-btn'); let touchStartX = 0;
+    const startRecording = async (e) => { if (e) e.preventDefault(); if (isRecording) return; isRecordingCancelled = false; if (hasUserInteracted && "vibrate" in navigator) navigator.vibrate(50); try { if (!globalMicStream) { globalMicStream = await navigator.mediaDevices.getUserMedia({ audio: true }); } document.getElementById('msg-input').style.display = 'none'; document.getElementById('attach-btn').style.display = 'none'; document.getElementById('recording-ui').style.display = 'flex'; document.querySelector('.slide-cancel').innerText = 'Slide to cancel 👈'; document.querySelector('.slide-cancel').style.color = '#ef4444'; let mimeType = 'audio/webm'; if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) mimeType = 'audio/webm;codecs=opus'; else if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4'; mediaRecorder = new MediaRecorder(globalMicStream, { mimeType: mimeType }); audioChunks = []; mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) audioChunks.push(e.data); }; mediaRecorder.onstop = async () => { if (audioChunks.length > 0 && !isRecordingCancelled) { await new Promise(r => setTimeout(r, 100)); const audioBlob = new Blob(audioChunks, { type: mimeType }); await sendVoiceMessage(audioBlob, mimeType); } isRecording = false; resetRecordingUI(); }; mediaRecorder.start(200); isRecording = true; micBtn.classList.add('recording'); recordSeconds = 0; document.getElementById('record-timer').innerText = `🔴 00:00`; recordInterval = setInterval(() => { recordSeconds++; document.getElementById('record-timer').innerText = `🔴 ${String(Math.floor(recordSeconds/60)).padStart(2,'0')}:${String(recordSeconds%60).padStart(2,'0')}`; }, 1000); } catch (err) { alert("Microphone permission blocked."); resetRecordingUI(); } };
+    const stopAndSendRecording = (e) => { if (e) e.preventDefault(); if (mediaRecorder && isRecording && !isRecordingCancelled) mediaRecorder.stop(); }; const cancelRecordingAction = (e) => { if (e) e.preventDefault(); if (mediaRecorder && isRecording && !isRecordingCancelled) { isRecordingCancelled = true; document.querySelector('.slide-cancel').innerText = '🗑️ Cancelled!'; document.querySelector('.slide-cancel').style.color = '#64748b'; mediaRecorder.stop(); if (hasUserInteracted && "vibrate" in navigator) navigator.vibrate([50, 50]); setTimeout(resetRecordingUI, 600); } };
+    micBtn.addEventListener('mousedown', startRecording); micBtn.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; startRecording(e); }, {passive: false}); micBtn.addEventListener('mouseup', stopAndSendRecording); micBtn.addEventListener('touchend', stopAndSendRecording); micBtn.addEventListener('mouseleave', cancelRecordingAction); micBtn.addEventListener('touchcancel', cancelRecordingAction); micBtn.addEventListener('touchmove', (e) => { if (!isRecording || isRecordingCancelled) return; const currentX = e.touches[0].clientX; if (touchStartX - currentX > 45) { cancelRecordingAction(e); } });
     function resetRecordingUI() { clearInterval(recordInterval); micBtn.classList.remove('recording'); document.getElementById('msg-input').style.display = 'block'; document.getElementById('attach-btn').style.display = 'flex'; document.getElementById('recording-ui').style.display = 'none'; }
-    
     async function sendVoiceMessage(audioBlob, mimeType) { document.getElementById('upload-loader').style.display = 'flex'; document.getElementById('loader-text').innerText = "Sending Voice..."; let ext = mimeType.includes('mp4') || mimeType.includes('m4a') ? 'mp4' : 'webm'; const formData = new FormData(); formData.append('file', new File([audioBlob], `voice_${Date.now()}.${ext}`, { type: mimeType })); formData.append('upload_preset', UPLOAD_PRESET); formData.append('resource_type', 'video'); try { const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: 'POST', body: formData }); const data = await res.json(); await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), mediaUrl: data.secure_url, mediaType: 'audio' }); await update(dbRef(dbChatRT, `chatRooms/${chatId}`), { participants: [currentUser.uid, targetUid], lastMessage: '🎤 Voice Message', lastSenderId: currentUser.uid, readBy: [currentUser.uid], updatedAt: serverTimestamp() }); cancelAction(); } catch(e) {} document.getElementById('upload-loader').style.display = 'none'; }
 
-    // 🖼️ MEDIA VIEWER & 🗑️ DELETE MODAL
     window.openMediaViewer = (url, type) => { let content = type === 'video' ? `<video src="${url}" controls autoplay style="max-width:95%; max-height:75vh; border-radius:8px;"></video>` : `<img src="${url}" style="max-width:95%; max-height:75vh; border-radius:8px;">`; let downloadBtn = `<a href="${url}" download="media" target="_blank" class="download-btn"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Download File</a>`; document.getElementById('viewer-content-box').innerHTML = content + downloadBtn; document.getElementById('media-viewer').style.display = 'flex'; };
     window.closeViewer = () => { document.getElementById('media-viewer').style.display = 'none'; document.getElementById('viewer-content-box').innerHTML = ''; };
-
     let deleteTargetId = null; window.showDeleteModal = (id, isMe) => { closeMenu(); deleteTargetId = id; document.getElementById('delete-modal').style.display = 'flex'; document.getElementById('btn-del-all').style.display = isMe ? 'block' : 'none'; }; window.closeDeleteModal = () => { document.getElementById('delete-modal').style.display = 'none'; }; window.executeDelete = async (type) => { if(!deleteTargetId) return; const id = deleteTargetId; closeDeleteModal(); if (type === 'me') { await update(dbRef(dbChatRT, `chats/${chatId}/messages/${id}`), { [`deletedFor_${currentUser.uid}`]: true }); document.getElementById(`msg-${id}`)?.remove(); } else if (type === 'everyone') { await update(dbRef(dbChatRT, `chats/${chatId}/messages/${id}`), { isDeletedEveryone: true, text: null, mediaUrl: null, replyText: null, isCall: null }); } };
 </script>
 </body>
