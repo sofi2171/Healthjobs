@@ -699,8 +699,30 @@
     function playOutgoingRing() { if (isRingingActive) return; isRingingActive = true; ringOutPromise = audioRingingOut.play(); ringOutPromise.catch(e => {}); }
     function stopRings() { isRingingActive = false; try { if (ringInPromise !== null) { ringInPromise.then(() => { audioRingingIn.pause(); audioRingingIn.currentTime = 0; }).catch(e => {}); } else { audioRingingIn.pause(); audioRingingIn.currentTime = 0; } if (ringOutPromise !== null) { ringOutPromise.then(() => { audioRingingOut.pause(); audioRingingOut.currentTime = 0; }).catch(e => {}); } else { audioRingingOut.pause(); audioRingingOut.currentTime = 0; } } catch(e){} if(ringVibrateInterval) { clearInterval(ringVibrateInterval); ringVibrateInterval = null; } if("vibrate" in navigator) navigator.vibrate(0); }
 
-    window.endCall = () => { update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { status: 'ended' }); closeWebRTC(); };
     
+        window.endCall = async () => { 
+        // Agar main caller hoon aur call abhi uthayi nahi gayi, toh Cancel ka push bhejo
+        if (peerConnection && peerConnection.signalingState !== 'stable' && !incomingCallPrompted) {
+            try {
+                const targetUserSnap = await getDoc(doc(dbMain, "users", targetUid));
+                if (targetUserSnap.exists() && targetUserSnap.data().fcmToken) {
+                    await fetch('https://my-jobs-backend.vercel.app/api', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            targetToken: targetUserSnap.data().fcmToken,
+                            callerUid: currentUser.uid,
+                            action: 'cancel' // 👈 Cancel signal
+                        })
+                    });
+                }
+            } catch (e) { console.error("Cancel Push Error:", e); }
+        }
+
+        update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { status: 'ended' }); 
+        closeWebRTC(); 
+    };
+
     function closeWebRTC() { 
         stopRings(); 
         incomingCallPrompted = false; 

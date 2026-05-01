@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>Terms of Service | Health Jobs Portal</title>
     <meta name="description" content="Read the Terms of Service for Health Jobs Portal. Understand our rules for job posting, user conduct, and Google AdSense advertising policies.">
@@ -186,6 +185,70 @@
             &copy; 2026 Powered by <span>Health Jobs</span>. All rights reserved.
         </div>
     </footer>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if running inside Android App (Capacitor)
+    if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
+        const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
+
+        // Redirect karne wala main function
+        const handleCallRedirect = (data) => {
+            if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
+                let callerUid = data.callerUid || data.uid;
+                if(callerUid) {
+                    // 500ms delay taake page proper load ho kar redirect kar sake
+                    setTimeout(() => {
+                        window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
+                    }, 500);
+                }
+            }
+        };
+
+        // 1. TAPPED ON NOTIFICATION (Jab app background ya kill state mein ho)
+        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+            const data = notification.notification.data;
+            handleCallRedirect(data);
+        });
+
+        // 2. APP KHULI HAI LEKIN KISI AUR PAGE PAR HAI
+        PushNotifications.addListener('pushNotificationReceived', async (notification) => {
+            const data = notification.data || {};
+            if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
+                
+                // Agar app open hai toh foran call page par le jao
+                handleCallRedirect(data);
+                
+                // Sath hi Android screen ko jagane (Wake-up) ka command
+                if (LocalNotifications) {
+                    await LocalNotifications.schedule({
+                        notifications: [{
+                            title: notification.title || "Incoming Call",
+                            body: "Calling...",
+                            id: 999,
+                            sound: "ringing.mp3",
+                            extra: data,
+                            android: {
+                                channelId: "high_importance_channel",
+                                importance: 5,
+                                visibility: 1,
+                                fullScreenIntent: true
+                            }
+                        }]
+                    });
+                }
+            }
+        });
+
+        // 3. FALLBACK: Tapped on Local Notification
+        if (LocalNotifications) {
+            LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+                const data = notification.notification.extra;
+                handleCallRedirect(data);
+            });
+        }
+    }
+});
+</script>
 
 </body>
 </html>

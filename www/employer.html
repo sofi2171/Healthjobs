@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <title>Post a Medical Job | Hire Healthcare Professionals | Health Jobs</title>
     <meta name="description" content=​"Hire top doctors, nurses, and medical staff in Pakistan. Post vacancies on Health Jobs Portal and connect with thousands of verified professionals instantly.">
     <meta name="keywords" content="hire doctors, nursing jobs, healthcare recruitment Pakistan, medical staff vacancy, post doctor job free, hire pharmacist, hospital jobs portal">
@@ -182,7 +183,7 @@
                 <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
             </a>
             <a href="index.html" class="logo-container">
-                <img src="images/logo.png" alt="Health Jobs" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+<img src="images/logo.png" alt="Health Jobs" class="logo-img" width="150" height="40" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
                 <span id="logo-fallback" class="logo-text">Health Jobs</span>
             </a>
         </div>
@@ -478,29 +479,75 @@
                 container.appendChild(itemDiv);
             });
         }
+        // 🔥 AUTO IMAGE COMPRESSOR 🔥
+        async function compressImageClientSide(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800;
+                        const scaleSize = MAX_WIDTH / img.width;
+                        canvas.width = MAX_WIDTH;
+                        canvas.height = img.height * (img.width > MAX_WIDTH ? scaleSize : 1);
 
-        async function uploadFileToCloudinary(file, index) {
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                        canvas.toBlob((blob) => {
+                            const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            });
+                            resolve(newFile);
+                        }, 'image/jpeg', 0.7);
+                    };
+                };
+            });
+        }
+
+                async function uploadFileToCloudinary(file, index) {
+            let uploadFile = file;
+            let type = 'other';
+            let endpoint = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`;
+
+            if (file.type.startsWith('image/')) {
+                type = 'image';
+                uploadFile = await compressImageClientSide(file); // Compress before upload
+            } else if (file.type.startsWith('video/')) {
+                type = 'video';
+            } else if (file.type === 'application/pdf') {
+                type = 'pdf';
+                // PDF Bypass Hack for Employer Page
+                const base64String = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(file);
+                });
+                const trickedString = base64String.replace("data:application/pdf", "data:text/plain");
+                uploadFile = new File([trickedString], "secure_doc.txt", { type: 'text/plain' });
+                endpoint = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`;
+            }
+
             const formData = new FormData();
-            formData.append('file', file);
+            formData.append('file', uploadFile);
             formData.append('upload_preset', UPLOAD_PRESET);
             const uniqueId = `post_${currentUser.uid}_${Date.now()}_${index}`;
             formData.append('public_id', uniqueId); 
 
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, {
-                method: 'POST', body: formData
-            });
+            const res = await fetch(endpoint, { method: 'POST', body: formData });
             const data = await res.json();
             
             if (data.secure_url) {
-                let type = 'other';
-                if(file.type.startsWith('image/')) type = 'image';
-                if(file.type.startsWith('video/')) type = 'video';
-                if(file.type === 'application/pdf') type = 'pdf';
                 return { url: data.secure_url, type: type, name: file.name };
             } else {
                 throw new Error(data.error?.message || "Upload Failed");
             }
         }
+
 
         document.getElementById('submit-btn').onclick = async () => {
             const title = document.getElementById('job-title').value.trim();
@@ -643,5 +690,75 @@ try {
             }
         };
     </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
+        const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
+
+        const handleCallRedirect = (data) => {
+            if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
+                let callerUid = data.callerUid || data.uid;
+                if(callerUid) {
+                    setTimeout(() => {
+                        window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
+                    }, 500);
+                }
+            }
+        };
+
+        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+            handleCallRedirect(notification.notification.data);
+        });
+
+        PushNotifications.addListener('pushNotificationReceived', async (notification) => {
+            const data = notification.data || {};
+            
+            // ❌ AGAR CANCEL KA SIGNAL AAYE TOH NOTIFICATION GAYAB KAR DO
+            if (data.action === "cancel_call") {
+                console.log("Call Cancelled! Removing Notifications...");
+                if (LocalNotifications) {
+                    await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
+                }
+                await PushNotifications.removeAllDeliveredNotifications();
+                
+                // Agar user ghalti se chat.html par hi betha hai, toh UI bhi band kar do
+                if (typeof closeWebRTC === 'function') { closeWebRTC(); }
+                return; // Code yahin rok do
+            }
+
+            // 📞 AGAR CALL AAYE TOH NOTIFICATION DIKHAO
+            if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
+                handleCallRedirect(data);
+                
+                if (LocalNotifications) {
+                    await LocalNotifications.schedule({
+                        notifications: [{
+                            title: notification.title || "Incoming Call",
+                            body: "Calling...",
+                            id: 999, // Yeh ID cancel karne ke kaam aati hai
+                            sound: "ringing.mp3",
+                            extra: data,
+                            android: {
+                                channelId: "high_importance_channel",
+                                importance: 5,
+                                visibility: 1,
+                                fullScreenIntent: true
+                            }
+                        }]
+                    });
+                }
+            }
+        });
+
+        if (LocalNotifications) {
+            LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+                handleCallRedirect(notification.notification.extra);
+            });
+        }
+    }
+});
+</script>
+
+
 </body>
 </html>

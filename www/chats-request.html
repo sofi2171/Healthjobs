@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages | Healthjobs Portal</title>
     <style>
         :root {
@@ -349,5 +349,75 @@
             window.dispatchEvent(new Event('storage'));
         }
     </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
+        const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
+
+        const handleCallRedirect = (data) => {
+            if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
+                let callerUid = data.callerUid || data.uid;
+                if(callerUid) {
+                    setTimeout(() => {
+                        window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
+                    }, 500);
+                }
+            }
+        };
+
+        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+            handleCallRedirect(notification.notification.data);
+        });
+
+        PushNotifications.addListener('pushNotificationReceived', async (notification) => {
+            const data = notification.data || {};
+            
+            // ❌ AGAR CANCEL KA SIGNAL AAYE TOH NOTIFICATION GAYAB KAR DO
+            if (data.action === "cancel_call") {
+                console.log("Call Cancelled! Removing Notifications...");
+                if (LocalNotifications) {
+                    await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
+                }
+                await PushNotifications.removeAllDeliveredNotifications();
+                
+                // Agar user ghalti se chat.html par hi betha hai, toh UI bhi band kar do
+                if (typeof closeWebRTC === 'function') { closeWebRTC(); }
+                return; // Code yahin rok do
+            }
+
+            // 📞 AGAR CALL AAYE TOH NOTIFICATION DIKHAO
+            if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
+                handleCallRedirect(data);
+                
+                if (LocalNotifications) {
+                    await LocalNotifications.schedule({
+                        notifications: [{
+                            title: notification.title || "Incoming Call",
+                            body: "Calling...",
+                            id: 999, // Yeh ID cancel karne ke kaam aati hai
+                            sound: "ringing.mp3",
+                            extra: data,
+                            android: {
+                                channelId: "high_importance_channel",
+                                importance: 5,
+                                visibility: 1,
+                                fullScreenIntent: true
+                            }
+                        }]
+                    });
+                }
+            }
+        });
+
+        if (LocalNotifications) {
+            LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+                handleCallRedirect(notification.notification.extra);
+            });
+        }
+    }
+});
+</script>
+
+
 </body>
 </html>

@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>Share Medical Updates & Clinical Cases | Health Jobs Portal</title>
     <meta name="description" content="Share the latest medical updates, clinical cases, and healthcare news with Pakistan's top professionals. Join the discussion on Health Jobs Portal.">
@@ -97,14 +96,15 @@
             <button class="back-btn" onclick="location.href='index.html'">
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             </button>
-            <img src="images/logo.png" class="logo-img" alt="Health Jobs" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
+<img src="images/logo.png" class="logo-img" width="140" height="35" alt="Health Jobs" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
+
         </div>
     </header>
 
     <main>
         <div class="post-card">
             <div class="post-header">
-                <img src="https://ui-avatars.com/api/?name=U" id="user-display-pic" class="user-avatar">
+<img src="https://ui-avatars.com/api/?name=U" id="user-display-pic" width="48" height="48" loading="lazy" class="user-avatar">
                 <div>
                     <div class="user-name" id="user-display-name">Loading...</div>
                     <div class="post-visibility">🌎 Public Update</div>
@@ -135,7 +135,7 @@
 
     <footer>
         <div class="footer-content">
-            <img src="images/logo.png" alt="Health Jobs" class="footer-logo" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
+            <img src="images/logo.png" alt="Health Jobs" width="120" height="30" loading="lazy" class="footer-logo" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
             <p class="footer-tagline">Pakistan's #1 Digital Healthcare Network</p>
             <div class="footer-links">
                 <a href="index.html">Home</a><a href="about.html">About Us</a><a href="terms.html">Terms</a><a href="privcy.html">Privacy</a>
@@ -233,18 +233,57 @@
                 container.appendChild(itemDiv);
             });
         }
+        // 🔥 AUTO IMAGE COMPRESSOR (Mobile ke andar compress karega) 🔥
+        async function compressImageClientSide(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        // Maximum width 800px rakhi hai, design kharab nahi hoga aur size chota ho jayega
+                        const MAX_WIDTH = 800;
+                        const scaleSize = MAX_WIDTH / img.width;
+                        canvas.width = MAX_WIDTH;
+                        canvas.height = img.height * (img.width > MAX_WIDTH ? scaleSize : 1);
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                        // 70% Quality par JPEG bana kar compress kar dega (10MB -> 100KB)
+                        canvas.toBlob((blob) => {
+                            const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            });
+                            resolve(newFile);
+                        }, 'image/jpeg', 0.7);
+                    };
+                };
+            });
+        }
 
         // 🚀 ULTIMATE CLOUDINARY BYPASS HACK
+        // 🚀 ULTIMATE CLOUDINARY BYPASS HACK + AUTO COMPRESS
         async function uploadToCloudinary(file) {
             let uploadFile = file;
             let type = 'image';
             let originalName = file.name;
             let endpoint = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`;
 
-            if (file.type.startsWith('video/')) type = 'video';
+            // Agar Image hai toh pehle goli ki tarah compress karega
+            if (file.type.startsWith('image/')) {
+                uploadFile = await compressImageClientSide(file);
+            } 
+            // Video ke liye
+            else if (file.type.startsWith('video/')) {
+                type = 'video';
+            }
             
             // --- BASE64 PDF ENCODER HACK ---
-            if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+            else if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
                 type = 'pdf';
                 const base64String = await new Promise((resolve) => {
                     const reader = new FileReader();
@@ -252,12 +291,8 @@
                     reader.readAsDataURL(file);
                 });
                 
-                // Cloudinary کو دھوکہ دینے کے لیے ہم PDF کے سگنیچر کو غائب کر رہے ہیں
                 const trickedString = base64String.replace("data:application/pdf", "data:text/plain");
-                
                 uploadFile = new File([trickedString], "secure_doc.txt", { type: 'text/plain' });
-                
-                // RAW endpoint کا استعمال تاکہ Cloudinary اس فائل کو سکین نہ کرے
                 endpoint = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`;
             }
             // --------------------------------
@@ -273,6 +308,7 @@
 
             return { url: data.secure_url, type: type, name: originalName };
         }
+
 
         document.getElementById('submit-btn').onclick = async () => {
             const desc = document.getElementById('post-desc').value.trim();
@@ -362,5 +398,75 @@
             }
         };
     </script>
+ <script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
+        const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
+
+        const handleCallRedirect = (data) => {
+            if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
+                let callerUid = data.callerUid || data.uid;
+                if(callerUid) {
+                    setTimeout(() => {
+                        window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
+                    }, 500);
+                }
+            }
+        };
+
+        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+            handleCallRedirect(notification.notification.data);
+        });
+
+        PushNotifications.addListener('pushNotificationReceived', async (notification) => {
+            const data = notification.data || {};
+            
+            // ❌ AGAR CANCEL KA SIGNAL AAYE TOH NOTIFICATION GAYAB KAR DO
+            if (data.action === "cancel_call") {
+                console.log("Call Cancelled! Removing Notifications...");
+                if (LocalNotifications) {
+                    await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
+                }
+                await PushNotifications.removeAllDeliveredNotifications();
+                
+                // Agar user ghalti se chat.html par hi betha hai, toh UI bhi band kar do
+                if (typeof closeWebRTC === 'function') { closeWebRTC(); }
+                return; // Code yahin rok do
+            }
+
+            // 📞 AGAR CALL AAYE TOH NOTIFICATION DIKHAO
+            if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
+                handleCallRedirect(data);
+                
+                if (LocalNotifications) {
+                    await LocalNotifications.schedule({
+                        notifications: [{
+                            title: notification.title || "Incoming Call",
+                            body: "Calling...",
+                            id: 999, // Yeh ID cancel karne ke kaam aati hai
+                            sound: "ringing.mp3",
+                            extra: data,
+                            android: {
+                                channelId: "high_importance_channel",
+                                importance: 5,
+                                visibility: 1,
+                                fullScreenIntent: true
+                            }
+                        }]
+                    });
+                }
+            }
+        });
+
+        if (LocalNotifications) {
+            LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+                handleCallRedirect(notification.notification.extra);
+            });
+        }
+    }
+});
+</script>
+
+
 </body>
 </html>

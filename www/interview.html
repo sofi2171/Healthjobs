@@ -2,9 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI Mock Interview for Healthcare Jobs | Health Jobs Portal</title>
     <meta name="description" content="Practice for your healthcare job interview with our AI-powered mock interviewer. Get instant feedback on your answers in English, Urdu, Roman Urdu, Hindi, or Arabic.">
+    <meta property="og:title" content="AI Mock Interview Practice - Health Jobs Portal">
+    <meta property="og:description" content="Ace your medical job interview with AI feedback. Free practice portal.">
+    <meta name="keywords" content="interview questions, interview ai, interviewer, interviewee, interviewer meaning in urdu, interviewer questions and answers, interviewer warmup, mock interview, healthcare jobs, AI interview practice, medical interview, job preparation, health jobs portal">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Health Jobs AI Mock Interview",
+  "url": "https://healthjobs-portal.web.app/interview.html",
+  "description": "An AI-powered interview practice tool specifically designed for healthcare professionals to prepare for job interviews with instant feedback.",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Web Browser",
+  "author": {
+    "@type": "Organization",
+    "name": "Health Jobs Portal"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "PKR"
+  }
+}
+</script>
     
     <style>
         :root {
@@ -20,6 +43,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-body); color: var(--text-main); padding-top: 80px; }
 
+        /* Header & Simple Credit Box */
         header { background-color: #fff; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; width: 100%; height: 65px; z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.03);}
         .back-btn { background: transparent; border: 1px solid #cbd5e1; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; color: #334155; flex-shrink: 0;}
         .back-btn:active { background: #f1f5f9; }
@@ -31,6 +55,7 @@
 
         .container { max-width: 700px; margin: 0 auto; padding: 15px; }
 
+        /* Cards & Screens */
         .card { background: #fff; padding: 30px 25px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.03); display: none; animation: fadeIn 0.4s ease; }
         .card.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -39,29 +64,39 @@
         .card-title { font-size: 22px; font-weight: 800; color: var(--primary-blue); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;}
         .card-subtitle { font-size: 14px; color: #64748b; }
 
+        /* Form Elements */
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 8px; color: #334155; }
         .form-control { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; transition: 0.2s; background: #fff; color: #0f172a;}
         .form-control:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(10,102,194,0.1);}
         textarea.form-control { resize: vertical; min-height: 120px; line-height: 1.5; }
 
+        /* Buttons */
         .btn { width: 100%; padding: 16px; background: var(--primary-blue); color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;}
         .btn:active { transform: scale(0.98); background: #004182;}
         .btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
 
+        /* Mic & Speaker Icons */
         .action-btn { background: #eff6ff; color: var(--primary-blue); border: 1px solid #bfdbfe; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; flex-shrink: 0;}
         .action-btn:active { transform: scale(0.9); }
         
+        /* Mic Recording Animation */
         .action-btn.recording { background: #fef2f2; color: var(--red); border-color: #fecaca; animation: pulseRed 1.2s infinite; }
         @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
+        /* Speaker Playing Animation (Beat) */
         .action-btn.playing { background: #dbeafe; color: var(--primary-blue); border-color: #93c5fd; animation: soundBeat 1s infinite alternate; }
-        @keyframes soundBeat { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(10, 102, 194, 0.4); } 100% { transform: scale(1.08); box-shadow: 0 0 0 8px rgba(10, 102, 194, 0); } }
+        @keyframes soundBeat { 
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(10, 102, 194, 0.4); } 
+            100% { transform: scale(1.08); box-shadow: 0 0 0 8px rgba(10, 102, 194, 0); } 
+        }
 
+        /* Q&A Section */
         .question-badge { display: inline-block; background: #eff6ff; color: var(--primary-blue); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 15px; }
         .q-box { background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid var(--primary-blue); margin-bottom: 20px; display: flex; gap: 15px; justify-content: space-between; align-items: flex-start;}
         .question-text { font-size: 18px; font-weight: 600; line-height: 1.5; color: #1e293b; margin: 0;}
         
+        /* Feedback Box */
         .feedback-box { padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid transparent; }
         .feed-correct { background: #ecfdf5; border-color: #a7f3d0; }
         .feed-incorrect { background: #fef2f2; border-color: #fecaca; }
@@ -76,6 +111,7 @@
         .ai-suggestion { padding: 15px; background: #fff; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05); font-size: 14.5px; line-height: 1.6; color: #0f172a;}
         .ai-suggestion strong { color: var(--primary-blue); display: block; margin-bottom: 5px;}
 
+        /* Loader */
         .loader-container { text-align: center; padding: 40px 0; }
         .spinner { width: 50px; height: 50px; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -88,8 +124,12 @@
         <button class="back-btn" onclick="location.href='index.html'">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
         </button>
+        
         <img src="images/logo.png" class="logo-img" alt="Logo" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
-        <div class="credit-badge" id="ui-credit-badge">Credits: <span id="ui-credit-count">--</span>/20</div>
+        
+        <div class="credit-badge" id="ui-credit-badge">
+            Credits: <span id="ui-credit-count">--</span>/20
+        </div>
     </header>
 
     <div class="container">
@@ -99,8 +139,14 @@
                 <div class="card-title" style="justify-content: center;">AI Mock Interview</div>
                 <div class="card-subtitle">Practice with our Human-Brain AI to ace your next job.</div>
             </div>
-            <div class="form-group"><label>Your Full Name</label><input type="text" id="candidate-name" class="form-control" placeholder="Enter your name"></div>
-            <div class="form-group"><label>Job Title / Profession</label><input type="text" id="int-role" class="form-control" placeholder="e.g. Staff Nurse, Pharmacist..."></div>
+            <div class="form-group">
+                <label>Your Full Name</label>
+                <input type="text" id="candidate-name" class="form-control" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label>Job Title / Profession</label>
+                <input type="text" id="int-role" class="form-control" placeholder="e.g. Staff Nurse, Pharmacist...">
+            </div>
             <div class="form-group">
                 <label>Experience Level</label>
                 <select id="int-exp" class="form-control">
@@ -137,7 +183,9 @@
                     <svg viewBox="0 0 24 24" width="35" fill="var(--red)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
                 </div>
                 <div class="card-title" style="justify-content: center; color: var(--red);">Credit Limit Exceeded</div>
-                <div class="card-subtitle" style="margin-top: 10px; font-size: 15px; color: #334155;">You have exhausted your free interview credits. Please wait 24 hours for your credits to automatically refill.</div>
+                <div class="card-subtitle" style="margin-top: 10px; font-size: 15px; color: #334155;">
+                    You have exhausted your free interview credits. Please wait 24 hours for your credits to automatically refill, or upgrade your account to continue practicing.
+                </div>
             </div>
             <button class="btn" onclick="location.reload()" style="margin-top: 20px;">Check for Refill</button>
             <button class="btn" onclick="location.href='index.html'" style="background: #f1f5f9; color: var(--primary-blue); margin-top: 10px;">Return to Home</button>
@@ -153,12 +201,14 @@
 
         <div class="card" id="question-screen">
             <div class="question-badge" id="q-counter">Question 1 of 5</div>
+            
             <div class="q-box">
                 <div class="question-text" id="q-text">Loading question...</div>
                 <button class="action-btn" onclick="window.speakText('q-text', null, this)" title="Listen to Question">
                     <svg class="speaker-icon" viewBox="0 0 24 24" width="22" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
                 </button>
             </div>
+            
             <div class="form-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <label style="margin: 0;">Your Answer:</label>
@@ -218,8 +268,8 @@
         let currentUser = null;
         let userCredits = 0;
         const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000; 
-        const API_URL = "https://intervie-groq.vercel.app/api/interview";
 
+        // 🎤 VOICE RECOGNITION (Speech to Text)
         let recognition;
         let isRecording = false;
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -227,7 +277,12 @@
             recognition = new SpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = true;
-            recognition.onstart = function() { isRecording = true; document.getElementById('mic-btn').classList.add('recording'); };
+
+            recognition.onstart = function() {
+                isRecording = true;
+                document.getElementById('mic-btn').classList.add('recording');
+            };
+
             recognition.onresult = function(event) {
                 let finalTranscript = '';
                 for (let i = event.resultIndex; i < event.results.length; ++i) {
@@ -238,28 +293,33 @@
                     textArea.value += (textArea.value ? ' ' : '') + finalTranscript;
                 }
             };
+
             recognition.onerror = function() { window.stopMic(); };
             recognition.onend = function() { window.stopMic(); };
         }
 
         window.toggleMic = function() {
-            if (!recognition) return alert("Your browser does not support Voice Typing. Please use Chrome.");
-            if (isRecording) window.stopMic(); else window.startMic();
+            if (!recognition) { alert("Your browser does not support Voice Typing. Please use Chrome."); return; }
+            if (isRecording) window.stopMic();
+            else window.startMic();
         };
 
         window.startMic = function() {
-            window.speechSynthesis.cancel(); resetSpeakerIcon();
+            window.speechSynthesis.cancel(); // Stop AI voice if speaking
+            resetSpeakerIcon(); // Reset UI
             recognition.lang = interviewData.lang === 'English' ? 'en-US' : 'ur-PK';
             recognition.start();
         };
 
         window.stopMic = function() {
             if (recognition) recognition.stop();
-            isRecording = false; document.getElementById('mic-btn').classList.remove('recording');
+            isRecording = false;
+            document.getElementById('mic-btn').classList.remove('recording');
         };
 
+        // 🔊 TEXT TO SPEECH (Play/Stop Toggle with Animation)
         const svgSpeaker = `<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>`;
-        const svgStop = `<path d="M6 6h12v12H6z"/>`;
+        const svgStop = `<path d="M6 6h12v12H6z"/>`; // Square stop icon
         let currentActiveBtn = null;
 
         function resetSpeakerIcon() {
@@ -271,20 +331,32 @@
         }
 
         window.speakText = function(elementId, customText = null, btnElement) {
+            // Stop mic if recording
             if (isRecording) window.stopMic();
+
             const text = customText || document.getElementById(elementId).innerText;
             if (!text) return;
             
+            // Check if already playing
             if (window.speechSynthesis.speaking) {
                 window.speechSynthesis.cancel(); 
                 let wasSameButton = (currentActiveBtn === btnElement);
                 resetSpeakerIcon();
+                // If user clicked the same button, just stop and exit
                 if (wasSameButton) return; 
             }
 
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = interviewData.lang === 'English' ? 'en-US' : (interviewData.lang === 'Urdu' ? 'ur-PK' : 'hi-IN');
+            
+            if (interviewData.lang === 'English') {
+                utterance.lang = 'en-US';
+            } else if (interviewData.lang === 'Urdu') {
+                utterance.lang = 'ur-PK';
+            } else {
+                utterance.lang = 'hi-IN'; // Best for Roman Urdu
+            }
 
+            // Events for Animation & Icon change
             utterance.onstart = function() {
                 if (btnElement) {
                     currentActiveBtn = btnElement;
@@ -295,12 +367,13 @@
             
             utterance.onend = function() { resetSpeakerIcon(); };
             utterance.onerror = function() { resetSpeakerIcon(); };
+
             window.speechSynthesis.speak(utterance);
         };
 
         window.speakFeedback = function(btnElement) {
             const comment = document.getElementById('feed-comment').innerText;
-            const suggestion = document.getElementById('feed-suggestion').innerText.replace("💡 AI's Perfect Answer:", '');
+            const suggestion = document.getElementById('feed-suggestion').innerText.replace('💡 AI\'s Perfect Answer:', '');
             window.speakText(null, comment + ". " + suggestion, btnElement);
         };
 
@@ -308,6 +381,7 @@
         const audioIncorrect = new Audio('audio/wrong.webm');
         const audioImprove = new Audio('audio/improve.webm');
 
+        const API_URL = "https://intervie-groq.vercel.app/api/interview";
         let interviewData = { role: '', exp: '', lang: '', qty: 5 };
         let questionsList = [];
         let currentQIndex = 0;
@@ -319,18 +393,22 @@
         function showScreen(id) {
             document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            window.speechSynthesis.cancel(); 
+            window.speechSynthesis.cancel(); // Stop speaking when changing screens
             resetSpeakerIcon();
         }
 
         function updateCreditUI(credits) {
             const badge = document.getElementById('ui-credit-badge');
             document.getElementById('ui-credit-count').innerText = credits;
-            if(credits <= 5) badge.classList.add('low'); else badge.classList.remove('low');
+            if(credits <= 5) badge.classList.add('low');
+            else badge.classList.remove('low');
         }
 
         onAuthStateChanged(auth, async (user) => {
-            if (!user) { window.location.href = 'login.html'; return; }
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
             currentUser = user;
             const userRef = doc(db, "users", currentUser.uid);
             const nowTime = Date.now(); 
@@ -352,7 +430,9 @@
                 }
                 updateCreditUI(userCredits);
                 if(userCredits <= 0) showScreen('no-credits-screen');
-            } catch (error) {}
+            } catch (error) {
+                console.error("Error loading credits:", error);
+            }
         });
 
         window.startInterview = async function() {
@@ -363,7 +443,12 @@
             if (!name) return alert("Please enter your Full Name.");
             if (!role) return alert("Please enter your Profession.");
 
-            interviewData = { name: name, role: role, exp: document.getElementById('int-exp').value, lang: document.getElementById('int-lang').value, qty: parseInt(document.getElementById('int-qty').value) };
+            interviewData = { 
+                name: name, role: role, 
+                exp: document.getElementById('int-exp').value, 
+                lang: document.getElementById('int-lang').value, 
+                qty: parseInt(document.getElementById('int-qty').value) 
+            };
 
             try { audioCorrect.load(); audioIncorrect.load(); audioImprove.load(); } catch (e) {}
 
@@ -371,13 +456,11 @@
             document.getElementById('loading-title').innerText = "AI is preparing your interview...";
 
             try {
-                // 🔥 FIX 1: API Timeout Check
-                const fetchPromise = fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'generate', ...interviewData }) });
-                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Server Timeout")), 15000));
-                
-                const res = await Promise.race([fetchPromise, timeoutPromise]);
-                if (!res.ok) throw new Error("API Server Error: " + res.status);
-                
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'generate', ...interviewData })
+                });
                 const data = await res.json();
                 if (data.error) throw new Error(data.error);
                 
@@ -385,7 +468,7 @@
                 currentQIndex = 0;
                 loadQuestionUI();
             } catch (err) {
-                alert("Error connecting to AI: " + err.message);
+                alert("Connection Error: " + err.message);
                 showScreen('setup-screen');
             }
         };
@@ -406,28 +489,28 @@
             document.getElementById('loading-title').innerText = "AI is checking your answer...";
 
             try {
-                // 🔥 FIX 1: API Timeout Check
-                const fetchPromise = fetch(API_URL, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'evaluate', role: interviewData.role, lang: interviewData.lang, question: questionsList[currentQIndex], answer: answer })
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'evaluate',
+                        role: interviewData.role,
+                        lang: interviewData.lang,
+                        question: questionsList[currentQIndex],
+                        answer: answer
+                    })
                 });
-                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AI is taking too long to respond.")), 20000));
-                
-                const res = await Promise.race([fetchPromise, timeoutPromise]);
-                if (!res.ok) throw new Error("API Server Error: " + res.status);
-                
                 const evalData = await res.json();
                 if(evalData.error) throw new Error(evalData.error);
                 
-                // 🔥 FIX 2: Non-blocking Firebase Update (Removed "await" so UI doesn't freeze if network is slow)
                 const userRef = doc(db, "users", currentUser.uid);
-                updateDoc(userRef, { interviewCredits: increment(-1) }).catch(e => console.log("Background sync delayed"));
+                await updateDoc(userRef, { interviewCredits: increment(-1) });
                 userCredits--; 
                 updateCreditUI(userCredits);
 
                 renderFeedback(evalData.status, evalData.feedback, evalData.correct_answer);
             } catch (err) {
-                alert("Evaluation Failed: " + err.message);
+                alert("Evaluation failed. Please try again.");
                 showScreen('question-screen');
             }
         };
@@ -442,11 +525,17 @@
             const playSound = (audioObj) => { audioObj.pause(); audioObj.currentTime = 0; audioObj.play().catch(e=>{}); };
 
             if(status === 'correct') {
-                playSound(audioCorrect); box.classList.add('feed-correct'); header.innerHTML = `${iconCorrect} Perfect Answer!`;
+                playSound(audioCorrect);
+                box.classList.add('feed-correct');
+                header.innerHTML = `${iconCorrect} Perfect Answer!`;
             } else if(status === 'incorrect') {
-                playSound(audioIncorrect); box.classList.add('feed-incorrect'); header.innerHTML = `${iconIncorrect} Incorrect / Weak Answer`;
+                playSound(audioIncorrect);
+                box.classList.add('feed-incorrect');
+                header.innerHTML = `${iconIncorrect} Incorrect / Weak Answer`;
             } else {
-                playSound(audioImprove); box.classList.add('feed-improve'); header.innerHTML = `${iconImprove} Needs Improvement`;
+                playSound(audioImprove);
+                box.classList.add('feed-improve');
+                header.innerHTML = `${iconImprove} Needs Improvement`;
             }
 
             comment.innerText = feedbackText;
@@ -463,5 +552,74 @@
             else showScreen('final-screen');
         };
     </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
+        const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
+
+        const handleCallRedirect = (data) => {
+            if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
+                let callerUid = data.callerUid || data.uid;
+                if(callerUid) {
+                    setTimeout(() => {
+                        window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
+                    }, 500);
+                }
+            }
+        };
+
+        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+            handleCallRedirect(notification.notification.data);
+        });
+
+        PushNotifications.addListener('pushNotificationReceived', async (notification) => {
+            const data = notification.data || {};
+            
+            // ❌ AGAR CANCEL KA SIGNAL AAYE TOH NOTIFICATION GAYAB KAR DO
+            if (data.action === "cancel_call") {
+                console.log("Call Cancelled! Removing Notifications...");
+                if (LocalNotifications) {
+                    await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
+                }
+                await PushNotifications.removeAllDeliveredNotifications();
+                
+                // Agar user ghalti se chat.html par hi betha hai, toh UI bhi band kar do
+                if (typeof closeWebRTC === 'function') { closeWebRTC(); }
+                return; // Code yahin rok do
+            }
+
+            // 📞 AGAR CALL AAYE TOH NOTIFICATION DIKHAO
+            if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
+                handleCallRedirect(data);
+                
+                if (LocalNotifications) {
+                    await LocalNotifications.schedule({
+                        notifications: [{
+                            title: notification.title || "Incoming Call",
+                            body: "Calling...",
+                            id: 999, // Yeh ID cancel karne ke kaam aati hai
+                            sound: "ringing.mp3",
+                            extra: data,
+                            android: {
+                                channelId: "high_importance_channel",
+                                importance: 5,
+                                visibility: 1,
+                                fullScreenIntent: true
+                            }
+                        }]
+                    });
+                }
+            }
+        });
+
+        if (LocalNotifications) {
+            LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+                handleCallRedirect(notification.notification.extra);
+            });
+        }
+    }
+});
+</script>
+
 </body>
 </html>
