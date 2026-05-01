@@ -1238,37 +1238,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-<script>
-window.addEventListener("load", async () => {
-    // Thora intezar karein taake Capacitor load ho jaye
-    setTimeout(async () => {
-        if (window.Capacitor && window.Capacitor.Plugins.AdMob) {
-            const { AdMob } = window.Capacitor.Plugins;
-            try {
-                // 1. AdMob Initialize karein
-                await AdMob.initialize({
-                    requestTrackingAuthorization: true,
-                    testingDevices: ["2077ef9a63d2b398840261c8221a0c9b"],
-                    initializeForTesting: true,
-                });
-                
-                // 2. Banner Ad Show karein
-                const options = {
-                    adId: "ca-app-pub-3940256099942544~6300978111", // Google ka Test Banner ID
-                    adSize: "BANNER",
-                    position: "BOTTOM_CENTER",
-                    margin: 0,
-                    isTesting: true
-                };
-                await AdMob.showBanner(options);
-                console.log("✅ AdMob Banner Loaded!");
-            } catch (e) {
-                console.error("AdMob Error:", e);
-            }
-        }
-    }, 3000); // Splash screen ke baad ad laye
-});
-</script>
 </body>
 </html>
