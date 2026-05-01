@@ -19,12 +19,13 @@
     },
     "SplashScreen": {
       "launchShowDuration": 3000,
-      "launchAutoHide": true,
       "backgroundColor": "#ffffff",
-      "androidScaleType": "CENTER_INSIDE",
+      "androidScaleType": "FIT_CENTER",
       "showSpinner": true,
       "androidSpinnerStyle": "large",
-      "spinnerColor": "#999999"
+      "spinnerColor": "#999999",
+      "splashFullScreen": false,
+      "splashImmersive": false
     }
   }
 }
