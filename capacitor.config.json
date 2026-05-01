@@ -16,6 +16,15 @@
     },
     "CapacitorHttp": {
       "enabled": false
+    },
+    "SplashScreen": {
+      "launchShowDuration": 3000,
+      "launchAutoHide": true,
+      "backgroundColor": "#ffffff",
+      "androidScaleType": "CENTER_INSIDE",
+      "showSpinner": true,
+      "androidSpinnerStyle": "large",
+      "spinnerColor": "#999999"
     }
   }
 }
