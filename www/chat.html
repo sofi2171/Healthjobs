@@ -633,6 +633,13 @@
 
         // 🔥 SECURE WAKE-UP SIGNAL VIA VERCEL BACKEND
         try {
+            // Pehle apna naam nikalein database se taake notification par aapka naam jaye
+            const myUserSnap = await getDoc(doc(dbMain, "users", currentUser.uid));
+            let myName = "User";
+            if (myUserSnap.exists()) {
+                myName = myUserSnap.data().fullName || myUserSnap.data().facilityName || "User";
+            }
+
             const targetUserSnap = await getDoc(doc(dbMain, "users", targetUid));
             if (targetUserSnap.exists() && targetUserSnap.data().fcmToken) {
                 await fetch('https://my-jobs-backend.vercel.app/api', {
@@ -640,12 +647,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         targetToken: targetUserSnap.data().fcmToken,
-                        callerName: targetName, 
+                        callerName: myName, // 👈 THE FIX IS HERE! Caller ka asli naam bheja ja raha hai
                         callerUid: currentUser.uid,
                         callType: type
                     })
                 });
-                console.log("Secure wake-up signal sent via Vercel!");
+                console.log("Secure wake-up signal sent via Vercel with correct Caller Name!");
             }
         } catch (e) {
             console.error("Backend Push Error:", e);
