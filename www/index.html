@@ -267,7 +267,36 @@
     </style>
 </head>
 <body>
-    
+    <div id="custom-splash" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 99999; transition: opacity 0.5s ease;">
+    <img src="images/logo.png" style="max-width: 80%; height: auto; margin-bottom: 20px;" alt="Logo">
+    <div class="spinner-splash"></div>
+</div>
+
+<style>
+.spinner-splash {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0a66c2;
+    border-radius: 50%;
+    animation: spin-splash 1s linear infinite;
+}
+@keyframes spin-splash { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+
+<script>
+// Jab app poori load ho jaye, toh 2 second baad splash hata do
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const splash = document.getElementById('custom-splash');
+        if(splash) {
+            splash.style.opacity = '0';
+            setTimeout(() => splash.remove(), 500);
+        }
+    }, 2500); // 2.5 seconds tak show hoga
+});
+</script>
+
     <header>
  <img src="images/logo.png" class="logo-img" width="140" height="38" onclick="window.scrollTo(0,0)" alt="Health Jobs Portal Logo" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
         <div class="header-right">
