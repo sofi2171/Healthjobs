@@ -14,5 +14,7 @@
 
     <style name="AppTheme.NoActionBarLaunch" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/health_splash</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/health_logo</item>
+        <item name="android:windowSplashScreenBackground">@android:color/white</item>
     </style>
 </resources>
