@@ -1,0 +1,20 @@
+{
+  "appId": "com.sufian.healthjobs",
+  "appName": "Healthjobs",
+  "webDir": "www",
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    },
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "backgroundColor": "#ffffff"
+    },
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#ffffff"
+    }
+  }
+}
