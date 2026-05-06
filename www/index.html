@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="google-adsense-account" content="ca-pub-1291348510465369">
+
     
     <title>Health Jobs | Find Medical & Healthcare Jobs Near You</title>
 <meta name="description" content="Health Jobs Portal is Pakistan's leading digital network for healthcare pros. Find medical jobs, hire doctors, nurses, and staff instantly.">
@@ -231,9 +231,20 @@
         .fs-clear-btn { background: none; border: none; font-size: 20px; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; }
         .fs-clear-btn.hidden { display: none; }
 
-        .fs-filter-tabs { display: flex; gap: 12px; padding: 12px 16px; background: var(--bg-white); border-bottom: 1px solid var(--border-color); }
-        .fs-tab { flex: 1; padding: 10px 0; border: 1px solid var(--border-color); background: var(--bg-body); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: 0.2s; }
-        .fs-tab.active { background: #f0f7ff; color: var(--primary-blue); border-color: #bae6fd; }
+        /* Filter Button Inside Search Box */
+        .fs-filter-btn { background: none; border: none; color: var(--text-secondary); padding: 5px 0 5px 10px; cursor: pointer; display: flex; align-items: center; border-left: 1px solid var(--border-color); margin-left: 8px; transition: 0.2s;}
+        .fs-filter-btn:active { transform: scale(0.9); }
+        .fs-filter-btn.active { color: var(--primary-blue); }
+
+        /* Filter Dropdown Menu */
+        .fs-filter-menu { position: absolute; top: 60px; right: 16px; background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); z-index: 10000; width: 160px; display: flex; flex-direction: column; transition: opacity 0.2s, transform 0.2s; transform-origin: top right; }
+        .fs-filter-menu.hidden { opacity: 0; transform: scale(0.95); pointer-events: none; }
+        .filter-opt { background: none; border: none; padding: 14px 16px; text-align: left; font-size: 14px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: 0.2s;}
+        .filter-opt:first-child { border-bottom: 1px solid #f1f5f9; border-radius: 10px 10px 0 0; }
+        .filter-opt:last-child { border-radius: 0 0 10px 10px; }
+        .filter-opt:hover, .filter-opt:active { background: #f8fafc; }
+        .filter-opt.active { color: var(--primary-blue); background: #f0f7ff; }
+
 
         .fs-search-results { flex: 1; overflow-y: auto; background: var(--bg-body); padding-bottom: 20px; }
         .fs-empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); font-size: 14px; font-weight: 500; }
@@ -285,18 +296,34 @@
 </style>
 
 <script>
-// Jab app poori load ho jaye, toh 2 second baad splash hata do
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const splash = document.getElementById('custom-splash');
-        if(splash) {
-            splash.style.opacity = '0';
-            setTimeout(() => splash.remove(), 500);
-        }
-    }, 2500); // 2.5 seconds tak show hoga
-});
-</script>
+/**
+ * SPLASH SCREEN SESSION LOGIC
+ * Sirf pehli dafa show hoga ek session mein.
+ */
+(function() {
+    const splash = document.getElementById('custom-splash');
+    const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
 
+    if (hasSeenSplash) {
+        // Agar pehle dekh chuka hai, toh bina dikhaye foran remove kar do
+        if(splash) {
+            splash.style.display = 'none';
+            splash.remove();
+        }
+    } else {
+        // Agar pehli baar aaya hai, toh show karo aur 2.5s baad hide kar do
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if(splash) {
+                    splash.style.opacity = '0';
+                    sessionStorage.setItem('hasSeenSplash', 'true'); 
+                    setTimeout(() => splash.remove(), 500);
+                }
+            }, 2500); 
+        });
+    }
+})();
+</script>
     <header>
  <img src="images/logo.png" class="logo-img" width="140" height="38" onclick="window.scrollTo(0,0)" alt="Health Jobs Portal Logo" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
         <div class="header-right">
@@ -321,15 +348,26 @@ window.addEventListener('load', () => {
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             </button>
             <div class="fs-search-input-box">
-                <input type="text" id="fs-search-in" placeholder="Search Doctors, Cities..." oninput="triggerLiveSearch()">
+                <input type="text" id="fs-search-in" placeholder="Search All (Posts & Profiles)..." oninput="triggerLiveSearch()">
                 <button class="fs-clear-btn hidden" id="fs-clear-btn" onclick="clearSearch()">&times;</button>
+                
+                <button class="fs-filter-btn" id="fs-filter-btn" onclick="toggleSearchFilterMenu()">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+                </button>
             </div>
         </div>
         
-        <div class="fs-filter-tabs">
-            <button class="fs-tab active" id="tab-all" onclick="setSearchFilter('all')">All Results</button>
-            <button class="fs-tab" id="tab-profile" onclick="setSearchFilter('profile')">Profiles Only</button>
+        <div id="fs-filter-menu" class="fs-filter-menu hidden">
+            <div style="padding: 10px 16px; font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid #f1f5f9;">Type</div>
+            <button class="filter-opt active" id="opt-all" onclick="setSearchFilter('all')">All Results</button>
+            <button class="filter-opt" id="opt-profile" onclick="setSearchFilter('profile')">Profiles Only</button>
+            
+            <div style="padding: 10px 16px; font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid #f1f5f9; border-top: 1px solid #f1f5f9;">Time</div>
+            <button class="filter-opt" id="opt-today" onclick="setDateFilter('today')">Today</button>
+            <button class="filter-opt" id="opt-yesterday" onclick="setDateFilter('yesterday')">Yesterday</button>
+            <button class="filter-opt" id="opt-week" onclick="setDateFilter('week')">Last 7 Days</button>
         </div>
+
 
         <div id="fs-search-results" class="fs-search-results">
             <div class="fs-empty-state">Type at least 2 characters to search...</div>
@@ -749,41 +787,256 @@ isSupported().then((supported) => {
         window.closeFullScreenSearch = () => { document.getElementById('fs-search-overlay').classList.add('hidden'); document.body.style.overflow = ''; };
         window.clearSearch = () => { const input = document.getElementById('fs-search-in'); input.value = ''; input.focus(); document.getElementById('fs-clear-btn').classList.add('hidden'); document.getElementById('fs-search-results').innerHTML = '<div class="fs-empty-state">Type at least 2 characters to search...</div>'; };
         
+        // Naya Toggle Menu Function
+        window.toggleSearchFilterMenu = () => {
+            const menu = document.getElementById('fs-filter-menu');
+            const btn = document.getElementById('fs-filter-btn');
+            menu.classList.toggle('hidden');
+            btn.classList.toggle('active');
+        };
+
+        // Updated Filter Function
         window.setSearchFilter = (type) => {
             currentSearchFilter = type;
-            document.getElementById('tab-all').classList.toggle('active', type === 'all');
-            document.getElementById('tab-profile').classList.toggle('active', type === 'profile');
-            document.getElementById('fs-search-in').placeholder = type === 'profile' ? "Search Profiles Only..." : "Search Doctors, Cities...";
+            
+            // Active class lagana aur hatana
+            document.getElementById('opt-all').classList.toggle('active', type === 'all');
+            document.getElementById('opt-profile').classList.toggle('active', type === 'profile');
+            
+            // Placeholder text change karna
+            document.getElementById('fs-search-in').placeholder = type === 'profile' ? "Search Profiles Only..." : "Search All (Posts & Profiles)...";
+            
+            // Option select hone ke baad dropdown band kar dena
+            document.getElementById('fs-filter-menu').classList.add('hidden');
+            document.getElementById('fs-filter-btn').classList.remove('active');
+            
+            window.triggerLiveSearch();
+        };
+        // ==========================================
+        // 7. FULL AUTO-FILTER & SEARCH ENGINE (FINAL)
+        // ==========================================
+
+        window.currentSearchFilter = 'all';
+        window.currentDateFilter = 'all';
+
+        // --- Search UI Controls ---
+        window.openFullScreenSearch = () => { 
+            document.getElementById('fs-search-overlay').classList.remove('hidden'); 
+            document.body.style.overflow = 'hidden'; 
+            setTimeout(() => document.getElementById('fs-search-in').focus(), 150); 
+        };
+
+        window.closeFullScreenSearch = () => { 
+            document.getElementById('fs-search-overlay').classList.add('hidden'); 
+            document.body.style.overflow = ''; 
+        };
+
+        window.clearSearch = () => { 
+            const input = document.getElementById('fs-search-in'); 
+            input.value = ''; 
+            input.focus(); 
+            document.getElementById('fs-clear-btn').classList.add('hidden'); 
+            document.getElementById('fs-search-results').innerHTML = '<div class="fs-empty-state">Select a Time Filter or type at least 2 characters...</div>'; 
+        };
+
+        // --- Filter Menu Controls ---
+        window.toggleSearchFilterMenu = () => {
+            const menu = document.getElementById('fs-filter-menu');
+            const btn = document.getElementById('fs-filter-btn');
+            if(menu && btn) {
+                menu.classList.toggle('hidden');
+                btn.classList.toggle('active');
+            }
+        };
+
+        // Screen par kahin aur click karne par menu band karne ka listener
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('fs-filter-menu');
+            const btn = document.getElementById('fs-filter-btn');
+            if (menu && btn && !menu.classList.contains('hidden') && !btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+                btn.classList.remove('active');
+            }
+        });
+
+        // --- Time Filter (Today, Yesterday, Last 7 Days) ---
+        window.setDateFilter = (time) => {
+            window.currentDateFilter = time;
+            document.querySelectorAll('.filter-opt').forEach(opt => opt.classList.remove('active'));
+            document.getElementById('opt-' + time).classList.add('active');
+            document.getElementById('fs-filter-menu').classList.add('hidden');
+            document.getElementById('fs-filter-btn').classList.remove('active');
+            
+            window.currentSearchFilter = 'all'; 
             window.triggerLiveSearch();
         };
 
+        // --- Type Filter (Profiles / All) ---
+        window.setSearchFilter = (type) => {
+            window.currentSearchFilter = type;
+            document.querySelectorAll('.filter-opt').forEach(opt => opt.classList.remove('active'));
+            document.getElementById('opt-' + type).classList.add('active');
+            document.getElementById('fs-search-in').placeholder = type === 'profile' ? "Search Profiles Only..." : "Search All (Posts & Profiles)...";
+            document.getElementById('fs-filter-menu').classList.add('hidden');
+            document.getElementById('fs-filter-btn').classList.remove('active');
+            
+            window.currentDateFilter = 'all'; // Type change hone par date reset
+            window.triggerLiveSearch();
+        };
+
+        // --- Main Live Search Engine (Profiles + Posts merged) ---
         window.triggerLiveSearch = () => {
             const q = document.getElementById('fs-search-in').value.trim().toLowerCase();
             const resultsBox = document.getElementById('fs-search-results');
             const clearBtn = document.getElementById('fs-clear-btn');
             
             if (q.length > 0) clearBtn.classList.remove('hidden'); else clearBtn.classList.add('hidden');
-            if(q.length < 2) { resultsBox.innerHTML = '<div class="fs-empty-state">Type at least 2 characters to search...</div>'; return; }
+
+            if(q.length < 2 && window.currentDateFilter === 'all') { 
+                resultsBox.innerHTML = '<div class="fs-empty-state">Select a Time Filter or type at least 2 characters...</div>'; 
+                return; 
+            }
             
             resultsBox.innerHTML = '<div class="loader-box"><div class="spinner" style="width:20px;height:20px;border-width:2px;"></div></div>';
             
-            let allData = window.searchIndexData || [];
+            // Profiles aur Posts dono ka data jama karna
+            let profilesData = window.searchIndexData || [];
+            let postsData = (typeof postsArr !== 'undefined' ? postsArr : []).map(p => ({
+                id: p.id,
+                t: p.title || (p.desc ? p.desc.substring(0, 50) + "..." : 'Update'),
+                p: p.posterName || p.authorName || 'Healthcare User',
+                loc: p.location || '',
+                pic: p.posterPic || p.authorPic || 'https://ui-avatars.com/api/?name=U',
+                type: p.type || 'general_post',
+                createdAt: p.createdAt || 0
+            }));
+
+            let allData = [...profilesData, ...postsData];
+            
+            const now = Date.now();
+            const ONE_DAY = 24 * 60 * 60 * 1000;
+            const uniqueDataMap = new Map();
+
             let results = allData.filter(item => {
-                const name = (item.t || "").toLowerCase(); const prof = (item.p || "").toLowerCase(); const loc = (item.loc || "").toLowerCase();
-                const matchesQuery = name.includes(q) || prof.includes(q) || loc.includes(q);
+                const name = (item.t || "").toLowerCase(); 
+                const prof = (item.p || "").toLowerCase(); 
+                const loc = (item.loc || "").toLowerCase();
+                
+                const matchesQuery = q.length >= 2 ? (name.includes(q) || prof.includes(q) || loc.includes(q)) : true;
                 const isProfile = item.type === 'profile' || item.type === 'user';
-                const matchesTab = (currentSearchFilter === 'all') || isProfile;
-                return matchesQuery && matchesTab;
+                const itemTime = item.createdAt || 0;
+
+                let matchesTime = true;
+                if (window.currentDateFilter !== 'all') {
+                    if (isProfile) return false; 
+                    if (window.currentDateFilter === 'today') {
+                        matchesTime = (now - itemTime) < ONE_DAY;
+                    } else if (window.currentDateFilter === 'yesterday') {
+                        matchesTime = (now - itemTime) >= ONE_DAY && (now - itemTime) < (ONE_DAY * 2);
+                    } else if (window.currentDateFilter === 'week') {
+                        matchesTime = (now - itemTime) < (ONE_DAY * 7);
+                    }
+                }
+
+                const matchesType = (window.currentSearchFilter === 'all') || (window.currentSearchFilter === 'profile' && isProfile);
+                
+                if (matchesQuery && matchesType && matchesTime) {
+                    uniqueDataMap.set(item.id, item);
+                    return true;
+                }
+                return false;
+            });
+
+            let finalResults = Array.from(uniqueDataMap.values());
+            finalResults.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            finalResults = finalResults.slice(0, 30);
+
+            if (finalResults.length === 0) { 
+                resultsBox.innerHTML = `<div class="fs-empty-state">No results found.</div>`; 
+                return; 
+            }
+            
+            resultsBox.innerHTML = finalResults.map(r => {
+                const isUser = r.type === 'user' || r.type === 'profile';
+                const link = isUser ? `wid.html?uid=${r.id}` : (r.type === 'general_post' ? `details.html?id=${r.id}` : `posts.html?id=${r.id}`);
+                
+                let dateStr = '';
+                if (!isUser && r.createdAt) {
+                    const diff = now - r.createdAt;
+                    if(diff < ONE_DAY) dateStr = 'Today';
+                    else if(diff < ONE_DAY * 2) dateStr = 'Yesterday';
+                    else dateStr = Math.floor(diff/ONE_DAY) + ' days ago';
+                }
+
+                return `
+                <div class="fs-result-item" onclick="location.href='${link}'">
+                    <img src="${r.pic}" class="fs-result-pic" loading="lazy" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                    <div class="fs-result-info">
+                        <span class="fs-result-title">${r.t}</span>
+                        <span class="fs-result-sub">${r.p} ${r.loc ? '• ' + r.loc : ''}</span>
+                        ${dateStr ? `<span style="font-size:10.5px; color:var(--primary-blue); font-weight:700; margin-top:4px;">📅 ${dateStr}</span>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        };
+
+        // Screen par kahin aur click karne par menu band karne ka code
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('fs-filter-menu');
+            const btn = document.getElementById('fs-filter-btn');
+            if (menu && btn && !menu.classList.contains('hidden') && !btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+                btn.classList.remove('active');
+            }
+        });
+
+                window.triggerLiveSearch = () => {
+            const q = document.getElementById('fs-search-in').value.trim().toLowerCase();
+            const resultsBox = document.getElementById('fs-search-results');
+            const clearBtn = document.getElementById('fs-clear-btn');
+            
+            if (q.length > 0) clearBtn.classList.remove('hidden'); else clearBtn.classList.add('hidden');
+            if(q.length < 2) { resultsBox.innerHTML = '<div class="fs-empty-state">Type at least 2 characters...</div>'; return; }
+            
+            resultsBox.innerHTML = '<div class="loader-box"><div class="spinner" style="width:20px;height:20px;"></div></div>';
+            
+            let allData = window.searchIndexData || [];
+            const now = Date.now();
+            const ONE_DAY = 24 * 60 * 60 * 1000;
+
+            let results = allData.filter(item => {
+                const name = (item.t || "").toLowerCase(); 
+                const prof = (item.p || "").toLowerCase(); 
+                const loc = (item.loc || "").toLowerCase();
+                const matchesQuery = name.includes(q) || prof.includes(q) || loc.includes(q);
+                
+                // 1. Type Filter check karein
+                const isProfile = item.type === 'profile' || item.type === 'user';
+                const matchesType = (currentSearchFilter === 'all') || (currentSearchFilter === 'profile' && isProfile);
+                
+                // 2. Time Filter check karein
+                let matchesTime = true;
+                const itemTime = item.createdAt || 0; // Search index mein createdAt field hona zaroori hai
+
+                if (currentDateFilter === 'today') {
+                    matchesTime = (now - itemTime) < ONE_DAY;
+                } else if (currentDateFilter === 'yesterday') {
+                    matchesTime = (now - itemTime) >= ONE_DAY && (now - itemTime) < (ONE_DAY * 2);
+                } else if (currentDateFilter === 'week') {
+                    matchesTime = (now - itemTime) < (ONE_DAY * 7);
+                }
+
+                return matchesQuery && matchesType && matchesTime;
             }).slice(0, 25);
 
-            if (results.length === 0) { resultsBox.innerHTML = `<div class="fs-empty-state">No results found for "<b>${q}</b>"<br><small style="color:#94a3b8">Try searching 'Doctor' or 'City name'</small></div>`; return; }
+            if (results.length === 0) { resultsBox.innerHTML = `<div class="fs-empty-state">No results found.</div>`; return; }
             
             resultsBox.innerHTML = results.map(r => {
                 const isUser = r.type === 'user' || r.type === 'profile';
                 const link = isUser ? `wid.html?uid=${r.id}` : (r.type === 'general_post' ? `details.html?id=${r.id}` : `posts.html?id=${r.id}`);
                 return `
                 <div class="fs-result-item" onclick="location.href='${link}'">
-<img src="${r.pic || 'https://ui-avatars.com/api/?name=U'}" class="fs-result-pic" width="48" height="48" loading="lazy" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                    <img src="${r.pic || 'https://ui-avatars.com/api/?name=U'}" class="fs-result-pic" onerror="this.src='https://ui-avatars.com/api/?name=U'">
                     <div class="fs-result-info">
                         <span class="fs-result-title">${r.t}</span>
                         <span class="fs-result-sub">${r.p} • ${r.loc || 'Pakistan'}</span>
@@ -792,12 +1045,12 @@ isSupported().then((supported) => {
             }).join('');
         };
 
+
         const searchIndexRef = dbRef(dbRT, 'search_index');
         onValue(searchIndexRef, (snapshot) => { const data = snapshot.val(); window.searchIndexData = data ? Object.values(data) : []; });
 
         // 8. HYBRID FEED
         window.loadInitialPosts = function() {
-            document.getElementById('loading').classList.remove('hidden');
             const TEN_MINUTES = 10 * 60 * 1000;
             
             if (localStorage.getItem('last_active_time') && (Date.now() - parseInt(localStorage.getItem('last_active_time')) > TEN_MINUTES)) {
@@ -806,9 +1059,17 @@ isSupported().then((supported) => {
 
             const cachedDataStr = localStorage.getItem(CACHE_KEY);
             if (cachedDataStr) { 
-                try { postsArr = JSON.parse(cachedDataStr); renderEverything(); } catch(e) {} 
+                try { 
+                    postsArr = JSON.parse(cachedDataStr); 
+                    renderEverything(); 
+                    // Loader ko foran hide kar dein agar data cache mein hai
+                    document.getElementById('loading').classList.add('hidden');
+                } catch(e) {} 
             } else {
-                postsArr = []; document.getElementById('feed').innerHTML = "";
+                // Agar cache khali hai toh loader show karein
+                postsArr = []; 
+                document.getElementById('feed').innerHTML = "";
+                document.getElementById('loading').classList.remove('hidden');
             }
 
             const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(25));                              
@@ -836,10 +1097,13 @@ isSupported().then((supported) => {
                 const badge = document.getElementById('notif-badge');
                 if(newUpdatesCount > 0) { badge.innerText = newUpdatesCount > 9 ? '9+' : newUpdatesCount; badge.classList.remove('hidden'); } else badge.classList.add('hidden');
 
-                postsArr = updatedFullArr; renderEverything(); document.getElementById('loading').classList.add('hidden');
+                postsArr = updatedFullArr; 
+                renderEverything(); // Background mein chup-chaap feed update ho jayegi
+                document.getElementById('loading').classList.add('hidden');
                 if (!snapshot.empty) { lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1]; hasMorePosts = true; }
             });
         }
+
 
         async function fetchMorePosts() {
             if (isFetchingMore || !hasMorePosts || !lastVisibleDoc) return;
@@ -862,8 +1126,17 @@ isSupported().then((supported) => {
         }
 
         window.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') localStorage.setItem('last_active_time', Date.now()); });
-        window.addEventListener('scroll', () => { if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) fetchMorePosts(); });
-
+        let scrollTimeout;
+window.addEventListener('scroll', () => {
+    if (scrollTimeout) return; // Agar pehle se chal raha hai toh wait karo
+    
+    scrollTimeout = setTimeout(() => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+            fetchMorePosts();
+        }
+        scrollTimeout = null;
+    }, 150); // Har 150 milliseconds ke baad check karega
+});
         function renderEverything() {
             if(userCity && postsArr.length > 0) {
                 const cityLower = userCity.toLowerCase().trim();
@@ -1144,29 +1417,31 @@ isSupported().then((supported) => {
         <svg viewBox="0 0 24 24" width="32" height="32" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.87 1.18-5.28 3.45-.5.34-.96.51-1.37.5-.45-.01-1.31-.25-1.95-.46-.78-.26-1.4-.4-1.34-.84.03-.22.34-.45.94-.69 3.68-1.59 6.13-2.64 7.35-3.14 3.49-1.45 4.22-1.7 4.7-1.71.11 0 .34.03.47.14.11.09.14.22.15.34-.01.07 0 .16-.01.25z"/></svg>
     </a>
 </div>
-<script type="module">
-    import { PushNotifications } from '@capacitor/push-notifications';
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
+            const PushNotifications = window.Capacitor.Plugins.PushNotifications;
 
-    // Yeh function har waqt chalta rahega
-    PushNotifications.addListener('pushNotificationReceived', (notification) => {
-        const data = notification.data;
-        if (data && (data.isCall === "true" || data.startCall === "true")) {
-            console.log("Call received in background/foreground!");
-            
-            // 🔥 Sab se zaroori line: User chahe kisi bhi page par ho, 
-            // usay foran chat.html (Ringing Screen) par bhej do!
-            window.location.href = `chat.html?uid=${data.callerUid}&startCall=true&incoming=true`;
-        }
-    });
+            // Yeh function har waqt chalta rahega
+            PushNotifications.addListener('pushNotificationReceived', (notification) => {
+                const data = notification.data;
+                if (data && (data.isCall === "true" || data.startCall === "true")) {
+                    console.log("Call received in background/foreground!");
+                    window.location.href = `chat.html?uid=${data.callerUid}&startCall=true&incoming=true`;
+                }
+            });
 
-    // Agar app band (kill) thi aur user ne notification par tap kiya
-    PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-        const data = notification.notification.data;
-        if (data && (data.isCall === "true" || data.startCall === "true")) {
-            window.location.href = `chat.html?uid=${data.callerUid}&startCall=true&incoming=true`;
+            // Agar app band (kill) thi aur user ne notification par tap kiya
+            PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+                const data = notification.notification.data;
+                if (data && (data.isCall === "true" || data.startCall === "true")) {
+                    window.location.href = `chat.html?uid=${data.callerUid}&startCall=true&incoming=true`;
+                }
+            });
         }
     });
 </script>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
