@@ -3,25 +3,18 @@
   "appName": "Healthjobs",
   "webDir": "www",
   "plugins": {
-    "StatusBar": {
-      "overlaysWebView": true
-    },
     "GoogleAuth": {
-      "scopes": [
-        "profile",
-        "email"
-      ],
+      "scopes": ["profile", "email"],
       "serverClientId": "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
       "forceCodeForRefreshToken": true
     },
-    "CapacitorHttp": {
-      "enabled": false
-    },
     "SplashScreen": {
-      "launchShowDuration": 2000,
+      "launchShowDuration": 2500,
       "launchAutoHide": true,
       "backgroundColor": "#ffffff",
-      "androidScaleType": "CENTER_INSIDE"
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "FIT_CENTER",
+      "showSpinner": false
     }
   }
 }
