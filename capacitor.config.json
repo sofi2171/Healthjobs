@@ -9,12 +9,14 @@
       "forceCodeForRefreshToken": true
     },
     "SplashScreen": {
-      "launchShowDuration": 2500,
-      "launchAutoHide": true,
+      "launchShowDuration": 0,
       "backgroundColor": "#ffffff",
-      "androidSplashResourceName": "splash",
-      "androidScaleType": "FIT_CENTER",
-      "showSpinner": false
+      "androidSplashResourceName": "health_splash",
+      "androidScaleType": "CENTER"
+    },
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#ffffff"
     }
   }
 }
