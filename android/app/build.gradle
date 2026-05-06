@@ -22,9 +22,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
-            // Pipes and other characters not allowed in file names
-            // are replaced with underscore. This includes the
-            // space character.
             ignoreAssetsPattern "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
         }
     }
@@ -35,10 +32,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-
-    setup {
-        // Any additional setup if required
     }
 }
 
