@@ -18,6 +18,7 @@
         <item name="android:windowBackground">@drawable/health_splash</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/health_logo</item>
         <item name="android:windowSplashScreenBackground">@android:color/white</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@android:color/white</item>
         <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
