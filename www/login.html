@@ -138,8 +138,8 @@
         let globalCountriesData = [];
         window.currentAuthMode = 'login';
 
-        // 🔥         // 🔥 SPEED FIX 1: Initialize Google Auth (Sirf Web ke liye zaroori hai)
-        if (!window.Capacitor || !window.Capacitor.isNativePlatform()) {
+        // 🔥 SPEED FIX 1: Safe Initialization
+        try {
             if (window.Capacitor && window.Capacitor.Plugins.GoogleAuth) {
                 Capacitor.Plugins.GoogleAuth.initialize({
                     clientId: "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
@@ -147,7 +147,49 @@
                     grantOfflineAccess: true
                 });
             }
+        } catch(e) {
+            console.log("Google Init warning:", e);
         }
+
+        // 🔥 SPEED FIX 2: Fast Native Google Login (Crash-Proof Version)
+        window.handleGoogleAuth = async function() {
+            const msgBox = document.getElementById('status-msg');
+            msgBox.innerText = "Connecting securely..."; 
+            msgBox.style.color = "var(--text-main)";
+            setAuthLoader(true); 
+
+            try { 
+                if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+                    
+                    // 1. Check karega ke plugin APK mein install hai ya nahi
+                    if (!Capacitor.Plugins.GoogleAuth) {
+                        throw new Error("GoogleAuth Plugin APK mein maujood nahi hai!");
+                    }
+
+                    // 2. Google ka popup kholay ga
+                    const googleUser = await Capacitor.Plugins.GoogleAuth.signIn();
+                    
+                    // 3. Check karega ke Google ne token diya hai ya nahi
+                    if (!googleUser || !googleUser.authentication || !googleUser.authentication.idToken) {
+                        throw new Error("Google ne token return nahi kiya (Client ID issue).");
+                    }
+
+                    const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
+                    await signInWithCredential(auth, credential);
+                    
+                } else {
+                    await signInWithPopup(auth, provider); 
+                }
+            } catch (error) { 
+                console.error("Google Auth Error: ", error);
+                // 🚀 YEH ALERT AAPKO BATA DEGA KE ASAL MASLA KYA HAI
+                alert("Login Error: " + (error.message || JSON.stringify(error))); 
+                
+                msgBox.style.color = "var(--error)"; 
+                msgBox.innerText = "Google Login Failed"; 
+                setAuthLoader(false);
+            }
+        };
 
 
         function hidePageLoader() {
@@ -226,29 +268,42 @@
             }
         };
 
-        // 🔥 SPEED FIX 2: Fast Native Google Login (100% Optimized)
+        // 🔥 SPEED FIX 2: Fast & Crash-Proof Native Google Login
         window.handleGoogleAuth = async function() {
             const msgBox = document.getElementById('status-msg');
             msgBox.innerText = "Connecting securely..."; 
             msgBox.style.color = "var(--text-main)";
+            
+            // Loader foran chala diya taake user ko app FAST feel ho
             setAuthLoader(true); 
 
             try { 
                 if (window.Capacitor && window.Capacitor.isNativePlatform()) {
-                    // Yahan se signOut nikal diya gaya hai taake instant login ho
+                    
+                    // CRASH FIX: Purana corrupt session/cache clear karna lazmi hai
+                    try { await Capacitor.Plugins.GoogleAuth.signOut(); } catch(e) {}
+
+                    // Ab safe tarike se login popup khulega
                     const googleUser = await Capacitor.Plugins.GoogleAuth.signIn();
+                    
+                    if (!googleUser || !googleUser.authentication || !googleUser.authentication.idToken) {
+                        throw new Error("Token missing");
+                    }
+
                     const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
                     await signInWithCredential(auth, credential);
+                    
                 } else {
                     await signInWithPopup(auth, provider); 
                 }
             } catch (error) { 
                 console.error("Google Auth Error: ", error);
                 msgBox.style.color = "var(--error)"; 
-                msgBox.innerText = "Google Login Cancelled or Failed"; 
+                msgBox.innerText = "Google Login Cancelled"; 
                 setAuthLoader(false);
             }
         };
+
         /* 🔥 NATIVE LOCATION PERMISSION FIX */
         window.detectLocation = async function() {
             const locStatus = document.getElementById('loc-status');
