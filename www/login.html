@@ -138,14 +138,17 @@
         let globalCountriesData = [];
         window.currentAuthMode = 'login';
 
-        // 🔥 SPEED FIX 1: Initialize Google Auth in Background on Page Load
-        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
-            Capacitor.Plugins.GoogleAuth.initialize({
-                clientId: "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
-                scopes: ["profile", "email"],
-                grantOfflineAccess: true
-            });
+        // 🔥         // 🔥 SPEED FIX 1: Initialize Google Auth (Sirf Web ke liye zaroori hai)
+        if (!window.Capacitor || !window.Capacitor.isNativePlatform()) {
+            if (window.Capacitor && window.Capacitor.Plugins.GoogleAuth) {
+                Capacitor.Plugins.GoogleAuth.initialize({
+                    clientId: "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
+                    scopes: ["profile", "email"],
+                    grantOfflineAccess: true
+                });
+            }
         }
+
 
         function hidePageLoader() {
             const loader = document.getElementById('page-loader');
@@ -223,16 +226,16 @@
             }
         };
 
-        // 🔥 SPEED FIX 2: Fast Native Google Login
+        // 🔥 SPEED FIX 2: Fast Native Google Login (100% Optimized)
         window.handleGoogleAuth = async function() {
             const msgBox = document.getElementById('status-msg');
-            msgBox.innerText = "Connecting Google..."; msgBox.style.color = "var(--text-main)";
+            msgBox.innerText = "Connecting securely..."; 
+            msgBox.style.color = "var(--text-main)";
             setAuthLoader(true); 
 
             try { 
                 if (window.Capacitor && window.Capacitor.isNativePlatform()) {
-                    // Sign out to force account picker, then sign in instantly!
-                    try { await Capacitor.Plugins.GoogleAuth.signOut(); } catch(e){}
+                    // Yahan se signOut nikal diya gaya hai taake instant login ho
                     const googleUser = await Capacitor.Plugins.GoogleAuth.signIn();
                     const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
                     await signInWithCredential(auth, credential);
@@ -240,10 +243,12 @@
                     await signInWithPopup(auth, provider); 
                 }
             } catch (error) { 
-                msgBox.style.color = "var(--error)"; msgBox.innerText = "Google Login Cancelled"; setAuthLoader(false);
+                console.error("Google Auth Error: ", error);
+                msgBox.style.color = "var(--error)"; 
+                msgBox.innerText = "Google Login Cancelled or Failed"; 
+                setAuthLoader(false);
             }
         };
-
         /* 🔥 NATIVE LOCATION PERMISSION FIX */
         window.detectLocation = async function() {
             const locStatus = document.getElementById('loc-status');
