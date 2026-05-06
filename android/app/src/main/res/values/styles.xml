@@ -9,12 +9,10 @@
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowBackground">@drawable/health_splash</item>
     </style>
 
     <style name="AppTheme.NoActionBarLaunch" parent="AppTheme.NoActionBar">
-        <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash</item>
-        <item name="android:windowSplashScreenBackground">@android:color/white</item>
+        <item name="android:windowBackground">@drawable/health_splash</item>
     </style>
 </resources>
