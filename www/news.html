@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Medical News | Health Jobs Portal</title>
+    <meta name="description" content="Latest medical news and updates for healthcare professionals in Pakistan.">
+    <link rel="canonical" href="https://healthjobs-portal.web.app/news.html">
+    <meta property="og:title" content="Medical News - Health Jobs Portal">
+    <meta property="og:description" content="Latest medical news and updates for healthcare professionals.">
+    <meta property="og:image" content="https://healthjobs-portal.web.app/images/logo.png">
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://firestore.googleapis.com">
+    
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --hover-blue: #1e40af;
+            --bg-white: #ffffff;
+            --bg-body: #f1f5f9;
+            --text-main: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #cbd5e1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { background-color: var(--bg-body); color: var(--text-main); padding-top: 70px; min-height: 100vh; display: flex; flex-direction: column; }
+
+        header {
+            background-color: var(--bg-white); padding: 0 15px; display: flex; justify-content: space-between;
+            align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 65px; z-index: 1000;
+            border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .back-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; color: var(--text-secondary); transition: 0.2s; text-decoration: none; }
+        .back-btn:hover { color: var(--primary-blue); }
+        .back-btn svg { width: 22px; height: 22px; fill: currentColor; }
+        
+        .logo-container { text-decoration: none; display: flex; align-items: center; }
+        .logo-img { height: 35px; width: auto; max-width: 120px; object-fit: contain; }
+
+        main { flex: 1; max-width: 600px; width: 100%; margin: 0 auto; padding: 15px 12px 80px; }
+
+        .page-title {
+            font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px; padding: 0 4px;
+        }
+
+        /* News Cards */
+        .news-card {
+            background: var(--bg-white); border: 1px solid var(--border-color);
+            border-radius: 14px; padding: 16px; margin-bottom: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s; cursor: pointer;
+        }
+        .news-card:active { transform: scale(0.98); }
+
+        .news-card-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
+
+        .news-thumbnail {
+            width: 90px; height: 90px; border-radius: 12px; object-fit: cover;
+            background: #e2e8f0; flex-shrink: 0; border: 1px solid #f1f5f9;
+        }
+
+        .news-title {
+            font-size: 15px; font-weight: 700; color: var(--text-main);
+            line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        .news-meta {
+            display: flex; align-items: center; gap: 10px; margin-top: 6px;
+            font-size: 11px; color: var(--text-secondary); font-weight: 500; flex-wrap: wrap;
+        }
+
+        .news-tag {
+            background: #eff6ff; color: var(--primary-blue); padding: 4px 12px;
+            border-radius: 14px; font-size: 10px; font-weight: 700; text-transform: uppercase;
+        }
+
+        .news-desc {
+            font-size: 13px; color: #475569; line-height: 1.6;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .news-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 10px; border-top: 1px solid #f1f5f9;
+        }
+
+        .news-author {
+            display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary);
+        }
+        .news-author img {
+            width: 24px; height: 24px; border-radius: 50%; object-fit: cover; background: #e2e8f0;
+        }
+
+        .read-more-btn {
+            background: var(--primary-blue); color: white; border: none;
+            padding: 7px 16px; border-radius: 18px; font-size: 12px; font-weight: 700;
+            cursor: pointer; transition: 0.2s; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+        .read-more-btn:hover { background: var(--hover-blue); }
+        .read-more-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+        /* Stats Row */
+        .news-stats {
+            display: flex; gap: 14px; font-size: 11px; color: var(--text-secondary);
+            font-weight: 500; margin-top: 6px;
+        }
+        .news-stats span { display: flex; align-items: center; gap: 4px; }
+        .news-stats svg { width: 13px; height: 13px; fill: currentColor; }
+
+        /* Loader */
+        .loader-box { text-align: center; padding: 20px; }
+        .spinner { width: 28px; height: 28px; border: 3px solid #e2e8f0; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .end-message { text-align: center; padding: 20px; color: #94a3b8; font-size: 13px; font-weight: 600; }
+
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
+        .empty-state .icon { font-size: 56px; margin-bottom: 14px; }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-white);
+            display: flex; justify-content: space-around; padding: 8px 0 10px;
+            border-top: 1px solid var(--border-color); z-index: 1000;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; text-decoration: none;
+            color: var(--text-secondary); flex: 1; transition: 0.1s; cursor: pointer;
+            background: none; border: none;
+        }
+        .nav-item.active { color: var(--primary-blue); }
+        .nav-item.active svg { fill: var(--primary-blue); }
+        .nav-item svg { width: 22px; height: 22px; fill: currentColor; margin-bottom: 3px; }
+        .nav-item span { font-size: 10px; font-weight: 600; }
+
+        /* Footer */
+        footer {
+            margin-top: 20px; background-color: var(--bg-white); padding: 30px 20px 90px;
+            border-top: 1px solid var(--border-color); text-align: center;
+        }
+        .footer-logo { height: 28px; object-fit: contain; margin-bottom: 6px; opacity: 0.8; }
+        .footer-tagline { font-size: 11px; color: var(--text-secondary); font-weight: 500; margin-bottom: 15px; }
+        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 12px; font-weight: 600; }
+        .footer-links a:hover { color: var(--primary-blue); }
+        .footer-copy { font-size: 11px; color: #94a3b8; font-weight: 500; }
+
+        .hidden { display: none !important; }
+
+        @media (min-width: 768px) {
+            .bottom-nav { max-width: 600px; left: 50%; transform: translateX(-50%); }
+            footer { padding-bottom: 40px; }
+            main { padding-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-left">
+            <a href="index.html" class="back-btn" title="Back to Feed">
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </a>
+            <a href="index.html" class="logo-container">
+                <img src="images/logo.png" alt="Health Jobs Portal" class="logo-img" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="page-title">
+            📰 Medical News & Updates
+        </div>
+
+        <div id="news-container"></div>
+        <div id="loader" class="loader-box hidden"><div class="spinner"></div></div>
+        <div id="end-message" class="end-message hidden">🎉 You've seen all medical updates!</div>
+
+        <div id="empty-state" class="empty-state hidden">
+            <div class="icon">📭</div>
+            <div style="font-weight: 700; font-size: 16px; margin-bottom: 6px;">No News Available</div>
+            <div style="font-size: 13px;">Check back later for medical updates.</div>
+        </div>
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="window.location.href='index.html'">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='my-posts.html'">
+            <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>My Posts</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='profile.html'">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg><span>Profile</span>
+        </button>
+    </nav>
+
+    <!-- FOOTER -->
+    <footer>
+        <img src="images/logo.png" alt="Health Jobs" class="footer-logo" width="100" height="28" loading="lazy" onerror="this.src='https://via.placeholder.com/100x28?text=Health+Jobs'">
+        <p class="footer-tagline">Pakistan's #1 Digital Healthcare Network</p>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="terms.html">Terms</a>
+            <a href="privcy.html">Privacy Policy</a>
+        </div>
+        <div class="footer-copy">&copy; 2026 Powered by SufianX</div>
+    </footer>
+
+    <!-- FIREBASE SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, query, orderBy, limit, startAfter, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+            authDomain: "jobs-45cc9.firebaseapp.com",
+            projectId: "jobs-45cc9",
+            storageBucket: "jobs-45cc9.firebasestorage.app",
+            messagingSenderId: "21065686301",
+            appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const container = document.getElementById('news-container');
+        const loader = document.getElementById('loader');
+        const endMessage = document.getElementById('end-message');
+        const emptyState = document.getElementById('empty-state');
+
+        const PAGE_SIZE = 10; // Har bar 10 posts load hongi
+        let lastVisibleDoc = null;
+        let isLoading = false;
+        let hasMorePosts = true;
+        let allLoadedPosts = [];
+
+        // HTML escape
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Single post card render karo
+        function renderPostCard(post, postId) {
+            const postTime = post.createdAt?.toMillis ? post.createdAt.toMillis() : (post.createdAt || Date.now());
+            const diff = Date.now() - postTime;
+            let timeAgo;
+            if (diff < 60000) timeAgo = "Just now";
+            else if (diff < 3600000) timeAgo = Math.floor(diff/60000) + "m ago";
+            else if (diff < 86400000) timeAgo = Math.floor(diff/3600000) + "h ago";
+            else if (diff < 604800000) timeAgo = Math.floor(diff/86400000) + "d ago";
+            else timeAgo = new Date(postTime).toLocaleDateString();
+            
+            // Thumbnail
+            let thumbnail = '';
+            let hasImage = false;
+            if (post.media && post.media.length > 0) {
+                thumbnail = post.media[0].url || post.media[0];
+                hasImage = true;
+            } else if (post.postMediaUrl && post.postMediaUrl.trim() !== '') {
+                thumbnail = post.postMediaUrl;
+                hasImage = true;
+            }
+            
+            const authorName = post.posterName || post.authorName || 'Health Jobs';
+            const authorPic = post.posterPic || post.authorPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=e2e8f0&color=64748b&size=30`;
+            const title = post.title || (post.desc ? post.desc.substring(0, 80) + '...' : 'Medical Update');
+            const desc = post.desc || 'Click to read more about this medical update.';
+            const category = post.category || 'General';
+            const likesCount = (post.likes || []).length;
+            const commentsCount = post.commentsCount || 0;
+            
+            return `
+                <div class="news-card" onclick="window.location.href='details.html?id=${postId}'">
+                    <div class="news-card-header">
+                        ${hasImage ? `<img src="${thumbnail}" class="news-thumbnail" alt="News" loading="lazy" onerror="this.style.display='none'">` : ''}
+                        <div style="flex:1; min-width:0;">
+                            <div class="news-title">${escapeHtml(title)}</div>
+                            <div class="news-meta">
+                                <span class="news-tag">${escapeHtml(category)}</span>
+                                <span>🕐 ${timeAgo}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="news-desc">${escapeHtml(desc.substring(0, 150))}${desc.length > 150 ? '...' : ''}</div>
+                    <div class="news-stats">
+                        <span>❤️ ${likesCount} Likes</span>
+                        <span>💬 ${commentsCount} Comments</span>
+                    </div>
+                    <div class="news-footer">
+                        <div class="news-author">
+                            <img src="${authorPic}" alt="${authorName}" onerror="this.style.display='none'">
+                            <span>${escapeHtml(authorName.split(' ')[0])}</span>
+                        </div>
+                        <a href="details.html?id=${postId}" class="read-more-btn" onclick="event.stopPropagation()">
+                            Read More
+                            <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initial load - pehle 10 posts
+        async function loadInitialPosts() {
+            loader.classList.remove('hidden');
+            endMessage.classList.add('hidden');
+            
+            try {
+                const q = query(
+                    collection(db, "posts"),
+                    orderBy("createdAt", "desc"),
+                    limit(PAGE_SIZE)
+                );
+                
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    container.innerHTML = '';
+                    emptyState.classList.remove('hidden');
+                    loader.classList.add('hidden');
+                    return;
+                }
+
+                allLoadedPosts = [];
+                let html = '';
+                
+                snapshot.forEach(doc => {
+                    const post = doc.data();
+                    if (post.type && post.type !== 'general_post') return;
+                    if (post.status === 'inactive' || post.status === 'deleted') return;
+                    
+                    allLoadedPosts.push({ id: doc.id, ...post });
+                    html += renderPostCard(post, doc.id);
+                });
+                
+                lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
+                hasMorePosts = snapshot.docs.length === PAGE_SIZE;
+                
+                if (html === '') {
+                    container.innerHTML = '';
+                    emptyState.classList.remove('hidden');
+                } else {
+                    container.innerHTML = html;
+                    emptyState.classList.add('hidden');
+                }
+                
+                if (!hasMorePosts) {
+                    endMessage.classList.remove('hidden');
+                }
+                
+            } catch (error) {
+                console.error("Error:", error);
+                container.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><div style="font-weight:700;font-size:16px;">Error Loading</div></div>';
+            }
+            
+            loader.classList.add('hidden');
+        }
+
+        // Load more - agli 10 posts
+        async function loadMorePosts() {
+            if (isLoading || !hasMorePosts || !lastVisibleDoc) return;
+            
+            isLoading = true;
+            loader.classList.remove('hidden');
+            
+            try {
+                const q = query(
+                    collection(db, "posts"),
+                    orderBy("createdAt", "desc"),
+                    startAfter(lastVisibleDoc),
+                    limit(PAGE_SIZE)
+                );
+                
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    hasMorePosts = false;
+                    endMessage.classList.remove('hidden');
+                    loader.classList.add('hidden');
+                    return;
+                }
+
+                let html = '';
+                
+                snapshot.forEach(doc => {
+                    const post = doc.data();
+                    if (post.type && post.type !== 'general_post') return;
+                    if (post.status === 'inactive' || post.status === 'deleted') return;
+                    
+                    allLoadedPosts.push({ id: doc.id, ...post });
+                    html += renderPostCard(post, doc.id);
+                });
+                
+                lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
+                hasMorePosts = snapshot.docs.length === PAGE_SIZE;
+                
+                if (html !== '') {
+                    container.insertAdjacentHTML('beforeend', html);
+                }
+                
+                if (!hasMorePosts) {
+                    endMessage.classList.remove('hidden');
+                }
+                
+            } catch (error) {
+                console.error("Error loading more:", error);
+            }
+            
+            isLoading = false;
+            loader.classList.add('hidden');
+        }
+
+        // Scroll listener
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (scrollTimeout) return;
+            scrollTimeout = setTimeout(() => {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 400) {
+                    loadMorePosts();
+                }
+                scrollTimeout = null;
+            }, 100);
+        });
+
+        // Page load honay par initial posts load karo
+        loadInitialPosts();
+    </script>
+</body>
+</html>
