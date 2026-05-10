@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Post Statistics | Health Jobs Portal</title>
+    <style>
+        :root {
+            --blue: #0a66c2;
+            --blue-dark: #004182;
+            --blue-light: #f0f7ff;
+            --bg: #f3f2ef;
+            --white: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --green: #16a34a;
+            --red: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); padding-top: 64px; padding-bottom: 40px; min-height: 100vh; }
+
+        header { position: fixed; top: 0; left: 0; width: 100%; height: 64px; background: var(--white); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding: 0 16px; z-index: 100; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .back-btn { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); flex-shrink: 0; transition: 0.2s; }
+        .back-btn:hover { background: #e2e8f0; }
+        .back-btn svg { width: 20px; height: 20px; fill: currentColor; }
+        .header-info { flex: 1; overflow: hidden; }
+        .header-title { font-size: 16px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .header-sub { font-size: 11px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+
+        main { max-width: 600px; margin: 0 auto; padding: 16px; }
+
+        .loader-box { text-align: center; padding: 60px 20px; }
+        .spinner { width: 32px; height: 32px; border: 3px solid #e2e8f0; border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .hidden { display: none !important; }
+
+        .section-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; padding-left: 2px; }
+
+        /* Post Preview */
+        .post-preview { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        .preview-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; cursor: pointer; }
+        .preview-pic { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; }
+        .preview-name { font-size: 14px; font-weight: 700; color: var(--text); }
+        .preview-meta { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+        .preview-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.4px; }
+        .badge-employer { background: #e8f0fe; color: #1967d2; }
+        .badge-candidate { background: #f3e8fd; color: #681da8; }
+        .badge-general { background: #fff3e0; color: #b45309; }
+        .preview-title { font-size: 15px; font-weight: 700; color: var(--blue); margin-bottom: 6px; line-height: 1.3; }
+        .preview-desc { font-size: 13px; color: #334155; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; gap: 10px; margin-bottom: 14px; }
+        .cols-2 { grid-template-columns: 1fr 1fr; }
+        .stat-box { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 14px 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+        .stat-icon { width: 18px; height: 18px; fill: currentColor; margin: 0 auto 5px; display: block; }
+        .stat-num { font-size: 24px; font-weight: 800; color: var(--blue); line-height: 1; }
+        .stat-lbl { font-size: 10px; color: var(--muted); font-weight: 600; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
+
+        /* Click Boxes */
+        .click-row { display: flex; gap: 10px; margin-bottom: 6px; }
+        .click-box { flex: 1; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 14px 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+        .click-box svg { width: 18px; height: 18px; display: block; margin: 0 auto 5px; }
+        .click-box .c-num { font-size: 22px; font-weight: 800; line-height: 1; }
+        .c-num.wa { color: #16a34a; }
+        .c-num.call { color: #0078ff; }
+        .c-num.chat { color: var(--blue); }
+        .click-box .c-lbl { font-size: 10px; color: var(--muted); font-weight: 600; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+        .click-note { font-size: 11px; color: #94a3b8; text-align: center; margin-bottom: 14px; font-weight: 500; }
+
+        /* Tabs */
+        .tabs { display: flex; background: var(--white); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+        .tab-btn { flex: 1; padding: 11px 6px; border: none; background: none; font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; transition: 0.15s; border-bottom: 3px solid transparent; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); background: var(--blue-light); }
+        .tab-btn svg { width: 14px; height: 14px; fill: currentColor; }
+        .tab-count { background: #e2e8f0; color: var(--muted); font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; }
+        .tab-btn.active .tab-count { background: #bfdbfe; color: var(--blue); }
+
+        /* List */
+        .list-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .list-item { display: flex; align-items: flex-start; gap: 12px; padding: 13px 15px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background 0.12s; }
+        .list-item:last-child { border-bottom: none; }
+        .list-item:active { background: #f8fafc; }
+        .item-pic { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; margin-top: 1px; }
+        .item-info { flex: 1; overflow: hidden; }
+        .item-name { font-size: 13.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-bubble { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 7px 10px; margin-top: 6px; font-size: 13px; color: #334155; line-height: 1.4; word-break: break-word; }
+        .item-time { font-size: 10.5px; color: #94a3b8; margin-top: 3px; }
+        .item-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px; flex-shrink: 0; margin-top: 2px; }
+        .badge-l { background: #fff0f0; color: #ef4444; }
+        .badge-c { background: var(--blue-light); color: var(--blue); }
+
+        /* Empty / Error */
+        .empty-box { text-align: center; padding: 40px 20px; }
+        .empty-box svg { width: 34px; height: 34px; fill: #cbd5e1; margin: 0 auto 10px; display: block; }
+        .empty-box p { font-size: 13px; color: var(--muted); font-weight: 500; }
+        .error-box { text-align: center; padding: 60px 20px; }
+        .error-box p { font-size: 14px; color: var(--muted); }
+    </style>
+</head>
+<body>
+
+<header>
+    <button class="back-btn" onclick="history.back()">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </button>
+    <div class="header-info">
+        <div class="header-title" id="h-title">Post Statistics</div>
+        <div class="header-sub" id="h-sub">Loading data...</div>
+    </div>
+</header>
+
+<main>
+    <div id="loader" class="loader-box"><div class="spinner"></div></div>
+    <div id="main-content" class="hidden"></div>
+</main>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const config = {
+        apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+        authDomain: "jobs-45cc9.firebaseapp.com",
+        projectId: "jobs-45cc9",
+        storageBucket: "jobs-45cc9.firebasestorage.app",
+        messagingSenderId: "21065686301",
+        appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+    };
+
+    const app = initializeApp(config);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const postId = new URLSearchParams(window.location.search).get('id');
+    let postData = null;
+    let allComments = [];
+
+    onAuthStateChanged(auth, (user) => {
+        if (!user) { window.location.replace('login.html'); return; }
+        if (!postId) {
+            document.getElementById('loader').innerHTML = "<div class='error-box'><p>Post ID not found.</p></div>";
+            return;
+        }
+        loadPost();
+    });
+
+    async function loadPost() {
+        try {
+            const snap = await getDoc(doc(db, "posts", postId));
+            if (!snap.exists()) {
+                document.getElementById('loader').innerHTML = "<div class='error-box'><p>Post not found or deleted.</p></div>";
+                return;
+            }
+            postData = { id: snap.id, ...snap.data() };
+            const cSnap = await getDocs(query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc")));
+            cSnap.forEach(d => allComments.push({ id: d.id, ...d.data() }));
+            renderPage();
+        } catch(e) {
+            document.getElementById('loader').innerHTML = "<div class='error-box'><p>Error loading post data.</p></div>";
+        }
+    }
+
+    function formatDate(ts) {
+        if (!ts) return '';
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function formatShortDate(ts) {
+        if (!ts) return '';
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+    }
+
+    function renderPage() {
+        document.getElementById('loader').classList.add('hidden');
+        const mc = document.getElementById('main-content');
+        mc.classList.remove('hidden');
+
+        const p = postData;
+        const isGeneral = p.type === 'general_post';
+        const isEmployer = p.type === 'employer_post';
+        const isCandidate = p.type === 'candidate_post';
+        const isJob = isEmployer || isCandidate;
+
+        const name = p.posterName || p.authorName || 'Healthcare User';
+        const pic = p.posterPic || p.authorPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}`;
+        const likesArr = p.likes || [];
+        const commentsCount = allComments.length;
+
+        const titleShort = (p.title || 'General Post').substring(0, 28);
+        document.getElementById('h-title').innerText = titleShort + ((p.title || '').length > 28 ? '...' : '');
+        document.getElementById('h-sub').innerText = `${likesArr.length} likes  \u2022  ${commentsCount} comments`;
+
+        let badgeClass = 'badge-general', badgeText = 'General Post';
+        if (isEmployer) { badgeClass = 'badge-employer'; badgeText = 'Employer Post'; }
+        if (isCandidate) { badgeClass = 'badge-candidate'; badgeText = 'Candidate Post'; }
+
+        let waNum = '';
+        if (p.whatsapp) {
+            waNum = p.whatsapp.replace(/[^0-9]/g, '');
+            if (waNum.startsWith('0')) waNum = '92' + waNum.substring(1);
+        }
+        const localNum = p.localNum || p.whatsapp || '';
+        const waClicks = p.waClicks || 0;
+        const callClicks = p.callClicks || 0;
+        const chatClicks = p.chatClicks || 0;
+        const webChatOn = (p.webChat === true || p.webChat === undefined);
+
+        let html = '';
+
+        // Post Preview
+        html += `
+        <div class="section-label">Post Overview</div>
+        <div class="post-preview">
+            <div class="preview-header" onclick="location.href='wid.html?uid=${p.posterId || p.authorId}'">
+                <img class="preview-pic" src="${pic}" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                <div>
+                    <div class="preview-name">${name}</div>
+                    <div class="preview-meta">${p.location || 'Pakistan'} &bull; ${formatDate(p.createdAt)}</div>
+                </div>
+            </div>
+            <span class="preview-badge ${badgeClass}">${badgeText}</span>
+            ${p.title ? `<div class="preview-title">${p.title}</div>` : ''}
+            <div class="preview-desc">${p.desc || ''}</div>
+        </div>`;
+
+        // Engagement Stats
+        html += `<div class="section-label">Engagement</div>
+        <div class="stats-grid cols-2">
+            <div class="stat-box">
+                <svg class="stat-icon" style="fill:#ef4444;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <div class="stat-num">${likesArr.length}</div>
+                <div class="stat-lbl">Likes</div>
+            </div>
+            <div class="stat-box">
+                <svg class="stat-icon" style="fill:#0a66c2;" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <div class="stat-num">${commentsCount}</div>
+                <div class="stat-lbl">Comments</div>
+            </div>
+        </div>`;
+
+        // Contact Clicks — only for job posts
+        if (isJob) {
+            const showWa = !!waNum;
+            const showCall = !!localNum;
+            const showChat = webChatOn;
+
+            if (showWa || showCall || showChat) {
+                html += `<div class="section-label" style="margin-top:4px;">Contact Button Clicks</div>
+                <div class="click-row">`;
+
+                if (showWa) html += `
+                    <div class="click-box">
+                        <svg style="fill:#16a34a;" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.09 11.815 11.815 0 0012.05 0z"/></svg>
+                        <div class="c-num wa">${waClicks}</div>
+                        <div class="c-lbl">WhatsApp</div>
+                    </div>`;
+
+                if (showCall) html += `
+                    <div class="click-box">
+                        <svg style="fill:#0078ff;" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                        <div class="c-num call">${callClicks}</div>
+                        <div class="c-lbl">Call</div>
+                    </div>`;
+
+                if (showChat) html += `
+                    <div class="click-box">
+                        <svg style="fill:#0a66c2;" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                        <div class="c-num chat">${chatClicks}</div>
+                        <div class="c-lbl">Web Chat</div>
+                    </div>`;
+
+                html += `</div>
+                <div class="click-note">Click counts update when applicants contact you from this post</div>`;
+            }
+        }
+
+        // Tabs
+        html += `
+        <div class="tabs">
+            <button class="tab-btn active" id="tab-likes" onclick="switchTab('likes')">
+                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                Likes
+                <span class="tab-count" id="tc-likes">${likesArr.length}</span>
+            </button>
+            <button class="tab-btn" id="tab-comments" onclick="switchTab('comments')">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Comments
+                <span class="tab-count" id="tc-comments">${commentsCount}</span>
+            </button>
+        </div>
+        <div class="list-wrap" id="list-wrap"></div>`;
+
+        mc.innerHTML = html;
+        loadLikes();
+    }
+
+    window.switchTab = (tab) => {
+        document.getElementById('tab-likes').classList.toggle('active', tab === 'likes');
+        document.getElementById('tab-comments').classList.toggle('active', tab === 'comments');
+        if (tab === 'likes') loadLikes();
+        else renderComments();
+    };
+
+    async function loadLikes() {
+        const wrap = document.getElementById('list-wrap');
+        const likesArr = postData?.likes || [];
+        if (likesArr.length === 0) {
+            wrap.innerHTML = `<div class="empty-box"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><p>No likes yet</p></div>`;
+            return;
+        }
+        wrap.innerHTML = `<div class="loader-box"><div class="spinner"></div></div>`;
+        let html = '';
+        for (const uid of likesArr.slice(0, 50)) {
+            try {
+                const uSnap = await getDoc(doc(db, "users", uid));
+                if (uSnap.exists()) {
+                    const u = uSnap.data();
+                    const uName = u.fullName || u.facilityName || 'Healthcare User';
+                    const uPic = u.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(uName)}`;
+                    const uRole = u.profession || u.role || 'Healthcare Professional';
+                    const uCity = u.city || u.location || 'Pakistan';
+                    html += `
+                    <div class="list-item" onclick="location.href='wid.html?uid=${uid}'">
+                        <img class="item-pic" src="${uPic}" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                        <div class="item-info">
+                            <div class="item-name">${uName}</div>
+                            <div class="item-sub">${uRole} &bull; ${uCity}</div>
+                        </div>
+                        <span class="item-badge badge-l">Liked</span>
+                    </div>`;
+                }
+            } catch(e) {}
+        }
+        wrap.innerHTML = html || `<div class="empty-box"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><p>No likes data</p></div>`;
+    }
+
+    function renderComments() {
+        const wrap = document.getElementById('list-wrap');
+        if (allComments.length === 0) {
+            wrap.innerHTML = `<div class="empty-box"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><p>No comments yet</p></div>`;
+            return;
+        }
+        let html = '';
+        allComments.forEach(c => {
+            const cPic = c.userPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.userName || 'U')}`;
+            const cName = c.userName || 'Healthcare User';
+            const cUid = c.userId || '';
+            const cTime = formatShortDate(c.createdAt);
+            html += `
+            <div class="list-item" onclick="location.href='wid.html?uid=${cUid}'">
+                <img class="item-pic" src="${cPic}" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                <div class="item-info">
+                    <div class="item-name">${cName}</div>
+                    ${cTime ? `<div class="item-time">${cTime}</div>` : ''}
+                    <div class="item-bubble">${c.text}</div>
+                </div>
+                <span class="item-badge badge-c">Comment</span>
+            </div>`;
+        });
+        wrap.innerHTML = html;
+    }
+</script>
+</body>
+</html>
