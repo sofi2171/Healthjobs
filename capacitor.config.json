@@ -18,6 +18,11 @@
     "LocalNotifications": {
       "smallIcon": "ic_notification",
       "iconColor": "#0a66c2"
+    },
+    "Keyboard": {
+      "resize": "body",
+      "style": "DARK",
+      "resizeOnFullScreen": true
     }
   }
 }
