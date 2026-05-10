@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Health Jobs | Final Premium Chat</title>
+    <title>Health Jobs | Chat</title>
     <meta name="robots" content="noindex, nofollow">
 
     <style>
@@ -72,7 +72,7 @@
         .btn-mic { background-color: #0ea5e9; user-select: none; touch-action: none; }
         .btn-mic.recording { background-color: #ef4444; transform: scale(1.15); }
 
-        /* 🎥 PREMIUM WEBRTC UI OVERLAY (WhatsApp Style) */
+        /* 🎥 PREMIUM WEBRTC UI OVERLAY */
         #call-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #111; z-index: 5000; display: none; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         
         .video-wrapper { position: absolute; top:0; left:0; width: 100%; height: 100%; background: #1a1a1a; display: flex; justify-content: center; align-items: center; }
@@ -83,7 +83,6 @@
 
         #local-video { position: absolute; top: 20px; right: 20px; width: 90px; height: 130px; object-fit: cover; border-radius: 12px; border: 2px solid rgba(255,255,255,0.4); background: #000; box-shadow: 0 8px 20px rgba(0,0,0,0.5); z-index: 5001;}
         
-        /* Incoming / Audio Ringing Screen */
         #call-overlay-screen { position: absolute; top:0; left:0; width:100%; height:100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 15vh; color: white; z-index: 5002; transition: opacity 0.3s; overflow: hidden; background: #0f172a;}
         
         .call-bg-blur { position: absolute; top: -10%; left: -10%; width: 120%; height: 120%; background-size: cover; background-position: center; filter: blur(30px) brightness(0.4); z-index: 1; }
@@ -249,16 +248,23 @@
     import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getDatabase, ref as dbRef, push, set, update, remove, onChildAdded, onChildChanged, onValue, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+    // ✅ صرف ایک Firebase Project - jobs-45cc9
+    // Firestore (users/IDs) + Realtime Database (chat) دونوں یہاں
     const CLOUD_NAME = "dr06qkbaa"; 
     const UPLOAD_PRESET = "nearjobs_profiles"; 
-    const mainConfig = { apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk", authDomain: "jobs-45cc9.firebaseapp.com", projectId: "jobs-45cc9" };
-    const chatConfig = { apiKey: "AIzaSyASgMlWAUfFFOl-pApiUEB__XAHzlo-9iI", authDomain: "chat-jobs.firebaseapp.com", databaseURL: "https://chat-jobs-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "chat-jobs" };
 
-    const mainApp = initializeApp(mainConfig); 
-    const chatApp = initializeApp(chatConfig, "ChatApp");
-    const auth = getAuth(mainApp); 
-    const dbMain = getFirestore(mainApp); 
-    const dbChatRT = getDatabase(chatApp); 
+    const firebaseConfig = { 
+        apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk", 
+        authDomain: "jobs-45cc9.firebaseapp.com", 
+        projectId: "jobs-45cc9",
+        databaseURL: "https://jobs-45cc9-default-rtdb.firebaseio.com"  // ✅ یہی ایک Realtime DB URL
+    };
+
+    // ✅ صرف ایک app initialize ہو رہا ہے
+    const app = initializeApp(firebaseConfig); 
+    const auth = getAuth(app); 
+    const dbMain = getFirestore(app);         // Firestore - users data
+    const dbChatRT = getDatabase(app);        // Realtime Database - chat data (اسی project میں)
 
     let currentUser = null, targetUid = new URLSearchParams(window.location.search).get('uid'), chatId = null;
     let autoStartCall = new URLSearchParams(window.location.search).get('startCall');
@@ -266,7 +272,7 @@
     let targetName = "User", targetPic = "https://ui-avatars.com/api/?name=User";
     window.chatMessages = {}; 
 
-    // 🔊 AUDIO & VIBRATION (Bypass Autoplay Policy)
+    // 🔊 AUDIO & VIBRATION
     const audioRingingOut = new Audio('audio/ringing.mp3'); audioRingingOut.loop = true; audioRingingOut.preload = 'auto';
     const audioRingingIn = new Audio('audio/incoming.mp3'); audioRingingIn.loop = true; audioRingingIn.preload = 'auto';
     let hasUserInteracted = false, isRingingActive = false, incomingCallPrompted = false, ringInPromise = null, ringOutPromise = null;
@@ -307,7 +313,6 @@
         listenForCalls(); 
         setupPushNotifications(); 
         
-        // Auto Start Call UI logic if opened from Native Push Notification wake-up
         if(autoStartCall === 'true') {
             setTimeout(() => { 
                 incomingCallPrompted = true;
@@ -360,7 +365,7 @@
         });
     }
 
-    // 🔔 BACKGROUND PUSH NOTIFICATION & FULL SCREEN INTENT LOGIC
+    // 🔔 PUSH NOTIFICATIONS
     async function setupPushNotifications() {
         if (!window.Capacitor || !window.Capacitor.Plugins.PushNotifications) return; 
 
@@ -373,10 +378,10 @@
             await PushNotifications.register();
 
             PushNotifications.addListener('registration', async (token) => {
+                // ✅ اب صرف ایک project میں fcmToken save ہوگا
                 await updateDoc(doc(dbMain, "users", currentUser.uid), { fcmToken: token.value });
             });
 
-            // Triggered when push is received in background - WAKES UP SCREEN!
             PushNotifications.addListener('pushNotificationReceived', async (notification) => {
                 await LocalNotifications.schedule({
                     notifications: [{
@@ -391,7 +396,7 @@
                             channelId: "high_importance_channel",
                             importance: 5,
                             visibility: 1, 
-                            fullScreenIntent: true // 🔥 The Native Screen Wakeup Call
+                            fullScreenIntent: true
                         }
                     }]
                 });
@@ -425,6 +430,11 @@
             if (document.visibilityState === 'visible') update(dbRef(dbChatRT, `chats/${chatId}/messages/${id}`), { status: 'read' }); 
         } 
     }
+    // ✅ Badge update - message read hone par
+let unreadCount = parseInt(localStorage.getItem('global_unread_chats')) || 0;
+if (unreadCount > 0) {
+    localStorage.setItem('global_unread_chats', Math.max(0, unreadCount - 1));
+}
     
     document.addEventListener("visibilitychange", () => { 
         if (document.visibilityState === 'visible') { 
@@ -488,7 +498,7 @@
         }
     }
 
-    // 🚀 ================== PREMIUM WEBRTC ENGINE ================== 🚀
+    // 🚀 WEBRTC ENGINE
     function listenForCalls() {
         const callDocRef = dbRef(dbChatRT, `chats/${chatId}/webrtc`);
         onValue(callDocRef, async (snapshot) => {
@@ -529,17 +539,13 @@
         document.getElementById('call-bg-blur').style.backgroundImage = `url('${img}')`;
         document.getElementById('call-overlay-name').innerText = name; 
         document.getElementById('call-status-text').innerText = status; 
-        
         document.getElementById('call-overlay-pic').classList.add('pulsing');
         document.getElementById('call-status-text').style.animation = 'pulse 1.5s infinite';
-        
         acceptBtnWrapper.style.display = isIncoming ? 'flex' : 'none'; 
         incomingControls.style.display = 'flex';
-        
         document.getElementById('ctrl-video').style.display = isVideoCall ? 'flex' : 'none'; 
         document.getElementById('ctrl-flip').style.display = isVideoCall ? 'flex' : 'none';
         document.getElementById('ctrl-speaker').style.display = 'flex'; 
-
         callScreenOverlay.style.display = 'flex'; 
         activeControls.style.display = 'none'; 
         callUI.style.display = 'flex'; 
@@ -581,11 +587,9 @@
             localVideo.muted = true; 
             localVideo.srcObject = localStream;
             isMicMuted = false; isVideoMuted = false; isSpeakerOn = true;
-            
             document.getElementById('icon-mic').classList.remove('active'); 
             document.getElementById('icon-cam').classList.remove('active'); 
             document.getElementById('icon-speaker').classList.add('active');
-            
             update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { [`micMuted_${currentUser.uid}`]: false, [`camMuted_${currentUser.uid}`]: false }); 
             return true;
         } catch(e) { 
@@ -599,19 +603,16 @@
         isVideoCall = type === 'video'; 
         const hasMedia = await setupMediaSources(); 
         if(!hasMedia) return;
-        
         showCallUI(targetPic, targetName, "CALLING...", false); 
         playOutgoingRing();
 
         peerConnection = new RTCPeerConnection(servers);
         localStream.getTracks().forEach(track => { peerConnection.addTrack(track, localStream); });
-
         peerConnection.ontrack = (event) => { 
             handleCallConnected(); 
             event.streams[0].getTracks().forEach(track => { remoteStream.addTrack(track); }); 
             remoteVideo.srcObject = remoteStream; 
         };
-        
         peerConnection.onicecandidate = (event) => { 
             if (event.candidate) { push(dbRef(dbChatRT, `chats/${chatId}/webrtc/iceCandidates`), { candidate: event.candidate.toJSON(), senderId: currentUser.uid }); } 
         };
@@ -619,6 +620,7 @@
         const offerDescription = await peerConnection.createOffer(); 
         await peerConnection.setLocalDescription(offerDescription);
         
+        // ✅ اسی ایک project کی Realtime DB میں webrtc data save
         await set(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { 
             offer: { type: offerDescription.type, sdp: offerDescription.sdp }, 
             callerId: currentUser.uid, 
@@ -631,15 +633,16 @@
         
         push(dbRef(dbChatRT, `chats/${chatId}/messages`), { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), isCall: true, callType: type });
 
-        // 🔥 SECURE WAKE-UP SIGNAL VIA VERCEL BACKEND
+        // 🔥 Push Notification via Vercel Backend
         try {
-            // Pehle apna naam nikalein database se taake notification par aapka naam jaye
+            // ✅ اسی ایک Firestore سے اپنا نام نکالیں
             const myUserSnap = await getDoc(doc(dbMain, "users", currentUser.uid));
             let myName = "User";
             if (myUserSnap.exists()) {
                 myName = myUserSnap.data().fullName || myUserSnap.data().facilityName || "User";
             }
 
+            // ✅ اسی ایک Firestore سے target کا fcmToken نکالیں
             const targetUserSnap = await getDoc(doc(dbMain, "users", targetUid));
             if (targetUserSnap.exists() && targetUserSnap.data().fcmToken) {
                 await fetch('https://my-jobs-backend.vercel.app/api', {
@@ -647,12 +650,11 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         targetToken: targetUserSnap.data().fcmToken,
-                        callerName: myName, // 👈 THE FIX IS HERE! Caller ka asli naam bheja ja raha hai
+                        callerName: myName,
                         callerUid: currentUser.uid,
                         callType: type
                     })
                 });
-                console.log("Secure wake-up signal sent via Vercel with correct Caller Name!");
             }
         } catch (e) {
             console.error("Backend Push Error:", e);
@@ -667,12 +669,10 @@
 
         peerConnection = new RTCPeerConnection(servers);
         localStream.getTracks().forEach(track => { peerConnection.addTrack(track, localStream); });
-
         peerConnection.ontrack = (event) => { 
             event.streams[0].getTracks().forEach(track => { remoteStream.addTrack(track); }); 
             remoteVideo.srcObject = remoteStream; 
         };
-        
         peerConnection.onicecandidate = (event) => { 
             if (event.candidate) { push(dbRef(dbChatRT, `chats/${chatId}/webrtc/iceCandidates`), { candidate: event.candidate.toJSON(), senderId: currentUser.uid }); } 
         };
@@ -699,11 +699,10 @@
     function playOutgoingRing() { if (isRingingActive) return; isRingingActive = true; ringOutPromise = audioRingingOut.play(); ringOutPromise.catch(e => {}); }
     function stopRings() { isRingingActive = false; try { if (ringInPromise !== null) { ringInPromise.then(() => { audioRingingIn.pause(); audioRingingIn.currentTime = 0; }).catch(e => {}); } else { audioRingingIn.pause(); audioRingingIn.currentTime = 0; } if (ringOutPromise !== null) { ringOutPromise.then(() => { audioRingingOut.pause(); audioRingingOut.currentTime = 0; }).catch(e => {}); } else { audioRingingOut.pause(); audioRingingOut.currentTime = 0; } } catch(e){} if(ringVibrateInterval) { clearInterval(ringVibrateInterval); ringVibrateInterval = null; } if("vibrate" in navigator) navigator.vibrate(0); }
 
-    
-        window.endCall = async () => { 
-        // Agar main caller hoon aur call abhi uthayi nahi gayi, toh Cancel ka push bhejo
+    window.endCall = async () => { 
         if (peerConnection && peerConnection.signalingState !== 'stable' && !incomingCallPrompted) {
             try {
+                // ✅ اسی ایک Firestore سے fcmToken
                 const targetUserSnap = await getDoc(doc(dbMain, "users", targetUid));
                 if (targetUserSnap.exists() && targetUserSnap.data().fcmToken) {
                     await fetch('https://my-jobs-backend.vercel.app/api', {
@@ -712,13 +711,12 @@
                         body: JSON.stringify({
                             targetToken: targetUserSnap.data().fcmToken,
                             callerUid: currentUser.uid,
-                            action: 'cancel' // 👈 Cancel signal
+                            action: 'cancel'
                         })
                     });
                 }
             } catch (e) { console.error("Cancel Push Error:", e); }
         }
-
         update(dbRef(dbChatRT, `chats/${chatId}/webrtc`), { status: 'ended' }); 
         closeWebRTC(); 
     };
@@ -737,8 +735,7 @@
         remove(dbRef(dbChatRT, `chats/${chatId}/webrtc`)); 
     }
 
-    // ==============================================================================================
-    // ⚙️ CHAT ACTIONS (Send, Attach, Voice, Delete)
+    // ⚙️ CHAT ACTIONS
     window.handleFileSelect = (e) => { const file = e.target.files[0]; if(file) { if (file.size > 10 * 1024 * 1024) { alert("Max 10MB allowed."); e.target.value = ""; return; } selectedFile = file; document.getElementById('action-preview').style.display = 'flex'; const thumb = document.getElementById('preview-img-thumb'); if (file.type.startsWith('image/')) { thumb.src = URL.createObjectURL(file); thumb.style.display = 'block'; } else { thumb.style.display = 'none'; } document.getElementById('preview-title').innerText = "📎 Attachment Ready"; document.getElementById('preview-text').innerText = selectedFile.name; window.toggleSendBtn(); } };
     window.toggleSendBtn = () => { const val = document.getElementById('msg-input').value.trim(); document.getElementById('mic-btn').style.display = (val || selectedFile) ? 'none' : 'flex'; document.getElementById('send-btn').style.display = (val || selectedFile) ? 'flex' : 'none'; };
     window.openMenu = (e, id) => { e.preventDefault(); e.stopPropagation(); if (hasUserInteracted && "vibrate" in navigator) navigator.vibrate(50); closeMenu(); activeMsgId = id; const msg = window.chatMessages[id]; const isMe = msg.senderId === currentUser.uid; const menu = document.getElementById('context-menu'); let html = `<div class="ctx-item" onclick="prepareAction('reply', '${id}')">↩️ Reply</div><div class="ctx-item" onclick="prepareAction('forward', '${id}')">↪️ Forward</div>`; if(isMe && msg.text && !msg.mediaUrl && !msg.isCall) html += `<div class="ctx-item" onclick="prepareAction('edit', '${id}')">✏️ Edit</div>`; html += `<div class="ctx-item" style="color:red;" onclick="showDeleteModal('${id}', ${isMe})">🗑️ Delete</div>`; menu.innerHTML = html; const appRect = document.getElementById('app-container').getBoundingClientRect(); let posX = (e.touches ? e.touches[0].clientX : e.clientX) - appRect.left; let posY = (e.touches ? e.touches[0].clientY : e.clientY) - appRect.top; menu.style.left = `${Math.min(posX, appRect.width - 190)}px`; menu.style.top = `${Math.min(posY, appRect.height - 230)}px`; menu.style.display = 'block'; document.getElementById(`bubble-${id}`).classList.add('active'); };
@@ -780,6 +777,7 @@
         document.getElementById('upload-loader').style.display = 'none'; 
         cancelAction(); 
         
+        // ✅ اسی ایک Realtime DB میں messages save
         await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), msgPayload); 
         await update(dbRef(dbChatRT, `chatRooms/${chatId}`), { 
             participants: [currentUser.uid, targetUid], 
@@ -804,11 +802,9 @@
             document.getElementById('recording-ui').style.display = 'flex'; 
             document.querySelector('.slide-cancel').innerText = 'Slide to cancel 👈'; 
             document.querySelector('.slide-cancel').style.color = '#ef4444'; 
-            
             let mimeType = 'audio/webm'; 
             if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) mimeType = 'audio/webm;codecs=opus'; 
             else if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4'; 
-            
             mediaRecorder = new MediaRecorder(globalMicStream, { mimeType: mimeType }); 
             audioChunks = []; 
             mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) audioChunks.push(e.data); }; 
@@ -856,6 +852,7 @@
         try { 
             const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: 'POST', body: formData }); 
             const data = await res.json(); 
+            // ✅ اسی ایک Realtime DB میں voice message save
             await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), mediaUrl: data.secure_url, mediaType: 'audio' }); 
             await update(dbRef(dbChatRT, `chatRooms/${chatId}`), { participants: [currentUser.uid, targetUid], lastMessage: '🎤 Voice Message', lastSenderId: currentUser.uid, readBy: [currentUser.uid], updatedAt: serverTimestamp() }); 
             cancelAction(); 
@@ -879,6 +876,10 @@
             await update(dbRef(dbChatRT, `chats/${chatId}/messages/${id}`), { isDeletedEveryone: true, text: null, mediaUrl: null, replyText: null, isCall: null }); 
         } 
     };
+    // ✅ Page leave hone par badge update
+window.addEventListener('beforeunload', () => {
+    localStorage.setItem('global_unread_chats', '0');
+});
 </script>
 </body>
 </html>
