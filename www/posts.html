@@ -111,6 +111,42 @@
         .spinner { width: 40px; height: 40px; border: 3px solid #e0dfdc; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         .hidden { display: none !important; }
+        /* Report Popup */
+.report-popup {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 30px);
+    max-width: 480px;
+    background: white;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    z-index: 9999;
+    padding: 18px;
+    display: none;
+    animation: slideUp 0.3s ease;
+}
+.report-popup.show { display: block; }
+@keyframes slideUp { from { opacity:0; transform: translateX(-50%) translateY(20px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+.report-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.report-top h3 { font-size: 15px; font-weight: 700; color: #0f172a; }
+.report-close { background: #f1f5f9; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 16px; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; }
+.report-reasons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.reason-chip {
+    padding: 7px 13px; border-radius: 20px; border: 1px solid #e2e8f0;
+    font-size: 12px; font-weight: 600; cursor: pointer; background: #f8fafc; color: #334155;
+    transition: 0.2s;
+}
+.reason-chip.selected { background: #0a66c2; color: white; border-color: #0a66c2; }
+.report-input { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; margin-bottom: 10px; outline: none; font-family: inherit; }
+.report-input:focus { border-color: #0a66c2; }
+.report-submit { width: 100%; padding: 11px; background: #ef4444; color: white; border: none; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+.report-submit:hover { background: #dc2626; }
+.report-success { text-align: center; padding: 10px 0; font-size: 14px; color: #16a34a; font-weight: 600; display: none; }
+.report-owner-box { display:flex; align-items:center; gap:10px; background:#f8fafc; padding:10px 12px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:14px; }
+.report-owner-box img { width:38px; height:38px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0; }
     </style>
 </head>
 <body>
@@ -138,8 +174,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         // Auth Imports add kiye gaye hain
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+        import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         // Your Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
@@ -192,6 +227,14 @@
         }
 
         function renderPost(post) {
+            // Report popup ke liye post owner info save karo
+            reportPostOwnerName = post.posterName || 'Unknown';
+            reportPostOwnerPic = post.posterPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.posterName || 'U')}`;
+            reportPostTitle = post.title || 'No Title';
+
+            // Popup mein owner info set karo
+            document.getElementById('report-owner-name').innerText = reportPostOwnerName;
+            document.getElementById('report-owner-pic').src = reportPostOwnerPic;
             document.getElementById('loader').classList.add('hidden');
             const contentDiv = document.getElementById('post-content');
             const actionDiv = document.getElementById('action-bar');
@@ -255,9 +298,20 @@
             if(waNumber.startsWith('0')) waNumber = '92' + waNumber.substring(1);
 
             // Three Circular Buttons
+// ✅ window par save karo
+window.reportPostOwnerName = post.posterName || 'Unknown';
+window.reportPostOwnerPic = post.posterPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.posterName || 'U')}`;
+window.reportPostTitle = post.title || 'Job Post';
+window.reportPostId = postId;
+
+// Popup mein owner info set karo
+document.getElementById('report-owner-name').innerText = window.reportPostOwnerName;
+document.getElementById('report-owner-pic').src = window.reportPostOwnerPic;
+
+            // Three Circular Buttons
             document.getElementById('buttons-container').innerHTML = `
                 ${waNumber ? `
-                <a href="https://wa.me/${waNumber}" target="_blank" class="circle-btn-wrapper">
+                <a href="https://wa.me/${waNumber}" target="_blank" class="circle-btn-wrapper" onclick="trackClick('waClicks')">
                     <div class="circle-btn btn-wa">
                         <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
                     </div>
@@ -265,19 +319,27 @@
                 </a>` : ''}
                 
                 ${post.localNum || post.whatsapp ? `
-                <a href="tel:${post.localNum || post.whatsapp}" class="circle-btn-wrapper">
+                <a href="tel:${post.localNum || post.whatsapp}" class="circle-btn-wrapper" onclick="trackClick('callClicks')">
                     <div class="circle-btn btn-call">
                         <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
                     </div>
                     <span class="btn-label">Call</span>
                 </a>` : ''}
 
-                <a href="chat.html?uid=${post.posterId}" class="circle-btn-wrapper">
+${(post.webChat === true || post.webChat === undefined) ? `
+                <a href="chat.html?uid=${post.posterId}" class="circle-btn-wrapper" onclick="trackClick('chatClicks')">
                     <div class="circle-btn btn-chat">
                         <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
                     </div>
                     <span class="btn-label">Web Chat</span>
-                </a>
+                </a>` : ''}
+
+                <div class="circle-btn-wrapper" onclick="openReportPopup()">
+                    <div class="circle-btn" style="background:#f1f5f9;">
+                        <svg viewBox="0 0 24 24" style="fill:#ef4444;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    </div>
+                    <span class="btn-label" style="color:#ef4444;">Report</span>
+                </div>
             `;
         }
 
@@ -285,8 +347,78 @@
         window.onload = loadPostDetails;
     </script>
     <script>
+// REPORT POPUP LOGIC
+let selectedReason = '';
+let reportPostId = new URLSearchParams(window.location.search).get('id') || 'Unknown';
+let reportPostOwnerName = '';
+let reportPostOwnerPic = '';
+let reportPostTitle = '';
+
+// 20 sec baad auto show
+
+
+function openReportPopup() {
+    document.getElementById('report-owner-name').innerText = window.reportPostOwnerName || 'Unknown';
+    document.getElementById('report-owner-pic').src = window.reportPostOwnerPic || 'https://ui-avatars.com/api/?name=U';
+    document.getElementById('report-popup').classList.add('show');
+}
+async function trackClick(field) {
+    if (!postId) return;
+    try {
+        const { initializeApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
+        const { getFirestore, doc, updateDoc, increment } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+        const existingApp = getApps()[0];
+        const db = getFirestore(existingApp);
+        await updateDoc(doc(db, "posts", postId), { [field]: increment(1) });
+    } catch(e) {}
+}
+function closeReport() {
+    document.getElementById('report-popup').classList.remove('show');
+}
+
+function selectReason(el) {
+    document.querySelectorAll('.reason-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedReason = el.innerText;
+}
+
+
+async function submitReport() {
+    const name = document.getElementById('report-name').value.trim();
+    const msg = document.getElementById('report-msg').value.trim();
+
+    if (!selectedReason) { alert('Please select a reason.'); return; }
+    if (!name) { alert('Please enter your name.'); return; }
+    if (!msg) { alert('Please describe the issue.'); return; }
+
+    const submitBtn = document.querySelector('.report-submit');
+    submitBtn.innerText = 'Sending...';
+    submitBtn.disabled = true;
+
+    try {
+        await emailjs.send('service_gnjsdvm', 'template_bus1179', {
+            reporter_name: name,
+            reason: selectedReason,
+            message: msg,
+            post_owner: reportPostOwnerName,
+            post_title: reportPostTitle,
+            post_id: reportPostId,
+            post_url: window.location.href
+        });
+
+        document.querySelector('.report-submit').style.display = 'none';
+        document.getElementById('report-success').style.display = 'block';
+        sessionStorage.setItem('reported_' + reportPostId, 'true');
+
+        setTimeout(() => closeReport(), 3000);
+    } catch(e) {
+        alert('Error sending report. Try again.');
+        submitBtn.innerText = 'Send Report';
+        submitBtn.disabled = false;
+    }
+}
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
+    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications) {
         const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
 
         const handleCallRedirect = (data) => {
@@ -344,14 +476,59 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        if (LocalNotifications) {
+if (LocalNotifications) {
             LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
                 handleCallRedirect(notification.notification.extra);
             });
         }
     }
 });
-</script>
 
+</script>
+<!-- REPORT POPUP -->
+<div class="report-popup" id="report-popup">
+    <div class="report-top">
+        <h3>⚑ Report this Post</h3>
+        <button class="report-close" onclick="closeReport()">✕</button>
+    </div>
+
+    <!-- Post Owner Info -->
+    <div id="report-owner-info" style="display:flex;align-items:center;gap:10px;background:#f8fafc;padding:10px 12px;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:14px;">
+        <img id="report-owner-pic" src="" width="38" height="38" style="border-radius:50%;object-fit:cover;border:1px solid #e2e8f0;" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+        <div>
+            <div id="report-owner-name" style="font-size:13px;font-weight:700;color:#0f172a;"></div>
+            <div style="font-size:11px;color:#64748b;">Post Owner</div>
+        </div>
+    </div>
+
+<div class="report-owner-box">
+        <img id="report-owner-pic" src="" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+        <div>
+            <div id="report-owner-name" style="font-size:13px;font-weight:700;color:#0f172a;"></div>
+            <div style="font-size:11px;color:#64748b;">Post Owner</div>
+        </div>
+    </div>
+
+    <div class="report-reasons" id="report-reasons">
+        <div class="reason-chip" onclick="selectReason(this)">Fake Job</div>
+        <div class="reason-chip" onclick="selectReason(this)">Scam / Fraud</div>
+        <div class="reason-chip" onclick="selectReason(this)">Wrong Info</div>
+        <div class="reason-chip" onclick="selectReason(this)">Spam</div>
+        <div class="reason-chip" onclick="selectReason(this)">Abusive Content</div>
+        <div class="reason-chip" onclick="selectReason(this)">Duplicate Post</div>
+        <div class="reason-chip" onclick="selectReason(this)">Other</div>
+    </div>
+
+    <input class="report-input" id="report-name" placeholder="Your Name *" maxlength="50">
+    <textarea class="report-input" id="report-msg" placeholder="Describe the issue... *" rows="3" style="resize:none;"></textarea>
+    
+    <button class="report-submit" onclick="submitReport()">Send Report</button>
+    <div class="report-success" id="report-success">✅ Report submitted! We'll review it shortly.</div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init('Rr88IrZ8s69Qyj8DS'); // EmailJS public key yahan
+</script>
 </body>
 </html>
