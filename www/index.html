@@ -259,8 +259,26 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
 .nav-link svg { width: 22px; height: 22px; fill: currentColor; margin-bottom: 4px; }
 .nav-link span { font-size: 10px; font-weight: 600; }
 .nav-icon-wrapper { position: relative; display: inline-flex; align-items: center; justify-content: center; }
-.nav-badge { position: absolute; top: -5px; right: -8px; background: var(--notif-red); color: white; font-size: 10px; font-weight: bold; min-width: 17px; height: 17px; border-radius: 8.5px; display: flex; justify-content: center; align-items: center; border: 2px solid var(--bg-white); padding: 0 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.25); z-index: 10; transition: transform 0.1s ease-out; }
-.nav-badge.pop { transform: scale(1.2); }
+.nav-badge { 
+    position: absolute; 
+    top: -5px; 
+    right: -8px; 
+    background: #ef4444; 
+    color: white; 
+    font-size: 11px; 
+    font-weight: 700; 
+    min-width: 20px; 
+    height: 20px; 
+    border-radius: 50%; 
+    display: flex !important;
+    justify-content: center; 
+    align-items: center; 
+    border: 2px solid white; 
+    padding: 0 5px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+    z-index: 10; 
+    line-height: 1;
+}
 
 /* =========================================
    7. BOTTOM SHEETS
@@ -383,6 +401,16 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 .telegram-btn { display: flex; justify-content: center; align-items: center; width: 55px; height: 55px; background-color: #2CA5E0; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; text-decoration: none; }
 .telegram-btn:active { transform: scale(0.95); }
 .telegram-close-btn { position: absolute; top: -4px; left: -4px; background-color: #222; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.4); z-index: 10000; padding-bottom: 2px; }
+
+/* =========================================
+
+
+/* Ye fields hide kar do */
+.hp-desc,
+.hp-features,
+.hp-footer-text {
+    display: none !important;
+}
 /* Splash Screen Spinner */
 .spinner-splash { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #0a66c2; border-radius: 50%; animation: spin-splash 1s linear infinite; }
 @keyframes spin-splash { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -660,9 +688,6 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 
 
 
-<!-- ✅ FILTER JAVASCRIPT — FULLY WORKING -->
-
-
 <!-- CAPACITOR PUSH NOTIFICATIONS -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -724,37 +749,65 @@ window.addEventListener("load", async function () {
 <script type="module">
   const notifSound = new Audio('audio/notifications.mp3');
   let lastKnownUnreadCount = parseInt(localStorage.getItem('global_unread_chats')) || 0;
-
-  window.updateChatBadgeWithSound = function (newCount, isInitialLoad = false) {
+window.updateChatBadgeWithSound = function (newCount, isInitialLoad = false) {
     let homeBadge = document.getElementById('chat-badge');
+    
+    // ✅ FIX: Initial load pe ring mat bajao
+    if (isInitialLoad) {
+        if (homeBadge) {
+            if (newCount > 0) {
+                homeBadge.innerText = newCount > 99 ? "99+" : newCount;
+                homeBadge.classList.remove('hidden');
+                homeBadge.style.display = 'flex';
+                homeBadge.style.setProperty('display', 'flex', 'important');
+            } else {
+                homeBadge.innerText = '';
+                homeBadge.classList.add('hidden');
+                homeBadge.style.display = 'none';
+                homeBadge.style.setProperty('display', 'none', 'important');
+            }
+        }
+        lastKnownUnreadCount = newCount;
+        return; // ✅ STOP - no ring on initial load
+    }
+    
     if (homeBadge) {
-      if (newCount > 0) {
-        homeBadge.innerText = newCount > 9 ? "9+" : newCount;
-        homeBadge.classList.remove('hidden');
-        homeBadge.classList.add('pop');
-        setTimeout(() => homeBadge.classList.remove('pop'), 200);
-      } else {
-        homeBadge.classList.add('hidden');
-      }
+        if (newCount > 0) {
+            // ✅ Badge update
+            homeBadge.innerText = newCount > 99 ? "99+" : newCount;
+            homeBadge.classList.remove('hidden');
+            homeBadge.style.display = 'flex';
+            homeBadge.style.setProperty('display', 'flex', 'important');
+            
+            // ✅ Ring SIRF tab jab naye messages aaye (count बढ़ा)
+            if (newCount > lastKnownUnreadCount) {
+                homeBadge.classList.add('pop');
+                setTimeout(() => homeBadge.classList.remove('pop'), 200);
+                notifSound.play().catch(e => console.log("Sound blocked:", e));
+            }
+        } else {
+            // ✅ Badge hide - jab 0 ho
+            homeBadge.innerText = '';
+            homeBadge.classList.add('hidden');
+            homeBadge.style.display = 'none';
+            homeBadge.style.setProperty('display', 'none', 'important');
+        }
     }
-    if (newCount > lastKnownUnreadCount && !isInitialLoad) {
-      notifSound.play().catch(e => console.log("Sound blocked:", e));
-    }
+    
     lastKnownUnreadCount = newCount;
-    localStorage.setItem('global_unread_chats', newCount);
-  };
-
+};
   window.addEventListener('load', () => {
     let unreadCount = parseInt(localStorage.getItem('global_unread_chats')) || 0;
     window.updateChatBadgeWithSound(unreadCount, true);
   });
 
-  window.addEventListener('storage', (e) => {
+  // ✅ Badge update - localStorage + Realtime DB dono se
+window.addEventListener('storage', (e) => {
     if (e.key === 'global_unread_chats') {
-      let unreadCount = parseInt(localStorage.getItem('global_unread_chats')) || 0;
-      window.updateChatBadgeWithSound(unreadCount);
+        let unreadCount = parseInt(localStorage.getItem('global_unread_chats')) || 0;
+        window.updateChatBadgeWithSound(unreadCount);
     }
-  });
+});
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -806,6 +859,8 @@ window.addEventListener("load", async function () {
 
   // GLOBAL VARIABLES
   let currentUser = null;
+  let currentUserProfile = null;
+  
   // ✅ CRITICAL FIX: window.postsArr ko properly initialize karo
   window.postsArr = [];
   let postsArr = window.postsArr;
@@ -1087,7 +1142,7 @@ if (window.catActive && window.catActive !== 'all' || window.timeActive && windo
       document.getElementById('loading').classList.remove('hidden');
     }
 
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(25));
+const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(20));
     onSnapshot(q, (snapshot) => {
       let livePosts = [];
       let snapshotIds = [];
@@ -1114,13 +1169,17 @@ if (window.catActive && window.catActive !== 'all' || window.timeActive && windo
       if (newUpdatesCount > 0) { badge.innerText = newUpdatesCount > 9 ? '9+' : newUpdatesCount; badge.classList.remove('hidden'); }
       else badge.classList.add('hidden');
 
-      // ✅ CRITICAL FIX: DONO variables update karo
       postsArr = updatedFullArr;
       window.postsArr = updatedFullArr;
 
       renderEverything();
       document.getElementById('loading').classList.add('hidden');
-      if (!snapshot.empty) { lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1]; hasMorePosts = true; }
+
+      // ✅ lastVisibleDoc properly save karo raw Firestore doc se
+      if (!snapshot.empty) {
+        lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
+        hasMorePosts = snapshot.docs.length >= 20;
+      }
     });
   };
 
@@ -1129,14 +1188,20 @@ if (window.catActive && window.catActive !== 'all' || window.timeActive && windo
     isFetchingMore = true;
     document.getElementById('loading').classList.remove('hidden');
     try {
-      const nextQ = query(collection(db, "posts"), orderBy("createdAt", "desc"), startAfter(lastVisibleDoc), limit(15));
+      const nextQ = query(collection(db, "posts"), orderBy("createdAt", "desc"), startAfter(lastVisibleDoc), limit(20));
       const snap = await getDocs(nextQ);
-      if (snap.empty) {
+
+      if (snap.empty || snap.docs.length === 0) {
         hasMorePosts = false;
-        document.getElementById('loading').innerHTML = "<div style='padding:20px;color:#94a3b8;font-size:12px;text-align:center;'>You've reached the end!</div>";
+        document.getElementById('loading').innerHTML = "<div style='padding:20px;color:#94a3b8;font-size:12px;text-align:center;'>✅ Sab posts load ho gayi!</div>";
         return;
       }
+
+      // ✅ lastVisibleDoc update karo
       lastVisibleDoc = snap.docs[snap.docs.length - 1];
+      hasMorePosts = snap.docs.length >= 20;
+
+      let newAdded = 0;
       snap.forEach(d => {
         let data = d.data();
         if (data.status !== 'inactive' && data.status !== 'deleted') {
@@ -1144,19 +1209,26 @@ if (window.catActive && window.catActive !== 'all' || window.timeActive && windo
           let np = { id: d.id, ...data };
           if (!postsArr.find(p => p.id === np.id)) {
             postsArr.push(np);
-            window.postsArr.push(np); // ✅ window.postsArr bhi update karo
-            postsArr.push(np);
-window.postsArr = postsArr;
-// ✅ اگر فلٹر ایکٹو ہے تو چیک کریں
-if (window.catActive && window.catActive !== 'all' || window.timeActive && window.timeActive !== 'all') {
-    if (typeof window.renderFiltered === 'function') window.renderFiltered();
-} else {
-    appendPostToDOM(np);
-}
+            window.postsArr = postsArr;
+            newAdded++;
+            if (window.catActive && window.catActive !== 'all' || window.timeActive && window.timeActive !== 'all') {
+              if (typeof window.renderFiltered === 'function') window.renderFiltered();
+            } else {
+              appendPostToDOM(np);
+            }
           }
         }
       });
-    } catch (e) {}
+
+      // ✅ Cache update karo
+      localStorage.setItem(CACHE_KEY, JSON.stringify(postsArr.slice(0, 100)));
+
+      console.log(`✅ ${newAdded} nai posts load hui`);
+
+    } catch (e) {
+      console.error("fetchMorePosts error:", e);
+    }
+
     isFetchingMore = false;
     document.getElementById('loading').classList.add('hidden');
   }
@@ -1169,9 +1241,14 @@ if (window.catActive && window.catActive !== 'all' || window.timeActive && windo
   window.addEventListener('scroll', () => {
     if (scrollTimeout) return;
     scrollTimeout = setTimeout(() => {
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) fetchMorePosts();
+      const scrolled = window.innerHeight + window.scrollY;
+      const total = document.body.offsetHeight;
+      // ✅ 300px pehle trigger karo
+      if (scrolled >= total - 300) {
+        fetchMorePosts();
+      }
       scrollTimeout = null;
-    }, 150);
+    }, 200);
   });
 
   function renderEverything() {
@@ -1321,7 +1398,8 @@ if (window.catActive && window.catActive !== 'all' || window.timeActive && windo
         snap.forEach(d => {
           const c = d.data();
           const isMe = c.userId === currentUser?.uid;
-          list.innerHTML += `<div class="cmt-item"><span class="cmt-user">${c.userName}</span><div class="cmt-txt" id="txt-${d.id}">${escapeHtml(c.text)}</div>${isMe ? `<div class="cmt-ctrl"><button class="cmt-btn" onclick="editLocalCmt('${pid}','${d.id}')">Edit</button><button class="cmt-btn" style="color:#ef4444" onclick="deleteLocalCmt('${pid}','${d.id}')">Delete</button></div>` : ''}</div>`;
+          const picSrc = c.userPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.userName || 'U')}`;
+          list.innerHTML += `<div class="cmt-item"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><img src="${picSrc}" width="28" height="28" style="border-radius:50%;object-fit:cover;border:1px solid #e2e8f0" onerror="this.src='https://ui-avatars.com/api/?name=U'"><span class="cmt-user">${c.userName}</span></div><div class="cmt-txt" id="txt-${d.id}">${escapeHtml(c.text)}</div>${isMe ? `<div class="cmt-ctrl"><button class="cmt-btn" onclick="editLocalCmt('${pid}','${d.id}')">Edit</button><button class="cmt-btn" style="color:#ef4444" onclick="deleteLocalCmt('${pid}','${d.id}')">Delete</button></div>` : ''}</div>`;
         });
       });
     }
@@ -1330,11 +1408,12 @@ if (window.catActive && window.catActive !== 'all' || window.timeActive && windo
   window.sendLocalCmt = async (pid) => {
     const inp = document.getElementById(`cmt-in-${pid}`);
     if (!inp.value.trim() || !currentUser) return;
-    await addDoc(collection(db, "posts", pid, "comments"), { text: inp.value, userId: currentUser.uid, userName: currentUser.displayName || "User", createdAt: serverTimestamp() });
+    const senderName = currentUserProfile?.name || currentUser.displayName || "User";
+    const senderPic = currentUserProfile?.pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(senderName)}`;
+    await addDoc(collection(db, "posts", pid, "comments"), { text: inp.value.trim(), userId: currentUser.uid, userName: senderName, userPic: senderPic, createdAt: serverTimestamp() });
     await updateDoc(doc(db, "posts", pid), { commentsCount: increment(1) });
     inp.value = "";
   };
-
   window.deleteLocalCmt = async (pid, cid) => {
     if (confirm("Delete comment?")) {
       await deleteDoc(doc(db, "posts", pid, "comments", cid));
@@ -1349,19 +1428,12 @@ if (window.catActive && window.catActive !== 'all' || window.timeActive && windo
   };
 
   // AUTH & BADGE SYNC
-  const chatBadgeConfig = {
-    apiKey: "AIzaSyASgMlWAUfFFOl-pApiUEB__XAHzlo-9iI",
-    authDomain: "chat-jobs.firebaseapp.com",
-    databaseURL: "https://chat-jobs-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "chat-jobs"
-  };
-  const chatBadgeApp = initializeApp(chatBadgeConfig, "ChatBadgeApp");
-  const chatRTDB = getDatabase(chatBadgeApp);
+
 
   onAuthStateChanged(auth, async (user) => {
     currentUser = user;
     if (user) {
-      const chatRoomsRef = dbRef(chatRTDB, 'chatRooms');
+      const chatRoomsRef = dbRef(dbRT, 'chatRooms');
       onValue(chatRoomsRef, (snapshot) => {
         let totalUnread = 0;
         if (snapshot.exists()) {
@@ -1388,7 +1460,9 @@ if (window.catActive && window.catActive !== 'all' || window.timeActive && windo
       if (userSnap.exists()) {
         uData = userSnap.data();
         const userNameForPic = uData.fullName || uData.facilityName || 'User';
+        currentUserProfile = { name: userNameForPic, pic: uData.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(userNameForPic)}` };
         document.getElementById('sidebar-pic').src = uData.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(userNameForPic)}`;
+        document.getElementById('sidebar-name-text').innerText = userNameForPic;
         document.getElementById('sidebar-name-text').innerText = userNameForPic;
         // Fast cache
         localStorage.setItem('fast_sidebar_pic', uData.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(userNameForPic)}`);
@@ -1549,6 +1623,27 @@ noRes.innerHTML = '<div style="padding:50px 20px;text-align:center;"><div style=
       document.querySelectorAll('.pro-box').forEach(b => b.classList.remove('active'));
     }
   });
+  // ✅ Badge update - دوسرے tabs کے لیے
+window.addEventListener('storage', (e) => {
+    if (e.key === 'global_unread_chats') {
+        let unreadCount = parseInt(localStorage.getItem('global_unread_chats')) || 0;
+        window.updateChatBadgeWithSound(unreadCount);
+    }
+});
+// ==========================================
+// 🔔 BADGE SYNC - Same Tab Fix
+// ==========================================
+
+// ✅ Polling - har 2 second mein localStorage check karo
+setInterval(() => {
+    const stored = parseInt(localStorage.getItem('global_unread_chats')) || 0;
+    const badge = document.getElementById('chat-badge');
+    const currentBadge = badge ? parseInt(badge.innerText) || 0 : 0;
+    
+    if (stored !== currentBadge) {
+        window.updateChatBadgeWithSound(stored);
+    }
+}, 2000); // Har 2 second mein check
 </script>
 
 </body>
