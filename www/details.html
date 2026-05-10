@@ -19,6 +19,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
     <style>
+    /* Report Button & Popup */
+.report-btn-wrap { padding: 15px; text-align: center; }
+.report-btn { background: none; border: 1px solid #e2e8f0; color: #94a3b8; padding: 8px 20px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.report-btn:hover { border-color: #ef4444; color: #ef4444; background: #fff5f5; }
+
+.report-popup { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 480px; background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 8px 30px rgba(0,0,0,0.15); z-index: 9999; padding: 18px; display: none; animation: slideUp 0.3s ease; }
+.report-popup.show { display: block; }
+@keyframes slideUp { from { opacity:0; transform: translateX(-50%) translateY(20px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+.report-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.report-top h3 { font-size: 15px; font-weight: 700; color: #0f172a; }
+.report-close { background: #f1f5f9; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 16px; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; }
+.report-owner-box { display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 10px 12px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 14px; }
+.report-owner-box img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0; }
+.report-reasons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.reason-chip { padding: 7px 13px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 12px; font-weight: 600; cursor: pointer; background: #f8fafc; color: #334155; transition: 0.2s; }
+.reason-chip.selected { background: #0a66c2; color: white; border-color: #0a66c2; }
+.report-input { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; margin-bottom: 10px; outline: none; font-family: inherit; }
+.report-input:focus { border-color: #0a66c2; }
+.report-submit { width: 100%; padding: 11px; background: #ef4444; color: white; border: none; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+.report-submit:hover { background: #dc2626; }
+.report-success { text-align: center; padding: 10px 0; font-size: 14px; color: #16a34a; font-weight: 600; display: none; }
         :root {
             --primary-blue: #0a66c2;
             --hover-blue: #004182;
@@ -181,22 +202,32 @@
                     return;
                 }
                 
-                let data = docSnap.data();
-                
-                if (data.authorId) {
+
+let data = docSnap.data();
+
+                // ✅ posterName/posterPic bhi check karo (employer/candidate posts)
+                const ownerUid = data.posterId || data.authorId;
+                if (ownerUid) {
                     try {
-                        const userDoc = await getDoc(doc(db, "users", data.authorId));
+                        const userDoc = await getDoc(doc(db, "users", ownerUid));
                         if (userDoc.exists()) {
                             const uData = userDoc.data();
-                            data.authorName = uData.fullName || data.authorName || "Unknown User";
-                            data.authorPic = uData.profilePicUrl || data.authorPic || `https://ui-avatars.com/api/?name=${data.authorName}&background=random`;
-                            data.location = uData.location || data.location || "Pakistan";
+                            const realName = uData.fullName || uData.facilityName || null;
+                            const realPic = uData.profilePicUrl || null;
+                            // Real name aur pic set karo
+                            data.authorName = realName || data.posterName || data.authorName || "Healthcare User";
+                            data.authorPic = realPic || data.posterPic || data.authorPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.authorName)}`;
+                            data.authorId = ownerUid;
+                            data.location = uData.city || data.location || "Pakistan";
                         }
                     } catch(e) {
-                        console.error("Failed to fetch fresh user data:", e);
+                        console.error("Failed to fetch user data:", e);
+                        // Fallback to post data
+                        data.authorName = data.posterName || data.authorName || "Healthcare User";
+                        data.authorPic = data.posterPic || data.authorPic || `https://ui-avatars.com/api/?name=U`;
+                        data.authorId = ownerUid;
                     }
                 }
-
                 currentPostData = data;
                 renderPost(data);
                 updateDynamicSEO(data);
@@ -255,14 +286,20 @@
                 mediaHTML += `</div>`;
             }
 
-            const safePic = p.authorPic || `https://ui-avatars.com/api/?name=${p.authorName || 'U'}&background=random`;
+const safePic = p.authorPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.authorName || 'U')}`;
+
+            // ✅ Report ke liye window par save karo
+            window.reportPostOwnerName = p.authorName || 'Unknown';
+            window.reportPostOwnerPic = safePic;
+            window.reportPostTitle = p.title || 'General Post';
+            window.reportPostId = postId;
 
             postView.innerHTML = `
                 <div class="post-container">
-                    <a href="profile.html?uid=${p.authorId}" class="post-header">
-                        <img src="${safePic}" class="post-avatar" alt="${p.authorName}">
+                    <a href="wid.html?uid=${p.authorId}" class="post-header">
+                        <img src="${safePic}" class="post-avatar" alt="${p.authorName}" onerror="this.src='https://ui-avatars.com/api/?name=U'">
                         <div>
-                            <div class="user-name">${p.authorName || "Verified User"}</div>
+                            <div class="user-name">${p.authorName || "Healthcare User"}</div>
                             <div class="post-loc-info">${p.location || 'Pakistan'} • ${p.createdAt ? new Date(p.createdAt.toDate()).toLocaleDateString() : 'Recent'}</div>
                         </div>
                     </a>
@@ -279,6 +316,11 @@
                         <button id="like-btn" class="action-btn ${isLiked?'liked':''}" onclick="toggleLike()">👍 Like</button>
                         <button class="action-btn" onclick="document.getElementById('cmt-in').focus()">💬 Comment</button>
                         <button class="action-btn" onclick="sharePost()">🔗 Share</button>
+                    </div>
+
+                    <!-- Report Button -->
+                    <div class="report-btn-wrap">
+                        <button class="report-btn" onclick="openReportPopup()">⚑ Report this Post</button>
                     </div>
                 </div>`;
             postView.classList.remove('hidden');
@@ -300,13 +342,16 @@
                 const list = document.getElementById('cmt-list');
                 list.innerHTML = "";
                 document.getElementById('c-count-title').innerText = snap.size;
-                snap.forEach(d => {
+snap.forEach(d => {
                     const c = d.data();
+                    const cmtPic = c.userPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.userName || 'U')}`;
+                    const cmtName = c.userName || 'Healthcare User';
+                    const cmtUid = c.userId || '';
                     list.innerHTML += `
-                        <div class="cmt-item">
-                            <img src="${c.userPic || 'https://ui-avatars.com/api/?name='+c.userName}" class="cmt-avatar" alt="${c.userName}">
+                        <div class="cmt-item" style="cursor:pointer;" onclick="location.href='wid.html?uid=${cmtUid}'">
+                            <img src="${cmtPic}" class="cmt-avatar" alt="${cmtName}" onerror="this.src='https://ui-avatars.com/api/?name=U'">
                             <div class="cmt-body">
-                                <span class="cmt-user">${c.userName}</span>
+                                <span class="cmt-user">${cmtName}</span>
                                 <div class="cmt-txt">${c.text}</div>
                             </div>
                         </div>`;
@@ -328,8 +373,8 @@
             if (!inp.value.trim()) return;
 
             const text = inp.value; inp.value = "";
-            const currentName = userData?.fullName || currentUser.displayName || "User";
-            const currentPic = userData?.profilePicUrl || `https://ui-avatars.com/api/?name=${currentName}&background=random`;
+            const currentName = userData?.fullName || userData?.facilityName || currentUser.displayName || "Healthcare User";
+            const currentPic = userData?.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentName)}`;
 
             await addDoc(collection(db, "posts", postId, "comments"), {
                 text: text, userId: currentUser.uid, userName: currentName,
@@ -551,6 +596,92 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('Rr88IrZ8s69Qyj8DS');</script>
 
+<!-- REPORT POPUP -->
+<div class="report-popup" id="report-popup">
+    <div class="report-top">
+        <h3>⚑ Report this Post</h3>
+        <button class="report-close" onclick="closeReport()">✕</button>
+    </div>
+
+    <div class="report-owner-box">
+        <img id="report-owner-pic" src="" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+        <div>
+            <div id="report-owner-name" style="font-size:13px;font-weight:700;color:#0f172a;"></div>
+            <div style="font-size:11px;color:#64748b;">Post Owner</div>
+        </div>
+    </div>
+
+    <div class="report-reasons">
+        <div class="reason-chip" onclick="selectReason(this)">Fake Info</div>
+        <div class="reason-chip" onclick="selectReason(this)">Spam</div>
+        <div class="reason-chip" onclick="selectReason(this)">Misleading</div>
+        <div class="reason-chip" onclick="selectReason(this)">Abusive</div>
+        <div class="reason-chip" onclick="selectReason(this)">Inappropriate</div>
+        <div class="reason-chip" onclick="selectReason(this)">Other</div>
+    </div>
+
+    <input class="report-input" id="report-name" placeholder="Your Name *" maxlength="50">
+    <textarea class="report-input" id="report-msg" placeholder="Describe the issue... *" rows="3" style="resize:none;"></textarea>
+
+    <button class="report-submit" onclick="submitReport()">Send Report</button>
+    <div class="report-success" id="report-success">✅ Report submitted! We will review it shortly.</div>
+</div>
+
+<script>
+let selectedReason = '';
+
+function openReportPopup() {
+    document.getElementById('report-owner-name').innerText = window.reportPostOwnerName || 'Unknown';
+    document.getElementById('report-owner-pic').src = window.reportPostOwnerPic || 'https://ui-avatars.com/api/?name=U';
+    document.getElementById('report-popup').classList.add('show');
+}
+
+function closeReport() {
+    document.getElementById('report-popup').classList.remove('show');
+}
+
+function selectReason(el) {
+    document.querySelectorAll('.reason-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedReason = el.innerText;
+}
+
+async function submitReport() {
+    const name = document.getElementById('report-name').value.trim();
+    const msg = document.getElementById('report-msg').value.trim();
+
+    if (!selectedReason) { alert('Please select a reason.'); return; }
+    if (!name) { alert('Please enter your name.'); return; }
+    if (!msg) { alert('Please describe the issue.'); return; }
+
+    const submitBtn = document.querySelector('.report-submit');
+    submitBtn.innerText = 'Sending...';
+    submitBtn.disabled = true;
+
+    try {
+        await emailjs.send('service_gnjsdvm', 'template_bus1179', {
+            reporter_name: name,
+            reason: selectedReason,
+            message: msg,
+            post_owner: window.reportPostOwnerName || 'Unknown',
+            post_title: window.reportPostTitle || 'General Post',
+            post_id: window.reportPostId || 'N/A',
+            post_url: window.location.href
+        });
+
+        document.querySelector('.report-submit').style.display = 'none';
+        document.getElementById('report-success').style.display = 'block';
+        setTimeout(() => closeReport(), 3000);
+    } catch(e) {
+        alert('Error sending report. Try again.');
+        submitBtn.innerText = 'Send Report';
+        submitBtn.disabled = false;
+    }
+}
+</script>
 </body>
 </html>
