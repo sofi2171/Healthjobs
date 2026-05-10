@@ -191,6 +191,43 @@
         <div id="posts-container"></div>
     </main>
 
+<!-- STATS MODAL -->
+    <div class="modal-overlay" id="stats-modal">
+        <div class="modal-content" style="max-width:500px;padding:0;overflow:hidden;">
+            <div style="background:#0a66c2;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;">
+                <div style="color:white;font-size:16px;font-weight:700;" id="stats-modal-title">Post Stats</div>
+                <button onclick="document.getElementById('stats-modal').style.display='none'" style="background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;">✕</button>
+            </div>
+
+            <!-- Stats Numbers -->
+            <div style="display:flex;gap:0;border-bottom:1px solid #e2e8f0;" id="stats-numbers">
+                <div style="flex:1;padding:16px;text-align:center;border-right:1px solid #e2e8f0;">
+                    <div id="stat-likes-count" style="font-size:24px;font-weight:800;color:#0a66c2;">0</div>
+                    <div style="font-size:12px;color:#64748b;font-weight:600;">Likes</div>
+                </div>
+                <div style="flex:1;padding:16px;text-align:center;border-right:1px solid #e2e8f0;">
+                    <div id="stat-comments-count" style="font-size:24px;font-weight:800;color:#0a66c2;">0</div>
+                    <div style="font-size:12px;color:#64748b;font-weight:600;">Comments</div>
+                </div>
+                <div style="flex:1;padding:16px;text-align:center;">
+                    <div id="stat-whatsapp-count" style="font-size:24px;font-weight:800;color:#25D366;">📞</div>
+                    <div style="font-size:12px;color:#64748b;font-weight:600;">WhatsApp</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div style="display:flex;border-bottom:1px solid #e2e8f0;">
+                <button id="tab-likes" onclick="switchTab('likes')" style="flex:1;padding:12px;border:none;background:none;font-size:13px;font-weight:700;color:#0a66c2;border-bottom:2px solid #0a66c2;cursor:pointer;">❤️ Likes</button>
+                <button id="tab-comments" onclick="switchTab('comments')" style="flex:1;padding:12px;border:none;background:none;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;">💬 Comments</button>
+            </div>
+
+            <!-- Content -->
+            <div id="stats-content" style="max-height:350px;overflow-y:auto;padding:12px;">
+                <div style="text-align:center;padding:20px;color:#94a3b8;">Loading...</div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="create-options-modal">
         <div class="modal-content" style="max-width: 400px; padding: 20px;">
             <div class="modal-header" style="border:none; text-align:center; margin-bottom: 15px;">What would you like to post?</div>
@@ -284,7 +321,7 @@
             <a href="privcy.html">Privacy Policy</a>
         </div>
         <div class="footer-copy">
-            &copy; 2026 powered by Health jobs | All rights reserved
+            &copy; 2026 powered by SufianX | All rights reserved
         </div>
     </footer>
 
@@ -539,9 +576,15 @@
                 <div class="post-desc">${post.desc || ''}</div>
                 ${linkHTML}
                 ${mediaHTML}
-                <div class="post-stats">
+<div class="post-stats">
                     <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg> ${likesCount} Likes</div>
                     <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"></path></svg> ${commentsCount} Comments</div>
+                    <div class="stat-item" style="margin-left:auto;">
+<button onclick="goToStats('${post.id}','${post.type || 'general_post'}')" style="background:#f0f7ff;border:1px solid #bfdbfe;color:#0a66c2;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z"/></svg>
+                            Stats
+                        </button>
+                    </div>
                 </div>
             `;
             container.appendChild(card);
@@ -685,6 +728,126 @@
                 btn.disabled = false;
             }
         };
+// ==========================================
+        // 📊 STATS MODAL
+        // ==========================================
+
+        let currentStatsPostId = null;
+        let currentStatsTab = 'likes';
+        let currentStatsPost = null;
+window.goToStats = (postId, postType) => {
+            location.href = `stats.html?id=${postId}`;
+        };
+        window.openStatsModal = async (postId, postType) => {
+            currentStatsPostId = postId;
+            currentStatsPost = myPostsArray.find(p => p.id === postId);
+            currentStatsTab = 'likes';
+
+            const modal = document.getElementById('stats-modal');
+            modal.style.display = 'flex';
+
+            // Title
+            const title = currentStatsPost?.title || 'Post Stats';
+            document.getElementById('stats-modal-title').innerText = title.length > 30 ? title.substring(0,30)+'...' : title;
+
+            // Stats numbers
+            const likesArr = currentStatsPost?.likes || [];
+            const commentsCount = currentStatsPost?.commentsCount || 0;
+            document.getElementById('stat-likes-count').innerText = likesArr.length;
+            document.getElementById('stat-comments-count').innerText = commentsCount;
+
+            // WhatsApp number
+            const wa = currentStatsPost?.whatsapp || '';
+            document.getElementById('stat-whatsapp-count').innerText = wa ? wa : 'N/A';
+
+            // Tab reset
+            document.getElementById('tab-likes').style.color = '#0a66c2';
+            document.getElementById('tab-likes').style.borderBottom = '2px solid #0a66c2';
+            document.getElementById('tab-likes').style.fontWeight = '700';
+            document.getElementById('tab-comments').style.color = '#64748b';
+            document.getElementById('tab-comments').style.borderBottom = 'none';
+            document.getElementById('tab-comments').style.fontWeight = '600';
+
+            loadLikesTab(postId, likesArr);
+        };
+
+        window.switchTab = async (tab) => {
+            currentStatsTab = tab;
+            const likesBtn = document.getElementById('tab-likes');
+            const cmtBtn = document.getElementById('tab-comments');
+
+            if (tab === 'likes') {
+                likesBtn.style.color = '#0a66c2'; likesBtn.style.borderBottom = '2px solid #0a66c2'; likesBtn.style.fontWeight = '700';
+                cmtBtn.style.color = '#64748b'; cmtBtn.style.borderBottom = 'none'; cmtBtn.style.fontWeight = '600';
+                loadLikesTab(currentStatsPostId, currentStatsPost?.likes || []);
+            } else {
+                cmtBtn.style.color = '#0a66c2'; cmtBtn.style.borderBottom = '2px solid #0a66c2'; cmtBtn.style.fontWeight = '700';
+                likesBtn.style.color = '#64748b'; likesBtn.style.borderBottom = 'none'; likesBtn.style.fontWeight = '600';
+                loadCommentsTab(currentStatsPostId);
+            }
+        };
+
+        async function loadLikesTab(postId, likesArr) {
+            const content = document.getElementById('stats-content');
+            if (!likesArr || likesArr.length === 0) {
+                content.innerHTML = '<div style="text-align:center;padding:30px;color:#94a3b8;font-size:13px;">❤️ No likes yet</div>';
+                return;
+            }
+            content.innerHTML = '<div style="text-align:center;padding:15px;color:#94a3b8;font-size:12px;">Loading likes...</div>';
+            try {
+                let html = '';
+                for (const uid of likesArr.slice(0, 30)) {
+                    try {
+                        const userSnap = await getDoc(doc(db, "users", uid));
+                        if (userSnap.exists()) {
+                            const u = userSnap.data();
+                            const name = u.fullName || u.facilityName || 'Healthcare User';
+                            const pic = u.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}`;
+                            const role = u.profession || u.role || 'Healthcare Professional';
+                            html += `
+                                <div onclick="location.href='wid.html?uid=${uid}'" style="display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #f1f5f9;cursor:pointer;">
+                                    <img src="${pic}" width="40" height="40" style="border-radius:50%;object-fit:cover;border:1px solid #e2e8f0;" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                                    <div>
+                                        <div style="font-size:13px;font-weight:700;color:#0f172a;">❤️ ${name}</div>
+                                        <div style="font-size:11px;color:#64748b;">${role}</div>
+                                    </div>
+                                </div>`;
+                        }
+                    } catch(e) {}
+                }
+                content.innerHTML = html || '<div style="text-align:center;padding:30px;color:#94a3b8;">No data</div>';
+            } catch(e) {
+                content.innerHTML = '<div style="text-align:center;padding:20px;color:red;font-size:12px;">Error loading likes</div>';
+            }
+        }
+
+        async function loadCommentsTab(postId) {
+            const content = document.getElementById('stats-content');
+            content.innerHTML = '<div style="text-align:center;padding:15px;color:#94a3b8;font-size:12px;">Loading comments...</div>';
+            try {
+                const snap = await getDocs(query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc")));
+                if (snap.empty) {
+                    content.innerHTML = '<div style="text-align:center;padding:30px;color:#94a3b8;font-size:13px;">💬 No comments yet</div>';
+                    return;
+                }
+                let html = '';
+                snap.forEach(d => {
+                    const c = d.data();
+                    const pic = c.userPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.userName || 'U')}`;
+                    html += `
+                        <div onclick="location.href='wid.html?uid=${c.userId}'" style="display:flex;gap:10px;padding:10px;border-bottom:1px solid #f1f5f9;cursor:pointer;align-items:flex-start;">
+                            <img src="${pic}" width="36" height="36" style="border-radius:50%;object-fit:cover;border:1px solid #e2e8f0;flex-shrink:0;" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                            <div style="flex:1;">
+                                <div style="font-size:13px;font-weight:700;color:#0f172a;">${c.userName || 'User'}</div>
+                                <div style="font-size:13px;color:#334155;margin-top:3px;line-height:1.4;">${c.text}</div>
+                            </div>
+                        </div>`;
+                });
+                content.innerHTML = html;
+            } catch(e) {
+                content.innerHTML = '<div style="text-align:center;padding:20px;color:red;font-size:12px;">Error loading comments</div>';
+            }
+        }
     </script>
     <script>
 document.addEventListener('DOMContentLoaded', () => {
