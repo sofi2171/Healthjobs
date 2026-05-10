@@ -268,7 +268,18 @@
                 </div>
             </div>
 
-            <div class="form-section-title">Attach Media (Images, Videos, PDFs) - Up to 5 Files</div>
+<div class="form-section-title">Web Chat Setting</div>
+
+<div class="form-group" style="flex-direction:row;align-items:center;justify-content:space-between;background:#f8fafc;padding:14px 16px;border-radius:10px;border:1px solid #e2e8f0;">
+    <div>
+        <div style="font-size:14px;font-weight:600;color:#0f172a;">Enable Web Chat</div>
+        <div style="font-size:12px;color:#64748b;margin-top:3px;">Candidates can message you directly on your post</div>
+    </div>
+    <button type="button" id="web-chat-toggle-btn" onclick="toggleWebChat()" style="padding:8px 18px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;background:#0a66c2;color:white;transition:0.2s;">ON</button>
+    <input type="hidden" id="web-chat-toggle" value="true">
+</div>
+
+<div class="form-section-title">Attach Media (Images, Videos, PDFs) - Up to 5 Files</div>
             
             <div class="upload-wrapper">
                 <div class="upload-box" id="upload-btn" onclick="document.getElementById('file-input').click()">
@@ -294,7 +305,7 @@
             <a href="privcy.html">Privacy Policy</a>
         </div>
         <div class="footer-copy">
-            &copy; 2026 powered by Health Jobs<li>All rights reserved</li>
+            &copy; 2026 powered by SufianX<li>All rights reserved</li>
         </div>
     </footer>
 
@@ -366,11 +377,27 @@
             catDropdown.classList.add('active');
         });
 
-        document.addEventListener('click', (e) => {
+document.addEventListener('click', (e) => {
             if (!catWrapper.contains(e.target)) {
                 catDropdown.classList.remove('active');
             }
         });
+
+        function toggleWebChat() {
+            const btn = document.getElementById('web-chat-toggle-btn');
+            const val = document.getElementById('web-chat-toggle');
+            if (val.value === 'true') {
+                val.value = 'false';
+                btn.innerText = 'OFF';
+                btn.style.background = '#cbd5e1';
+                btn.style.color = '#64748b';
+            } else {
+                val.value = 'true';
+                btn.innerText = 'ON';
+                btn.style.background = '#0a66c2';
+                btn.style.color = 'white';
+            }
+        }
     </script>
 
     <script type="module">
@@ -563,11 +590,7 @@
             }
 
             // Validating against the global array we created
-            if (!window.medicalCategories.includes(category)) {
-                alert("Please select a valid Medical Category from the dropdown list.");
-                document.getElementById('job-category-input').focus();
-                return;
-            }
+            
 
             const loaderMsg = document.getElementById('loader-msg');
             document.getElementById('upload-loader').classList.remove('hidden');
@@ -586,8 +609,11 @@
                 const posterNameDisplay = (userData && userData.facilityName) 
                     ? userData.facilityName : (userData && userData.fullName ? userData.fullName : "Healthcare Facility");
 
+                const webChatEnabled = document.getElementById('web-chat-toggle').value === 'true';
+
                 const postData = {
                     type: 'employer_post',
+                    webChat: webChatEnabled,
                     title: title,
                     category: category,
                     desc: desc,
