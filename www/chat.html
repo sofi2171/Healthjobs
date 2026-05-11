@@ -913,29 +913,32 @@ window.addEventListener('beforeunload', () => {
 
 // ✅ Capacitor Keyboard Fix
 if (window.Capacitor && window.Capacitor.Plugins.Keyboard) {
-    const Keyboard = window.Capacitor.Plugins.Keyboard;
+    const { Keyboard } = window.Capacitor.Plugins;
 
     Keyboard.addListener('keyboardWillShow', (info) => {
-        const kbH = info.keyboardHeight;
-        document.getElementById('app-container').style.height = `calc(100dvh - ${kbH}px)`;
+        const kbHeight = info.keyboardHeight;
+        const appContainer = document.getElementById('app-container');
+        
+        // Direct container ki height choti karein taake input field upar aa jaye
+        appContainer.style.height = `calc(100dvh - ${kbHeight}px)`;
+        
         setTimeout(() => {
             const chatArea = document.getElementById('chat-area');
             chatArea.scrollTop = chatArea.scrollHeight;
-        }, 100);
+            // Input field ko view mein laane ke liye extra safety
+            document.getElementById('msg-input').scrollIntoView({ block: "end" });
+        }, 150);
     });
 
     Keyboard.addListener('keyboardWillHide', () => {
-        document.getElementById('app-container').style.height = '100dvh';
+        const appContainer = document.getElementById('app-container');
+        appContainer.style.height = '100dvh';
+        
+        // Layout shift fix karne ke liye
+        window.scrollTo(0, 0);
     });
 }
 
-// ✅ Browser fallback — input focus par scroll
-document.getElementById('msg-input').addEventListener('focus', () => {
-    setTimeout(() => {
-        const chatArea = document.getElementById('chat-area');
-        chatArea.scrollTop = chatArea.scrollHeight;
-    }, 350);
-});
 </script>
 </body>
 </html>
