@@ -188,6 +188,14 @@
         const urlParams = new URLSearchParams(window.location.search);
         const postId = urlParams.get('id');
 
+        // ✅ Click tracker — window par set karo taake HTML onclick access kar sake
+        window.trackClick = async (field) => {
+            if (!postId) return;
+            try {
+                await updateDoc(doc(db, "posts", postId), { [field]: increment(1) });
+            } catch(e) { console.log("Track error:", e); }
+        };
+
         // SILENT BACKGROUND AUTHENTICATION CHECK
         onAuthStateChanged(auth, (user) => {
             if (!user) {
@@ -361,16 +369,6 @@ function openReportPopup() {
     document.getElementById('report-owner-name').innerText = window.reportPostOwnerName || 'Unknown';
     document.getElementById('report-owner-pic').src = window.reportPostOwnerPic || 'https://ui-avatars.com/api/?name=U';
     document.getElementById('report-popup').classList.add('show');
-}
-async function trackClick(field) {
-    if (!postId) return;
-    try {
-        const { initializeApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
-        const { getFirestore, doc, updateDoc, increment } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
-        const existingApp = getApps()[0];
-        const db = getFirestore(existingApp);
-        await updateDoc(doc(db, "posts", postId), { [field]: increment(1) });
-    } catch(e) {}
 }
 function closeReport() {
     document.getElementById('report-popup').classList.remove('show');
