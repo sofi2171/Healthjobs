@@ -13,8 +13,38 @@
         html, body { height: 100%; width: 100%; background-color: var(--app-bg); }
         body { display: flex; justify-content: center; align-items: center; margin: 0; overflow: hidden; }
         
-     #app-container { width: 100%; max-width: 450px; height: 100vh; height: 100dvh; background-color: var(--bg-body); display: flex; flex-direction: column; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2); overflow: hidden; border-radius: 12px; transition: height 0.25s ease; }
-        @media (max-width: 500px) { body { background-color: var(--bg-body); } #app-container { max-width: 100%; border-radius: 0; box-shadow: none; height: 100%; } }
+/* NAYA UPDATED CODE */
+#app-container {
+    width: 100%;
+    max-width: 450px;
+    /* Fixed height ki jagah flexible height use karein */
+    height: 100dvh; 
+    background-color: var(--bg-body);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    /* Overflow hidden keyboard ko resize nahi hone deta, isay clip ya auto rakhein */
+    overflow: clip; 
+    transition: height 0.1s ease-out;
+}
+
+@media (max-width: 500px) {
+    body { 
+        background-color: var(--bg-body); 
+        align-items: flex-start; /* Keyboard ke liye top alignment zaroori hai */
+    }
+    #app-container {
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        /* Mobile par height ko fixed rakhne ki bajaye auto resize hone dein */
+        height: 100%; 
+        flex: 1;
+    }
+}
+
 
         /* Header */
         header { flex: 0 0 65px; background-color: var(--primary-blue); padding: 0 15px; display: flex; align-items: center; color: white; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
