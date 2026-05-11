@@ -881,5 +881,34 @@ window.addEventListener('beforeunload', () => {
     localStorage.setItem('global_unread_chats', '0');
 });
 </script>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.Capacitor && window.Capacitor.Plugins.Keyboard) {
+    const Keyboard = window.Capacitor.Plugins.Keyboard;
+
+    Keyboard.addListener('keyboardWillShow', (info) => {
+      const h = info.keyboardHeight;
+      document.querySelectorAll(
+        '.bottom-comment-bar, .chat-input-bar, .input-bar, ' +
+        '[class*="bottom-bar"], [class*="input-wrap"], ' +
+        '[class*="comment-bar"], [class*="chat-bar"]'
+      ).forEach(el => {
+        el.style.transform = `translateY(-${h}px)`;
+        el.style.transition = 'transform 0.25s ease';
+      });
+    });
+
+    Keyboard.addListener('keyboardWillHide', () => {
+      document.querySelectorAll(
+        '.bottom-comment-bar, .chat-input-bar, .input-bar, ' +
+        '[class*="bottom-bar"], [class*="input-wrap"], ' +
+        '[class*="comment-bar"], [class*="chat-bar"]'
+      ).forEach(el => {
+        el.style.transform = 'translateY(0)';
+      });
+    });
+  }
+});
+    </script>
 </body>
 </html>
