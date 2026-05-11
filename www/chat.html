@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
     <title>Health Jobs | Chat</title>
     <meta name="robots" content="noindex, nofollow">
 
@@ -13,7 +13,7 @@
         html, body { height: 100%; width: 100%; background-color: var(--app-bg); }
         body { display: flex; justify-content: center; align-items: center; margin: 0; overflow: hidden; }
         
-        #app-container { width: 100%; max-width: 450px; height: 100vh; height: 100dvh; background-color: var(--bg-body); display: flex; flex-direction: column; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2); overflow: hidden; border-radius: 12px; }
+     #app-container { width: 100%; max-width: 450px; height: 100vh; height: 100dvh; background-color: var(--bg-body); display: flex; flex-direction: column; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2); overflow: hidden; border-radius: 12px; transition: height 0.25s ease; }
         @media (max-width: 500px) { body { background-color: var(--bg-body); } #app-container { max-width: 100%; border-radius: 0; box-shadow: none; height: 100%; } }
 
         /* Header */
@@ -53,7 +53,7 @@
         .msg-tick.read svg { fill: var(--tick-blue); }
 
         /* Inputs */
-        .bottom-container { flex: 0 0 auto; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; flex-direction: column; z-index: 10; position: relative;}
+.bottom-container { flex: 0 0 auto; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; flex-direction: column; z-index: 10; position: relative; padding-bottom: env(safe-area-inset-bottom);}
         .preview-box { display: none; padding: 12px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; position: relative; border-left: 4px solid var(--primary-blue); font-size: 14px; align-items: center; gap: 12px;}
         .preview-img-thumbnail { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; background: #e2e8f0; display: none; border: 1px solid #cbd5e1; }
         .preview-content { flex: 1; overflow: hidden; }
@@ -880,35 +880,32 @@ if (unreadCount > 0) {
 window.addEventListener('beforeunload', () => {
     localStorage.setItem('global_unread_chats', '0');
 });
-</script>
-    <script>
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.Capacitor && window.Capacitor.Plugins.Keyboard) {
+
+// ✅ Capacitor Keyboard Fix
+if (window.Capacitor && window.Capacitor.Plugins.Keyboard) {
     const Keyboard = window.Capacitor.Plugins.Keyboard;
 
     Keyboard.addListener('keyboardWillShow', (info) => {
-      const h = info.keyboardHeight;
-      document.querySelectorAll(
-        '.bottom-comment-bar, .chat-input-bar, .input-bar, ' +
-        '[class*="bottom-bar"], [class*="input-wrap"], ' +
-        '[class*="comment-bar"], [class*="chat-bar"]'
-      ).forEach(el => {
-        el.style.transform = `translateY(-${h}px)`;
-        el.style.transition = 'transform 0.25s ease';
-      });
+        const kbH = info.keyboardHeight;
+        document.getElementById('app-container').style.height = `calc(100dvh - ${kbH}px)`;
+        setTimeout(() => {
+            const chatArea = document.getElementById('chat-area');
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }, 100);
     });
 
     Keyboard.addListener('keyboardWillHide', () => {
-      document.querySelectorAll(
-        '.bottom-comment-bar, .chat-input-bar, .input-bar, ' +
-        '[class*="bottom-bar"], [class*="input-wrap"], ' +
-        '[class*="comment-bar"], [class*="chat-bar"]'
-      ).forEach(el => {
-        el.style.transform = 'translateY(0)';
-      });
+        document.getElementById('app-container').style.height = '100dvh';
     });
-  }
+}
+
+// ✅ Browser fallback — input focus par scroll
+document.getElementById('msg-input').addEventListener('focus', () => {
+    setTimeout(() => {
+        const chatArea = document.getElementById('chat-area');
+        chatArea.scrollTop = chatArea.scrollHeight;
+    }, 350);
 });
-    </script>
+</script>
 </body>
 </html>
