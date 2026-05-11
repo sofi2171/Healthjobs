@@ -20,7 +20,7 @@
       "iconColor": "#0a66c2"
     },
     "Keyboard": {
-      "resize": "body",
+      "resize": "ionic",
       "style": "DARK",
       "resizeOnFullScreen": true
     }
