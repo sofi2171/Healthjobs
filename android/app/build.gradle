@@ -1,9 +1,7 @@
 apply plugin: 'com.android.application'
-
 android {
     namespace "com.sufian.healthjobs"
     compileSdkVersion rootProject.ext.compileSdkVersion
-
     signingConfigs {
         release {
             storeFile file('upload-key.jks')
@@ -12,20 +10,17 @@ android {
             keyPassword '123456'
         }
     }
-
     defaultConfig {
         applicationId "com.sufian.healthjobs"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
-        versionName "1.1"
-
+        versionName "1.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
         }
     }
-
     buildTypes {
         release {
             signingConfig signingConfigs.release
@@ -34,7 +29,6 @@ android {
         }
     }
 }
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
@@ -43,10 +37,12 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+
+    // ✅ Firebase - YEH LINE ADD KI GAYI HAI
+    implementation platform('com.google.firebase:firebase-bom:32.7.0')
+    implementation 'com.google.firebase:firebase-messaging'
 }
-
 apply from: 'capacitor.build.gradle'
-
 try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {
