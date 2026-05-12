@@ -343,9 +343,9 @@ let autoCallType = new URLSearchParams(window.location.search).get('callType') |
         listenToRTDB(); 
         listenForCalls(); 
         setupPushNotifications(); 
-        
+  // ✅ Agar android native app hai aur autoStartCall nahi to JS ring mat bajao
+        const isNativeAndroid = window.Capacitor && window.Capacitor.getPlatform() === 'android';      
 if(autoStartCall === 'true') {
-            // ✅ User data load hone ka wait karo phir call screen dikhao
             setTimeout(async () => {
                 // Target user data reload karo
                 try {
@@ -416,7 +416,11 @@ if(autoStartCall === 'true') {
 
     // 🔔 PUSH NOTIFICATIONS
     async function setupPushNotifications() {
-        if (!window.Capacitor || !window.Capacitor.Plugins.PushNotifications) return; 
+        // ✅ Agar native app hai to JS mein call handling mat karo
+        // Native Android (IncomingCallActivity) handle karega
+        if (!window.Capacitor || !window.Capacitor.Plugins.PushNotifications) return;
+        // ✅ Android par push notifications JS se handle nahi karenge
+        if (window.Capacitor.getPlatform() === 'android') return;
 
         try {
             const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
