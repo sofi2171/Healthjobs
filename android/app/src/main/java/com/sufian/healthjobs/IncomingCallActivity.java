@@ -12,12 +12,14 @@ import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class IncomingCallActivity extends Activity {
 
+    private static final String TAG = "IncomingCall";
     private MediaPlayer ringtonePlayer;
     private Vibrator vibrator;
 
@@ -25,22 +27,26 @@ public class IncomingCallActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG, "IncomingCallActivity created");
+
         // ✅ Lock screen ke upar dikhao
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
         }
         getWindow().addFlags(
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON  |
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON  |
-            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED   |
+            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON     |
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON     |
+            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD   |
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         );
 
-        // ✅ Notification action handle karo
-        String action = getIntent().getStringExtra("action");
+        String action    = getIntent().getStringExtra("action");
+        String callerUid = getIntent().getStringExtra("callerUid");
+        String callType  = getIntent().getStringExtra("callType");
 
+        // ✅ Notification action — accept ya decline
         if ("decline".equals(action)) {
             cancelNotification();
             finish();
@@ -49,90 +55,92 @@ public class IncomingCallActivity extends Activity {
 
         if ("accept".equals(action)) {
             cancelNotification();
-            openChat(
-                getIntent().getStringExtra("callerUid"),
-                getIntent().getStringExtra("callType")
-            );
+            openChat(callerUid, callType);
             return;
         }
 
+        // ✅ Normal incoming call screen dikhao
         setContentView(R.layout.activity_incoming_call);
 
         String callerName = getIntent().getStringExtra("callerName");
-        String callerUid  = getIntent().getStringExtra("callerUid");
-        String callType   = getIntent().getStringExtra("callType");
 
         TextView nameView = findViewById(R.id.caller_name);
         TextView typeView = findViewById(R.id.call_type);
         Button acceptBtn  = findViewById(R.id.btn_accept);
         Button declineBtn = findViewById(R.id.btn_decline);
 
-        nameView.setText(callerName != null ? callerName : "Unknown");
-        typeView.setText("video".equals(callType) ? "Incoming Video Call" : "Incoming Audio Call");
+        if (nameView != null) nameView.setText(callerName != null ? callerName : "Unknown");
+        if (typeView != null) typeView.setText("video".equals(callType) ? "Incoming Video Call" : "Incoming Audio Call");
 
-        // ✅ Ringtone + vibration
+        // ✅ Ringtone + vibration shuru karo
         startRingtone();
 
-        acceptBtn.setOnClickListener(v -> {
-            stopRingtone();
-            cancelNotification();
-            openChat(callerUid, callType);
-        });
+        if (acceptBtn != null) {
+            acceptBtn.setOnClickListener(v -> {
+                stopRingtone();
+                cancelNotification();
+                openChat(callerUid, callType);
+            });
+        }
 
-        declineBtn.setOnClickListener(v -> {
-            stopRingtone();
-            cancelNotification();
-            finish();
-        });
+        if (declineBtn != null) {
+            declineBtn.setOnClickListener(v -> {
+                stopRingtone();
+                cancelNotification();
+                finish();
+            });
+        }
     }
 
     private void openChat(String callerUid, String callType) {
+        if (callerUid == null || callerUid.isEmpty()) {
+            finish();
+            return;
+        }
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("callerUid", callerUid);
         intent.putExtra("startCall", "true");
-        intent.putExtra("callType",  callType);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("callType",  callType != null ? callType : "audio");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
 
     private void startRingtone() {
         try {
-            // ✅ Audio focus lo pehle
             AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-            audioManager.requestAudioFocus(null,
-                AudioManager.STREAM_RING,
-                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-            audioManager.setStreamVolume(
-                AudioManager.STREAM_RING,
-                audioManager.getStreamMaxVolume(AudioManager.STREAM_RING),
-                0
-            );
+            if (audioManager != null) {
+                audioManager.requestAudioFocus(
+                    null,
+                    AudioManager.STREAM_RING,
+                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
+                );
+                int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, maxVol, 0);
+            }
 
             Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
             if (ringtoneUri == null) {
                 ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             }
+
             ringtonePlayer = new MediaPlayer();
             ringtonePlayer.setDataSource(this, ringtoneUri);
             ringtonePlayer.setAudioStreamType(AudioManager.STREAM_RING);
             ringtonePlayer.setLooping(true);
             ringtonePlayer.prepare();
             ringtonePlayer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Fallback — Ringtone class use karo
-            try {
-                Uri fallbackUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                android.media.Ringtone ringtone = RingtoneManager.getRingtone(this, fallbackUri);
-                if (ringtone != null) ringtone.play();
-            } catch (Exception ex) { ex.printStackTrace(); }
-                                                                }
 
+            Log.d(TAG, "Ringtone started");
+        } catch (Exception e) {
+            Log.e(TAG, "Ringtone error: " + e.getMessage());
+        }
+
+        // ✅ Vibration
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 VibratorManager vm = (VibratorManager) getSystemService(VIBRATOR_MANAGER_SERVICE);
-                vibrator = vm.getDefaultVibrator();
+                if (vm != null) vibrator = vm.getDefaultVibrator();
             } else {
                 vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             }
@@ -145,28 +153,37 @@ public class IncomingCallActivity extends Activity {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Vibration error: " + e.getMessage());
         }
     }
 
     private void stopRingtone() {
         try {
             if (ringtonePlayer != null) {
-                ringtonePlayer.stop();
+                if (ringtonePlayer.isPlaying()) ringtonePlayer.stop();
                 ringtonePlayer.release();
                 ringtonePlayer = null;
             }
+        } catch (Exception e) {
+            Log.e(TAG, "Stop ringtone error: " + e.getMessage());
+        }
+        try {
             if (vibrator != null) {
                 vibrator.cancel();
+                vibrator = null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Stop vibration error: " + e.getMessage());
         }
     }
 
     private void cancelNotification() {
-        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (nm != null) nm.cancel(999);
+        try {
+            NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            if (nm != null) nm.cancel(999);
+        } catch (Exception e) {
+            Log.e(TAG, "Cancel notification error: " + e.getMessage());
+        }
     }
 
     @Override
