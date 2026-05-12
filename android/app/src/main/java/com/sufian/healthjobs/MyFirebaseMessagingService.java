@@ -33,10 +33,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Map<String, String> data = remoteMessage.getData();
 
-        // ✅ Cancel call handle karo
+        // // ✅ Cancel call handle karo
         if ("cancel_call".equals(data.get("action"))) {
             NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             if (nm != null) nm.cancel(999);
+            // ✅ IncomingCallActivity ko bhi band karo
+            IncomingCallActivity.cancelIncomingCall();
+            // ✅ Finish activity intent bhejo
+            Intent cancelIntent = new Intent(this, IncomingCallActivity.class);
+            cancelIntent.putExtra("action", "cancel");
+            cancelIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(cancelIntent);
             return;
         }
 
