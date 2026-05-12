@@ -298,6 +298,7 @@
 
     let currentUser = null, targetUid = new URLSearchParams(window.location.search).get('uid'), chatId = null;
     let autoStartCall = new URLSearchParams(window.location.search).get('startCall');
+let autoCallType = new URLSearchParams(window.location.search).get('callType') || 'audio';
     let selectedFile = null, actionType = null, actionData = null, longPressTimer = null, activeMsgId = null;
     let targetName = "User", targetPic = "https://ui-avatars.com/api/?name=User";
     window.chatMessages = {}; 
@@ -343,12 +344,30 @@
         listenForCalls(); 
         setupPushNotifications(); 
         
-        if(autoStartCall === 'true') {
-            setTimeout(() => { 
+if(autoStartCall === 'true') {
+            // ✅ User data load hone ka wait karo phir call screen dikhao
+            setTimeout(async () => {
+                // Target user data reload karo
+                try {
+                    const snap = await getDoc(doc(dbMain, "users", targetUid));
+                    if(snap.exists()){
+                        targetName = snap.data().facilityName || snap.data().fullName || "User";
+                        targetPic = snap.data().profilePicUrl || `https://ui-avatars.com/api/?name=${targetName}`;
+                        document.getElementById('target-name').innerText = targetName;
+                        document.getElementById('target-pic').src = targetPic;
+                    }
+                } catch(e) {}
+
                 incomingCallPrompted = true;
-                showCallUI(targetPic, targetName, "INCOMING CALL...", true); 
-                playIncomingRing(); 
-            }, 1000);
+                isVideoCall = autoCallType === 'video';
+                showCallUI(
+                    targetPic,
+                    targetName,
+                    isVideoCall ? "INCOMING VIDEO CALL" : "INCOMING AUDIO CALL",
+                    true
+                );
+                playIncomingRing();
+            }, 1500);
         }
     });
 
