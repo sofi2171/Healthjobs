@@ -68,12 +68,11 @@ public class MainActivity extends BridgeActivity {
     private void loadCallUrl(String callerUid, String callType) {
         try {
             String callTypeParam = (callType != null) ? callType : "audio";
-            final String url = "file:///android_asset/public/chat.html"
+            final String url = "https://localhost/chat.html"
                 + "?uid=" + callerUid
                 + "&startCall=true"
                 + "&incoming=true"
                 + "&callType=" + callTypeParam;
-
             getBridge().getWebView().post(() -> {
                 getBridge().getWebView().loadUrl(url);
             });
