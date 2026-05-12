@@ -98,16 +98,36 @@ public class IncomingCallActivity extends Activity {
 
     private void startRingtone() {
         try {
+            // ✅ Audio focus lo pehle
+            AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+            audioManager.requestAudioFocus(null,
+                AudioManager.STREAM_RING,
+                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            audioManager.setStreamVolume(
+                AudioManager.STREAM_RING,
+                audioManager.getStreamMaxVolume(AudioManager.STREAM_RING),
+                0
+            );
+
             Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-            ringtonePlayer = MediaPlayer.create(this, ringtoneUri);
-            if (ringtonePlayer != null) {
-                ringtonePlayer.setAudioStreamType(AudioManager.STREAM_RING);
-                ringtonePlayer.setLooping(true);
-                ringtonePlayer.start();
+            if (ringtoneUri == null) {
+                ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             }
+            ringtonePlayer = new MediaPlayer();
+            ringtonePlayer.setDataSource(this, ringtoneUri);
+            ringtonePlayer.setAudioStreamType(AudioManager.STREAM_RING);
+            ringtonePlayer.setLooping(true);
+            ringtonePlayer.prepare();
+            ringtonePlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+            // Fallback — Ringtone class use karo
+            try {
+                Uri fallbackUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                android.media.Ringtone ringtone = RingtoneManager.getRingtone(this, fallbackUri);
+                if (ringtone != null) ringtone.play();
+            } catch (Exception ex) { ex.printStackTrace(); }
+                                                                }
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
