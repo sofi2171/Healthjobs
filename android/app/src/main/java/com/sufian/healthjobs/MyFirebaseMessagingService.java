@@ -25,13 +25,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FCMService";
     private static final String CALL_CHANNEL_ID = "incoming_call_channel";
 
+    
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
         Log.d(TAG, "FCM received: " + remoteMessage.getData().toString());
+        Log.d(TAG, "FCM notification: " + (remoteMessage.getNotification() != null ? remoteMessage.getNotification().getBody() : "null"));
 
         Map<String, String> data = remoteMessage.getData();
+
+        // ✅ Agar data empty hai to kuch mat karo
+        if (data == null || data.isEmpty()) {
+            Log.d(TAG, "Empty data — ignoring");
+            return;
+        }
 
         // // ✅ Cancel call handle karo
         if ("cancel_call".equals(data.get("action"))) {
