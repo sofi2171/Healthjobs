@@ -698,7 +698,7 @@ if (unreadCount > 0) {
             // ✅ اسی ایک Firestore سے target کا fcmToken نکالیں
             const targetUserSnap = await getDoc(doc(dbMain, "users", targetUid));
             if (targetUserSnap.exists() && targetUserSnap.data().fcmToken) {
-                await fetch('https://my-jobs-backend.vercel.app/api', {
+                await fetch('https://notication-healthjobs.vercel.app/api/server', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
