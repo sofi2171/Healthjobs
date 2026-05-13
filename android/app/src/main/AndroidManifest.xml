@@ -71,12 +71,15 @@
             android:value="ca-app-pub-3940256099942544~3347511713" />
 
         <!-- ✅ FCM Service -->
+        <!-- ✅ FCM Service -->
         <service
             android:name=".MyFirebaseMessagingService"
-            android:exported="false"
-            android:stopWithTask="false">
+            android:exported="true"
+            android:stopWithTask="false"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
 
