@@ -758,15 +758,15 @@ if (unreadCount > 0) {
                 // ✅ اسی ایک Firestore سے fcmToken
                 const targetUserSnap = await getDoc(doc(dbMain, "users", targetUid));
                 if (targetUserSnap.exists() && targetUserSnap.data().fcmToken) {
-                    await fetch('https://my-jobs-backend.vercel.app/api', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            targetToken: targetUserSnap.data().fcmToken,
-                            callerUid: currentUser.uid,
-                            action: 'cancel'
-                        })
-                    });
+                    await fetch('https://notication-healthjobs.vercel.app/api/call', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        targetToken: targetUserSnap.data().fcmToken,
+        callerUid: currentUser.uid,
+        action: 'cancel'
+    })
+});
                 }
             } catch (e) { console.error("Cancel Push Error:", e); }
         }
