@@ -16,6 +16,39 @@
     <meta property="og:url" content="https://healthjobs-portal.web.app/posts.html">
 
     <style>
+    #pull-to-refresh {
+    position: fixed;
+    top: -60px; /* شروع میں اسکرین سے باہر */
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: transform 0.2s ease;
+}
+
+.refresh-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* جب ریفریش ہو رہا ہو تو اسے گھمانے کے لیے */
+.spinning {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
         :root {
             --primary-blue: #0a66c2;
             --hover-blue: #004182;
@@ -150,6 +183,9 @@
     </style>
 </head>
 <body>
+<div id="pull-to-refresh">
+    <div class="refresh-spinner"></div>
+</div>
 
     <header>
 <button class="back-btn" onclick="location.href='index.html'">
@@ -301,9 +337,13 @@
                 ${mediaHtml}
             `;
 
-            // WhatsApp formatting
-            let waNumber = post.whatsapp ? post.whatsapp.replace(/[^0-9]/g, '') : '';
-            if(waNumber.startsWith('0')) waNumber = '92' + waNumber.substring(1);
+// WhatsApp formatting
+let waNumber = '';
+if (post.whatsapp && post.whatsapp.trim() !== '') {
+    waNumber = post.whatsapp.replace(/[^0-9]/g, '');
+    if (waNumber.startsWith('0')) waNumber = '92' + waNumber.substring(1);
+}
+const localNum = post.localNum && post.localNum.trim() !== '' ? post.localNum : '';
 
             // Three Circular Buttons
 // ✅ window par save karo
@@ -326,13 +366,13 @@ document.getElementById('report-owner-pic').src = window.reportPostOwnerPic;
                     <span class="btn-label">WhatsApp</span>
                 </a>` : ''}
                 
-                ${post.localNum || post.whatsapp ? `
-                <a href="tel:${post.localNum || post.whatsapp}" class="circle-btn-wrapper" onclick="trackClick('callClicks')">
-                    <div class="circle-btn btn-call">
-                        <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                    </div>
-                    <span class="btn-label">Call</span>
-                </a>` : ''}
+               ${localNum || waNumber ? `
+<a href="tel:${localNum || post.whatsapp}" class="circle-btn-wrapper" onclick="trackClick('callClicks')">
+    <div class="circle-btn btn-call">
+        <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+    </div>
+    <span class="btn-label">Call</span>
+</a>` : ''} 
 
 ${(post.webChat === true || post.webChat === undefined) ? `
                 <a href="chat.html?uid=${post.posterId}" class="circle-btn-wrapper" onclick="trackClick('chatClicks')">
@@ -481,6 +521,62 @@ if (LocalNotifications) {
         }
     }
 });
+let startY = 0;
+const pullToRefresh = document.getElementById('pull-to-refresh');
+const spinner = pullToRefresh.querySelector('.refresh-spinner');
+
+// جب انگلی یا ماؤس اسکرین پر لگے
+window.addEventListener('touchstart', (e) => {
+    // صرف تب کام کرے جب پیج بالکل اوپر (top: 0) ہو
+    if (window.scrollY === 0) {
+        startY = e.touches[0].pageY;
+    }
+}, {passive: true});
+
+// جب اسکرین کو نیچے کھینچا جائے
+window.addEventListener('touchmove', (e) => {
+    const y = e.touches[0].pageY;
+    const pullDistance = y - startY;
+
+    if (pullDistance > 0 && window.scrollY === 0) {
+        // لوڈر کو نیچے لائیں (زیادہ سے زیادہ 80px تک)
+        const move = Math.min(pullDistance / 2, 80);
+        pullToRefresh.style.transform = `translateY(${move}px)`;
+        
+        // جیسے جیسے کھینچیں اسپنر تھوڑا مڑے
+        spinner.style.transform = `rotate(${pullDistance * 2}deg)`;
+    }
+}, {passive: true});
+
+// جب انگلی اسکرین سے ہٹا لی جائے
+window.addEventListener('touchend', (e) => {
+    const endY = e.changedTouches[0].pageY;
+    const pullDistance = endY - startY;
+
+    if (pullDistance > 100 && window.scrollY === 0) {
+        // ریفریش شروع کریں
+        pullToRefresh.style.transform = `translateY(70px)`;
+        spinner.classList.add('spinning');
+
+        // یہاں اپنا ڈیٹا لوڈ کرنے والا فنکشن کال کریں
+        console.log("Refreshing data...");
+        
+        setTimeout(() => {
+            // 2 سیکنڈ بعد واپس چھپا دیں (آپ اپنی ضرورت کے مطابق سیٹ کریں)
+            resetPullToRefresh();
+            location.reload(); // پیج ریفریش کرنے کے لیے
+        }, 1500);
+    } else {
+        resetPullToRefresh();
+    }
+});
+
+function resetPullToRefresh() {
+    pullToRefresh.style.transform = `translateY(0)`;
+    setTimeout(() => {
+        spinner.classList.remove('spinning');
+    }, 200);
+}
 
 </script>
 <!-- REPORT POPUP -->
