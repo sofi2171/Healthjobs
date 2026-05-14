@@ -169,7 +169,20 @@
         .spinner { width: 40px; height: 40px; border: 3px solid #e0dfdc; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
         .loader-text { margin-top: 15px; font-weight: 600; font-size: 14px; color: var(--text-secondary); text-align: center;}
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
+/* Phone Input with Country Code */
+.phone-input-group { display: flex; align-items: stretch; border: 1px solid var(--border-color); border-radius: 6px; background: #fafafa; }
+.phone-input-group:focus-within { border-color: var(--primary-blue); box-shadow: 0 0 0 1px var(--primary-blue); }
+.phone-input-group input { border: none !important; box-shadow: none !important; background: transparent; border-radius: 0 6px 6px 0; flex: 1; }
+.cc-btn { display: flex; align-items: center; gap: 4px; padding: 0 10px; background: #f0f0f0; border: none; border-right: 1px solid var(--border-color); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-main); border-radius: 6px 0 0 6px; white-space: nowrap; }
+.cc-btn:hover { background: #e4e4e4; }
+.country-code-selector { position: relative; }
+.cc-dropdown { position: absolute; top: 100%; left: 0; z-index: 200; background: white; border: 1px solid var(--primary-blue); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); min-width: 200px; max-height: 240px; overflow-y: auto; display: none; margin-top: 4px; }
+.cc-dropdown.active { display: block; }
+.cc-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; font-size: 13px; border-bottom: 1px solid #f1f1f1; transition: 0.1s; }
+.cc-item:last-child { border-bottom: none; }
+.cc-item:hover { background: #f0f7ff; color: var(--primary-blue); }
+.cc-item .cc-name { flex: 1; }
+.cc-item .cc-num { color: var(--text-secondary); font-size: 12px; }
         .hidden { display: none !important; }
 
         @media (max-width: 600px) { .form-row { flex-direction: column; gap: 0; } .form-card { padding: 20px; } }
@@ -258,16 +271,52 @@
 
             <div class="form-section-title">Contact Details</div>
             
-            <div class="form-row">
+<div class="form-row">
                 <div class="form-group">
                     <label>WhatsApp Number *</label>
-                    <input type="tel" id="whatsapp" placeholder="+92 3XX XXXXXXX">
+                    <div class="phone-input-group">
+                        <div class="country-code-selector">
+                            <button type="button" class="cc-btn" id="wa-cc-btn" onclick="toggleCCDropdown('wa-cc-dropdown')">
+                                <span id="wa-flag">🇵🇰</span>
+                                <span id="wa-code">+92</span>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                            </button>
+                            <div class="cc-dropdown" id="wa-cc-dropdown"></div>
+                        </div>
+                        <input type="tel" id="whatsapp" placeholder="3XX XXXXXXX">
+                    </div>
+                    <input type="hidden" id="whatsapp-cc" value="+92">
                 </div>
                 <div class="form-group">
                     <label>Calling Number (Optional)</label>
-                    <input type="tel" id="local-num" placeholder="03XX XXXXXXX">
+                    <div class="phone-input-group">
+                        <div class="country-code-selector">
+                            <button type="button" class="cc-btn" id="ln-cc-btn" onclick="toggleCCDropdown('ln-cc-dropdown')">
+                                <span id="ln-flag">🇵🇰</span>
+                                <span id="ln-code">+92</span>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                            </button>
+                            <div class="cc-dropdown" id="ln-cc-dropdown"></div>
+                        </div>
+                        <input type="tel" id="local-num" placeholder="3XX XXXXXXX">
+                    </div>
+                    <input type="hidden" id="local-num-cc" value="+92">
                 </div>
             </div>
+            <div class="form-section-title">Post Schedule & Expiry</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label>Post Start Date & Time</label>
+        <input type="datetime-local" id="schedule-start">
+        <small style="color:var(--text-secondary);font-size:11px;margin-top:3px;">خالی چھوڑیں تو ابھی فوری پبلش ہوگا</small>
+    </div>
+    <div class="form-group">
+        <label>Post Expiry Date & Time</label>
+        <input type="datetime-local" id="schedule-expiry">
+        <small style="color:var(--text-secondary);font-size:11px;margin-top:3px;">خالی چھوڑیں تو پوسٹ کبھی expire نہیں ہوگی</small>
+    </div>
+</div>
 
 <div class="form-section-title">Web Chat Setting</div>
 
@@ -398,7 +447,61 @@ document.addEventListener('click', (e) => {
                 btn.style.color = 'white';
             }
         }
+const countryCodes = [
+    { flag: "🇵🇰", name: "Pakistan",      code: "+92"  },
+    { flag: "🇸🇦", name: "Saudi Arabia",  code: "+966" },
+    { flag: "🇦🇪", name: "UAE",           code: "+971" },
+    { flag: "🇶🇦", name: "Qatar",         code: "+974" },
+    { flag: "🇰🇼", name: "Kuwait",        code: "+965" },
+    { flag: "🇧🇭", name: "Bahrain",       code: "+973" },
+    { flag: "🇴🇲", name: "Oman",          code: "+968" },
+    { flag: "🇬🇧", name: "UK",            code: "+44"  },
+    { flag: "🇺🇸", name: "USA",           code: "+1"   },
+    { flag: "🇨🇦", name: "Canada",        code: "+1"   },
+    { flag: "🇦🇺", name: "Australia",     code: "+61"  },
+    { flag: "🇩🇪", name: "Germany",       code: "+49"  },
+    { flag: "🇮🇳", name: "India",         code: "+91"  },
+    { flag: "🇧🇩", name: "Bangladesh",    code: "+880" },
+    { flag: "🇱🇾", name: "Libya",         code: "+218" },
+    { flag: "🇮🇶", name: "Iraq",          code: "+964" },
+    { flag: "🇯🇴", name: "Jordan",        code: "+962" },
+    { flag: "🇲🇾", name: "Malaysia",      code: "+60"  },
+    { flag: "🇵🇭", name: "Philippines",   code: "+63"  },
+    { flag: "🇿🇦", name: "South Africa",  code: "+27"  }
+];
 
+function buildCCDropdown(dropdownId, flagId, codeId, hiddenId) {
+    const dropdown = document.getElementById(dropdownId);
+    dropdown.innerHTML = '';
+    countryCodes.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'cc-item';
+        div.innerHTML = `<span>${c.flag}</span><span class="cc-name">${c.name}</span><span class="cc-num">${c.code}</span>`;
+        div.onclick = () => {
+            document.getElementById(flagId).textContent = c.flag;
+            document.getElementById(codeId).textContent = c.code;
+            document.getElementById(hiddenId).value = c.code;
+            dropdown.classList.remove('active');
+        };
+        dropdown.appendChild(div);
+    });
+}
+
+function toggleCCDropdown(dropdownId) {
+    document.querySelectorAll('.cc-dropdown').forEach(d => {
+        if (d.id !== dropdownId) d.classList.remove('active');
+    });
+    document.getElementById(dropdownId).classList.toggle('active');
+}
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.country-code-selector')) {
+        document.querySelectorAll('.cc-dropdown').forEach(d => d.classList.remove('active'));
+    }
+});
+
+buildCCDropdown('wa-cc-dropdown', 'wa-flag', 'wa-code', 'whatsapp-cc');
+buildCCDropdown('ln-cc-dropdown', 'ln-flag', 'ln-code', 'local-num-cc');
         // ✅ Manual typing allow — dropdown se select na karo toh jo likha hai wo hi save hoga
         catInput.addEventListener('blur', () => {
             // Input jo bhi value hai wo waise hi rahegi — force select nahi
@@ -582,8 +685,8 @@ document.addEventListener('click', (e) => {
             const salary = document.getElementById('salary').value.trim();
             const desc = document.getElementById('job-desc').value.trim();
             const whatsapp = document.getElementById('whatsapp').value.trim();
-            
-            if(!title || !category || !jobLocation || !salary || !desc || !whatsapp) {
+
+if(!title || !category || !jobLocation || !salary || !desc) {
                 alert("Please fill all required fields (marked with *).");
                 return;
             }
@@ -615,8 +718,8 @@ const webChatEnabled = document.getElementById('web-chat-toggle').value === 'tru
                     title: title,
                     category: category,
                     desc: desc,
-                    whatsapp: whatsapp,
-                    localNum: document.getElementById('local-num').value.trim(),
+whatsapp: whatsapp ? (document.getElementById('whatsapp-cc').value + whatsapp) : null,
+localNum: document.getElementById('local-num').value.trim() ? (document.getElementById('local-num-cc').value + document.getElementById('local-num').value.trim()) : null,
                     salary: salary,
                     shift: document.getElementById('job-shift').value,
                     experience: document.getElementById('job-exp').value,
@@ -628,7 +731,15 @@ const webChatEnabled = document.getElementById('web-chat-toggle').value === 'tru
                     media: uploadedMediaData, 
                     likes: [],
                     commentsCount: 0,
-                    createdAt: serverTimestamp()
+createdAt: serverTimestamp(),
+scheduledAt: document.getElementById('schedule-start').value 
+    ? new Date(document.getElementById('schedule-start').value).toISOString() 
+    : null,
+expiresAt: document.getElementById('schedule-expiry').value 
+    ? new Date(document.getElementById('schedule-expiry').value).toISOString() 
+    : null,
+isScheduled: document.getElementById('schedule-start').value ? true : false,
+isExpired: false
                 };
 
                 // Changed this line to capture the document ID
@@ -651,23 +762,40 @@ const webChatEnabled = document.getElementById('web-chat-toggle').value === 'tru
                 // ---------------------------------------------------
 
                 // --- VERCEL BACKEND CALL FOR NOTIFICATION ---
-                try {
-                    await fetch('https://notication-healthjobs.vercel.app/api/server', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            title: title,
-                            hospital: posterNameDisplay,
-                            postId: docRef.id, 
-                            senderPhoto: (userData && userData.profilePicUrl) ? userData.profilePicUrl : "https://via.placeholder.com/150"
-                        })
-                    });
-                    console.log("Notification request sent to Vercel backend successfully.");
-                } catch (notifyErr) {
-                    console.error("Vercel backend ko notification request bhejte hue masla aaya:", notifyErr);
-                }
+// ✅ 1. EMAIL NOTIFICATION - نئی پوسٹ پر
+// ✅ نئی پوسٹ پر - Email Notificatio
+try {
+    await fetch('https://nodemails.vercel.app/api/send-notification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({
+    type: 'new-post',
+    postId: docRef.id,
+    title: title,
+    category: category,
+    location: jobLocation,
+    salary: salary,
+    posterName: posterNameDisplay,
+    posterId: currentUser.uid,
+    postType: 'candidate_post',
+    link: 'https://healthjobs-portal.web.app/posts.html?id=' + docRef.id
+})
+});
+    console.log("✅ Matched users notified.");
+} catch (notifyErr) {
+    console.error("❌ Notify error:", notifyErr);
+}
+
+// ✅ 2. EXPIRED POSTS HANDLER - الگ URL
+fetch('https://backend-posts-details.vercel.app/api/update-post', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        postId: docRef.id,
+        expiresAt: document.getElementById('schedule-expiry').value || null
+    })
+}).then(() => console.log("✅ Expiry handler notified!"))
+  .catch(err => console.error("❌ Expiry handler error:", err));
                                // =======================================================
                 // 🚀 TELEGRAM CHANNEL AUTO-POST (Updated for Details & Image)
                 // =======================================================
