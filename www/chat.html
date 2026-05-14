@@ -11,7 +11,7 @@
         :root { --primary-blue: #0a66c2; --bg-body: #f8fafc; --msg-me: #e0f2fe; --msg-them: #ffffff; --text-main: #0f172a; --tick-blue: #0ea5e9; --tick-gray: #94a3b8; --app-bg: #e2e8f0; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         html, body { height: 100%; width: 100%; background-color: var(--app-bg); }
-        body { display: flex; justify-content: center; align-items: center; margin: 0; overflow: hidden; }
+body { display: flex; justify-content: center; align-items: flex-start; margin: 0; overflow: hidden; }
         
 /* NAYA UPDATED CODE */
 #app-container {
@@ -832,6 +832,20 @@ if (unreadCount > 0) {
         
         // ✅ اسی ایک Realtime DB میں messages save
         await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), msgPayload); 
+        // ✅ Chat Request Notification save karo (sirf pehli baar)
+const chatReqKey = 'chat_requests_' + targetUid;
+let existingReqs = JSON.parse(localStorage.getItem(chatReqKey) || '[]');
+const alreadySent = existingReqs.find(r => r.fromUid === currentUser.uid && r.toUid === targetUid);
+if (!alreadySent) {
+    existingReqs.unshift({
+        toUid: targetUid,
+        fromUid: currentUser.uid,
+        fromName: document.getElementById('target-name')?.innerText || 'User',
+        fromPic: document.getElementById('target-pic')?.src || '',
+        sentAt: Date.now()
+    });
+    localStorage.setItem(chatReqKey, JSON.stringify(existingReqs));
+}
         await update(dbRef(dbChatRT, `chatRooms/${chatId}`), { 
             participants: [currentUser.uid, targetUid], 
             lastMessage: text || (mediaType === 'video' ? '🎥 Video' : '📷 Photo'), 
