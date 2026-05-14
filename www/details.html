@@ -4,71 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title id="page-title">Post Details | Health Jobs Portal</title>
-    
-    <meta id="meta-desc" name="description" content="Click to view details, images, and documents of this healthcare opportunity.">
+
+    <!-- Static OG tags (WhatsApp/bots) -->
+    <meta id="meta-desc" name="description" content="View details of this healthcare opportunity on Health Jobs Portal.">
     <link id="canonical-url" rel="canonical" href="https://healthjobs-portal.web.app/details.html" />
     <meta property="og:type" content="article">
-    <meta id="og-title" property="og:title" content="Health Jobs | Professional Post Details">
-    <meta id="og-desc" property="og:description" content="Click to view details, images, and documents of this healthcare opportunity.">
+    <meta id="og-title" property="og:title" content="Health Jobs Portal - Healthcare Opportunity">
+    <meta id="og-desc" property="og:description" content="View details, images, and documents of this healthcare opportunity.">
     <meta id="og-image" property="og:image" content="https://healthjobs-portal.web.app/images/logo.png">
     <meta id="og-url" property="og:url" content="https://healthjobs-portal.web.app/details.html">
     <meta property="og:site_name" content="Health Jobs Portal">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta id="tw-title" name="twitter:title" content="Health Jobs Portal">
+    <meta id="tw-desc" name="twitter:description" content="View this healthcare opportunity.">
+    <meta id="tw-image" name="twitter:image" content="https://healthjobs-portal.web.app/images/logo.png">
 
-    <script id="schema-markup" type="application/ld+json"></script>
+    <!-- Bot meta fix via Firebase REST (no SDK needed for bots) -->
+    <script>
+    (function() {
+        var ua = navigator.userAgent || '';
+        var isBot = /WhatsApp|facebookexternalhit|Twitterbot|LinkedInBot|TelegramBot|Discordbot|Slackbot/i.test(ua);
+        if (!isBot) return;
+        var postId = new URLSearchParams(window.location.search).get('id');
+        if (!postId) return;
+        fetch('https://firestore.googleapis.com/v1/projects/jobs-45cc9/databases/(default)/documents/posts/' + postId + '?key=AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk')
+            .then(function(r){ return r.json(); })
+            .then(function(data) {
+                if (!data || !data.fields) return;
+                var f = data.fields;
+                var title = (f.title && f.title.stringValue) || 'Healthcare Opportunity';
+                var desc = (f.desc && f.desc.stringValue && f.desc.stringValue.substring(0, 200)) || 'View this post on Health Jobs Portal';
+                var fullUrl = 'https://healthjobs-portal.web.app/details.html?id=' + postId;
+                document.title = title;
+                var setMeta = function(id, val) { var el = document.getElementById(id); if (el) el.setAttribute('content', val); };
+                setMeta('meta-desc', desc); setMeta('og-title', title); setMeta('og-desc', desc);
+                setMeta('og-url', fullUrl); setMeta('tw-title', title); setMeta('tw-desc', desc);
+                var canon = document.getElementById('canonical-url');
+                if (canon) canon.setAttribute('href', fullUrl);
+            }).catch(function(){});
+    })();
+    </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- PDF.js (lazy loaded only when needed) -->
+    <script>
+    window._pdfJsLoaded = false;
+    window._loadPdfJs = function(cb) {
+        if (window._pdfJsLoaded) { cb(); return; }
+        var s1 = document.createElement('script');
+        s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        s1.onload = function() {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            window._pdfJsLoaded = true;
+            cb();
+        };
+        document.head.appendChild(s1);
+    };
+    </script>
 
     <style>
-        /* ریفریشر کا ڈیزائن */
-.ptr-element {
-    width: 100%;
-    height: 0;
-    overflow: hidden;
+    #pull-to-refresh {
+    position: fixed;
+    top: -60px; /* شروع میں اسکرین سے باہر */
+    left: 0;
+    right: 0;
+    height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #f8fafc; /* ہلکا بیک گراؤنڈ */
-    transition: height 0.3s ease;
+    z-index: 1000;
+    transition: transform 0.2s ease;
 }
 
-.ptr-active {
-    height: 70px; /* جب نیچے کھینچیں گے تو اتنی جگہ بنے گی */
-}
-
-.spinner-icon {
+.refresh-spinner {
     width: 30px;
     height: 30px;
-    border: 3px solid #cbd5e1;
-    border-top: 3px solid #0a66c2; /* سفیان بھائی، آپ کا برانڈ بلو کلر */
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
     border-radius: 50%;
-    animation: ptr-spin 0.8s linear infinite;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-@keyframes ptr-spin {
-    to { transform: rotate(360deg); }
+/* جب ریفریش ہو رہا ہو تو اسے گھمانے کے لیے */
+.spinning {
+    animation: spin 0.8s linear infinite;
 }
 
-    /* Report Button & Popup */
-.report-btn-wrap { padding: 15px; text-align: center; }
-.report-btn { background: none; border: 1px solid #e2e8f0; color: #94a3b8; padding: 8px 20px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-.report-btn:hover { border-color: #ef4444; color: #ef4444; background: #fff5f5; }
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
-.report-popup { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 480px; background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 8px 30px rgba(0,0,0,0.15); z-index: 9999; padding: 18px; display: none; animation: slideUp 0.3s ease; }
-.report-popup.show { display: block; }
-@keyframes slideUp { from { opacity:0; transform: translateX(-50%) translateY(20px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
-.report-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-.report-top h3 { font-size: 15px; font-weight: 700; color: #0f172a; }
-.report-close { background: #f1f5f9; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 16px; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; }
-.report-owner-box { display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 10px 12px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 14px; }
-.report-owner-box img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0; }
-.report-reasons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-.reason-chip { padding: 7px 13px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 12px; font-weight: 600; cursor: pointer; background: #f8fafc; color: #334155; transition: 0.2s; }
-.reason-chip.selected { background: #0a66c2; color: white; border-color: #0a66c2; }
-.report-input { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; margin-bottom: 10px; outline: none; font-family: inherit; }
-.report-input:focus { border-color: #0a66c2; }
-.report-submit { width: 100%; padding: 11px; background: #ef4444; color: white; border: none; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-.report-submit:hover { background: #dc2626; }
-.report-success { text-align: center; padding: 10px 0; font-size: 14px; color: #16a34a; font-weight: 600; display: none; }
         :root {
             --primary-blue: #0a66c2;
             --hover-blue: #004182;
@@ -78,35 +104,32 @@
             --text-secondary: #00000099;
             --border-color: #e0dfdc;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        
-        body { background-color: var(--bg-body); color: var(--text-main); padding-top: 60px; padding-bottom: 70px; min-height: 100vh; display: flex; flex-direction: column;}
-        main { flex: 1; max-width: 600px; width: 100%; margin: 0 auto; background: var(--bg-white); box-shadow: 0 1px 4px rgba(0,0,0,0.08); min-height: 100vh;}
+        body { background-color: var(--bg-body); color: var(--text-main); padding-top: 60px; padding-bottom: 70px; min-height: 100vh; display: flex; flex-direction: column; }
+        main { flex: 1; max-width: 600px; width: 100%; margin: 0 auto; background: var(--bg-white); box-shadow: 0 1px 4px rgba(0,0,0,0.08); min-height: 100vh; }
 
         /* Header */
         header { background-color: var(--bg-white); padding: 0 15px; display: flex; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 60px; z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .back-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; color: var(--text-secondary); padding: 8px; border-radius: 50%; margin-right: 10px; transition: 0.2s;}
+        .back-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; color: var(--text-secondary); padding: 8px; border-radius: 50%; margin-right: 10px; transition: 0.2s; }
         .back-btn:hover { background-color: #f3f4f6; color: var(--primary-blue); }
         .back-btn svg { width: 26px; height: 26px; fill: currentColor; }
         .header-title { font-size: 18px; font-weight: 700; color: var(--text-main); }
 
         /* Post Content */
         .post-container { padding: 20px 15px; border-bottom: 1px solid var(--border-color); }
-        .post-header { display: flex; align-items: center; margin-bottom: 15px; cursor: pointer; text-decoration: none;}
+        .post-header { display: flex; align-items: center; margin-bottom: 15px; cursor: pointer; text-decoration: none; }
         .post-avatar { width: 50px; height: 50px; border-radius: 50%; margin-right: 12px; border: 1px solid #eee; object-fit: cover; background: #e0e0e0; }
         .user-name { font-size: 16px; font-weight: 700; color: var(--text-main); }
-        .post-loc-info { font-size: 12.5px; color: var(--text-secondary); font-weight: 500; margin-top: 2px;}
+        .post-loc-info { font-size: 12.5px; color: var(--text-secondary); font-weight: 500; margin-top: 2px; }
+        .post-title { font-size: 20px; font-weight: 800; color: var(--primary-blue); margin-bottom: 10px; line-height: 1.3; }
+        .post-desc { font-size: 15.5px; line-height: 1.6; color: #191919; white-space: pre-wrap; margin-bottom: 15px; word-break: break-word; }
 
-        .post-title { font-size: 20px; font-weight: 800; color: var(--primary-blue); margin-bottom: 10px; line-height: 1.3;}
-        .post-desc { font-size: 15.5px; line-height: 1.6; color: #191919; white-space: pre-wrap; margin-bottom: 15px; word-break: break-word;}
-
-        /* Media Display */
+        /* Media */
         .all-media-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
-        .media-wrapper { position: relative; background: #f8f9fa; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center;}
-        .media-item { width: 100%; max-height: 500px; object-fit: contain; cursor: pointer; display: block; background: #000;}
+        .media-wrapper { position: relative; background: #f8f9fa; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; }
+        .media-item { width: 100%; max-height: 500px; object-fit: contain; cursor: pointer; display: block; background: #000; }
 
-        /* Document Box UI */
+        /* Document */
         .doc-box { padding: 15px; background: #fff5f5; border: 1px solid #fed7d7; border-radius: 8px; display: flex; flex-direction: column; gap: 12px; }
         .doc-box-inner { display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .doc-icon { width: 40px; height: 40px; fill: #e53e3e; flex-shrink: 0; }
@@ -116,529 +139,137 @@
         .doc-dl-btn { background: var(--primary-blue); color: white; border: none; padding: 10px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 5px; width: 100%; transition: 0.2s; }
         .doc-dl-btn:hover { background: var(--hover-blue); }
         .doc-dl-btn svg { width: 16px; height: 16px; fill: currentColor; }
-
-        .dl-btn { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; border: none; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; backdrop-filter: blur(5px); z-index: 5;}
+        .dl-btn { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; border: none; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; backdrop-filter: blur(5px); z-index: 5; }
         .dl-btn:hover { background: var(--primary-blue); }
+
+        /* Stats & Actions */
+        .stats-bar { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); padding: 10px 0; border-bottom: 1px solid #f1f1f1; }
+        .post-actions { display: flex; padding: 5px 0; border-bottom: 1px solid var(--border-color); }
+        .action-btn { flex: 1; background: none; border: none; padding: 10px 0; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--text-secondary); font-size: 14px; font-weight: 600; border-radius: 6px; transition: 0.2s; }
+        .action-btn:hover { background: #f3f4f6; color: var(--text-main); }
+        .action-btn.liked { color: var(--primary-blue); }
+        .action-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
         /* Fullscreen Viewer */
         #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; flex-direction: column; align-items: center; }
-        #viewer-container { width: 100%; height: 85%; display: flex; justify-content: center; align-items: center; margin-top: 50px; overflow-y: auto;}
-        .viewer-close { position: absolute; top: 15px; right: 20px; color: white; font-size: 35px; cursor: pointer; z-index: 3001; }
-        
-        /* Stats & Actions */
-        .stats-bar { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); padding: 10px 0; border-bottom: 1px solid #f1f1f1; }
-        .post-actions { display: flex; padding: 5px 0; }
-        .action-btn { flex: 1; background: none; border: none; padding: 10px 0; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--text-secondary); font-size: 14.5px; font-weight: 600; border-radius: 6px;}
-        .action-btn.liked { color: var(--primary-blue); }
+        #viewer-container { width: 100%; height: 85%; display: flex; justify-content: center; align-items: center; margin-top: 50px; overflow-y: auto; }
+        .viewer-close { position: absolute; top: 15px; right: 20px; color: white; font-size: 35px; cursor: pointer; z-index: 3001; line-height: 1; }
 
         /* Comments */
         .comments-section { padding: 15px; background: #fff; }
-        .cmt-item { display: flex; gap: 10px; margin-bottom: 12px; }
-        .cmt-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; background: #eee; }
+        .cmt-item { display: flex; gap: 10px; margin-bottom: 12px; cursor: pointer; }
+        .cmt-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; background: #eee; flex-shrink: 0; }
         .cmt-body { background: #f0f2f5; padding: 8px 12px; border-radius: 12px; flex: 1; }
         .cmt-user { font-weight: 700; font-size: 13px; color: var(--text-main); }
         .cmt-txt { font-size: 14px; color: #333; margin-top: 2px; }
 
-        .bottom-comment-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; padding: 10px; border-top: 1px solid var(--border-color); z-index: 1000;}
+        /* Bottom Comment Bar */
+        .bottom-comment-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; padding: 10px; border-top: 1px solid var(--border-color); z-index: 1000; }
         .inner-wrap { max-width: 600px; margin: 0 auto; display: flex; gap: 8px; }
-        .cmt-input { flex: 1; padding: 10px 15px; border: 1px solid #ddd; background: #f0f2f5; border-radius: 20px; outline: none; font-size: 14px;}
-        .cmt-btn-send { background: var(--primary-blue); color: #fff; border: none; padding: 0 15px; border-radius: 18px; font-weight: 700; cursor: pointer;}
+        .cmt-input { flex: 1; padding: 10px 15px; border: 1px solid #ddd; background: #f0f2f5; border-radius: 20px; outline: none; font-size: 14px; }
+        .cmt-input:focus { border-color: var(--primary-blue); background: #fff; }
+        .cmt-btn-send { background: var(--primary-blue); color: #fff; border: none; padding: 0 18px; border-radius: 18px; font-weight: 700; cursor: pointer; font-size: 14px; }
+        .cmt-btn-send:hover { background: var(--hover-blue); }
+
+        /* Share Popup */
+        .share-popup { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 480px; background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 8px 30px rgba(0,0,0,0.15); z-index: 9999; padding: 18px; display: none; animation: slideUp 0.3s ease; }
+        .share-popup.show { display: block; }
+        .share-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .share-top h3 { font-size: 15px; font-weight: 700; color: #0f172a; }
+        .share-close { background: #f1f5f9; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 16px; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; }
+        .share-link-box { display: flex; gap: 8px; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+        .share-link-text { flex: 1; font-size: 12px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .share-copy-btn { background: var(--primary-blue); color: white; border: none; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .share-note { font-size: 11.5px; color: #94a3b8; text-align: center; }
+
+        /* Report */
+        .report-btn-wrap { padding: 12px 15px; text-align: center; }
+        .report-btn { background: none; border: 1px solid #e2e8f0; color: #94a3b8; padding: 7px 18px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .report-btn:hover { border-color: #ef4444; color: #ef4444; background: #fff5f5; }
+        .report-popup { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 480px; background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 8px 30px rgba(0,0,0,0.15); z-index: 9999; padding: 18px; display: none; animation: slideUp 0.3s ease; }
+        .report-popup.show { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .report-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .report-top h3 { font-size: 15px; font-weight: 700; color: #0f172a; }
+        .report-close { background: #f1f5f9; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 16px; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; }
+        .report-owner-box { display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 10px 12px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 14px; }
+        .report-owner-box img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0; }
+        .report-reasons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+        .reason-chip { padding: 7px 13px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 12px; font-weight: 600; cursor: pointer; background: #f8fafc; color: #334155; transition: 0.2s; }
+        .reason-chip.selected { background: #0a66c2; color: white; border-color: #0a66c2; }
+        .report-input { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; margin-bottom: 10px; outline: none; font-family: inherit; }
+        .report-input:focus { border-color: #0a66c2; }
+        .report-submit { width: 100%; padding: 11px; background: #ef4444; color: white; border: none; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .report-submit:hover { background: #dc2626; }
+        .report-success { text-align: center; padding: 10px 0; font-size: 14px; color: #16a34a; font-weight: 600; display: none; }
+
         .hidden { display: none !important; }
-        
         .loading-text { padding: 50px 20px; text-align: center; color: var(--text-secondary); font-weight: 500; }
+        
     </style>
 </head>
 <body>
-<div id="ptr-spinner" class="ptr-element">
-    <div class="spinner-icon"></div>
+<div id="pull-to-refresh">
+    <div class="refresh-spinner"></div>
 </div>
-    
-    <header>
-<button class="back-btn" onclick="window.location.href='index.html'" aria-label="Go Back">
-            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
-        </button>
-        <div class="header-title">Post Details</div>
-    </header>
 
-    <main id="main-content">
-        <article>
-            <h1 id="seo-h1" class="hidden">Healthcare Community Post</h1>
-            
-            <div id="loader" class="loading-text">Fetching post details...</div>
-            <div id="post-view" class="hidden"></div>
-            
-            <section id="comments-wrapper" class="comments-section hidden" aria-label="Comments Section">
-                <div style="font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
-                    Comments (<span id="c-count-title">0</span>)
-                </div>
-                <div id="cmt-list"></div>
-            </section>
-        </article>
-    </main>
+<header>
+    <button class="back-btn" onclick="window.location.href='index.html'" aria-label="Go Back">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
+    </button>
+    <div class="header-title">Post Details</div>
+</header>
 
-    <div id="viewer" role="dialog" aria-modal="true">
-        <span class="viewer-close" onclick="closeViewer()" aria-label="Close Viewer">&times;</span>
-        <div id="viewer-container"></div>
-        <div style="padding: 15px;">
-            <button id="viewer-dl" class="dl-btn" style="position: static; padding: 10px 25px; margin: 0 auto;">⬇️ Download Original File</button>
-        </div>
+<main id="main-content">
+    <article>
+        <h1 id="seo-h1" class="hidden">Healthcare Community Post</h1>
+        <div id="loader" class="loading-text">Fetching post details...</div>
+        <div id="post-view" class="hidden"></div>
+        <section id="comments-wrapper" class="comments-section hidden" aria-label="Comments Section">
+            <div style="font-weight:700;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #eee;">
+                Comments (<span id="c-count-title">0</span>)
+            </div>
+            <div id="cmt-list"></div>
+        </section>
+    </article>
+</main>
+
+<!-- Fullscreen Viewer -->
+<div id="viewer" role="dialog" aria-modal="true">
+    <span class="viewer-close" onclick="closeViewer()" aria-label="Close Viewer">&times;</span>
+    <div id="viewer-container"></div>
+    <div style="padding:15px;">
+        <button id="viewer-dl" class="dl-btn" style="position:static;padding:10px 25px;margin:0 auto;">Download Original File</button>
     </div>
+</div>
 
-    <div class="bottom-comment-bar hidden" id="comment-bar">
-        <div class="inner-wrap">
-            <input type="text" class="cmt-input" id="cmt-in" placeholder="Add a comment..." aria-label="Write a comment">
-            <button class="cmt-btn-send" onclick="sendComment()">Post</button>
-        </div>
+<!-- Bottom Comment Bar -->
+<div class="bottom-comment-bar hidden" id="comment-bar">
+    <div class="inner-wrap">
+        <input type="text" class="cmt-input" id="cmt-in" placeholder="Add a comment..." aria-label="Write a comment">
+        <button class="cmt-btn-send" id="cmt-send-btn">Post</button>
     </div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<!-- Share Popup -->
+<div class="share-popup" id="share-popup">
+    <div class="share-top">
+        <h3>Share Post</h3>
+        <button class="share-close" onclick="document.getElementById('share-popup').classList.remove('show')">✕</button>
+    </div>
+    <div class="share-link-box">
+        <span class="share-link-text" id="share-link-text"></span>
+        <button class="share-copy-btn" id="share-copy-btn" onclick="copyShareLink()">Copy</button>
+    </div>
+    <div class="share-note">Copy this link and paste in WhatsApp, SMS, or any app</div>
+</div>
 
-        // Your Firebase Config
-        const config = { apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk", authDomain: "jobs-45cc9.firebaseapp.com", projectId: "jobs-45cc9", storageBucket: "jobs-45cc9.firebasestorage.app", messagingSenderId: "21065686301", appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4" };
-        const app = initializeApp(config);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('id');
-
-        let currentUser = null;
-        let userData = null;
-        let currentPostData = null; 
-
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-        // Check Auth Status
-        onAuthStateChanged(auth, async (user) => {
-            currentUser = user;
-            if (user) {
-                const userSnap = await getDoc(doc(db, "users", user.uid));
-                if(userSnap.exists()) userData = userSnap.data();
-            }
-            if (postId) {
-                listenToPostRealtime();
-                listenToComments();
-            } else {
-                document.getElementById('loader').innerText = "Post ID not found!";
-            }
-        });
-
-        // Fetch Post Data and Live User Data
-        function listenToPostRealtime() {
-            onSnapshot(doc(db, "posts", postId), async (docSnap) => {
-                if (!docSnap.exists()) {
-                    document.getElementById('main-content').innerHTML = "<p class='loading-text'>This post is no longer available or has been deleted.</p>";
-                    return;
-                }
-                
-
-let data = docSnap.data();
-
-                // ✅ posterName/posterPic bhi check karo (employer/candidate posts)
-                const ownerUid = data.posterId || data.authorId;
-                if (ownerUid) {
-                    try {
-                        const userDoc = await getDoc(doc(db, "users", ownerUid));
-                        if (userDoc.exists()) {
-                            const uData = userDoc.data();
-                            const realName = uData.fullName || uData.facilityName || null;
-                            const realPic = uData.profilePicUrl || null;
-                            // Real name aur pic set karo
-                            data.authorName = realName || data.posterName || data.authorName || "Healthcare User";
-                            data.authorPic = realPic || data.posterPic || data.authorPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.authorName)}`;
-                            data.authorId = ownerUid;
-                            data.location = uData.city || data.location || "Pakistan";
-                        }
-                    } catch(e) {
-                        console.error("Failed to fetch user data:", e);
-                        // Fallback to post data
-                        data.authorName = data.posterName || data.authorName || "Healthcare User";
-                        data.authorPic = data.posterPic || data.authorPic || `https://ui-avatars.com/api/?name=U`;
-                        data.authorId = ownerUid;
-                    }
-                }
-                currentPostData = data;
-                renderPost(data);
-                updateDynamicSEO(data);
-            });
-        }
-
-        // Render HTML for the Post
-        function renderPost(p) {
-            document.getElementById('loader').classList.add('hidden');
-            const postView = document.getElementById('post-view');
-            document.getElementById('comments-wrapper').classList.remove('hidden');
-            document.getElementById('comment-bar').classList.remove('hidden');
-
-            const isLiked = p.likes?.includes(currentUser?.uid);
-            let mediaHTML = '';
-            
-            let mediaArr = p.media || [];
-            if(mediaArr.length > 0) {
-                mediaHTML += `<div class="all-media-container">`;
-                mediaArr.forEach((m, index) => {
-                    const url = m.url || m;
-                    const type = m.type || 'image';
-                    const name = m.name || `Attachment ${index + 1}`;
-
-                    if (type === 'pdf' || type === 'document') {
-                        mediaHTML += `
-                        <div class="doc-box">
-                            <div class="doc-box-inner" onclick="openViewer('${url}', '${type}')">
-                                <svg class="doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"></path></svg>
-                                <div class="doc-info">
-                                    <div class="doc-name">${name}</div>
-                                    <div class="doc-hint">Click to Preview Document</div>
-                                </div>
-                            </div>
-                            <button class="doc-dl-btn" onclick="downloadFile('${url}', this, event, '${type}')">
-                                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg> 
-                                Download Securely
-                            </button>
-                        </div>`;
-                    } 
-                    else if (type === 'video') {
-                        mediaHTML += `
-                        <div class="media-wrapper">
-                            <video src="${url}" class="media-item" controls onclick="openViewer('${url}', 'video')"></video>
-                            <button class="dl-btn" onclick="downloadFile('${url}', this, event, 'video')">⬇️ Download</button>
-                        </div>`;
-                    } 
-                    else {
-                        mediaHTML += `
-                        <div class="media-wrapper">
-                            <img src="${url}" class="media-item" alt="Post Image" onclick="openViewer('${url}', 'image')">
-                            <button class="dl-btn" onclick="downloadFile('${url}', this, event, 'image')">⬇️ Save</button>
-                        </div>`;
-                    }
-                });
-                mediaHTML += `</div>`;
-            }
-
-const safePic = p.authorPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.authorName || 'U')}`;
-
-            // ✅ Report ke liye window par save karo
-            window.reportPostOwnerName = p.authorName || 'Unknown';
-            window.reportPostOwnerPic = safePic;
-            window.reportPostTitle = p.title || 'General Post';
-            window.reportPostId = postId;
-
-            postView.innerHTML = `
-                <div class="post-container">
-                    <a href="wid.html?uid=${p.authorId}" class="post-header">
-                        <img src="${safePic}" class="post-avatar" alt="${p.authorName}" onerror="this.src='https://ui-avatars.com/api/?name=U'">
-                        <div>
-                            <div class="user-name">${p.authorName || "Healthcare User"}</div>
-                            <div class="post-loc-info">${p.location || 'Pakistan'} • ${p.createdAt ? new Date(p.createdAt.toDate()).toLocaleDateString() : 'Recent'}</div>
-                        </div>
-                    </a>
-                    ${p.title ? `<div class="post-title">${p.title}</div>` : ''}
-                    <div class="post-desc">${p.desc || ''}</div>
-                    
-                    ${mediaHTML}
-                    
-                    <div class="stats-bar">
-                        <span id="l-count">${(p.likes || []).length} Likes</span>
-                        <span id="c-count">${p.commentsCount || 0} Comments</span>
-                    </div>
-                    <div class="post-actions">
-                        <button id="like-btn" class="action-btn ${isLiked?'liked':''}" onclick="toggleLike()">👍 Like</button>
-                        <button class="action-btn" onclick="document.getElementById('cmt-in').focus()">💬 Comment</button>
-                        <button class="action-btn" onclick="sharePost()">🔗 Share</button>
-                    </div>
-
-                    <!-- Report Button -->
-                    <div class="report-btn-wrap">
-                        <button class="report-btn" onclick="openReportPopup()">⚑ Report this Post</button>
-                    </div>
-                </div>`;
-            postView.classList.remove('hidden');
-        }
-
-        function updateDynamicSEO(p) {
-            const seoTitle = p.title ? `${p.title} | Health Jobs` : `Update from ${p.authorName} | Health Jobs`;
-            const seoDesc = p.desc ? p.desc.substring(0, 150) + '...' : `Check out this medical update shared by ${p.authorName} on Health Jobs Portal.`;
-            
-            document.getElementById('page-title').innerText = seoTitle;
-            document.title = seoTitle;
-            document.getElementById('meta-desc').content = seoDesc;
-            document.getElementById('og-title').content = seoTitle;
-            document.getElementById('og-desc').content = seoDesc;
-        }
-
-        function listenToComments() {
-            onSnapshot(query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc")), (snap) => {
-                const list = document.getElementById('cmt-list');
-                list.innerHTML = "";
-                document.getElementById('c-count-title').innerText = snap.size;
-snap.forEach(d => {
-                    const c = d.data();
-                    const cmtPic = c.userPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.userName || 'U')}`;
-                    const cmtName = c.userName || 'Healthcare User';
-                    const cmtUid = c.userId || '';
-                    list.innerHTML += `
-                        <div class="cmt-item" style="cursor:pointer;" onclick="location.href='wid.html?uid=${cmtUid}'">
-                            <img src="${cmtPic}" class="cmt-avatar" alt="${cmtName}" onerror="this.src='https://ui-avatars.com/api/?name=U'">
-                            <div class="cmt-body">
-                                <span class="cmt-user">${cmtName}</span>
-                                <div class="cmt-txt">${c.text}</div>
-                            </div>
-                        </div>`;
-                });
-            });
-        }
-
-        window.toggleLike = async () => {
-            if (!currentUser) { window.location.href='login.html'; return; }
-            const isL = document.getElementById('like-btn').classList.contains('liked');
-            await updateDoc(doc(db, "posts", postId), { 
-                likes: isL ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid) 
-            });
-        };
-
-        window.sendComment = async () => {
-            const inp = document.getElementById('cmt-in');
-            if (!currentUser) { window.location.href='login.html'; return; }
-            if (!inp.value.trim()) return;
-
-            const text = inp.value; inp.value = "";
-            const currentName = userData?.fullName || userData?.facilityName || currentUser.displayName || "Healthcare User";
-            const currentPic = userData?.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentName)}`;
-
-            await addDoc(collection(db, "posts", postId, "comments"), {
-                text: text, userId: currentUser.uid, userName: currentName,
-                userPic: currentPic, createdAt: serverTimestamp()
-            });
-            await updateDoc(doc(db, "posts", postId), { commentsCount: increment(1) });
-        };
-
-        window.sharePost = () => { 
-            if(navigator.share) {
-                navigator.share({ title: document.title, url: window.location.href });
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert("Link copied to clipboard!"); 
-            }
-        };
-
-        // 🚀 FULLY SECURE BASE64 VIEWER HACK
-        window.openViewer = async (url, type) => {
-            const viewer = document.getElementById('viewer'); 
-            const container = document.getElementById('viewer-container');
-            const dlBtn = document.getElementById('viewer-dl');
-            
-            if (type === 'pdf' || type === 'document') {
-                container.innerHTML = `
-                    <div id="pdf-render-area" style="width:100%; height:100%; text-align:center;">
-                        <p id="pdf-loading-msg" style="color:white; margin-top:20px; font-weight:bold;">Loading PDF Preview...</p>
-                    </div>`;
-                viewer.style.display = 'flex'; 
-                document.body.style.overflow = 'hidden';
-
-                try {
-                    const res = await fetch(url);
-                    let textContent = await res.text();
-                    
-                    // Reversing the trick: changing text/plain back to application/pdf
-                    textContent = textContent.replace("data:text/plain", "data:application/pdf");
-                    
-                    let pdfSource;
-                    if (textContent.startsWith('data:application/pdf;base64,')) {
-                        const base64Data = textContent.split(',')[1];
-                        const binaryString = window.atob(base64Data);
-                        const bytes = new Uint8Array(binaryString.length);
-                        for (let i = 0; i < binaryString.length; i++) {
-                            bytes[i] = binaryString.charCodeAt(i);
-                        }
-                        pdfSource = bytes; 
-                    } else {
-                        pdfSource = url;
-                    }
-
-                    const pdf = await pdfjsLib.getDocument(pdfSource).promise;
-                    document.getElementById('pdf-loading-msg').style.display = 'none';
-                    const renderArea = document.getElementById('pdf-render-area');
-                    
-                    const maxPages = Math.min(pdf.numPages, 3);
-                    for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
-                        const page = await pdf.getPage(pageNum); 
-                        const viewport = page.getViewport({ scale: 1.2 });
-                        const canvas = document.createElement('canvas'); 
-                        const context = canvas.getContext('2d');
-                        canvas.height = viewport.height; 
-                        canvas.width = viewport.width;
-                        canvas.style.maxWidth = '95%'; 
-                        canvas.style.height = 'auto'; 
-                        canvas.style.marginBottom = '15px'; 
-                        canvas.style.background = '#fff';
-                        canvas.style.borderRadius = '5px';
-                        renderArea.appendChild(canvas);
-                        await page.render({ canvasContext: context, viewport: viewport }).promise;
-                    }
-                    if(pdf.numPages > 3) {
-                        renderArea.innerHTML += `<p style="color:white; margin-bottom:20px;">Download to view remaining pages.</p>`;
-                    }
-                } catch(e) {
-                    console.error("Preview Error:", e);
-                    container.innerHTML = `<p style="color:white; margin-top:20px;">Preview Error. Please download the file to view it.</p>`;
-                }
-            } else if (type === 'video') {
-                container.innerHTML = `<video src="${url}" controls autoplay style="max-width:95%; max-height:100%;"></video>`;
-                viewer.style.display = 'flex'; document.body.style.overflow = 'hidden';
-            } else {
-                container.innerHTML = `<img src="${url}" style="max-width:95%; max-height:100%; object-fit:contain;" alt="Preview">`;
-                viewer.style.display = 'flex'; document.body.style.overflow = 'hidden';
-            }
-            dlBtn.onclick = () => downloadFile(url, dlBtn, null, type);
-        };
-
-        window.closeViewer = () => { 
-            document.getElementById('viewer').style.display = 'none'; 
-            document.getElementById('viewer-container').innerHTML = '';
-            document.body.style.overflow = 'auto'; 
-        };
-
-        // 🚀 FULLY SECURE BASE64 DOWNLOAD HACK
-        window.downloadFile = async (url, btn, event, type) => {
-            if(event) event.stopPropagation(); 
-            const originalText = btn.innerHTML;
-            btn.innerHTML = "⏳ Wait...";
-            btn.disabled = true;
-            
-            try {
-                const response = await fetch(url);
-                let blobUrl;
-                let ext = "pdf";
-                
-                if (type === 'pdf' || type === 'document') {
-                    let textContent = await response.text();
-                    
-                    // Reversing the trick for downloading correctly
-                    textContent = textContent.replace("data:text/plain", "data:application/pdf");
-                    
-                    if (textContent.startsWith('data:application/pdf;base64,')) {
-                        const base64Data = textContent.split(',')[1];
-                        const binaryString = window.atob(base64Data);
-                        const bytes = new Uint8Array(binaryString.length);
-                        for (let i = 0; i < binaryString.length; i++) {
-                            bytes[i] = binaryString.charCodeAt(i);
-                        }
-                        const pdfBlob = new Blob([bytes], { type: 'application/pdf' });
-                        blobUrl = window.URL.createObjectURL(pdfBlob);
-                    } else {
-                        const fallbackRes = await fetch(url);
-                        const fbBlob = await fallbackRes.blob();
-                        blobUrl = window.URL.createObjectURL(fbBlob);
-                    }
-                } else {
-                    const blob = await response.blob();
-                    blobUrl = window.URL.createObjectURL(blob);
-                    ext = type === 'image' ? 'png' : 'mp4';
-                }
-                
-                const link = document.createElement('a');
-                link.style.display = 'none';
-                link.href = blobUrl;
-                link.download = `HealthJobs_Document_${Date.now()}.${ext}`;
-                document.body.appendChild(link);
-                link.click();
-                
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    window.URL.revokeObjectURL(blobUrl);
-                }, 5000); 
-
-            } catch (error) {
-                console.error("Download Failed:", error);
-                window.open(url, '_blank'); 
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        };
-    </script>
-    <script>
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
-        const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
-
-        const handleCallRedirect = (data) => {
-            if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
-                let callerUid = data.callerUid || data.uid;
-                if(callerUid) {
-                    setTimeout(() => {
-                        window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
-                    }, 500);
-                }
-            }
-        };
-
-        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-            handleCallRedirect(notification.notification.data);
-        });
-
-        PushNotifications.addListener('pushNotificationReceived', async (notification) => {
-            const data = notification.data || {};
-            
-            // ❌ AGAR CANCEL KA SIGNAL AAYE TOH NOTIFICATION GAYAB KAR DO
-            if (data.action === "cancel_call") {
-                console.log("Call Cancelled! Removing Notifications...");
-                if (LocalNotifications) {
-                    await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
-                }
-                await PushNotifications.removeAllDeliveredNotifications();
-                
-                // Agar user ghalti se chat.html par hi betha hai, toh UI bhi band kar do
-                if (typeof closeWebRTC === 'function') { closeWebRTC(); }
-                return; // Code yahin rok do
-            }
-
-            // 📞 AGAR CALL AAYE TOH NOTIFICATION DIKHAO
-            if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
-                handleCallRedirect(data);
-                
-                if (LocalNotifications) {
-                    await LocalNotifications.schedule({
-                        notifications: [{
-                            title: notification.title || "Incoming Call",
-                            body: "Calling...",
-                            id: 999, // Yeh ID cancel karne ke kaam aati hai
-                            sound: "ringing.mp3",
-                            extra: data,
-                            android: {
-                                channelId: "high_importance_channel",
-                                importance: 5,
-                                visibility: 1,
-                                fullScreenIntent: true
-                            }
-                        }]
-                    });
-                }
-            }
-        });
-
-        if (LocalNotifications) {
-            LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
-                handleCallRedirect(notification.notification.extra);
-            });
-        }
-    }
-});
-</script>
-<!-- EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init('Rr88IrZ8s69Qyj8DS');</script>
-
-<!-- REPORT POPUP -->
+<!-- Report Popup -->
 <div class="report-popup" id="report-popup">
     <div class="report-top">
-        <h3>⚑ Report this Post</h3>
+        <h3>Report this Post</h3>
         <button class="report-close" onclick="closeReport()">✕</button>
     </div>
-
     <div class="report-owner-box">
         <img id="report-owner-pic" src="" onerror="this.src='https://ui-avatars.com/api/?name=U'">
         <div>
@@ -646,7 +277,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <div style="font-size:11px;color:#64748b;">Post Owner</div>
         </div>
     </div>
-
     <div class="report-reasons">
         <div class="reason-chip" onclick="selectReason(this)">Fake Info</div>
         <div class="reason-chip" onclick="selectReason(this)">Spam</div>
@@ -655,98 +285,647 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="reason-chip" onclick="selectReason(this)">Inappropriate</div>
         <div class="reason-chip" onclick="selectReason(this)">Other</div>
     </div>
-
     <input class="report-input" id="report-name" placeholder="Your Name *" maxlength="50">
     <textarea class="report-input" id="report-msg" placeholder="Describe the issue... *" rows="3" style="resize:none;"></textarea>
-
     <button class="report-submit" onclick="submitReport()">Send Report</button>
-    <div class="report-success" id="report-success">✅ Report submitted! We will review it shortly.</div>
+    <div class="report-success" id="report-success">Report submitted! We will review it shortly.</div>
 </div>
 
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
 <script>
-let selectedReason = '';
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.emailjs) emailjs.init('Rr88IrZ8s69Qyj8DS');
+});
+</script>
 
-function openReportPopup() {
-    document.getElementById('report-owner-name').innerText = window.reportPostOwnerName || 'Unknown';
-    document.getElementById('report-owner-pic').src = window.reportPostOwnerPic || 'https://ui-avatars.com/api/?name=U';
-    document.getElementById('report-popup').classList.add('show');
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import {
+    getFirestore, doc, getDoc, updateDoc, collection,
+    query, orderBy, onSnapshot, addDoc, serverTimestamp,
+    increment, arrayUnion, arrayRemove
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// ── Config ──────────────────────────────────────────────────────────────────
+const config = {
+    apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+    authDomain: "jobs-45cc9.firebaseapp.com",
+    projectId: "jobs-45cc9",
+    storageBucket: "jobs-45cc9.firebasestorage.app",
+    messagingSenderId: "21065686301",
+    appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+};
+const app = initializeApp(config);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ── State ────────────────────────────────────────────────────────────────────
+const urlParams = new URLSearchParams(window.location.search);
+const postId = urlParams.get('id');
+
+let currentUser = null;
+let userData = null;
+let currentPostData = null;
+let postUnsubscribe = null;
+let commentsUnsubscribe = null;
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function escHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
 }
 
-function closeReport() {
-    document.getElementById('report-popup').classList.remove('show');
+function getShareUrl() {
+    return 'https://healthjobs-portal.web.app/details.html?id=' + postId;
 }
 
-function selectReason(el) {
-    document.querySelectorAll('.reason-chip').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedReason = el.innerText;
+// ── Auth ─────────────────────────────────────────────────────────────────────
+// ✅ نیا — user data بھی cache میں
+if (!window._userCache) window._userCache = {};
+
+onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    if (user) {
+        // صرف تب fetch کرو جب cache میں نہ ہو
+        if (window._userCache[user.uid]) {
+            userData = window._userCache[user.uid];
+        } else {
+            try {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    userData = snap.data();
+                    window._userCache[user.uid] = userData; // cache میں save
+                }
+            } catch(e) { console.warn('User data fetch failed:', e); }
+        }
+    }
+    if (!postId) {
+        document.getElementById('loader').innerText = "Post ID not found!";
+        return;
+    }
+    startListeners();
+});
+
+// ── Listeners (real-time) ────────────────────────────────────────────────────
+function startListeners() {
+    // Unsubscribe previous listeners (defensive)
+    if (postUnsubscribe) postUnsubscribe();
+    if (commentsUnsubscribe) commentsUnsubscribe();
+
+    // ── Post listener ────────────────────────────────────────────────────────
+    // Uses Firestore local cache → no extra read if page was recently loaded
+    postUnsubscribe = onSnapshot(doc(db, "posts", postId), async (docSnap) => {
+        if (!docSnap.exists()) {
+            document.getElementById('main-content').innerHTML = "<p class='loading-text'>This post is no longer available.</p>";
+            return;
+        }
+
+        let data = { ...docSnap.data() };
+
+        // Fetch owner info only when posterId exists AND we don't have it yet
+        const ownerUid = data.posterId || data.authorId;
+        if (ownerUid) {
+            // Cache owner data to avoid repeated Firestore reads
+            if (!window._ownerCache) window._ownerCache = {};
+            let ownerData = window._ownerCache[ownerUid];
+            if (!ownerData) {
+                try {
+                    const uDoc = await getDoc(doc(db, "users", ownerUid));
+                    if (uDoc.exists()) {
+                        ownerData = uDoc.data();
+                        window._ownerCache[ownerUid] = ownerData;
+                    }
+                } catch(e) { /* use fallback */ }
+            }
+            if (ownerData) {
+                data.authorName = ownerData.fullName || ownerData.facilityName || data.posterName || data.authorName || "Healthcare User";
+                data.authorPic  = ownerData.profilePicUrl || data.posterPic || data.authorPic || null;
+                data.location   = ownerData.city || data.location || "Pakistan";
+            }
+            data.authorId = ownerUid;
+        }
+
+        data.authorName = data.authorName || data.posterName || "Healthcare User";
+        data.authorPic  = data.authorPic  || data.posterPic  || null;
+
+        currentPostData = data;
+        renderPost(data);
+        updateSEO(data);
+    }, (err) => {
+        console.error('Post listener error:', err);
+        document.getElementById('loader').innerText = 'Error loading post. Please refresh.';
+    });
+
+    // ── Comments listener ────────────────────────────────────────────────────
+    commentsUnsubscribe = onSnapshot(
+        query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc")),
+        (snap) => {
+            const list = document.getElementById('cmt-list');
+            if (!list) return;
+            const fragment = document.createDocumentFragment();
+            snap.forEach(d => {
+                const c = d.data();
+                const cmtPic  = c.userPic || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(c.userName || 'U');
+                const cmtName = escHtml(c.userName || 'Healthcare User');
+                const cmtUid  = c.userId || '';
+                const cmtTxt  = escHtml(c.text || '');
+
+                const el = document.createElement('div');
+                el.className = 'cmt-item';
+                el.onclick = () => { location.href = 'wid.html?uid=' + cmtUid; };
+                el.innerHTML = `
+                    <img src="${escHtml(cmtPic)}" class="cmt-avatar" alt="${cmtName}" loading="lazy" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                    <div class="cmt-body">
+                        <span class="cmt-user">${cmtName}</span>
+                        <div class="cmt-txt">${cmtTxt}</div>
+                    </div>`;
+                fragment.appendChild(el);
+            });
+            list.innerHTML = '';
+            list.appendChild(fragment);
+// ✅ نیا — دونوں counters ایک ساتھ update
+const cmtCountEl = document.getElementById('c-count-title');
+            const cmtCountEl2 = document.getElementById('c-count');
+            if (cmtCountEl) cmtCountEl.innerText = snap.size;
+            if (cmtCountEl2) cmtCountEl2.innerText = snap.size + ' Comments';
+        },
+        (err) => { console.error('Comments listener error:', err); }
+    );
 }
 
-async function submitReport() {
-    const name = document.getElementById('report-name').value.trim();
-    const msg = document.getElementById('report-msg').value.trim();
+// ── Render Post ───────────────────────────────────────────────────────────────
+function renderPost(p) {
+    document.getElementById('loader').classList.add('hidden');
+    document.getElementById('comments-wrapper').classList.remove('hidden');
+    document.getElementById('comment-bar').classList.remove('hidden');
 
-    if (!selectedReason) { alert('Please select a reason.'); return; }
-    if (!name) { alert('Please enter your name.'); return; }
-    if (!msg) { alert('Please describe the issue.'); return; }
+    const likesArr   = Array.isArray(p.likes) ? p.likes : [];
+    const isLiked    = currentUser ? likesArr.includes(currentUser.uid) : false;
+    const likesCount = likesArr.length;
 
-    const submitBtn = document.querySelector('.report-submit');
-    submitBtn.innerText = 'Sending...';
-    submitBtn.disabled = true;
-
-    try {
-        await emailjs.send('service_gnjsdvm', 'template_bus1179', {
-            reporter_name: name,
-            reason: selectedReason,
-            message: msg,
-            post_owner: window.reportPostOwnerName || 'Unknown',
-            post_title: window.reportPostTitle || 'General Post',
-            post_id: window.reportPostId || 'N/A',
-            post_url: window.location.href
+    // Media HTML
+    let mediaHTML = '';
+    const mediaArr = Array.isArray(p.media) ? p.media : [];
+    if (mediaArr.length > 0) {
+        mediaHTML = '<div class="all-media-container">';
+        mediaArr.forEach((m, idx) => {
+            const url  = escHtml(m.url || m);
+            const type = m.type || 'image';
+            const name = escHtml(m.name || ('Attachment ' + (idx + 1)));
+            if (type === 'pdf' || type === 'document') {
+                mediaHTML += `
+                <div class="doc-box">
+                    <div class="doc-box-inner" onclick="openViewer('${url}','${type}')">
+                        <svg class="doc-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                        <div class="doc-info">
+                            <div class="doc-name">${name}</div>
+                            <div class="doc-hint">Tap to Preview Document</div>
+                        </div>
+                    </div>
+                    <button class="doc-dl-btn" onclick="downloadFile('${url}',this,event,'${type}')">
+                        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        Download Securely
+                    </button>
+                </div>`;
+            } else if (type === 'video') {
+                mediaHTML += `
+                <div class="media-wrapper">
+                    <video src="${url}" class="media-item" controls preload="metadata" onclick="openViewer('${url}','video')"></video>
+                    <button class="dl-btn" onclick="downloadFile('${url}',this,event,'video')">Download</button>
+                </div>`;
+            } else {
+                mediaHTML += `
+                <div class="media-wrapper">
+                    <img src="${url}" class="media-item" alt="Post Image" loading="lazy" onclick="openViewer('${url}','image')">
+                    <button class="dl-btn" onclick="downloadFile('${url}',this,event,'image')">Save</button>
+                </div>`;
+            }
         });
+        mediaHTML += '</div>';
+    }
 
-        document.querySelector('.report-submit').style.display = 'none';
-        document.getElementById('report-success').style.display = 'block';
-        setTimeout(() => closeReport(), 3000);
-    } catch(e) {
-        alert('Error sending report. Try again.');
-        submitBtn.innerText = 'Send Report';
-        submitBtn.disabled = false;
+    const safePic = p.authorPic || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(p.authorName || 'U');
+    const safeAuthorName = escHtml(p.authorName || 'Healthcare User');
+    const safeLocation   = escHtml(p.location || 'Pakistan');
+    const safeTitle      = escHtml(p.title || '');
+    const authorId       = escHtml(p.authorId || '');
+    const dateStr        = p.createdAt ? new Date(p.createdAt.toDate()).toLocaleDateString() : 'Recent';
+
+    // Store for report popup
+    window._reportData = {
+        ownerName : p.authorName  || 'Unknown',
+        ownerPic  : safePic,
+        postTitle : p.title       || 'General Post',
+        postId    : postId
+    };
+
+    const postView = document.getElementById('post-view');
+    postView.innerHTML = `
+        <div class="post-container">
+            <a href="wid.html?uid=${authorId}" class="post-header">
+                <img src="${escHtml(safePic)}" class="post-avatar" alt="${safeAuthorName}" loading="lazy" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                <div>
+                    <div class="user-name">${safeAuthorName}</div>
+                    <div class="post-loc-info">${safeLocation} &bull; ${dateStr}</div>
+                </div>
+            </a>
+            ${safeTitle ? `<div class="post-title">${safeTitle}</div>` : ''}
+            <div class="post-desc">${escHtml(p.desc || '')}</div>
+            ${mediaHTML}
+            <div class="stats-bar">
+                <span id="l-count">${likesCount} ${likesCount === 1 ? 'Like' : 'Likes'}</span>
+                <span id="c-count">${p.commentsCount || 0} Comments</span>
+            </div>
+            <div class="post-actions">
+                <button id="like-btn" class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike()">
+                    <svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+                    Like
+                </button>
+                <button class="action-btn" onclick="focusComment()">
+                    <svg viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg>
+                    Comment
+                </button>
+                <button class="action-btn" onclick="sharePost()">
+                    <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                    Share
+                </button>
+            </div>
+            <div class="report-btn-wrap">
+                <button class="report-btn" onclick="openReportPopup()">Report this Post</button>
+            </div>
+        </div>`;
+    postView.classList.remove('hidden');
+}
+
+// ── SEO ───────────────────────────────────────────────────────────────────────
+function updateSEO(p) {
+    const title   = p.title ? p.title + ' | Health Jobs' : 'Update from ' + (p.authorName || 'User') + ' | Health Jobs';
+    const desc    = p.desc ? p.desc.substring(0, 150) + '...' : 'Check out this update on Health Jobs Portal.';
+    const imgUrl  = (Array.isArray(p.media) && p.media.length > 0 && (!p.media[0].type || p.media[0].type === 'image'))
+                    ? (p.media[0].url || p.media[0])
+                    : 'https://healthjobs-portal.web.app/images/logo.png';
+    const fullUrl = getShareUrl();
+
+    document.title = title;
+    var setM = function(id, v) { var e = document.getElementById(id); if (e) e.setAttribute('content', v); };
+    setM('meta-desc', desc); setM('og-title', title); setM('og-desc', desc);
+    setM('og-image', imgUrl); setM('og-url', fullUrl);
+    setM('tw-title', title); setM('tw-desc', desc); setM('tw-image', imgUrl);
+    var canon = document.getElementById('canonical-url');
+    if (canon) canon.setAttribute('href', fullUrl);
+
+    var shareLinkEl = document.getElementById('share-link-text');
+    if (shareLinkEl) shareLinkEl.textContent = fullUrl;
+
+    if (window.history && window.history.replaceState) {
+        window.history.replaceState({}, title, 'details.html?id=' + postId);
     }
 }
-    let startY = 0;
-const spinner = document.getElementById('ptr-spinner');
 
-// ٹچ شروع ہونا
+// ── Actions ───────────────────────────────────────────────────────────────────
+// Like
+window.toggleLike = async function() {
+    if (!currentUser) { redirectToLogin(); return; }
+    const btn = document.getElementById('like-btn');
+    if (!btn) return;
+    const wasLiked = btn.classList.contains('liked');
+    btn.classList.toggle('liked');  // Optimistic UI
+    try {
+        await updateDoc(doc(db, "posts", postId), {
+            likes: wasLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        });
+    } catch(e) {
+        btn.classList.toggle('liked');  // Rollback
+        console.error("Like failed:", e);
+    }
+};
+
+// Focus comment
+window.focusComment = function() {
+    if (!currentUser) { redirectToLogin(); return; }
+    const inp = document.getElementById('cmt-in');
+    if (inp) inp.focus();
+};
+
+// Send comment
+async function doSendComment() {
+    if (!currentUser) { redirectToLogin(); return; }
+    const inp = document.getElementById('cmt-in');
+    if (!inp || !inp.value.trim()) return;
+    const text = inp.value.trim();
+    inp.value = '';
+    const name = userData?.fullName || userData?.facilityName || currentUser.displayName || "Healthcare User";
+    const pic  = userData?.profilePicUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name);
+    try {
+        await addDoc(collection(db, "posts", postId, "comments"), {
+            text, userId: currentUser.uid, userName: name, userPic: pic, createdAt: serverTimestamp()
+        });
+        await updateDoc(doc(db, "posts", postId), { commentsCount: increment(1) });
+    } catch(e) {
+        inp.value = text;
+        console.error("Comment failed:", e);
+    }
+}
+
+// Share
+window.sharePost = function() {
+    const url = getShareUrl();
+    var linkEl = document.getElementById('share-link-text');
+    if (linkEl) linkEl.textContent = url;
+    if (navigator.share) {
+        navigator.share({ title: document.title, text: 'Check out this healthcare opportunity!', url: url })
+            .catch(function(err) {
+                if (err.name !== 'AbortError') document.getElementById('share-popup').classList.add('show');
+            });
+    } else {
+        document.getElementById('share-popup').classList.add('show');
+    }
+};
+
+// Copy share link
+window.copyShareLink = function() {
+    var url = getShareUrl();
+    var btn = document.getElementById('share-copy-btn');
+    var done = function() { if(btn){ btn.textContent = '✓ Copied!'; setTimeout(function(){ btn.textContent = 'Copy'; }, 2000); } };
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(done).catch(function() { fallbackCopy(url); done(); });
+    } else { fallbackCopy(url); done(); }
+};
+
+function fallbackCopy(text) {
+    var el = document.createElement('textarea');
+    el.value = text; el.style.cssText = 'position:fixed;left:-9999px;top:-9999px;';
+    document.body.appendChild(el); el.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(el);
+}
+
+// Viewer
+window.openViewer = async function(url, type) {
+    const viewer    = document.getElementById('viewer');
+    const container = document.getElementById('viewer-container');
+    const dlBtn     = document.getElementById('viewer-dl');
+    viewer.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    dlBtn.onclick = function() { downloadFile(url, dlBtn, null, type); };
+
+    if (type === 'pdf' || type === 'document') {
+        container.innerHTML = '<div id="pdf-render-area" style="width:100%;text-align:center;padding:10px;"><p id="pdf-loading-msg" style="color:white;margin-top:20px;font-weight:bold;">Loading PDF Preview...</p></div>';
+        window._loadPdfJs(async function() {
+            try {
+                const res = await fetch(url);
+                let text = await res.text();
+                text = text.replace('data:text/plain', 'data:application/pdf');
+                let src;
+                if (text.startsWith('data:application/pdf;base64,')) {
+                    const b64 = text.split(',')[1];
+                    const bin = atob(b64);
+                    const bytes = new Uint8Array(bin.length);
+                    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+                    src = bytes;
+                } else { src = url; }
+                const pdf = await pdfjsLib.getDocument(src).promise;
+                const area = document.getElementById('pdf-render-area');
+                var msg = document.getElementById('pdf-loading-msg');
+                if (msg) msg.style.display = 'none';
+                const maxPages = Math.min(pdf.numPages, 3);
+                for (let pn = 1; pn <= maxPages; pn++) {
+                    const page = await pdf.getPage(pn);
+                    const vp = page.getViewport({ scale: 1.2 });
+                    const canvas = document.createElement('canvas');
+                    canvas.height = vp.height; canvas.width = vp.width;
+                    canvas.style.cssText = 'max-width:95%;height:auto;margin-bottom:15px;background:#fff;border-radius:5px;display:block;margin-left:auto;margin-right:auto;';
+                    area.appendChild(canvas);
+                    await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+                }
+                if (pdf.numPages > 3) area.innerHTML += '<p style="color:white;margin-bottom:20px;text-align:center;">Download to view remaining pages.</p>';
+            } catch(e) {
+                container.innerHTML = '<p style="color:white;margin-top:30px;text-align:center;">Preview unavailable. Please download the file.</p>';
+            }
+        });
+    } else if (type === 'video') {
+        container.innerHTML = `<video src="${url}" controls autoplay style="max-width:95%;max-height:100%;"></video>`;
+    } else {
+        container.innerHTML = `<img src="${url}" style="max-width:95%;max-height:100%;object-fit:contain;" alt="Preview" loading="lazy">`;
+    }
+};
+
+window.closeViewer = function() {
+    document.getElementById('viewer').style.display = 'none';
+    document.getElementById('viewer-container').innerHTML = '';
+    document.body.style.overflow = 'auto';
+};
+
+window.downloadFile = async function(url, btn, event, type) {
+    if (event) event.stopPropagation();
+    var orig = btn.innerHTML;
+    btn.innerHTML = 'Please wait...';
+    btn.disabled = true;
+    try {
+        const resp = await fetch(url);
+        let blobUrl, ext = 'pdf';
+        if (type === 'pdf' || type === 'document') {
+            let txt = await resp.text();
+            txt = txt.replace('data:text/plain', 'data:application/pdf');
+            if (txt.startsWith('data:application/pdf;base64,')) {
+                const bin = atob(txt.split(',')[1]);
+                const bytes = new Uint8Array(bin.length);
+                for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+                blobUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+            } else { blobUrl = URL.createObjectURL(await (await fetch(url)).blob()); }
+        } else {
+            blobUrl = URL.createObjectURL(await resp.blob());
+            ext = type === 'image' ? 'png' : 'mp4';
+        }
+        var a = document.createElement('a');
+        a.style.display = 'none'; a.href = blobUrl;
+        a.download = 'HealthJobs_Document_' + Date.now() + '.' + ext;
+        document.body.appendChild(a); a.click();
+        setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(blobUrl); }, 5000);
+    } catch(e) { window.open(url, '_blank'); }
+    finally { btn.innerHTML = orig; btn.disabled = false; }
+};
+
+// Report
+window.openReportPopup = function() {
+    var d = window._reportData || {};
+    document.getElementById('report-owner-name').innerText = d.ownerName || 'Unknown';
+    document.getElementById('report-owner-pic').src = d.ownerPic || 'https://ui-avatars.com/api/?name=U';
+    document.getElementById('report-popup').classList.add('show');
+};
+window.closeReport = function() {
+    document.getElementById('report-popup').classList.remove('show');
+};
+
+var _selectedReason = '';
+window.selectReason = function(el) {
+    document.querySelectorAll('.reason-chip').forEach(function(c){ c.classList.remove('selected'); });
+    el.classList.add('selected');
+    _selectedReason = el.innerText;
+};
+
+window.submitReport = async function() {
+    var name = document.getElementById('report-name').value.trim();
+    var msg  = document.getElementById('report-msg').value.trim();
+    if (!_selectedReason) { alert('Please select a reason.'); return; }
+    if (!name) { alert('Please enter your name.'); return; }
+    if (!msg)  { alert('Please describe the issue.'); return; }
+    var btn = document.querySelector('.report-submit');
+    btn.innerText = 'Sending...'; btn.disabled = true;
+    try {
+        var d = window._reportData || {};
+        await emailjs.send('service_gnjsdvm', 'template_bus1179', {
+            reporter_name: name, reason: _selectedReason, message: msg,
+            post_owner: d.ownerName || 'Unknown', post_title: d.postTitle || 'General Post',
+            post_id: d.postId || 'N/A', post_url: window.location.href
+        });
+        document.querySelector('.report-submit').style.display = 'none';
+        document.getElementById('report-success').style.display = 'block';
+        setTimeout(window.closeReport, 3000);
+    } catch(e) {
+        alert('Error sending report. Try again.');
+        btn.innerText = 'Send Report'; btn.disabled = false;
+    }
+};
+
+function redirectToLogin() {
+    window.location.href = 'login.html?return=' + encodeURIComponent(window.location.href);
+}
+
+// ── DOM Event Bindings ────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.emailjs) emailjs.init('Rr88IrZ8s69Qyj8DS');
+
+    // Comment input – require auth before typing
+    var inp = document.getElementById('cmt-in');
+    if (inp) {
+        inp.addEventListener('focus', function() {
+            if (!currentUser) { inp.blur(); redirectToLogin(); }
+        });
+        inp.addEventListener('keypress', async function(e) {
+            if (e.key === 'Enter') { await doSendComment(); }
+        });
+    }
+
+    // Send button
+    var sendBtn = document.getElementById('cmt-send-btn');
+    if (sendBtn) {
+        sendBtn.addEventListener('click', async function() {
+            if (!currentUser) { redirectToLogin(); return; }
+            await doSendComment();
+        });
+    }
+
+    // Close popups on outside click
+    document.addEventListener('click', function(e) {
+        var sp = document.getElementById('share-popup');
+        var rp = document.getElementById('report-popup');
+        if (sp && sp.classList.contains('show') && !sp.contains(e.target)) sp.classList.remove('show');
+        if (rp && rp.classList.contains('show') && !rp.contains(e.target) && !e.target.classList.contains('report-btn')) rp.classList.remove('show');
+    });
+});
+
+// ── Push Notifications (Capacitor) ───────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.PushNotifications) return;
+    var PushNotifications  = window.Capacitor.Plugins.PushNotifications;
+    var LocalNotifications = window.Capacitor.Plugins.LocalNotifications;
+
+    function handleCallRedirect(data) {
+        if (!data) return;
+        if (data.isCall === 'true' || data.isCall === true || data.startCall === 'true') {
+            var callerUid = data.callerUid || data.uid;
+            if (callerUid) setTimeout(function() { window.location.href = 'chat.html?uid=' + callerUid + '&startCall=true&incoming=true'; }, 500);
+        }
+    }
+
+    PushNotifications.addListener('pushNotificationActionPerformed', function(n) { handleCallRedirect(n.notification.data); });
+    PushNotifications.addListener('pushNotificationReceived', async function(n) {
+        var data = n.data || {};
+        if (data.action === 'cancel_call') {
+            if (LocalNotifications) await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
+            await PushNotifications.removeAllDeliveredNotifications();
+            if (typeof closeWebRTC === 'function') closeWebRTC();
+            return;
+        }
+        if (data.isCall === 'true' || data.isCall === true || data.startCall === 'true') {
+            handleCallRedirect(data);
+            if (LocalNotifications) {
+                await LocalNotifications.schedule({ notifications: [{
+                    title: n.title || 'Incoming Call', body: 'Calling...', id: 999,
+                    sound: 'ringing.mp3', extra: data,
+                    android: { channelId: 'high_importance_channel', importance: 5, visibility: 1, fullScreenIntent: true }
+                }] });
+            }
+        }
+    });
+    if (LocalNotifications) {
+        LocalNotifications.addListener('localNotificationActionPerformed', function(n) { handleCallRedirect(n.notification.extra); });
+    }
+});
+let startY = 0;
+const pullToRefresh = document.getElementById('pull-to-refresh');
+const spinner = pullToRefresh.querySelector('.refresh-spinner');
+
+// جب انگلی یا ماؤس اسکرین پر لگے
 window.addEventListener('touchstart', (e) => {
+    // صرف تب کام کرے جب پیج بالکل اوپر (top: 0) ہو
     if (window.scrollY === 0) {
         startY = e.touches[0].pageY;
     }
-}, { passive: true });
+}, {passive: true});
 
-// ٹچ کے ساتھ نیچے کھینچنا
+// جب اسکرین کو نیچے کھینچا جائے
 window.addEventListener('touchmove', (e) => {
-    let currentY = e.touches[0].pageY;
-    let diff = currentY - startY;
+    const y = e.touches[0].pageY;
+    const pullDistance = y - startY;
 
-    if (window.scrollY === 0 && diff > 10) {
-        spinner.classList.add('ptr-active');
-    }
-}, { passive: true });
-
-// جب ہاتھ چھوڑیں تو ریفریش ہو
-window.addEventListener('touchend', () => {
-    if (spinner.classList.contains('ptr-active')) {
-        // یہاں آپ کی ایپ ریفریش ہوگی
-        window.location.reload(); 
+    if (pullDistance > 0 && window.scrollY === 0) {
+        // لوڈر کو نیچے لائیں (زیادہ سے زیادہ 80px تک)
+        const move = Math.min(pullDistance / 2, 80);
+        pullToRefresh.style.transform = `translateY(${move}px)`;
         
-        // 2 سیکنڈ بعد اسپنر بند ہو جائے گا (اگر پیج لوڈ نہ ہوا ہو)
+        // جیسے جیسے کھینچیں اسپنر تھوڑا مڑے
+        spinner.style.transform = `rotate(${pullDistance * 2}deg)`;
+    }
+}, {passive: true});
+
+// جب انگلی اسکرین سے ہٹا لی جائے
+window.addEventListener('touchend', (e) => {
+    const endY = e.changedTouches[0].pageY;
+    const pullDistance = endY - startY;
+
+    if (pullDistance > 100 && window.scrollY === 0) {
+        // ریفریش شروع کریں
+        pullToRefresh.style.transform = `translateY(70px)`;
+        spinner.classList.add('spinning');
+
+        // یہاں اپنا ڈیٹا لوڈ کرنے والا فنکشن کال کریں
+        console.log("Refreshing data...");
+        
         setTimeout(() => {
-            spinner.classList.remove('ptr-active');
-        }, 2000);
+            // 2 سیکنڈ بعد واپس چھپا دیں (آپ اپنی ضرورت کے مطابق سیٹ کریں)
+            resetPullToRefresh();
+            location.reload(); // پیج ریفریش کرنے کے لیے
+        }, 1500);
+    } else {
+        resetPullToRefresh();
     }
 });
-                        
+
+function resetPullToRefresh() {
+    pullToRefresh.style.transform = `translateY(0)`;
+    setTimeout(() => {
+        spinner.classList.remove('spinning');
+    }, 200);
+}
+
 </script>
 </body>
 </html>
