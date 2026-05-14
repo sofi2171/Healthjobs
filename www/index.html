@@ -77,35 +77,6 @@
 <meta name="theme-color" content="#ffffff">
 
 <style>
-  /* ریفریشر کا ڈیزائن */
-.ptr-element {
-    width: 100%;
-    height: 0;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f8fafc; /* ہلکا بیک گراؤنڈ */
-    transition: height 0.3s ease;
-}
-
-.ptr-active {
-    height: 70px; /* جب نیچے کھینچیں گے تو اتنی جگہ بنے گی */
-}
-
-.spinner-icon {
-    width: 30px;
-    height: 30px;
-    border: 3px solid #cbd5e1;
-    border-top: 3px solid #0a66c2; /* سفیان بھائی، آپ کا برانڈ بلو کلر */
-    border-radius: 50%;
-    animation: ptr-spin 0.8s linear infinite;
-}
-
-@keyframes ptr-spin {
-    to { transform: rotate(360deg); }
-}
-  
 /* =========================================
    1. ROOT VARIABLES & RESET
 ========================================= */
@@ -450,9 +421,45 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
   .fs-search-overlay { max-width: 580px; left: 50%; transform: translateX(-50%); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); }
   footer { padding-bottom: 40px; }
 }
+#pull-to-refresh {
+    position: fixed;
+    top: -60px; /* شروع میں اسکرین سے باہر */
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: transform 0.2s ease;
+}
+
+.refresh-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* جب ریفریش ہو رہا ہو تو اسے گھمانے کے لیے */
+.spinning {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 </style>
 </head>
 <body>
+<div id="pull-to-refresh">
+    <div class="refresh-spinner"></div>
+</div>
 
 <!-- SPLASH SCREEN -->
 <div id="custom-splash" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#ffffff;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:99999;transition:opacity 0.5s ease;">
@@ -478,6 +485,63 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
     });
   }
 })();
+let startY = 0;
+const pullToRefresh = document.getElementById('pull-to-refresh');
+const spinner = pullToRefresh.querySelector('.refresh-spinner');
+
+// جب انگلی یا ماؤس اسکرین پر لگے
+window.addEventListener('touchstart', (e) => {
+    // صرف تب کام کرے جب پیج بالکل اوپر (top: 0) ہو
+    if (window.scrollY === 0) {
+        startY = e.touches[0].pageY;
+    }
+}, {passive: true});
+
+// جب اسکرین کو نیچے کھینچا جائے
+window.addEventListener('touchmove', (e) => {
+    const y = e.touches[0].pageY;
+    const pullDistance = y - startY;
+
+    if (pullDistance > 0 && window.scrollY === 0) {
+        // لوڈر کو نیچے لائیں (زیادہ سے زیادہ 80px تک)
+        const move = Math.min(pullDistance / 2, 80);
+        pullToRefresh.style.transform = `translateY(${move}px)`;
+        
+        // جیسے جیسے کھینچیں اسپنر تھوڑا مڑے
+        spinner.style.transform = `rotate(${pullDistance * 2}deg)`;
+    }
+}, {passive: true});
+
+// جب انگلی اسکرین سے ہٹا لی جائے
+window.addEventListener('touchend', (e) => {
+    const endY = e.changedTouches[0].pageY;
+    const pullDistance = endY - startY;
+
+    if (pullDistance > 100 && window.scrollY === 0) {
+        // ریفریش شروع کریں
+        pullToRefresh.style.transform = `translateY(70px)`;
+        spinner.classList.add('spinning');
+
+        // یہاں اپنا ڈیٹا لوڈ کرنے والا فنکشن کال کریں
+        console.log("Refreshing data...");
+        
+        setTimeout(() => {
+            // 2 سیکنڈ بعد واپس چھپا دیں (آپ اپنی ضرورت کے مطابق سیٹ کریں)
+            resetPullToRefresh();
+            location.reload(); // پیج ریفریش کرنے کے لیے
+        }, 1500);
+    } else {
+        resetPullToRefresh();
+    }
+});
+
+function resetPullToRefresh() {
+    pullToRefresh.style.transform = `translateY(0)`;
+    setTimeout(() => {
+        spinner.classList.remove('spinning');
+    }, 200);
+}
+
 </script>
 
 <!-- HEADER -->
@@ -527,10 +591,6 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 
 <!-- MAIN -->
 <main>
-  <div id="ptr-spinner" class="ptr-element">
-    <div class="spinner-icon"></div>
-  </div>
-  
 
   <!-- ✅ FILTER BOXES -->
   <div class="dual-box-container">
@@ -875,20 +935,51 @@ window.addEventListener('storage', (e) => {
 
   // GLOBAL SYNC LISTENER
   const syncRef = dbRef(dbRT, 'global_sync');
-  onValue(syncRef, (snapshot) => {
+onValue(syncRef, (snapshot) => {
     const syncData = snapshot.val();
     if (syncData) {
       const lastHandled = localStorage.getItem('last_sync_handled');
       if (!lastHandled || parseInt(lastHandled) < syncData.lastUpdate) {
-        localStorage.removeItem('trending_cache_html');
-        localStorage.removeItem('trending_cache_time');
-        localStorage.removeItem('health_jobs_hybrid_cache');
-        if (typeof loadTrendingPosts === 'function') loadTrendingPosts();
-        if (typeof window.loadInitialPosts === 'function') window.loadInitialPosts();
+
+        // ✅ DELETE/EXPIRED signal — sirf woh post hatao, full reload nahi
+        if (
+          (syncData.action === 'deleted' || syncData.action === 'expired_deleted') 
+          && syncData.updatedPostId
+        ) {
+          const pid = syncData.updatedPostId;
+
+          // DOM se hatao
+          const cardEl = document.getElementById(`card-${pid}`);
+          if (cardEl) cardEl.remove();
+
+          // postsArr se hatao
+          window.postsArr = (window.postsArr || []).filter(p => p.id !== pid);
+          postsArr = window.postsArr;
+
+          // Local cache update karo
+          const cached = localStorage.getItem(CACHE_KEY);
+          if (cached) {
+            try {
+              const arr = JSON.parse(cached).filter(p => p.id !== pid);
+              localStorage.setItem(CACHE_KEY, JSON.stringify(arr));
+            } catch(e) {}
+          }
+
+          console.log('🗑️ Post removed from UI:', pid);
+
+        } else {
+          // Baaki sab actions pe full reload
+          localStorage.removeItem('trending_cache_html');
+          localStorage.removeItem('trending_cache_time');
+          localStorage.removeItem('health_jobs_hybrid_cache');
+          if (typeof loadTrendingPosts === 'function') loadTrendingPosts();
+          if (typeof window.loadInitialPosts === 'function') window.loadInitialPosts();
+        }
+
         localStorage.setItem('last_sync_handled', syncData.lastUpdate.toString());
       }
     }
-  });
+});
 
   // GLOBAL VARIABLES
   let currentUser = null;
@@ -1226,7 +1317,12 @@ const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(20)
 
       if (snap.empty || snap.docs.length === 0) {
         hasMorePosts = false;
-        document.getElementById('loading').innerHTML = "<div style='padding:20px;color:#94a3b8;font-size:12px;text-align:center;'>✅ Sab posts load ho gayi!</div>";
+        document.getElementById('loading').innerHTML = `
+          <div style='padding:30px 20px;text-align:center;'>
+            <div style='font-size:28px;margin-bottom:8px;'>🏁</div>
+            <div style='font-size:13px;font-weight:700;color:#64748b;'>You're all caught up!</div>
+            <div style='font-size:12px;color:#94a3b8;margin-top:4px;'>No more posts to load.</div>
+          </div>`;
         return;
       }
 
@@ -1235,7 +1331,7 @@ const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(20)
       hasMorePosts = snap.docs.length >= 20;
 
       let newAdded = 0;
-      snap.forEach(d => {
+snap.forEach(d => {
         let data = d.data();
         if (data.status !== 'inactive' && data.status !== 'deleted') {
           if (data.createdAt?.toMillis) data.createdAt = data.createdAt.toMillis();
@@ -1244,14 +1340,26 @@ const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(20)
             postsArr.push(np);
             window.postsArr = postsArr;
             newAdded++;
-            if (window.catActive && window.catActive !== 'all' || window.timeActive && window.timeActive !== 'all') {
-              if (typeof window.renderFiltered === 'function') window.renderFiltered();
-            } else {
-              appendPostToDOM(np);
-            }
           }
         }
       });
+
+      // ✅ Sab posts add hone ke baad — ek baar render karo
+      if (newAdded > 0) {
+        if (
+          (window.catActive && window.catActive !== 'all') || 
+          (window.timeActive && window.timeActive !== 'all')
+        ) {
+          // Filter laga hua hai — filtered render karo
+          if (typeof window.renderFiltered === 'function') window.renderFiltered();
+        } else {
+          // Koi filter nahi — sirf nayi posts append karo
+          const startIndex = postsArr.length - newAdded;
+          for (let i = startIndex; i < postsArr.length; i++) {
+            appendPostToDOM(postsArr[i]);
+          }
+        }
+      }
 
       // ✅ Cache update karo
       localStorage.setItem(CACHE_KEY, JSON.stringify(postsArr.slice(0, 100)));
@@ -1277,7 +1385,7 @@ const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(20)
       const scrolled = window.innerHeight + window.scrollY;
       const total = document.body.offsetHeight;
       // ✅ 300px pehle trigger karo
-      if (scrolled >= total - 300) {
+if (scrolled >= total - 150 && hasMorePosts && !isFetchingMore) {
         fetchMorePosts();
       }
       scrollTimeout = null;
@@ -1678,102 +1786,6 @@ setInterval(() => {
     }
 }, 2000); // Har 2 second mein check
 </script>
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
-            const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
 
-            const handleCallRedirect = (data) => {
-                if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
-                    let callerUid = data.callerUid || data.uid;
-                    if(callerUid) {
-                        setTimeout(() => {
-                            window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
-                        }, 500);
-                    }
-                }
-            };
-
-            PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-                handleCallRedirect(notification.notification.data);
-            });
-
-            PushNotifications.addListener('pushNotificationReceived', async (notification) => {
-                const data = notification.data || {};
-                
-                if (data.action === "cancel_call") {
-                    if (LocalNotifications) {
-                        await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
-                    }
-                    await PushNotifications.removeAllDeliveredNotifications();
-                    if (typeof closeWebRTC === 'function') { closeWebRTC(); }
-                    return; 
-                }
-
-                if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
-                    handleCallRedirect(data);
-                    
-                    if (LocalNotifications) {
-                        await LocalNotifications.schedule({
-                            notifications: [{
-                                title: notification.title || "Incoming Call",
-                                body: "Calling...",
-                                id: 999, 
-                                sound: "ringing.mp3",
-                                extra: data,
-                                android: {
-                                    channelId: "high_importance_channel",
-                                    importance: 5,
-                                    visibility: 1,
-                                    fullScreenIntent: true
-                                }
-                            }]
-                        });
-                    }
-                }
-            });
-
-            if (LocalNotifications) {
-                LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
-                    handleCallRedirect(notification.notification.extra);
-                });
-            }
-        }
-    });
-      let startY = 0;
-const spinner = document.getElementById('ptr-spinner');
-
-// ٹچ شروع ہونا
-window.addEventListener('touchstart', (e) => {
-    if (window.scrollY === 0) {
-        startY = e.touches[0].pageY;
-    }
-}, { passive: true });
-
-// ٹچ کے ساتھ نیچے کھینچنا
-window.addEventListener('touchmove', (e) => {
-    let currentY = e.touches[0].pageY;
-    let diff = currentY - startY;
-
-    if (window.scrollY === 0 && diff > 10) {
-        spinner.classList.add('ptr-active');
-    }
-}, { passive: true });
-
-// جب ہاتھ چھوڑیں تو ریفریش ہو
-window.addEventListener('touchend', () => {
-    if (spinner.classList.contains('ptr-active')) {
-        // یہاں آپ کی ایپ ریفریش ہوگی
-        window.location.reload(); 
-        
-        // 2 سیکنڈ بعد اسپنر بند ہو جائے گا (اگر پیج لوڈ نہ ہوا ہو)
-        setTimeout(() => {
-            spinner.classList.remove('ptr-active');
-        }, 2000);
-    }
-});
-      
-    </script>
-  
 </body>
 </html>
