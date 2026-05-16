@@ -1091,10 +1091,9 @@ onValue(syncRef, (snapshot) => {
 const link = `https://healthjobs-portal.web.app/${pageName}?id=${window.currentShareId}`;
     const title = post?.title ? `📢 ${post.title}\n` : "Health Jobs Portal\n";
     const desc = post?.desc ? `${post.desc.substring(0, 100)}...\n\n` : "";
-    const appLink = `intent://post?id=${window.currentShareId}#Intent;scheme=healthjobs;package=com.sufian.healthjobs;S.browser_fallback_url=${encodeURIComponent(link)};end`;
 const text = `${title}${desc}Check details here: ${link}`;
     if (platform === 'copy') { navigator.clipboard.writeText(link).then(() => alert("Link copied!")); }
-else if (platform === 'whatsapp') { window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(title + desc + 'App link: ' + appLink + '\nWeb link: ' + link)}`, '_blank'); }
+else if (platform === 'whatsapp') { window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(title + desc + link)}`, '_blank'); }
     else if (platform === 'facebook') { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank'); }
     else if (platform === 'more') { if (navigator.share) navigator.share({ title: post?.title || 'Health Jobs', text: desc, url: link }); }
     toggleShareSheet(false);
