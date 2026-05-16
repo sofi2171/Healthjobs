@@ -783,6 +783,19 @@ function resetPullToRefresh() {
 
 <!-- CAPACITOR PUSH NOTIFICATIONS -->
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+  if (window.Capacitor && window.Capacitor.Plugins.App) {
+    window.Capacitor.Plugins.App.addListener('appUrlOpen', function(data) {
+      const url = data.url;
+      if (url.includes('post?id=')) {
+        const postId = url.split('post?id=')[1];
+        if (postId) {
+          window.location.href = 'posts.html?id=' + postId;
+        }
+      }
+    });
+  }
+});
 document.addEventListener('DOMContentLoaded', function () {
   if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
     var _a = window.Capacitor.Plugins, PushNotifications = _a.PushNotifications, LocalNotifications = _a.LocalNotifications;
@@ -1075,12 +1088,13 @@ onValue(syncRef, (snapshot) => {
     if (!window.currentShareId) return;
     const post = postsArr.find(p => p.id === window.currentShareId);
     const pageName = window.currentShareType === 'general_post' ? 'details.html' : 'posts.html';
-    const link = `${window.location.origin}/${pageName}?id=${window.currentShareId}`;
+const link = `https://healthjobs-portal.web.app/${pageName}?id=${window.currentShareId}`;
     const title = post?.title ? `📢 ${post.title}\n` : "Health Jobs Portal\n";
     const desc = post?.desc ? `${post.desc.substring(0, 100)}...\n\n` : "";
-    const text = `${title}${desc}Check details here: ${link}`;
+    const appLink = `intent://post?id=${window.currentShareId}#Intent;scheme=healthjobs;package=com.sufian.healthjobs;S.browser_fallback_url=${encodeURIComponent(link)};end`;
+const text = `${title}${desc}Check details here: ${link}`;
     if (platform === 'copy') { navigator.clipboard.writeText(link).then(() => alert("Link copied!")); }
-    else if (platform === 'whatsapp') { window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank'); }
+else if (platform === 'whatsapp') { window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(title + desc + 'App link: ' + appLink + '\nWeb link: ' + link)}`, '_blank'); }
     else if (platform === 'facebook') { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank'); }
     else if (platform === 'more') { if (navigator.share) navigator.share({ title: post?.title || 'Health Jobs', text: desc, url: link }); }
     toggleShareSheet(false);
