@@ -698,7 +698,7 @@ if (unreadCount > 0) {
             // ✅ اسی ایک Firestore سے target کا fcmToken نکالیں
             const targetUserSnap = await getDoc(doc(dbMain, "users", targetUid));
             if (targetUserSnap.exists() && targetUserSnap.data().fcmToken) {
-                await fetch('https://notication-healthjobs.vercel.app/api/server', {
+await fetch('https://notication-healthjobs.vercel.app/api/call', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -761,11 +761,13 @@ if (unreadCount > 0) {
                     await fetch('https://notication-healthjobs.vercel.app/api/call', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        targetToken: targetUserSnap.data().fcmToken,
-        callerUid: currentUser.uid,
-        action: 'cancel'
-    })
+body: JSON.stringify({
+    targetToken: targetUserSnap.data().fcmToken,
+    callerName:  myName,
+    callerUid:   currentUser.uid,
+    callerPhoto: myUserSnap.data().profilePicUrl || '',
+    callType:    type
+})
 });
                 }
             } catch (e) { console.error("Cancel Push Error:", e); }
@@ -854,6 +856,39 @@ if (!alreadySent) {
             updatedAt: serverTimestamp() 
         }); 
     };
+    // ✅ Chat Notification — sirf pehli baar ya target offline ho tab
+try {
+    const mySnap = await getDoc(doc(dbMain, "users", currentUser.uid));
+    const myName = mySnap.exists() 
+        ? (mySnap.data().fullName || mySnap.data().facilityName || "User") 
+        : "User";
+    const myPic = mySnap.exists() ? (mySnap.data().profilePicUrl || "") : "";
+
+    const targetSnap = await getDoc(doc(dbMain, "users", targetUid));
+    const targetData = targetSnap.exists() ? targetSnap.data() : null;
+    
+    // ✅ Sirf tab bhejo jab target offline ho aur token ho
+    const targetPresenceSnap = await new Promise(resolve => {
+        const presRef = dbRef(dbChatRT, `presence/${targetUid}`);
+        onValue(presRef, resolve, { onlyOnce: true });
+    });
+    const presenceData = targetPresenceSnap.val();
+    const isTargetOnline = presenceData && presenceData.state === 'online';
+
+    if (targetData?.fcmToken && !isTargetOnline) {
+        fetch('https://notication-healthjobs.vercel.app/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                targetToken: targetData.fcmToken,
+                senderName:  myName,
+                senderUid:   currentUser.uid,
+                senderPhoto: myPic,
+                roomId:      chatId
+            })
+        });
+    }
+} catch(e) { console.log("Chat notification failed:", e); }
 
     let mediaRecorder = null, audioChunks = [], recordInterval = null, recordSeconds = 0, isRecording = false, isRecordingCancelled = false, globalMicStream = null; const micBtn = document.getElementById('mic-btn'); let touchStartX = 0;
     
@@ -921,7 +956,13 @@ if (!alreadySent) {
             const data = await res.json(); 
             // ✅ اسی ایک Realtime DB میں voice message save
             await set(push(dbRef(dbChatRT, `chats/${chatId}/messages`)), { senderId: currentUser.uid, status: 'sent', timestamp: serverTimestamp(), mediaUrl: data.secure_url, mediaType: 'audio' }); 
-            await update(dbRef(dbChatRT, `chatRooms/${chatId}`), { participants: [currentUser.uid, targetUid], lastMessage: '🎤 Voice Message', lastSenderId: currentUser.uid, readBy: [currentUser.uid], updatedAt: serverTimestamp() }); 
+await update(dbRef(dbChatRT, `chatRooms/${chatId}`), {
+    participants: [currentUser.uid, targetUid],
+    lastMessage: '🎤 Voice Message',
+    lastSenderId: currentUser.uid,
+    readBy: [currentUser.uid],
+    updatedAt: serverTimestamp()
+});
             cancelAction(); 
         } catch(e) {} 
         document.getElementById('upload-loader').style.display = 'none'; 
