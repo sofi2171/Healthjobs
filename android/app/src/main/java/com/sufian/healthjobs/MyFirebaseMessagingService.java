@@ -36,10 +36,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
 
         // ✅ Agar data empty hai to kuch mat karo
-        if (data == null || data.isEmpty()) {
-            Log.d(TAG, "Empty data — ignoring");
-            return;
-        }
+if (data == null || data.isEmpty()) {
+    // ✅ Agar sirf notification block hai (post notification) to system khud handle karega
+    Log.d(TAG, "Empty data — system will handle notification");
+    return;
+}
 
         // // ✅ Cancel call handle karo
         if ("cancel_call".equals(data.get("action"))) {
@@ -55,45 +56,48 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             return;
         }
 
-        // ✅ Incoming call handle karo
-        String isCall = data.get("isCall");
-        if ("true".equals(isCall)) {
-            String callerUid  = data.containsKey("callerUid")  ? data.get("callerUid")  : "";
-            String callerName = data.containsKey("callerName") ? data.get("callerName") : "Health Jobs User";
-            String callType   = data.containsKey("callType")   ? data.get("callType")   : "audio";
+// ✅ Incoming call handle karo
+String isCall = data.get("isCall");
+if ("true".equals(isCall)) {
+    String callerUid  = data.containsKey("callerUid")  ? data.get("callerUid")  : "";
+    String callerName = data.containsKey("callerName") ? data.get("callerName") : "Health Jobs User";
+    String callType   = data.containsKey("callType")   ? data.get("callType")   : "audio";
+    // ✅ callerPhoto bhi lo — notification icon ke liye
+    String callerPhoto = data.containsKey("callerPhoto") ? data.get("callerPhoto") : "";
 
-            Log.d(TAG, "Incoming call from: " + callerName + " uid: " + callerUid);
+    Log.d(TAG, "Incoming call from: " + callerName + " uid: " + callerUid);
 
-            // ✅ WakeLock — screen jagao
-            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            if (pm != null) {
-                PowerManager.WakeLock wl = pm.newWakeLock(
-                    PowerManager.FULL_WAKE_LOCK |
-                    PowerManager.ACQUIRE_CAUSES_WAKEUP |
-                    PowerManager.ON_AFTER_RELEASE,
-                    "healthjobs:callwake"
-                );
-                wl.acquire(30000);
-            }
+    // ✅ WakeLock — screen jagao
+    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    if (pm != null) {
+        PowerManager.WakeLock wl = pm.newWakeLock(
+            PowerManager.FULL_WAKE_LOCK |
+            PowerManager.ACQUIRE_CAUSES_WAKEUP |
+            PowerManager.ON_AFTER_RELEASE,
+            "healthjobs:callwake"
+        );
+        wl.acquire(30000);
+    }
 
-            // ✅ Notification channel banao
-            createCallChannel();
+    // ✅ Notification channel banao
+    createCallChannel();
 
-            // ✅ Full screen notification dikhao
-            showFullScreenNotification(callerUid, callerName, callType);
+    // ✅ Full screen notification dikhao
+    showFullScreenNotification(callerUid, callerName, callType);
 
-            // ✅ IncomingCallActivity directly launch karo
-            Intent callIntent = new Intent(this, IncomingCallActivity.class);
-            callIntent.putExtra("callerUid",  callerUid);
-            callIntent.putExtra("callerName", callerName);
-            callIntent.putExtra("callType",   callType);
-            callIntent.setFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK |
-                Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP
-            );
-            startActivity(callIntent);
-        }
+    // ✅ Foreground Service se IncomingCallActivity launch karo
+    // Direct startActivity ki jagah service use karo — background mein kaam karega
+    Intent serviceIntent = new Intent(this, CallForegroundService.class);
+    serviceIntent.putExtra("callerUid",   callerUid);
+    serviceIntent.putExtra("callerName",  callerName);
+    serviceIntent.putExtra("callType",    callType);
+    serviceIntent.putExtra("callerPhoto", callerPhoto);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        startForegroundService(serviceIntent);
+    } else {
+        startService(serviceIntent);
+    }
+}
     }
 
     private void createCallChannel() {
@@ -164,7 +168,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             builder.setPriority(Notification.PRIORITY_MAX);
         }
 
-        builder.setSmallIcon(R.mipmap.ic_launcher)
+        builder.setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(callerName)
             .setContentText("video".equals(callType) ? "Incoming Video Call" : "Incoming Audio Call")
             .setCategory(Notification.CATEGORY_CALL)
