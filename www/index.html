@@ -980,11 +980,29 @@ onValue(syncRef, (snapshot) => {
 
           console.log('🗑️ Post removed from UI:', pid);
 
-        } else {
-          // Baaki sab actions pe full reload
+} else {
+          // ✅ Cache فوری clear
           localStorage.removeItem('trending_cache_html');
           localStorage.removeItem('trending_cache_time');
-          localStorage.removeItem('health_jobs_hybrid_cache');
+          localStorage.removeItem(CACHE_KEY);
+
+          // ✅ Specific post cache + DOM سے ہٹاؤ
+          if (syncData.updatedPostId) {
+            const pid = syncData.updatedPostId;
+            const cached = localStorage.getItem(CACHE_KEY);
+            if (cached) {
+              try {
+                let arr = JSON.parse(cached);
+                arr = arr.filter(p => p.id !== pid);
+                localStorage.setItem(CACHE_KEY, JSON.stringify(arr));
+              } catch(e) {}
+            }
+            const cardEl = document.getElementById(`card-${pid}`);
+            if (cardEl) cardEl.remove();
+            window.postsArr = (window.postsArr || []).filter(p => p.id !== pid);
+            postsArr = window.postsArr;
+          }
+
           if (typeof loadTrendingPosts === 'function') loadTrendingPosts();
           if (typeof window.loadInitialPosts === 'function') window.loadInitialPosts();
         }
