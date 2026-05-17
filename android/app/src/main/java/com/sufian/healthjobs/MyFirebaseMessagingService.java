@@ -168,7 +168,7 @@ if ("true".equals(isCall)) {
             builder.setPriority(Notification.PRIORITY_MAX);
         }
 
-        builder.setSmallIcon(R.drawable.ic_notification)
+        builder.setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(callerName)
             .setContentText("video".equals(callType) ? "Incoming Video Call" : "Incoming Audio Call")
             .setCategory(Notification.CATEGORY_CALL)
