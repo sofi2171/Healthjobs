@@ -613,13 +613,14 @@ function resetPullToRefresh() {
         <span class="label-text" id="timeLabel">Timeline & News</span>
         <span class="f-arrow">&#9660;</span>
       </div>
-      <ul class="pro-list" id="timeList">
-        <li class="selected" onclick="filterTime('all', this, 'Timeline & News')">Anytime</li>
-        <li onclick="filterTime('today', this, 'Today')">Today's Posts</li>
-        <li onclick="filterTime('yesterday', this, 'Yesterday')">Yesterday</li>
-        <li onclick="filterTime('weekly', this, 'Last 7 Days')">Last 7 Days</li>
-        <li class="news-li" onclick="goNews(event)">Medical News</li>
-      </ul>
+  <ul class="pro-list" id="timeList">
+  <li class="selected" onclick="filterTime('all', this, 'Timeline & News')">Anytime</li>
+  <li onclick="filterTime('active', this, '✅ Active Jobs')">Active Jobs</li>
+  <li onclick="filterTime('today', this, 'Today')">Today's Posts</li>
+  <li onclick="filterTime('yesterday', this, 'Yesterday')">Yesterday</li>
+  <li onclick="filterTime('weekly', this, 'Last 7 Days')">Last 7 Days</li>
+  <li class="news-li" onclick="goNews(event)">Medical News</li>
+</ul>
     </div>
   </div>
 
@@ -783,17 +784,41 @@ function resetPullToRefresh() {
 
 <!-- CAPACITOR PUSH NOTIFICATIONS -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
   if (window.Capacitor && window.Capacitor.Plugins.App) {
     window.Capacitor.Plugins.App.addListener('appUrlOpen', function(data) {
       const url = data.url;
+
+      // posts.html ke liye
+      if (url.includes('posts.html?id=')) {
+        const postId = url.split('posts.html?id=')[1].split('&')[0];
+        if (postId) { window.location.href = 'posts.html?id=' + postId; return; }
+      }
+
+      // details.html ke liye
+      if (url.includes('details.html?id=')) {
+        const postId = url.split('details.html?id=')[1].split('&')[0];
+        if (postId) { window.location.href = 'details.html?id=' + postId; return; }
+      }
+
+      // purana format bhi support karo
       if (url.includes('post?id=')) {
-        const postId = url.split('post?id=')[1];
-        if (postId) {
-          window.location.href = 'posts.html?id=' + postId;
-        }
+        const postId = url.split('post?id=')[1].split('&')[0];
+        if (postId) { window.location.href = 'posts.html?id=' + postId; return; }
       }
     });
+  }
+
+  // ✅ Page load par bhi check karo — agar directly web link se aaya ho
+  const urlParams = new URLSearchParams(window.location.search);
+  const directId = urlParams.get('id');
+  const currentPage = window.location.pathname;
+  if (directId) {
+    if (currentPage.includes('posts')) {
+      window.location.href = 'posts.html?id=' + directId;
+    } else if (currentPage.includes('details')) {
+      window.location.href = 'details.html?id=' + directId;
+    }
   }
 });
 document.addEventListener('DOMContentLoaded', function () {
@@ -955,57 +980,49 @@ onValue(syncRef, (snapshot) => {
       if (!lastHandled || parseInt(lastHandled) < syncData.lastUpdate) {
 
         // ✅ DELETE/EXPIRED signal — sirf woh post hatao, full reload nahi
-        if (
-          (syncData.action === 'deleted' || syncData.action === 'expired_deleted') 
-          && syncData.updatedPostId
-        ) {
-          const pid = syncData.updatedPostId;
-
-          // DOM se hatao
-          const cardEl = document.getElementById(`card-${pid}`);
-          if (cardEl) cardEl.remove();
-
-          // postsArr se hatao
-          window.postsArr = (window.postsArr || []).filter(p => p.id !== pid);
-          postsArr = window.postsArr;
-
-          // Local cache update karo
-          const cached = localStorage.getItem(CACHE_KEY);
-          if (cached) {
-            try {
-              const arr = JSON.parse(cached).filter(p => p.id !== pid);
-              localStorage.setItem(CACHE_KEY, JSON.stringify(arr));
-            } catch(e) {}
-          }
-
-          console.log('🗑️ Post removed from UI:', pid);
+if (
+  (syncData.action === 'deleted' || syncData.action === 'expired_deleted') 
+  && syncData.updatedPostId
+) {
+  const pid = syncData.updatedPostId;
+  const cardEl = document.getElementById(`card-${pid}`);
+  if (cardEl) cardEl.remove();
+  window.postsArr = (window.postsArr || []).filter(p => p.id !== pid);
+  postsArr = window.postsArr;
+  const cached = localStorage.getItem(CACHE_KEY);
+  if (cached) {
+    try {
+      const arr = JSON.parse(cached).filter(p => p.id !== pid);
+      localStorage.setItem(CACHE_KEY, JSON.stringify(arr));
+    } catch(e) {}
+  }
+  localStorage.removeItem('trending_cache_html');
+  localStorage.removeItem('trending_cache_time');
+  if (typeof loadTrendingPosts === 'function') loadTrendingPosts(true);
+  console.log('🗑️ Post removed from UI:', pid);
 
 } else {
-          // ✅ Cache فوری clear
-          localStorage.removeItem('trending_cache_html');
-          localStorage.removeItem('trending_cache_time');
-          localStorage.removeItem(CACHE_KEY);
-
-          // ✅ Specific post cache + DOM سے ہٹاؤ
-          if (syncData.updatedPostId) {
-            const pid = syncData.updatedPostId;
-            const cached = localStorage.getItem(CACHE_KEY);
-            if (cached) {
-              try {
-                let arr = JSON.parse(cached);
-                arr = arr.filter(p => p.id !== pid);
-                localStorage.setItem(CACHE_KEY, JSON.stringify(arr));
-              } catch(e) {}
-            }
-            const cardEl = document.getElementById(`card-${pid}`);
-            if (cardEl) cardEl.remove();
-            window.postsArr = (window.postsArr || []).filter(p => p.id !== pid);
-            postsArr = window.postsArr;
-          }
-
-          if (typeof loadTrendingPosts === 'function') loadTrendingPosts();
-          if (typeof window.loadInitialPosts === 'function') window.loadInitialPosts();
-        }
+  localStorage.removeItem('trending_cache_html');
+  localStorage.removeItem('trending_cache_time');
+  localStorage.removeItem(CACHE_KEY);
+  if (syncData.updatedPostId) {
+    const pid = syncData.updatedPostId;
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      try {
+        let arr = JSON.parse(cached);
+        arr = arr.filter(p => p.id !== pid);
+        localStorage.setItem(CACHE_KEY, JSON.stringify(arr));
+      } catch(e) {}
+    }
+    const cardEl = document.getElementById(`card-${pid}`);
+    if (cardEl) cardEl.remove();
+    window.postsArr = (window.postsArr || []).filter(p => p.id !== pid);
+    postsArr = window.postsArr;
+  }
+  if (typeof loadTrendingPosts === 'function') loadTrendingPosts(true);
+  if (typeof window.loadInitialPosts === 'function') window.loadInitialPosts();
+}
 
         localStorage.setItem('last_sync_handled', syncData.lastUpdate.toString());
       }
@@ -1029,7 +1046,7 @@ onValue(syncRef, (snapshot) => {
   window.currentShareType = null;
 
   // TRENDING POSTS
-  async function loadTrendingPosts() {
+async function loadTrendingPosts(forceRefresh = false) {
     const trendingList = document.getElementById('trending-list');
     const trendingSection = document.getElementById('trending-section');
     if (!trendingList) return;
@@ -1038,7 +1055,7 @@ onValue(syncRef, (snapshot) => {
     const cachedTime = localStorage.getItem('trending_cache_time');
     const TWO_HOURS = 2 * 60 * 60 * 1000;
 
-    if (cachedHTML && cachedTime && (Date.now() - parseInt(cachedTime) < TWO_HOURS)) {
+if (!forceRefresh && cachedHTML && cachedTime && (Date.now() - parseInt(cachedTime) < TWO_HOURS)) {
       if (cachedHTML === "empty") trendingSection.style.display = 'none';
       else { trendingList.innerHTML = cachedHTML; trendingSection.style.display = 'block'; }
       return;
@@ -1106,7 +1123,7 @@ onValue(syncRef, (snapshot) => {
     if (!window.currentShareId) return;
     const post = postsArr.find(p => p.id === window.currentShareId);
     const pageName = window.currentShareType === 'general_post' ? 'details.html' : 'posts.html';
-const link = `https://healthjobs-portal.web.app/${pageName}?id=${window.currentShareId}`;
+const link = `https://healthjobportal.com/${pageName}?id=${window.currentShareId}`;
     const title = post?.title ? `📢 ${post.title}\n` : "Health Jobs Portal\n";
     const desc = post?.desc ? `${post.desc.substring(0, 100)}...\n\n` : "";
 const text = `${title}${desc}Check details here: ${link}`;
@@ -1756,12 +1773,21 @@ const locCat = pType === 'general_post'
     const filtered = arr.filter(p => {
       if (p.status==='deleted'||p.status==='inactive') return false;
       if (!matchCat(p, window.catActive)) return false;
-      if (window.timeActive !== 'all') {
-        const diff = now - (p.createdAt||0);
-        if (window.timeActive==='today' && diff >= ONE_DAY) return false;
-        if (window.timeActive==='yesterday' && (diff < ONE_DAY || diff >= ONE_DAY*2)) return false;
-        if (window.timeActive==='weekly' && diff >= ONE_DAY*7) return false;
-      }
+if (window.timeActive !== 'all') {
+  const diff = now - (p.createdAt||0);
+  if (window.timeActive==='today' && diff >= ONE_DAY) return false;
+  if (window.timeActive==='yesterday' && (diff < ONE_DAY || diff >= ONE_DAY*2)) return false;
+  if (window.timeActive==='weekly' && diff >= ONE_DAY*7) return false;
+  if (window.timeActive==='active') {
+    // Sirf employer aur candidate posts
+    if (p.type !== 'employer_post' && p.type !== 'candidate_post') return false;
+    // Expire nahi honi chahiye
+    if (p.expiresAt) {
+      const expDate = new Date(p.expiresAt).getTime();
+      if (expDate < now) return false;
+    }
+  }
+}
       return true;
     });
     const feed = document.getElementById('feed'), noRes = document.getElementById('no-res');
