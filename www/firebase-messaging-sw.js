@@ -1,3 +1,4 @@
+// firebase-messaging-sw.js
 importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js');
 
@@ -12,14 +13,37 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Background mein notification handle karne ke liye
 messaging.onBackgroundMessage((payload) => {
-    console.log('Background Message received: ', payload);
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        icon: '/images/logo.png'
-    };
+    console.log('📩 Background:', payload);
+    
+    const { notification = {}, data = {} } = payload;
+    
+    self.registration.showNotification(
+        notification.title || 'Health Jobs Alert',
+        {
+            body: notification.body || 'New medical jobs available!',
+            icon: '/images/logo.png',
+            badge: '/images/favicon.png',
+            data: data,
+            vibrate: [200, 100, 200],
+            tag: data.postId || 'post',
+            renotify: true
+        }
+    );
+});
 
-    self.registration.showNotification(notificationTitle, notificationOptions);
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const data = event.notification.data || {};
+    let url = '/';
+    if (data.postId) url = `/details.html?id=${data.postId}`;
+    
+    event.waitUntil(
+        clients.matchAll({ type: 'window' }).then(clientList => {
+            for (const client of clientList) {
+                if (client.url.includes(url) && 'focus' in client) return client.focus();
+            }
+            if (clients.openWindow) return clients.openWindow(url);
+        })
+    );
 });

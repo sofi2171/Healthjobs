@@ -5,6 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages | Healthjobs Portal</title>
     <style>
+        /* ریفریشر کا ڈیزائن */
+.ptr-element {
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8fafc; /* ہلکا بیک گراؤنڈ */
+    transition: height 0.3s ease;
+}
+
+.ptr-active {
+    height: 70px; /* جب نیچے کھینچیں گے تو اتنی جگہ بنے گی */
+}
+
+.spinner-icon {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #cbd5e1;
+    border-top: 3px solid #0a66c2; /* سفیان بھائی، آپ کا برانڈ بلو کلر */
+    border-radius: 50%;
+    animation: ptr-spin 0.8s linear infinite;
+}
+
+@keyframes ptr-spin {
+    to { transform: rotate(360deg); }
+}
+        
         :root {
             --primary-blue: #0a66c2;
             --hover-blue: #004182;
@@ -87,7 +116,10 @@
     </style>
 </head>
 <body>
-
+<div id="ptr-spinner" class="ptr-element">
+    <div class="spinner-icon"></div>
+</div>
+    
     <header>
         <div class="header-left">
             <button class="back-btn" onclick="location.href='index.html'">
@@ -134,24 +166,17 @@
         import { getDatabase, ref as dbRef, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         // MAIN DB FOR PROFILES (Firestore)
+        // ✅ صرف ایک بار - CORRECT!
         const mainConfig = { 
             apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk", 
             authDomain: "jobs-45cc9.firebaseapp.com", 
-            projectId: "jobs-45cc9" 
+            projectId: "jobs-45cc9",
+            databaseURL: "https://jobs-45cc9-default-rtdb.firebaseio.com"
         };
         const mainApp = initializeApp(mainConfig);
         const auth = getAuth(mainApp);
         const dbMain = getFirestore(mainApp);
-
-        // CHAT DB FOR MESSAGES (Realtime Database)
-        const chatConfig = { 
-            apiKey: "AIzaSyASgMlWAUfFFOl-pApiUEB__XAHzlo-9iI", 
-            authDomain: "chat-jobs.firebaseapp.com", 
-            databaseURL: "https://chat-jobs-default-rtdb.asia-southeast1.firebasedatabase.app", 
-            projectId: "chat-jobs"
-        };
-        const chatApp = initializeApp(chatConfig, "ChatApp");
-        const dbChatRT = getDatabase(chatApp);
+const dbChatRT = getDatabase(mainApp); // ✅ اسی app سے
 
         let currentUser = null;
         let CACHE_KEY = "";
@@ -348,6 +373,39 @@
             localStorage.setItem('global_unread_chats', count);
             window.dispatchEvent(new Event('storage'));
         }
+        let startY = 0;
+const spinner = document.getElementById('ptr-spinner');
+
+// ٹچ شروع ہونا
+window.addEventListener('touchstart', (e) => {
+    if (window.scrollY === 0) {
+        startY = e.touches[0].pageY;
+    }
+}, { passive: true });
+
+// ٹچ کے ساتھ نیچے کھینچنا
+window.addEventListener('touchmove', (e) => {
+    let currentY = e.touches[0].pageY;
+    let diff = currentY - startY;
+
+    if (window.scrollY === 0 && diff > 10) {
+        spinner.classList.add('ptr-active');
+    }
+}, { passive: true });
+
+// جب ہاتھ چھوڑیں تو ریفریش ہو
+window.addEventListener('touchend', () => {
+    if (spinner.classList.contains('ptr-active')) {
+        // یہاں آپ کی ایپ ریفریش ہوگی
+        window.location.reload(); 
+        
+        // 2 سیکنڈ بعد اسپنر بند ہو جائے گا (اگر پیج لوڈ نہ ہوا ہو)
+        setTimeout(() => {
+            spinner.classList.remove('ptr-active');
+        }, 2000);
+    }
+});
+        
     </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {

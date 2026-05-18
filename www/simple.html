@@ -140,7 +140,7 @@
             <div class="footer-links">
                 <a href="index.html">Home</a><a href="about.html">About Us</a><a href="terms.html">Terms</a><a href="privcy.html">Privacy</a>
             </div>
-            <div class="footer-copy">&copy; 2026 Powered by Health Jobs Portal</div>
+            <div class="footer-copy">&copy; 2026 Powered by SufianX</div>
         </div>
     </footer>
 
@@ -353,15 +353,18 @@
 
                 // Notification Backend
                 try {
-                    fetch('https://notication-healthjobs.vercel.app/api/server', {
+fetch('https://notication-healthjobs.vercel.app/api/server', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
-                            title: title || finalName, 
-                            body: desc || "Check new medical update!", 
-                            postId: docRef.id,
-                            type: "general_post"
-                        })
+    title: title || "New Medical Update",
+    hospital: finalName,
+    body: desc || "Check new medical update!",
+    postId: docRef.id,
+    senderPhoto: finalPic,
+    posterId: currentUser.uid,
+    type: "general_post"
+})
                     });
                 } catch(e) { console.log("Notification backend failed"); }
 
