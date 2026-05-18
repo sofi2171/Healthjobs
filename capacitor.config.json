@@ -2,9 +2,16 @@
   "appId": "com.sufian.healthjobs",
   "appName": "Healthjobs",
   "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": [
+      "healthjobportal.com",
+      "healthjobs-portal.web.app"
+    ]
+  },
   "plugins": {
     "App": {
-      "launchUrl": "healthjobs://post"
+      "launchUrl": "https://healthjobportal.com"
     },
     "GoogleAuth": {
       "scopes": ["profile", "email"],
