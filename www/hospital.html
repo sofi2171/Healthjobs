@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Nearby Hospitals | Health Jobs Portal</title>
+<meta name="description" content="Find hospitals near you with live turn-by-turn navigation. Health Jobs Portal.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --blue:      #1a56db;
+  --blue-dark: #1039a0;
+  --blue-light:#e8f0fe;
+  --teal:      #0f766e;
+  --green:     #15803d;
+  --orange:    #c2410c;
+  --red:       #dc2626;
+  --bg:        #f4f6fb;
+  --surface:   #ffffff;
+  --text:      #111827;
+  --muted:     #6b7280;
+  --border:    #e5e7eb;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.09);
+  --r:         12px;
+}
+*, *::before, *::after {
+  margin:0; padding:0; box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+  font-family:'DM Sans', sans-serif;
+}
+html, body { height:100%; overflow-x:hidden; }
+body { background:var(--bg); color:var(--text); }
+
+/* ── HEADER ── */
+header {
+  background:var(--surface);
+  height:58px; padding:0 16px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:fixed; top:0; left:0; width:100%; z-index:1000;
+  border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow-sm);
+}
+.back-btn {
+  width:38px; height:38px; border-radius:50%;
+  border:1px solid var(--border); background:transparent;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:#374151; transition:background 0.15s;
+}
+.back-btn:active { background:#f3f4f6; }
+.header-center { position:absolute; left:50%; transform:translateX(-50%); }
+.logo-img { height:30px; object-fit:contain; display:block; }
+.logo-text { font-size:15px; font-weight:800; color:var(--blue); display:none; }
+.header-spacer { width:38px; flex-shrink:0; }
+
+/* ── MAIN SCREEN ── */
+#main-screen { padding-top:58px; min-height:100vh; display:flex; flex-direction:column; }
+
+.hero {
+  background:linear-gradient(140deg, #1a56db 0%, #0f766e 100%);
+  padding:28px 20px 24px; text-align:center; position:relative; overflow:hidden;
+}
+.hero::after {
+  content:''; position:absolute; inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.hero-icon {
+  width:54px; height:54px;
+  background:rgba(255,255,255,0.15);
+  border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 14px;
+  border:1px solid rgba(255,255,255,0.2);
+  position:relative; z-index:1;
+}
+.hero h1 { font-size:20px; font-weight:800; color:#fff; margin-bottom:6px; position:relative; z-index:1; }
+.hero p  { font-size:13px; color:rgba(255,255,255,0.78); line-height:1.6; max-width:280px; margin:0 auto; position:relative; z-index:1; }
+
+.start-wrap { padding:16px 16px 0; }
+#start-btn {
+  width:100%; padding:14px 20px;
+  background:var(--blue); color:#fff;
+  border:none; border-radius:var(--r);
+  font-size:14px; font-weight:700;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  transition:background 0.18s, transform 0.1s;
+  box-shadow:0 3px 12px rgba(26,86,219,0.35);
+}
+#start-btn:active { transform:scale(0.98); background:var(--blue-dark); }
+
+/* status */
+#status-bar {
+  margin:12px 16px 0; padding:11px 14px;
+  border-radius:10px; font-size:13px; font-weight:600;
+  display:none; align-items:center; gap:9px;
+}
+#status-bar.info    { background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+#status-bar.success { background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; }
+#status-bar.error   { background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
+.pdot {
+  width:9px; height:9px; border-radius:50%;
+  background:currentColor; flex-shrink:0;
+  animation:pulse 1.2s ease infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.6)} }
+
+/* filter */
+#filter-section { display:none; padding:14px 16px 0; }
+.filter-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.7px; margin-bottom:8px; }
+.chips { display:flex; gap:7px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; }
+.chips::-webkit-scrollbar { display:none; }
+.chip {
+  padding:7px 13px; border-radius:999px;
+  border:1.5px solid var(--border); background:var(--surface);
+  font-size:12px; font-weight:600; color:var(--muted);
+  white-space:nowrap; cursor:pointer; transition:0.18s; flex-shrink:0;
+}
+.chip.active { background:var(--blue); border-color:var(--blue); color:#fff; box-shadow:0 2px 8px rgba(26,86,219,.25); }
+
+/* map preview */
+#map-preview-section { display:none; padding:12px 16px 0; }
+#map-preview { width:100%; height:195px; border-radius:var(--r); overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow-md); display:block; }
+
+/* results */
+#results-section { padding:12px 16px 16px; flex:1; }
+#results-title { font-size:13px; font-weight:700; color:var(--muted); margin-bottom:10px; display:none; align-items:center; gap:6px; }
+#results-title span { background:var(--blue); color:#fff; font-size:11px; padding:2px 8px; border-radius:999px; }
+
+/* card */
+.hosp-card {
+  background:var(--surface); border-radius:var(--r);
+  border:1px solid var(--border); padding:14px;
+  margin-bottom:10px; box-shadow:var(--shadow-sm);
+  cursor:pointer; transition:box-shadow 0.18s, transform 0.1s;
+  position:relative; overflow:hidden;
+}
+.hosp-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:3px; background:var(--blue); border-radius:3px 0 0 3px;
+}
+.hosp-card.pharmacy::before { background:var(--teal); }
+.hosp-card.clinic::before   { background:var(--orange); }
+.hosp-card:active { transform:scale(0.99); box-shadow:none; }
+
+.card-top { display:flex; align-items:flex-start; gap:12px; }
+.card-icon {
+  width:42px; height:42px; border-radius:10px;
+  background:var(--blue-light);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.card-icon.teal  { background:#f0fdfa; }
+.card-icon.org   { background:#fff7ed; }
+
+.card-info { flex:1; min-width:0; }
+.card-name { font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; }
+.card-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:10px; font-weight:700; padding:2px 8px;
+  border-radius:999px; margin-bottom:4px;
+  background:var(--blue-light); color:var(--blue);
+}
+.card-badge.clinic   { background:#fff7ed; color:var(--orange); }
+.card-badge.pharmacy { background:#f0fdfa; color:var(--teal); }
+.card-badge.doctors  { background:#faf5ff; color:#7c3aed; }
+.card-badge.emergency{ background:#fef2f2; color:var(--red); }
+.card-addr { font-size:11.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dist-pill {
+  background:var(--blue-light); color:var(--blue);
+  font-size:11.5px; font-weight:700; padding:4px 9px;
+  border-radius:7px; white-space:nowrap; flex-shrink:0; align-self:flex-start;
+  font-family:'DM Mono', monospace;
+}
+
+.card-actions { display:flex; gap:7px; margin-top:11px; }
+.cbtn {
+  flex:1; padding:8px 6px; border-radius:8px;
+  border:1.5px solid var(--border); background:var(--surface);
+  font-size:11.5px; font-weight:700; color:#374151;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;
+  transition:background 0.15s;
+}
+.cbtn:active { background:#f3f4f6; }
+.cbtn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+.cbtn.primary:active { background:var(--blue-dark); }
+.cbtn svg { width:14px; height:14px; fill:currentColor; flex-shrink:0; }
+
+/* skeleton */
+.skel-card { background:var(--surface); border-radius:var(--r); padding:14px; margin-bottom:10px; border:1px solid var(--border); }
+.sk { background:linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%); background-size:200% 100%; animation:sh 1.3s infinite; border-radius:5px; }
+@keyframes sh { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ── NAVIGATION SCREEN ── */
+#nav-screen {
+  display:none;
+  position:fixed;
+  top:0; left:0; width:100%; height:100%;
+  z-index:9000;
+  background:#e5e0d8;
+  flex-direction:column;
+}
+#nav-screen.open { display:flex; }
+
+#nav-topbar {
+  position:relative; z-index:200;
+  background:#1a56db;
+  padding:12px 14px;
+  padding-top:max(env(safe-area-inset-top, 0px), 12px);
+  display:flex; align-items:center; gap:10px;
+  flex-shrink:0;
+}
+#nav-close-btn {
+  width:40px; height:40px; border-radius:50%;
+  background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.3);
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; flex-shrink:0;
+}
+#nav-dest-info { flex:1; }
+#nav-dest-name { font-size:15px; font-weight:800; color:#fff; margin-bottom:2px; line-height:1.3; }
+#nav-dest-dist { font-size:12px; color:rgba(255,255,255,.75); font-weight:600; }
+
+/* instruction banner */
+#nav-instruction {
+  position:relative; z-index:200;
+  background:#1039a0; color:#fff;
+  padding:12px 15px;
+  display:flex; align-items:center; gap:12px;
+  flex-shrink:0;
+  transition:background 0.4s;
+}
+#nav-turn-icon {
+  width:42px; height:42px; min-width:42px;
+  background:rgba(255,255,255,.18); border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+}
+#nav-turn-icon svg { width:24px; height:24px; fill:#fff; }
+#nav-turn-text { flex:1; min-width:0; }
+#nav-step-dist { font-size:22px; font-weight:800; line-height:1; font-family:'DM Mono',monospace; }
+#nav-step-name { font-size:12px; opacity:.85; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* map takes remaining space */
+#nav-map {
+  flex:1;
+  width:100%;
+  position:relative;
+  z-index:100;
+  min-height:0;
+}
+
+/* recenter */
+#recenter-btn {
+  position:absolute; right:14px; bottom:170px; z-index:201;
+  width:46px; height:46px; border-radius:50%;
+  background:var(--surface); border:none;
+  box-shadow:0 2px 12px rgba(0,0,0,.22);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+}
+#recenter-btn svg { width:20px; height:20px; fill:var(--blue); }
+
+/* ETA panel */
+#nav-eta-panel {
+  position:relative; z-index:200;
+  background:var(--surface);
+  padding:14px 20px;
+  padding-bottom:max(env(safe-area-inset-bottom, 0px), 16px);
+  box-shadow:0 -4px 20px rgba(0,0,0,.12);
+  flex-shrink:0;
+}
+.eta-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.eta-item { text-align:center; flex:1; }
+.eta-val  { font-size:22px; font-weight:800; color:var(--blue); line-height:1; font-family:'DM Mono',monospace; }
+.eta-label{ font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+.eta-div  { width:1px; height:40px; background:var(--border); }
+
+#nav-arrived-btn {
+  width:100%; padding:13px;
+  background:var(--green); color:#fff;
+  border:none; border-radius:var(--r);
+  font-size:14px; font-weight:700;
+  cursor:pointer; transition:0.18s;
+}
+#nav-arrived-btn:active { transform:scale(0.98); }
+
+/* ── DETAIL MODAL ── */
+#detail-modal {
+  position:fixed; inset:0;
+  background:rgba(17,24,39,.55);
+  z-index:5000; display:none;
+  align-items:flex-end; justify-content:center;
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+}
+#detail-modal.open { display:flex; }
+.modal-sheet {
+  background:var(--surface); width:100%; max-width:540px;
+  border-radius:20px 20px 0 0;
+  padding:20px 20px;
+  padding-bottom:max(env(safe-area-inset-bottom), 28px);
+  animation:slideUp 0.28s cubic-bezier(0.34,1.4,0.64,1);
+  max-height:82vh; overflow-y:auto;
+}
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.modal-handle { width:36px; height:4px; background:#e5e7eb; border-radius:999px; margin:0 auto 18px; }
+.modal-name  { font-size:18px; font-weight:800; margin-bottom:5px; line-height:1.3; }
+.modal-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; background:var(--blue-light); color:var(--blue); margin-bottom:14px; }
+.modal-row   { display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid #f3f4f6; font-size:13px; color:#374151; font-weight:500; }
+.modal-row:last-of-type { border-bottom:none; }
+.modal-row svg { width:16px; height:16px; fill:var(--blue); flex-shrink:0; }
+.modal-btns  { display:flex; gap:8px; margin-top:16px; }
+.mbtn { flex:1; padding:12px; border-radius:10px; border:none; font-size:13.5px; font-weight:700; cursor:pointer; transition:0.18s; }
+.mbtn.primary { background:var(--blue); color:#fff; }
+.mbtn.sec     { background:#f3f4f6; color:#374151; }
+.mbtn:active  { transform:scale(0.98); }
+
+/* empty / footer */
+.empty-state { text-align:center; padding:40px 20px; }
+.empty-state svg { width:56px; height:56px; fill:#d1d5db; margin-bottom:14px; }
+.empty-state h3  { font-size:16px; font-weight:700; color:#6b7280; margin-bottom:6px; }
+.empty-state p   { font-size:13px; color:var(--muted); line-height:1.5; }
+
+footer { background:var(--surface); border-top:1px solid var(--border); padding:20px 20px 28px; text-align:center; margin-top:auto; }
+.footer-logo     { height:26px; margin-bottom:8px; }
+.footer-tagline  { font-size:12px; color:var(--muted); margin-bottom:12px; font-weight:500; }
+.footer-links    { display:flex; justify-content:center; gap:16px; margin-bottom:12px; flex-wrap:wrap; }
+.footer-links a  { font-size:12px; font-weight:600; color:var(--blue); text-decoration:none; }
+.footer-div      { width:32px; height:2px; background:linear-gradient(90deg,var(--blue),var(--teal)); border-radius:999px; margin:0 auto 12px; }
+.footer-copy     { font-size:11px; color:#9ca3af; line-height:1.6; }
+.footer-copy b   { color:var(--muted); }
+
+/* Leaflet popup tweak */
+.leaflet-popup-content-wrapper { border-radius:10px !important; box-shadow:var(--shadow-md) !important; }
+.leaflet-popup-content { font-family:'DM Sans',sans-serif !important; font-size:13px !important; font-weight:600 !important; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <button class="back-btn" onclick="history.back()">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+  </button>
+  <div class="header-center">
+    <img src="images/logo.png" class="logo-img" alt="Health Jobs Portal"
+         onerror="this.style.display='none';document.getElementById('ltxt').style.display='block'">
+    <span class="logo-text" id="ltxt">Health Jobs Portal</span>
+  </div>
+  <div class="header-spacer"></div>
+</header>
+
+<!-- MAIN SCREEN -->
+<div id="main-screen">
+  <div class="hero">
+    <div class="hero-icon">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="white">
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/>
+      </svg>
+    </div>
+    <h1>Find Nearby Hospitals</h1>
+    <p>Locate hospitals, clinics and pharmacies with live turn-by-turn navigation</p>
+  </div>
+
+  <div class="start-wrap">
+    <button id="start-btn" onclick="startSearch()">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="white">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+      </svg>
+      Use My Current Location
+    </button>
+  </div>
+
+  <div id="status-bar">
+    <div class="pdot"></div>
+    <span id="status-txt">Detecting location...</span>
+  </div>
+
+  <div id="filter-section">
+    <div class="filter-label">Filter by Type</div>
+    <div class="chips">
+      <div class="chip active"  onclick="filterBy('all',this)">All</div>
+      <div class="chip" onclick="filterBy('hospital',this)">Hospital</div>
+      <div class="chip" onclick="filterBy('clinic',this)">Clinic</div>
+      <div class="chip" onclick="filterBy('pharmacy',this)">Pharmacy</div>
+      <div class="chip" onclick="filterBy('doctors',this)">Doctor</div>
+    </div>
+  </div>
+
+  <div id="map-preview-section">
+    <div id="map-preview"></div>
+  </div>
+
+  <div id="results-section">
+    <div id="results-title">Results Found <span id="result-count">0</span></div>
+    <div id="cards-container"></div>
+  </div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <img src="images/logo.png" alt="Health Jobs" class="footer-logo" width="120" height="30" loading="lazy" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
+    <p class="footer-tagline">Pakistan's #1 Digital Healthcare Network</p>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="terms.html">Terms</a>
+      <a href="privcy.html">Privacy Policy</a>
+
+    </div>
+    <div class="footer-copy">&copy; 2026 Powered by SufianX/All right reserved</div>
+  </div>
+</footer>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detail-modal" onclick="closeModalBg(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- NAVIGATION SCREEN (true fixed fullscreen) -->
+<div id="nav-screen">
+  <div id="nav-map"></div>
+
+  <div id="nav-topbar">
+    <button id="nav-close-btn" onclick="stopNavigation()">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="white">
+        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+      </svg>
+    </button>
+    <div id="nav-dest-info">
+      <div id="nav-dest-name">Navigating...</div>
+      <div id="nav-dest-dist">Calculating route...</div>
+    </div>
+  </div>
+
+  <div id="nav-instruction">
+    <div id="nav-turn-icon">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 4l-7 7h4v6h6v-6h4z"/></svg>
+    </div>
+    <div id="nav-turn-text">
+      <div id="nav-step-dist">--</div>
+      <div id="nav-step-name">Calculating route...</div>
+    </div>
+  </div>
+
+  <button id="recenter-btn" onclick="recenterMap()">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+    </svg>
+  </button>
+
+  <div id="nav-eta-panel">
+    <div class="eta-row">
+      <div class="eta-item">
+        <div class="eta-val" id="eta-time">--</div>
+        <div class="eta-label">ETA (mins)</div>
+      </div>
+      <div class="eta-div"></div>
+      <div class="eta-item">
+        <div class="eta-val" id="eta-dist">--</div>
+        <div class="eta-label">Distance</div>
+      </div>
+      <div class="eta-div"></div>
+      <div class="eta-item">
+        <div class="eta-val" id="eta-steps">--</div>
+        <div class="eta-label">Steps Left</div>
+      </div>
+    </div>
+    <button id="nav-arrived-btn" onclick="stopNavigation()">I Have Arrived</button>
+  </div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────
+   STATE
+───────────────────────────────────────────── */
+let userLat = null, userLon = null;
+let previewMap = null, navMap = null;
+let userMarkerPrev = null, navUserMarker = null;
+let routeLayerPrev = null, navRouteLayer = null, destMarker = null;
+let allHospitals = [], prevMarkers = [];
+let watchId = null, routeSteps = [], stepIdx = 0, navTarget = null;
+let autoFollow = true;
+
+/* ─────────────────────────────────────────────
+   TURN ICONS
+───────────────────────────────────────────── */
+const TURN_PATHS = {
+  'turn-left':        'M15 5l-7 7 7 7V5z',
+  'turn-right':       'M9 5l7 7-7 7V5z',
+  'turn-slight-left': 'M11 6L4.5 12.5 11 19l1.4-1.4-5.1-5.1 5.1-5.1z',
+  'turn-slight-right':'M13 6l6.5 6.5L13 19l-1.4-1.4 5.1-5.1-5.1-5.1z',
+  'uturn':            'M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z',
+  'arrive':           'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
+  'default':          'M12 4l-7 7h4v6h6v-6h4z'
+};
+function turnSvg(type, mod) {
+  const key = (mod ? `${type}-${mod}` : type).replace(/ /g, '-');
+  const d = TURN_PATHS[key] || TURN_PATHS[type] || TURN_PATHS.default;
+  return `<svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="${d}"/></svg>`;
+}
+
+/* ─────────────────────────────────────────────
+   STATUS
+───────────────────────────────────────────── */
+function showStatus(msg, type) {
+  const b = document.getElementById('status-bar');
+  b.className = type; b.style.display = 'flex';
+  document.getElementById('status-txt').textContent = msg;
+}
+function hideStatus() { document.getElementById('status-bar').style.display = 'none'; }
+
+/* ─────────────────────────────────────────────
+   START SEARCH
+───────────────────────────────────────────── */
+function startSearch() {
+  const btn = document.getElementById('start-btn');
+  btn.disabled = true; btn.style.opacity = '0.7';
+  btn.innerHTML = `<div class="pdot" style="background:#fff;"></div> Detecting location...`;
+  showStatus('Acquiring GPS signal...', 'info');
+
+  if (!navigator.geolocation) {
+    showStatus('Geolocation not supported.', 'error');
+    resetBtn(); return;
+  }
+  navigator.geolocation.getCurrentPosition(pos => {
+    userLat = pos.coords.latitude;
+    userLon = pos.coords.longitude;
+    showStatus('Location found! Searching nearby...', 'info');
+    initPreviewMap();
+    fetchHospitals();
+  }, () => {
+    showStatus('Please allow location access and try again.', 'error');
+    resetBtn();
+  }, { enableHighAccuracy: true, timeout: 15000 });
+}
+
+function resetBtn() {
+  const btn = document.getElementById('start-btn');
+  btn.disabled = false; btn.style.opacity = '1';
+  btn.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Use My Current Location`;
+}
+
+/* ─────────────────────────────────────────────
+   PREVIEW MAP
+───────────────────────────────────────────── */
+function initPreviewMap() {
+  const sec = document.getElementById('map-preview-section');
+  sec.style.display = 'block';
+
+  if (!previewMap) {
+    previewMap = L.map('map-preview', { zoomControl: false, attributionControl: false })
+      .setView([userLat, userLon], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(previewMap);
+  } else {
+    previewMap.setView([userLat, userLon], 14);
+  }
+
+  // fix map size after display:block
+  setTimeout(() => previewMap.invalidateSize(), 100);
+
+  const ui = L.divIcon({
+    html: `<div style="width:14px;height:14px;background:#dc2626;border-radius:50%;border:2.5px solid white;box-shadow:0 0 0 4px rgba(220,38,38,.22);"></div>`,
+    className: '', iconAnchor: [7, 7]
+  });
+  if (userMarkerPrev) userMarkerPrev.remove();
+  userMarkerPrev = L.marker([userLat, userLon], { icon: ui }).addTo(previewMap).bindPopup('You are here');
+}
+
+/* ─────────────────────────────────────────────
+   FETCH HOSPITALS (Overpass)
+───────────────────────────────────────────── */
+async function fetchHospitals() {
+  showSkeletons();
+  const r = 5000;
+  const q = `[out:json][timeout:25];(
+    node["amenity"="hospital"](around:${r},${userLat},${userLon});
+    node["amenity"="clinic"](around:${r},${userLat},${userLon});
+    node["amenity"="pharmacy"](around:${r},${userLat},${userLon});
+    node["amenity"="doctors"](around:${r},${userLat},${userLon});
+    way["amenity"="hospital"](around:${r},${userLat},${userLon});
+    way["amenity"="clinic"](around:${r},${userLat},${userLon});
+  );out center;`;
+
+  try {
+    const res = await fetch('https://overpass-api.de/api/interpreter', {
+      method: 'POST', body: `data=${encodeURIComponent(q)}`
+    });
+    const data = await res.json();
+    processResults(data.elements);
+  } catch (e) {
+    showStatus('Failed to load data. Check your connection.', 'error');
+    document.getElementById('cards-container').innerHTML =
+      emptyState('Network Error', 'Please check your internet connection and try again.');
+    resetBtn(); hideStatus();
+  }
+}
+
+function processResults(els) {
+  allHospitals = els.map(el => {
+    const lat = el.lat || el.center?.lat;
+    const lon = el.lon  || el.center?.lon;
+    if (!lat || !lon) return null;
+    return {
+      id: String(el.id),
+      name: el.tags?.name || el.tags?.['name:en'] || 'Medical Center',
+      type: el.tags?.amenity || 'hospital',
+      lat, lon,
+      dist: getDist(userLat, userLon, lat, lon),
+      address: el.tags?.['addr:full'] || el.tags?.['addr:street'] || el.tags?.['addr:city'] || '',
+      phone: el.tags?.phone || el.tags?.contact_phone || '',
+      emergency: el.tags?.emergency === 'yes',
+      opening: el.tags?.opening_hours || ''
+    };
+  }).filter(Boolean)
+    .sort((a, b) => a.dist - b.dist)
+    .slice(0, 30);
+
+  renderCards(allHospitals);
+  addPrevMarkers(allHospitals);
+  document.getElementById('filter-section').style.display = 'block';
+  showStatus(`${allHospitals.length} medical facilities found nearby`, 'success');
+
+  const btn = document.getElementById('start-btn');
+  btn.innerHTML = `<svg viewBox="0 0 24 24" width="17" height="17" fill="white"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg> Refresh`;
+  btn.disabled = false; btn.style.opacity = '1'; btn.onclick = startSearch;
+  setTimeout(hideStatus, 3000);
+}
+
+/* ─────────────────────────────────────────────
+   CARDS
+───────────────────────────────────────────── */
+function renderCards(list) {
+  const c = document.getElementById('cards-container');
+  const t = document.getElementById('results-title');
+  document.getElementById('result-count').textContent = list.length;
+  t.style.display = list.length ? 'flex' : 'none';
+
+  if (!list.length) {
+    c.innerHTML = emptyState('No Hospitals Found', 'No medical facilities found within 5km. Try refreshing.');
+    return;
+  }
+
+  c.innerHTML = list.map(h => `
+    <div class="hosp-card ${h.type}" onclick="showDetail('${h.id}')">
+      <div class="card-top">
+        <div class="card-icon ${h.type === 'pharmacy' ? 'teal' : h.type === 'clinic' ? 'org' : ''}">
+          ${typeIcon(h.type)}
+        </div>
+        <div class="card-info">
+          <div class="card-name">${h.name}</div>
+          <div class="card-badge ${h.type}">${typeLabel(h.type)}${h.emergency ? ' &middot; Emergency' : ''}</div>
+          <div class="card-addr">${h.address || fmtCoord(h.lat, h.lon)}</div>
+        </div>
+        <div class="dist-pill">${fmtDist(h.dist)}</div>
+      </div>
+      <div class="card-actions">
+        <button class="cbtn primary" onclick="event.stopPropagation();startNavigation('${h.id}')">
+          <svg viewBox="0 0 24 24"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg>
+          Navigate
+        </button>
+        ${h.phone
+          ? `<button class="cbtn" onclick="event.stopPropagation();window.location='tel:${h.phone}'">
+              <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+              Call
+            </button>`
+          : `<button class="cbtn" onclick="event.stopPropagation();focusPrev(${h.lat},${h.lon})">
+              <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+              Map
+            </button>`}
+        <button class="cbtn" onclick="event.stopPropagation();showDetail('${h.id}')">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          Info
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function addPrevMarkers(list) {
+  prevMarkers.forEach(m => m.remove());
+  prevMarkers = [];
+  list.slice(0, 25).forEach(h => {
+    const clr = h.type === 'pharmacy' ? '#0f766e' : h.type === 'clinic' ? '#c2410c' : '#1a56db';
+    const ic = L.divIcon({
+      html: `<div style="width:22px;height:22px;background:${clr};border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,.28);"></div>`,
+      className: '', iconAnchor: [11, 22]
+    });
+    const m = L.marker([h.lat, h.lon], { icon: ic })
+      .addTo(previewMap)
+      .bindPopup(`<b>${h.name}</b><br>${fmtDist(h.dist)} away`);
+    m.on('click', () => showDetail(h.id));
+    prevMarkers.push(m);
+  });
+}
+
+function filterBy(type, el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const filtered = type === 'all' ? allHospitals : allHospitals.filter(h => h.type === type);
+  renderCards(filtered);
+  addPrevMarkers(filtered);
+}
+
+function focusPrev(lat, lon) {
+  if (previewMap) {
+    previewMap.setView([lat, lon], 16, { animate: true });
+    document.getElementById('map-preview-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+/* ─────────────────────────────────────────────
+   DETAIL MODAL
+───────────────────────────────────────────── */
+function showDetail(id) {
+  const h = allHospitals.find(x => x.id === String(id));
+  if (!h) return;
+  focusPrev(h.lat, h.lon);
+
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-name">${h.name}</div>
+    <div class="modal-badge">${typeLabel(h.type)}${h.emergency ? ' &middot; Emergency' : ''}</div>
+    <div class="modal-row">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      <span><b>Distance:</b> ${fmtDist(h.dist)} from your location</span>
+    </div>
+    ${h.address ? `<div class="modal-row"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>${h.address}</span></div>` : ''}
+    ${h.phone   ? `<div class="modal-row"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span><a href="tel:${h.phone}" style="color:var(--blue);font-weight:700;">${h.phone}</a></span></div>` : ''}
+    ${h.opening ? `<div class="modal-row"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg><span>${h.opening}</span></div>` : ''}
+    <div class="modal-btns">
+      <button class="mbtn primary" onclick="document.getElementById('detail-modal').classList.remove('open');startNavigation('${h.id}')">Navigate</button>
+      ${h.phone ? `<button class="mbtn sec" onclick="window.location='tel:${h.phone}'" style="background:#f0fdf4;color:var(--green);">Call</button>` : ''}
+      <button class="mbtn sec" onclick="document.getElementById('detail-modal').classList.remove('open')">Close</button>
+    </div>`;
+
+  document.getElementById('detail-modal').classList.add('open');
+}
+function closeModalBg(e) {
+  if (e.target.id === 'detail-modal') document.getElementById('detail-modal').classList.remove('open');
+}
+
+/* ─────────────────────────────────────────────
+   LIVE NAVIGATION ENGINE
+───────────────────────────────────────────── */
+async function startNavigation(id) {
+  document.getElementById('detail-modal').classList.remove('open');
+  const h = allHospitals.find(x => x.id === String(id));
+  if (!h) return;
+
+  navTarget = h; routeSteps = []; stepIdx = 0; autoFollow = true;
+
+  // Show fullscreen nav
+  const navScreen = document.getElementById('nav-screen');
+  navScreen.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  document.getElementById('nav-dest-name').textContent = h.name;
+  document.getElementById('nav-dest-dist').textContent = 'Fetching route...';
+  document.getElementById('nav-step-dist').textContent = '--';
+  document.getElementById('nav-step-name').textContent = 'Calculating...';
+  document.getElementById('nav-instruction').style.background = 'var(--blue)';
+
+  // Init nav map — must happen AFTER the screen is visible
+  if (!navMap) {
+    navMap = L.map('nav-map', { zoomControl: false, attributionControl: false })
+      .setView([userLat, userLon], 16);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(navMap);
+    navMap.on('dragstart', () => { autoFollow = false; });
+  } else {
+    navMap.setView([userLat, userLon], 16);
+  }
+
+  // Force map to fill container correctly
+  requestAnimationFrame(() => {
+    navMap.invalidateSize();
+  });
+
+  // Dest marker
+  if (destMarker) destMarker.remove();
+  const di = L.divIcon({
+    html: `<div style="width:34px;height:34px;background:var(--blue);border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:0 3px 12px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;"><svg viewBox='0 0 24 24' width='16' height='16' fill='white' style='transform:rotate(45deg)'><path d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z'/></svg></div>`,
+    className: '', iconAnchor: [17, 34]
+  });
+  destMarker = L.marker([h.lat, h.lon], { icon: di }).addTo(navMap).bindPopup(`<b>${h.name}</b>`).openPopup();
+
+  // User dot
+  updateNavDot(userLat, userLon);
+
+  // Route
+  await fetchRoute(userLat, userLon, h.lat, h.lon);
+
+  // Live GPS watch
+  if (watchId) navigator.geolocation.clearWatch(watchId);
+  watchId = navigator.geolocation.watchPosition(pos => {
+    userLat = pos.coords.latitude;
+    userLon = pos.coords.longitude;
+    updateNavDot(userLat, userLon);
+    updateStep(userLat, userLon);
+  }, null, { enableHighAccuracy: true, maximumAge: 2000, timeout: 10000 });
+}
+
+async function fetchRoute(fLat, fLon, tLat, tLon) {
+  try {
+    const url = `https://router.project-osrm.org/route/v1/foot/${fLon},${fLat};${tLon},${tLat}?overview=full&geometries=geojson&steps=true`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.code !== 'Ok') throw new Error('No route');
+
+    const route = data.routes[0];
+    const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+
+    if (navRouteLayer) navRouteLayer.remove();
+    navRouteLayer = L.polyline(coords, { color: '#1a56db', weight: 7, opacity: 0.88, lineCap: 'round', lineJoin: 'round' }).addTo(navMap);
+
+    if (routeLayerPrev) routeLayerPrev.remove();
+    routeLayerPrev = L.polyline(coords, { color: '#1a56db', weight: 4, opacity: 0.65 }).addTo(previewMap);
+
+    routeSteps = route.legs[0].steps.map(s => ({
+      lat: s.maneuver.location[1], lon: s.maneuver.location[0],
+      dist: s.distance, name: s.name || '',
+      type: s.maneuver.type, mod: s.maneuver.modifier || ''
+    }));
+    stepIdx = 0;
+
+    const totalDist = route.distance;
+    const totalTime = Math.ceil(route.duration / 60);
+
+    document.getElementById('nav-dest-dist').textContent = `${fmtDist(totalDist)} · ~${totalTime} min walk`;
+    document.getElementById('eta-time').textContent  = totalTime;
+    document.getElementById('eta-dist').textContent  = fmtDist(totalDist);
+    document.getElementById('eta-steps').textContent = routeSteps.length;
+
+    navMap.fitBounds(navRouteLayer.getBounds(), { padding: [80, 80] });
+    setTimeout(() => { navMap.setView([userLat, userLon], 17, { animate: true }); autoFollow = true; }, 1800);
+
+    updateStep(userLat, userLon);
+  } catch (e) {
+    // Fallback: straight line
+    document.getElementById('nav-dest-dist').textContent = 'Road route unavailable';
+    const d = getDist(userLat, userLon, navTarget.lat, navTarget.lon);
+    document.getElementById('eta-time').textContent  = Math.ceil(d / 80);
+    document.getElementById('eta-dist').textContent  = fmtDist(d);
+    document.getElementById('eta-steps').textContent = '--';
+    document.getElementById('nav-step-dist').textContent = fmtDist(d);
+    document.getElementById('nav-step-name').textContent  = `Head toward ${navTarget.name}`;
+
+    if (navRouteLayer) navRouteLayer.remove();
+    navRouteLayer = L.polyline([[userLat, userLon], [navTarget.lat, navTarget.lon]], {
+      color: '#1a56db', weight: 4, dashArray: '8 8', opacity: 0.75
+    }).addTo(navMap);
+    navMap.fitBounds([[userLat, userLon], [navTarget.lat, navTarget.lon]], { padding: [80, 80] });
+  }
+}
+
+function updateNavDot(lat, lon) {
+  const ui = L.divIcon({
+    html: `<div style="width:18px;height:18px;background:#dc2626;border-radius:50%;border:3px solid white;box-shadow:0 0 0 5px rgba(220,38,38,.2);"></div>`,
+    className: '', iconAnchor: [9, 9]
+  });
+  if (navUserMarker) navUserMarker.setLatLng([lat, lon]);
+  else navUserMarker = L.marker([lat, lon], { icon: ui }).addTo(navMap);
+  if (autoFollow) navMap.setView([lat, lon], 17, { animate: true, duration: 0.6 });
+}
+
+function updateStep(lat, lon) {
+  if (!routeSteps.length) return;
+
+  while (stepIdx < routeSteps.length - 1) {
+    const d = getDist(lat, lon, routeSteps[stepIdx].lat, routeSteps[stepIdx].lon);
+    if (d < 20) stepIdx++; else break;
+  }
+
+  const step = routeSteps[stepIdx];
+  const dToStep = getDist(lat, lon, step.lat, step.lon);
+  const dToDest = getDist(lat, lon, navTarget.lat, navTarget.lon);
+  const remMin  = Math.max(1, Math.ceil(dToDest / 80));
+
+  document.getElementById('nav-turn-icon').innerHTML = turnSvg(step.type, step.mod);
+  document.getElementById('nav-step-dist').textContent = fmtDist(dToStep);
+  document.getElementById('nav-step-name').textContent = step.name
+    ? `onto ${step.name}`
+    : `Continue ${step.mod || 'straight'}`;
+
+  document.getElementById('eta-dist').textContent  = fmtDist(dToDest);
+  document.getElementById('eta-time').textContent  = remMin;
+  document.getElementById('eta-steps').textContent = routeSteps.length - stepIdx;
+
+  if (dToDest < 30) {
+    document.getElementById('nav-instruction').style.background = 'var(--green)';
+    document.getElementById('nav-step-dist').textContent = 'You have arrived!';
+    document.getElementById('nav-step-name').textContent = navTarget.name;
+  }
+}
+
+function recenterMap() {
+  autoFollow = true;
+  if (navMap && userLat) navMap.setView([userLat, userLon], 17, { animate: true });
+}
+
+function stopNavigation() {
+  if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+  document.getElementById('nav-screen').classList.remove('open');
+  document.body.style.overflow = '';
+  autoFollow = true; routeSteps = []; stepIdx = 0;
+  document.getElementById('nav-instruction').style.background = 'var(--blue)';
+  // refresh preview map size
+  if (previewMap) setTimeout(() => previewMap.invalidateSize(), 200);
+}
+
+/* ─────────────────────────────────────────────
+   HELPERS
+───────────────────────────────────────────── */
+function showSkeletons() {
+  document.getElementById('cards-container').innerHTML = Array(4).fill(`
+    <div class="skel-card">
+      <div style="display:flex;gap:11px;">
+        <div class="sk" style="width:42px;height:42px;border-radius:10px;flex-shrink:0;"></div>
+        <div style="flex:1;">
+          <div class="sk" style="height:14px;width:60%;margin-bottom:9px;"></div>
+          <div class="sk" style="height:11px;width:38%;margin-bottom:8px;"></div>
+          <div class="sk" style="height:10px;width:75%;"></div>
+        </div>
+      </div>
+    </div>`).join('');
+  document.getElementById('results-title').style.display = 'none';
+}
+
+function emptyState(t, m) {
+  return `<div class="empty-state">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+    <h3>${t}</h3><p>${m}</p>
+  </div>`;
+}
+
+function getDist(a, b, c, d) {
+  const R = 6371000;
+  const dL = (c - a) * Math.PI / 180;
+  const dO = (d - b) * Math.PI / 180;
+  const x = Math.sin(dL / 2) ** 2 + Math.cos(a * Math.PI / 180) * Math.cos(c * Math.PI / 180) * Math.sin(dO / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
+}
+function fmtDist(m) { return m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(1) + ' km'; }
+function fmtCoord(la, lo) { return la.toFixed(4) + ', ' + lo.toFixed(4); }
+function typeLabel(t) { return { hospital: 'Hospital', clinic: 'Clinic', pharmacy: 'Pharmacy', doctors: 'Doctor' }[t] || 'Medical'; }
+
+function typeIcon(t) {
+  if (t === 'pharmacy') return `<svg viewBox="0 0 24 24" fill="#0f766e" width="20" height="20"><path d="M20 4h-3V2h-2v2H9V2H7v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 18H4V10h16v12zM13 12h-2v3H8v2h3v3h2v-3h3v-2h-3z"/></svg>`;
+  if (t === 'clinic')   return `<svg viewBox="0 0 24 24" fill="#c2410c" width="20" height="20"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>`;
+  if (t === 'doctors')  return `<svg viewBox="0 0 24 24" fill="#7c3aed" width="20" height="20"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zm0 12c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/></svg>`;
+  return `<svg viewBox="0 0 24 24" fill="#1a56db" width="20" height="20"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>`;
+}
+</script>
+</body>
+</html>
