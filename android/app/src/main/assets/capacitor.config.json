@@ -1,20 +1,38 @@
 {
-  "appId": "com.sufian.healthjobs",
-  "appName": "Healthjobs",
-  "webDir": "www",
-  "plugins": {
-    "GoogleAuth": {
-      "scopes": ["profile", "email"],
-      "serverClientId": "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
-      "forceCodeForRefreshToken": true
-    },
-    "SplashScreen": {
-      "launchShowDuration": 0,
-      "backgroundColor": "#ffffff"
-    },
-    "StatusBar": {
-      "style": "LIGHT",
-      "backgroundColor": "#ffffff"
-    }
-  }
+	"appId": "com.sufian.healthjobs",
+	"appName": "Healthjobs",
+	"webDir": "www",
+	"plugins": {
+		"App": {
+			"launchUrl": "healthjobs://post"
+		},
+		"GoogleAuth": {
+			"scopes": [
+				"profile",
+				"email"
+			],
+			"serverClientId": "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com",
+			"forceCodeForRefreshToken": true
+		},
+		"SplashScreen": {
+			"launchShowDuration": 0,
+			"backgroundColor": "#ffffff"
+		},
+		"PushNotifications": {
+			"presentationOptions": [
+				"badge",
+				"sound",
+				"alert"
+			]
+		},
+		"LocalNotifications": {
+			"smallIcon": "ic_notification",
+			"iconColor": "#0a66c2"
+		},
+		"Keyboard": {
+			"resize": "ionic",
+			"style": "DARK",
+			"resizeOnFullScreen": true
+		}
+	}
 }

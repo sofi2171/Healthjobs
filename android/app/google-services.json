@@ -52,11 +52,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "21065686301-bvo6bj8qo7b472okqu5tmjd572i0534h.apps.googleusercontent.com",
+          "client_id": "21065686301-r3vb1r64vipejludc5e71churk2oqmgh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sufian.healthjobs",
-            "certificate_hash": "8e2da5f54a8f2be7e5aa7df49bea31712b18ea9d"
+            "certificate_hash": "842d757127d9b7735d7ee8028792d56aaaa2fb0d"
           }
         },
         {
