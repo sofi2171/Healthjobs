@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dose Calculator | Health Jobs Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue:        #0a66c2;
+            --blue-dark:   #004182;
+            --blue-light:  #e8f1fb;
+            --blue-mid:    #cce0f5;
+            --text:        #0f172a;
+            --text-muted:  #64748b;
+            --border:      #dce6f0;
+            --bg:          #f0f5fb;
+            --white:       #ffffff;
+            --red:         #dc2626;
+            --green:       #16a34a;
+            --green-light: #f0fdf4;
+            --shadow:      0 1px 3px rgba(10,102,194,0.08), 0 8px 24px rgba(10,102,194,0.06);
+        }
+        .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    flex-shrink: 0;
+}
+
+.back-btn:hover {
+    background: var(--blue-light);
+    border-color: var(--blue-mid);
+    color: var(--blue);
+}
+
+.back-btn svg {
+    stroke: currentColor;
+}
+
+.header-logo-img {
+    height: 28px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.logo-text {
+    font-size: clamp(14px, 3vw, 18px);
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+}
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 0 clamp(12px, 4vw, 32px);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: clamp(14px, 3vw, 18px);
+            font-weight: 700;
+            color: var(--blue);
+            text-decoration: none;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+        }
+
+        .header-tag {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--blue);
+            background: var(--blue-light);
+            padding: 3px 10px;
+            border-radius: 99px;
+            border: 1px solid var(--blue-mid);
+            white-space: nowrap;
+        }
+
+        /* ── Layout ── */
+        .page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: clamp(20px, 4vw, 40px) clamp(12px, 3vw, 20px) 60px;
+        }
+
+        /* ── Page Title ── */
+        .page-title {
+            margin-bottom: clamp(20px, 4vw, 32px);
+        }
+
+        .page-title h1 {
+            font-size: clamp(20px, 4vw, 28px);
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: clamp(13px, 2vw, 15px);
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ── About Box ── */
+        .about-box {
+            background: var(--blue-light);
+            border: 1px solid var(--blue-mid);
+            border-left: 4px solid var(--blue);
+            border-radius: 10px;
+            padding: clamp(14px, 3vw, 20px) clamp(16px, 3vw, 24px);
+            margin-bottom: clamp(20px, 4vw, 32px);
+        }
+
+        .about-box h3 {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--blue);
+            margin-bottom: 8px;
+        }
+
+        .about-box p {
+            font-size: clamp(12px, 2vw, 14px);
+            color: #1e3a5f;
+            line-height: 1.7;
+        }
+
+        /* ── Two column layout ── */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(12px, 2vw, 20px);
+            align-items: start;
+        }
+
+        @media (max-width: 700px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        /* ── Card ── */
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: clamp(16px, 3vw, 28px);
+            box-shadow: var(--shadow);
+        }
+
+        .card-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--blue);
+            margin-bottom: clamp(14px, 3vw, 20px);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ── Form ── */
+        .form-group { margin-bottom: clamp(12px, 2vw, 18px); }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        label span {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: clamp(13px, 2vw, 14px);
+            color: var(--text);
+            background: #fafcff;
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+        input[type="number"]:focus, select:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(10,102,194,0.12);
+            background: var(--white);
+        }
+
+        select { cursor: pointer; }
+
+        .input-unit { position: relative; }
+        .input-unit input { padding-right: 48px; }
+
+        .unit-label {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            pointer-events: none;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .btn-calc {
+            width: 100%;
+            padding: 12px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: clamp(13px, 2vw, 15px);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            margin-top: 4px;
+        }
+
+        .btn-calc:hover { background: var(--blue-dark); }
+        .btn-calc:active { transform: scale(0.99); }
+
+        .btn-reset {
+            width: 100%;
+            padding: 9px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.15s;
+        }
+
+        .btn-reset:hover { border-color: var(--blue); color: var(--blue); }
+
+        /* ── Results ── */
+        .result-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 260px;
+            color: var(--text-muted);
+            text-align: center;
+            gap: 12px;
+        }
+
+        .ph-icon {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            background: var(--blue-light);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .ph-icon svg { width: 22px; height: 22px; stroke: var(--blue); }
+        .result-placeholder p { font-size: 13px; max-width: 180px; line-height: 1.5; }
+
+        .results { display: none; }
+
+        .patient-summary {
+            background: var(--blue-light);
+            border: 1px solid var(--blue-mid);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+
+        .patient-summary .ps-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--blue);
+            margin-bottom: 5px;
+        }
+
+        .patient-summary .ps-val {
+            font-size: 13px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .dose-item {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            transition: border-color 0.15s;
+        }
+
+        .dose-item:hover { border-color: var(--blue-mid); }
+
+        .drug-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+        .drug-category { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+
+        .dose-value {
+            font-family: 'DM Mono', monospace;
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: 500;
+            color: var(--blue);
+            margin-bottom: 4px;
+        }
+
+        .dose-range { font-size: 12px; color: var(--text-muted); }
+
+        .dose-note {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+
+        .tag-green  { background: #dcfce7; color: #15803d; }
+        .tag-blue   { background: var(--blue-light); color: var(--blue); }
+        .tag-orange { background: #fff7ed; color: #c2410c; }
+
+        .disclaimer {
+            margin-top: 16px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: #92400e;
+            line-height: 1.6;
+        }
+
+        .disclaimer strong { color: #b45309; }
+
+        /* ── Reference Table ── */
+        .ref-section { margin-top: clamp(20px, 4vw, 32px); }
+
+        .ref-section h2 {
+            font-size: clamp(13px, 2.5vw, 15px);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        /* Scrollable table wrapper */
+        .table-scroll {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .ref-table {
+            width: 100%;
+            min-width: 560px;
+            border-collapse: collapse;
+            font-size: clamp(11px, 1.8vw, 13px);
+            background: var(--white);
+        }
+
+        .ref-table th {
+            background: var(--blue);
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: clamp(10px, 1.6vw, 12px);
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .ref-table td {
+            padding: 9px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            vertical-align: top;
+        }
+
+        .ref-table tr:last-child td { border-bottom: none; }
+        .ref-table tr:nth-child(even) td { background: #f8fbff; }
+
+        .mono { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); white-space: nowrap; }
+
+        footer {
+            text-align: center;
+            padding: 24px clamp(12px, 4vw, 20px);
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            background: var(--white);
+            margin-top: 40px;
+        }
+
+        /* Scroll hint on mobile */
+        .scroll-hint {
+            display: none;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            padding-left: 2px;
+        }
+
+        @media (max-width: 600px) {
+            .scroll-hint { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <a href="javascript:history.back()" class="back-btn" title="Go Back">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke-width="2.2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+            </svg>
+        </a>
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Health Jobs Portal Logo" class="header-logo-img">
+
+        </a>
+    </div>
+
+</header>
+
+<div class="page">
+
+    <div class="page-title">
+        <h1>Paediatric &amp; Adult Dose Calculator</h1>
+        <p>Weight-based medication dose calculator for common drugs. Enter patient details and select a drug category to get accurate dose recommendations.</p>
+    </div>
+
+    <div class="about-box">
+        <h3>About This Tool</h3>
+        <p>This calculator uses standard weight-based dosing formulas (mg/kg) as published in the British National Formulary (BNF) and WHO Essential Medicines guidelines. It is intended as a <strong>clinical decision support tool</strong> only. Always verify doses against your institution's formulary and consider individual patient factors such as renal/hepatic function before prescribing.</p>
+    </div>
+
+    <div class="grid">
+
+        <!-- Left: Input -->
+        <div class="card">
+            <div class="card-title">Patient Details</div>
+
+            <div class="form-group">
+                <label>Patient Age <span>(years)</span></label>
+                <div class="input-unit">
+                    <input type="number" id="age" min="0" max="120" placeholder="e.g. 5">
+                    <span class="unit-label">yrs</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Body Weight <span>(kg)</span></label>
+                <div class="input-unit">
+                    <input type="number" id="weight" min="0.5" max="300" step="0.1" placeholder="e.g. 20">
+                    <span class="unit-label">kg</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Patient Type</label>
+                <select id="patientType">
+                    <option value="paediatric">Paediatric (under 18 years)</option>
+                    <option value="adult">Adult (18 years and above)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Drug Class / Category</label>
+                <select id="drugClass" onchange="populateDrugs()">
+                    <option value="">— Select Drug Class —</option>
+                    <optgroup label="Analgesics &amp; Antipyretics">
+                        <option value="non_opioid_analgesic">Non-Opioid Analgesics (Aniline / Salicylate)</option>
+                        <option value="nsaid">NSAIDs (Propionic / Acetic / Oxicam acids)</option>
+                        <option value="opioid_weak">Weak Opioids (Codeine / Tramadol class)</option>
+                        <option value="opioid_strong">Strong Opioids (Morphine / Fentanyl class)</option>
+                    </optgroup>
+                    <optgroup label="Antibiotics">
+                        <option value="penicillin">Penicillins (β-lactam, aminopenicillin)</option>
+                        <option value="penicillin_inhibitor">Penicillin + β-lactamase Inhibitor</option>
+                        <option value="cephalosporin_1">1st Gen Cephalosporins</option>
+                        <option value="cephalosporin_3">3rd Gen Cephalosporins</option>
+                        <option value="macrolide">Macrolides (Azalide / 14-membered ring)</option>
+                        <option value="fluoroquinolone">Fluoroquinolones (4th Gen)</option>
+                        <option value="aminoglycoside">Aminoglycosides</option>
+                        <option value="nitroimidazole">Nitroimidazoles</option>
+                        <option value="sulfonamide">Sulfonamides / Antifolates</option>
+                        <option value="tetracycline">Tetracyclines</option>
+                        <option value="glycopeptide">Glycopeptides (Cell-wall synthesis)</option>
+                        <option value="carbapenem">Carbapenems</option>
+                        <option value="oxazolidinone">Oxazolidinones</option>
+                        <option value="lincosamide">Lincosamides</option>
+                    </optgroup>
+                    <optgroup label="Antifungals">
+                        <option value="azole_antifungal">Azole Antifungals (Triazoles)</option>
+                        <option value="polyene_antifungal">Polyene Antifungals</option>
+                        <option value="echinocandin">Echinocandins</option>
+                    </optgroup>
+                    <optgroup label="Antivirals">
+                        <option value="nucleoside_antiviral">Nucleoside Analogues (DNA Polymerase inhibitors)</option>
+                        <option value="neuraminidase_inhibitor">Neuraminidase Inhibitors (Influenza)</option>
+                    </optgroup>
+                    <optgroup label="Antiprotozoals / Antimalarials">
+                        <option value="antimalarial_4ag">4-Aminoquinolines (Chloroquine class)</option>
+                        <option value="antimalarial_artemi">Artemisinin Derivatives</option>
+                        <option value="antiprotozoal">Antiprotozoals (Nitro class)</option>
+                    </optgroup>
+                    <optgroup label="Antihistamines">
+                        <option value="antihistamine_1g">1st Gen Antihistamines (Sedating)</option>
+                        <option value="antihistamine_2g">2nd Gen Antihistamines (Non-sedating)</option>
+                    </optgroup>
+                    <optgroup label="Corticosteroids">
+                        <option value="glucocorticoid_oral">Glucocorticoids — Oral (Prednisolone class)</option>
+                        <option value="glucocorticoid_high">High-potency Glucocorticoids (Dexamethasone class)</option>
+                        <option value="mineralocorticoid">Mineralocorticoids</option>
+                    </optgroup>
+                    <optgroup label="Respiratory">
+                        <option value="saba">Short-acting β₂ Agonists (SABA)</option>
+                        <option value="laba">Long-acting β₂ Agonists (LABA)</option>
+                        <option value="anticholinergic_resp">Anticholinergics — Respiratory (SAMA)</option>
+                        <option value="methylxanthine">Methylxanthines (Phosphodiesterase inhibitors)</option>
+                        <option value="leukotriene_antagonist">Leukotriene Receptor Antagonists</option>
+                        <option value="inhaled_corticosteroid">Inhaled Corticosteroids (ICS)</option>
+                    </optgroup>
+                    <optgroup label="CNS / Anticonvulsants">
+                        <option value="benzodiazepine">Benzodiazepines (GABA-A agonist)</option>
+                        <option value="barbiturate">Barbiturates</option>
+                        <option value="sodium_channel_blocker">Sodium Channel Blockers (Phenytoin class)</option>
+                        <option value="valproate_class">Valproate Class (GABA Enhancer)</option>
+                        <option value="newer_aed">Newer AEDs (Levetiracetam / Lamotrigine class)</option>
+                    </optgroup>
+                    <optgroup label="Cardiovascular">
+                        <option value="beta_blocker">Beta Blockers (β-adrenergic antagonists)</option>
+                        <option value="ace_inhibitor">ACE Inhibitors</option>
+                        <option value="arb">ARBs (Angiotensin-II receptor blockers)</option>
+                        <option value="ccb_dihydro">CCBs — Dihydropyridine (Amlodipine class)</option>
+                        <option value="loop_diuretic">Loop Diuretics</option>
+                        <option value="thiazide">Thiazide Diuretics</option>
+                        <option value="digoxin_class">Cardiac Glycosides</option>
+                        <option value="antiplatelet">Antiplatelets (COX inhibitor class)</option>
+                    </optgroup>
+                    <optgroup label="Endocrine / Diabetes">
+                        <option value="biguanide">Biguanides (Metformin class)</option>
+                        <option value="sulfonylurea">Sulfonylureas</option>
+                        <option value="insulin_rapid">Insulin — Rapid-acting</option>
+                        <option value="levothyroxine_class">Thyroid Hormone Replacement</option>
+                    </optgroup>
+                    <optgroup label="GI / Antiemetics">
+                        <option value="ppi">Proton Pump Inhibitors (PPIs)</option>
+                        <option value="h2_antagonist">H₂ Receptor Antagonists</option>
+                        <option value="d2_antiemetic">D₂ Antagonist Antiemetics (Metoclopramide class)</option>
+                        <option value="5ht3_antiemetic">5-HT₃ Antagonist Antiemetics (Ondansetron class)</option>
+                        <option value="osmotic_laxative">Osmotic Laxatives</option>
+                    </optgroup>
+                    <optgroup label="Fluids / Electrolytes">
+                        <option value="ors">Oral Rehydration Solution</option>
+                        <option value="iv_fluid">IV Crystalloids</option>
+                    </optgroup>
+                    <optgroup label="Vitamins / Minerals">
+                        <option value="iron_supplement">Iron Supplements</option>
+                        <option value="vitamin_d">Vitamin D (Calciferols)</option>
+                        <option value="zinc_supplement">Zinc Supplements</option>
+                        <option value="folic_acid">Folic Acid</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Specific Drug</label>
+                <select id="drug">
+                    <option value="">— Select Class First —</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Indication / Route <span>(optional)</span></label>
+                <select id="indication">
+                    <option value="standard">Standard / Oral</option>
+                    <option value="severe">Severe / IV / IM</option>
+                    <option value="prophylaxis">Prophylaxis</option>
+                </select>
+            </div>
+
+            <button class="btn-calc" onclick="calculate()">Calculate Dose</button>
+            <button class="btn-reset" onclick="resetForm()">Clear / Reset</button>
+        </div>
+
+        <!-- Right: Result -->
+        <div class="card">
+            <div class="card-title">Dose Recommendation</div>
+
+            <div class="result-placeholder" id="placeholder">
+                <div class="ph-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15l-1.575 1.498a1.5 1.5 0 01-2.1 0L14.25 14.5m5.55.5l1.575 1.498a1.5 1.5 0 002.1 0L19.8 15"/>
+                    </svg>
+                </div>
+                <p>Enter patient details, select drug class and drug to see dose calculation.</p>
+            </div>
+
+            <div class="results" id="results"></div>
+        </div>
+    </div>
+
+    <!-- Reference Table -->
+    <div class="ref-section">
+        <h2>Quick Reference — Common Paediatric Doses</h2>
+        <p class="scroll-hint">← Scroll horizontally to see full table →</p>
+        <div class="table-scroll">
+        <table class="ref-table">
+            <thead>
+                <tr>
+                    <th>Drug (Generic Formula Class)</th>
+                    <th>Paed Dose (mg/kg)</th>
+                    <th>Adult Fixed Dose</th>
+                    <th>Frequency</th>
+                    <th>Max Single</th>
+                    <th>Route</th>
+                </tr>
+            </thead>
+            <tbody id="refTableBody">
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    &copy; 2026 Health Jobs Portal &mdash; Clinical Tools are for reference only. Always verify with current BNF / local formulary.
+    <strong>Powered by sufianX</strong>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════
+// DRUG DATABASE — grouped by pharmacological class
+// Formula-based: same class = same dosing principle
+// ══════════════════════════════════════════════
+const drugClasses = {
+
+    // ── ANALGESICS ──
+    non_opioid_analgesic: {
+        label: "Non-Opioid Analgesics",
+        drugs: {
+            paracetamol:  { name:"Paracetamol (Acetaminophen)", formula:"Aniline derivative — COX-3 inhibitor / central prostaglandin synthesis inhibitor", paed:{mgPerKg:15,min:10,max:15,maxDose:1000,freq:"Every 4–6 h"}, adult:{fixed:500,max:1000,freq:"Every 4–6 h",maxDaily:4000}, routes:"Oral / PR / IV", note:"Max 4 doses/24 h. Hepatotoxic in overdose. Reduce dose in hepatic impairment." },
+            mefenamic_acid: { name:"Mefenamic Acid", formula:"Fenamate NSAID — COX inhibitor, prostaglandin antagonist", paed:{mgPerKg:6.5,min:5,max:8,maxDose:250,freq:"Every 8 h TDS"}, adult:{fixed:500,max:500,freq:"Every 8 h TDS",maxDaily:1500}, routes:"Oral", note:"Short-term use only (max 7 days). Avoid in renal impairment. Take with food." },
+        }
+    },
+
+    nsaid: {
+        label: "NSAIDs",
+        drugs: {
+            ibuprofen:    { name:"Ibuprofen", formula:"Propionic acid NSAID — reversible non-selective COX-1/COX-2 inhibitor", paed:{mgPerKg:7.5,min:5,max:10,maxDose:400,freq:"Every 6–8 h"}, adult:{fixed:400,max:400,freq:"Every 6–8 h",maxDaily:1200}, routes:"Oral / IV", note:"Avoid in <3 months / <5 kg. Take with food. Avoid in peptic ulcer, renal impairment." },
+            naproxen:     { name:"Naproxen", formula:"Propionic acid NSAID — long-acting reversible COX-1/COX-2 inhibitor", paed:{mgPerKg:5,min:5,max:5,maxDose:250,freq:"Every 12 h BD (≥5 yrs)"}, adult:{fixed:250,max:500,freq:"Every 6–12 h",maxDaily:1000}, routes:"Oral", note:"Longer half-life than ibuprofen. GI protective agent recommended. Avoid in CV disease." },
+            diclofenac:   { name:"Diclofenac", formula:"Acetic acid NSAID — preferential COX-2 inhibitor", paed:{mgPerKg:1,min:1,max:1.5,maxDose:50,freq:"Every 8–12 h"}, adult:{fixed:50,max:75,freq:"Every 8–12 h",maxDaily:150}, routes:"Oral / IM / PR", note:"Lower GI risk than ibuprofen. Avoid in cardiac failure. IM injection painful." },
+            aspirin:      { name:"Aspirin (Low-dose antiplatelet)", formula:"Salicylate — irreversible COX-1 inhibitor (acetylation of serine residue)", paed:{mgPerKg:null,contraindicated:true}, adult:{fixed:75,max:300,freq:"Once daily (antiplatelet)",maxDaily:300}, routes:"Oral", note:"CONTRAINDICATED in children <16 yrs (Reye syndrome). Analgesic dose: 300–900 mg every 4–6 h in adults only." },
+            celecoxib:    { name:"Celecoxib", formula:"Diaryl heterocyclic — selective COX-2 inhibitor (sulfonamide moiety)", paed:{mgPerKg:null}, adult:{fixed:100,max:200,freq:"Once or twice daily",maxDaily:400}, routes:"Oral", note:"Selective COX-2 inhibitor — less GI toxicity. Avoid in sulfonamide allergy. Increased CV risk." },
+            piroxicam:    { name:"Piroxicam", formula:"Oxicam NSAID — long-acting non-selective COX inhibitor (enol acid structure)", paed:{mgPerKg:0.3,min:0.3,max:0.3,maxDose:10,freq:"Once daily (≥6 yrs)"}, adult:{fixed:10,max:20,freq:"Once daily",maxDaily:20}, routes:"Oral", note:"Very long half-life (~50 h). Not for short-term use. High GI and CV risk." },
+            ketorolac:    { name:"Ketorolac", formula:"Pyrrolizine carboxylic acid NSAID — potent analgesic COX inhibitor (parenteral NSAID)", paed:{mgPerKg:0.5,min:0.5,max:0.5,maxDose:15,freq:"Every 6 h (max 5 days)"}, adult:{fixed:15,max:30,freq:"Every 6 h (max 5 days)",maxDaily:90}, routes:"IV / IM", note:"Parenteral analgesic only. Max 5 days use. GI/renal risk. Not in children <2 yrs." },
+            indomethacin: { name:"Indomethacin", formula:"Indole acetic acid NSAID — potent COX-1/COX-2 inhibitor (also phospholipase A2 inhibitor)", paed:{mgPerKg:0.5,min:0.5,max:0.5,maxDose:25,freq:"Every 8–12 h"}, adult:{fixed:25,max:50,freq:"Every 8–12 h",maxDaily:150}, routes:"Oral / IV / PR", note:"Used in PDA closure (neonates), gout, ankylosing spondylitis. High GI side effects." },
+        }
+    },
+
+    opioid_weak: {
+        label: "Weak Opioids",
+        drugs: {
+            codeine:      { name:"Codeine Phosphate", formula:"Phenanthrene alkaloid — μ-opioid receptor partial agonist (prodrug → morphine via CYP2D6)", paed:{mgPerKg:0.5,min:0.5,max:1,maxDose:30,freq:"Every 4–6 h"}, adult:{fixed:30,max:60,freq:"Every 4–6 h",maxDaily:240}, routes:"Oral / IM", note:"Avoid in <12 yrs and post-tonsillectomy (ultra-rapid metabolisers risk). Use with caution in respiratory disease." },
+            tramadol:     { name:"Tramadol", formula:"Synthetic opioid — weak μ-receptor agonist + serotonin/noradrenaline reuptake inhibitor", paed:{mgPerKg:1,min:1,max:2,maxDose:50,freq:"Every 6–8 h (≥12 yrs)"}, adult:{fixed:50,max:100,freq:"Every 4–6 h",maxDaily:400}, routes:"Oral / IV / IM", note:"Avoid in seizure disorders. Serotonin syndrome risk with SSRIs. Not recommended <12 yrs in UK." },
+            dihydrocodeine: { name:"Dihydrocodeine", formula:"Semisynthetic opioid — μ-opioid agonist (stronger than codeine, weaker than morphine)", paed:{mgPerKg:0.5,min:0.5,max:0.5,maxDose:30,freq:"Every 4–6 h (≥4 yrs)"}, adult:{fixed:30,max:30,freq:"Every 4–6 h",maxDaily:180}, routes:"Oral / IM", note:"Second-line opioid analgesic. Constipation common. Not licensed in young children." },
+        }
+    },
+
+    opioid_strong: {
+        label: "Strong Opioids",
+        drugs: {
+            morphine:     { name:"Morphine Sulphate", formula:"Phenanthrene alkaloid — full μ-opioid receptor agonist (also κ/δ activity)", paed:{mgPerKg:0.2,min:0.1,max:0.2,maxDose:10,freq:"Every 4 h (titrate)"}, adult:{fixed:5,max:10,freq:"Every 4 h (titrate)",maxDaily:null}, routes:"Oral / IV / SC / IM", note:"Gold standard opioid. Titrate to effect. Monitor respiratory rate. Naloxone available for reversal." },
+            oxycodone:    { name:"Oxycodone", formula:"Semisynthetic thebaine derivative — full μ/κ-opioid agonist (~1.5× potency of morphine)", paed:{mgPerKg:0.1,min:0.05,max:0.1,maxDose:5,freq:"Every 4–6 h"}, adult:{fixed:5,max:10,freq:"Every 4–6 h",maxDaily:null}, routes:"Oral / IV", note:"Higher bioavailability than oral morphine. Controlled drug. Monitor closely." },
+            fentanyl:     { name:"Fentanyl", formula:"Phenylpiperidine synthetic opioid — highly selective μ-opioid agonist (100× potency of morphine)", paed:{mgPerKg:0.001,min:0.001,max:0.002,maxDose:0.05,freq:"Single dose / infusion"}, adult:{fixed:null,max:null,freq:"IV/patch — specialist use only",maxDaily:null}, routes:"IV / Transdermal / Intranasal", note:"Specialist use only. Highly potent — doses in micrograms (mcg/kg). Transdermal patch for chronic pain." },
+            pethidine:    { name:"Pethidine (Meperidine)", formula:"Phenylpiperidine synthetic opioid — μ-opioid agonist (shorter acting than morphine)", paed:{mgPerKg:1,min:0.5,max:1,maxDose:50,freq:"Every 3–4 h"}, adult:{fixed:50,max:100,freq:"Every 3–4 h",maxDaily:600}, routes:"IM / IV / SC", note:"Less preferred due to neurotoxic metabolite (norpethidine). Avoid in renal impairment and MAOIs." },
+        }
+    },
+
+    // ── ANTIBIOTICS ──
+    penicillin: {
+        label: "Penicillins",
+        drugs: {
+            amoxicillin:  { name:"Amoxicillin", formula:"Aminopenicillin — β-lactam cell wall synthesis inhibitor (PBP binding, bactericidal)", paed:{mgPerKg:25,min:20,max:30,maxDose:500,freq:"Every 8 h TDS"}, adult:{fixed:500,max:500,freq:"Every 8 h TDS",maxDaily:3000}, routes:"Oral / IV / IM", note:"Check penicillin allergy. Complete full course. Broad-spectrum aminopenicillin." },
+            flucloxacillin: { name:"Flucloxacillin", formula:"Isoxazolyl penicillin — penicillinase-resistant β-lactam (anti-staphylococcal)", paed:{mgPerKg:12.5,min:12.5,max:25,maxDose:500,freq:"Every 6 h QDS (empty stomach)"}, adult:{fixed:500,max:1000,freq:"Every 6 h QDS",maxDaily:4000}, routes:"Oral / IV / IM", note:"Must be taken on empty stomach. Drug of choice for Staph aureus (MSSA). Not for MRSA." },
+            phenoxymethylpenicillin: { name:"Phenoxymethylpenicillin (Penicillin V)", formula:"Natural penicillin — narrow-spectrum β-lactam (acid-stable oral form)", paed:{mgPerKg:6.25,min:6.25,max:12.5,maxDose:500,freq:"Every 6 h QDS"}, adult:{fixed:500,max:500,freq:"Every 6 h QDS",maxDaily:2000}, routes:"Oral", note:"For streptococcal tonsillitis, rheumatic fever prophylaxis. Take on empty stomach." },
+            ampicillin:   { name:"Ampicillin", formula:"Aminopenicillin (IV) — β-lactam PBP inhibitor, bactericidal (same class as amoxicillin)", paed:{mgPerKg:25,min:25,max:50,maxDose:500,freq:"Every 6 h QDS"}, adult:{fixed:500,max:1000,freq:"Every 6 h QDS",maxDaily:4000}, routes:"IV / IM", note:"IV form of aminopenicillin. Used for meningitis, listeria. Causes rash in EBV mononucleosis." },
+            benzylpenicillin: { name:"Benzylpenicillin (Penicillin G)", formula:"Natural penicillin — narrow-spectrum β-lactam, IV/IM only (acid-labile)", paed:{mgPerKg:50,min:25,max:100,maxDose:2400,freq:"Every 4–6 h"}, adult:{fixed:1200,max:2400,freq:"Every 4–6 h",maxDaily:14400}, routes:"IV / IM", note:"Doses in mg (600 mg = 1 megaunit). For meningococcal disease, endocarditis. Pre-hospital: IM dose if meningitis suspected." },
+        }
+    },
+
+    penicillin_inhibitor: {
+        label: "Penicillin + β-lactamase Inhibitor",
+        drugs: {
+            amoxclav:     { name:"Amoxicillin/Clavulanate (Co-amoxiclav)", formula:"Aminopenicillin + irreversible β-lactamase inhibitor (clavulanic acid — suicide inhibitor)", paed:{mgPerKg:25,min:20,max:30,maxDose:625,freq:"Every 8 h TDS"}, adult:{fixed:625,max:625,freq:"Every 8 h TDS",maxDaily:1875}, routes:"Oral / IV", note:"Dose refers to amoxicillin component. Take with food. Avoid in hepatic impairment. Check allergy." },
+            piperacilin_tazo: { name:"Piperacillin/Tazobactam (Tazocin)", formula:"Acylaminopenicillin + β-lactamase inhibitor (tazobactam — broad-spectrum inhibitor)", paed:{mgPerKg:90,min:80,max:100,maxDose:4500,freq:"Every 6–8 h"}, adult:{fixed:4500,max:4500,freq:"Every 6–8 h",maxDaily:18000}, routes:"IV", note:"Broad-spectrum for severe hospital-acquired infections. Monitor renal function. Doses in mg." },
+            ampicillin_sulbactam: { name:"Ampicillin/Sulbactam (Unasyn)", formula:"Aminopenicillin + sulbactam β-lactamase inhibitor (irreversible inhibitor)", paed:{mgPerKg:50,min:50,max:75,maxDose:3000,freq:"Every 6 h"}, adult:{fixed:1500,max:3000,freq:"Every 6 h",maxDaily:12000}, routes:"IV / IM", note:"Dose refers to ampicillin/sulbactam combined. Acinetobacter coverage via sulbactam." },
+        }
+    },
+
+    cephalosporin_1: {
+        label: "1st Generation Cephalosporins",
+        drugs: {
+            cephalexin:   { name:"Cephalexin (Cefalexin)", formula:"1st gen cephalosporin — β-lactam PBP inhibitor (oral, gram-positive spectrum)", paed:{mgPerKg:12.5,min:12.5,max:25,maxDose:500,freq:"Every 6 h QDS"}, adult:{fixed:500,max:500,freq:"Every 6 h QDS",maxDaily:4000}, routes:"Oral", note:"10% cross-reactivity with penicillin allergy. Good for skin/soft tissue, UTI. Reduce in renal impairment." },
+            cefazolin:    { name:"Cefazolin (Cephazolin)", formula:"1st gen cephalosporin (IV) — β-lactam, strongest gram-positive coverage in class", paed:{mgPerKg:25,min:25,max:50,maxDose:1000,freq:"Every 8 h"}, adult:{fixed:1000,max:2000,freq:"Every 8 h TDS",maxDaily:6000}, routes:"IV / IM", note:"Preferred prophylactic antibiotic for surgical procedures. Good staph coverage." },
+        }
+    },
+
+    cephalosporin_3: {
+        label: "3rd Generation Cephalosporins",
+        drugs: {
+            cefixime:     { name:"Cefixime", formula:"3rd gen cephalosporin (oral) — β-lactam, enhanced gram-negative spectrum, PBP3 binding", paed:{mgPerKg:8,min:8,max:8,maxDose:200,freq:"Once daily or BD"}, adult:{fixed:200,max:400,freq:"Once or twice daily",maxDaily:400}, routes:"Oral", note:"Oral 3rd gen. Good for typhoid, UTI, gonorrhoea. Poor staph coverage." },
+            ceftriaxone:  { name:"Ceftriaxone", formula:"3rd gen cephalosporin (IV) — long-acting β-lactam, excellent CNS penetration, PBP3 binding", paed:{mgPerKg:50,min:50,max:80,maxDose:2000,freq:"Once daily"}, adult:{fixed:1000,max:2000,freq:"Once daily",maxDaily:4000}, routes:"IV / IM", note:"Gold standard for meningitis, typhoid, pneumonia (hospital). Long half-life — once daily. Biliary sludge in neonates." },
+            cefotaxime:   { name:"Cefotaxime", formula:"3rd gen cephalosporin — β-lactam, CSF penetration, metabolised to active desacetyl form", paed:{mgPerKg:50,min:25,max:50,maxDose:2000,freq:"Every 8–12 h"}, adult:{fixed:1000,max:2000,freq:"Every 8–12 h",maxDaily:12000}, routes:"IV / IM", note:"Preferred in neonatal meningitis (avoids ceftriaxone biliary issues). Renal excretion — adjust in renal failure." },
+            ceftazidime:  { name:"Ceftazidime", formula:"3rd gen cephalosporin — β-lactam with anti-pseudomonal activity (extended spectrum)", paed:{mgPerKg:25,min:25,max:50,maxDose:2000,freq:"Every 8 h TDS"}, adult:{fixed:1000,max:2000,freq:"Every 8 h TDS",maxDaily:6000}, routes:"IV / IM", note:"Anti-pseudomonal coverage distinguishes from other 3rd gen. Used in CF, febrile neutropenia." },
+        }
+    },
+
+    macrolide: {
+        label: "Macrolides",
+        drugs: {
+            azithromycin: { name:"Azithromycin", formula:"Azalide (15-membered ring macrolide) — 50S ribosomal subunit inhibitor (23S rRNA), bacteriostatic", paed:{mgPerKg:10,min:10,max:10,maxDose:500,freq:"Once daily x 3 days"}, adult:{fixed:500,max:500,freq:"Once daily x 3–5 days",maxDaily:500}, routes:"Oral / IV", note:"Short 3-day course. Tissue concentrations >> plasma. QT prolongation risk. Atypical cover." },
+            clarithromycin: { name:"Clarithromycin", formula:"14-membered ring macrolide — 50S ribosomal inhibitor, also CYP3A4 inhibitor, anti-H.pylori", paed:{mgPerKg:7.5,min:7.5,max:7.5,maxDose:250,freq:"Every 12 h BD"}, adult:{fixed:250,max:500,freq:"Every 12 h BD",maxDaily:1000}, routes:"Oral / IV", note:"H. pylori triple therapy component. Many drug interactions via CYP3A4. Avoid in hepatic failure." },
+            erythromycin: { name:"Erythromycin", formula:"14-membered ring macrolide (prototype) — 50S ribosomal inhibitor, prokinetic (motilin agonist)", paed:{mgPerKg:12.5,min:12.5,max:12.5,maxDose:500,freq:"Every 6 h QDS"}, adult:{fixed:250,max:500,freq:"Every 6 h QDS",maxDaily:2000}, routes:"Oral / IV", note:"Prototype macrolide. Many GI side effects (pro-kinetic). Significant drug interactions. Infantile hypertrophic pyloric stenosis risk in neonates." },
+            roxithromycin: { name:"Roxithromycin", formula:"14-membered ring semi-synthetic macrolide — 50S ribosomal inhibitor (better oral bioavailability)", paed:{mgPerKg:2.5,min:2.5,max:2.5,maxDose:150,freq:"Every 12 h BD"}, adult:{fixed:150,max:300,freq:"Once or twice daily",maxDaily:300}, routes:"Oral", note:"Better GI tolerance than erythromycin. Atypical pathogen cover. Less drug interaction than clarithromycin." },
+        }
+    },
+
+    fluoroquinolone: {
+        label: "Fluoroquinolones",
+        drugs: {
+            ciprofloxacin: { name:"Ciprofloxacin", formula:"4th gen fluoroquinolone — DNA gyrase (topoisomerase II/IV) inhibitor, bactericidal", paed:{mgPerKg:10,min:10,max:15,maxDose:500,freq:"Every 12 h BD (specialist use)"}, adult:{fixed:500,max:750,freq:"Every 12 h BD",maxDaily:1500}, routes:"Oral / IV", note:"Restricted in children (cartilage concerns — specialist use only). Best gram-negative quinolone. Tendon rupture risk." },
+            levofloxacin: { name:"Levofloxacin", formula:"L-isomer of ofloxacin — DNA gyrase/topoisomerase IV inhibitor (enhanced gram-positive activity)", paed:{mgPerKg:null}, adult:{fixed:500,max:500,freq:"Once daily",maxDaily:500}, routes:"Oral / IV", note:"Respiratory fluoroquinolone. Avoid in children. QT prolongation. Antacids reduce absorption." },
+            moxifloxacin: { name:"Moxifloxacin", formula:"8-methoxyfluoroquinolone — topoisomerase II/IV inhibitor (broadest spectrum quinolone)", paed:{mgPerKg:null}, adult:{fixed:400,max:400,freq:"Once daily",maxDaily:400}, routes:"Oral / IV", note:"Broadest spectrum quinolone — atypical, anaerobic cover. Not for UTI (poor urinary excretion). QT risk." },
+            norfloxacin:  { name:"Norfloxacin", formula:"1st gen fluoroquinolone — DNA gyrase inhibitor (urinary tract levels only)", paed:{mgPerKg:null}, adult:{fixed:400,max:400,freq:"Every 12 h BD",maxDaily:800}, routes:"Oral", note:"UTI only — low systemic levels. Not for systemic infections. Avoid in children." },
+        }
+    },
+
+    aminoglycoside: {
+        label: "Aminoglycosides",
+        drugs: {
+            gentamicin:   { name:"Gentamicin", formula:"Aminocyclitol aminoglycoside — 30S ribosomal subunit inhibitor, concentration-dependent bactericidal", paed:{mgPerKg:2.5,min:2.5,max:5,maxDose:80,freq:"Every 8 h (or ODD)"}, adult:{fixed:3,max:5,freq:"Once daily (ODD) × mg/kg",maxDaily:null}, routes:"IV / IM", note:"Monitor renal function & levels. Ototoxic and nephrotoxic. Once-daily dosing preferred. Neonatal dosing complex — consult." },
+            amikacin:     { name:"Amikacin", formula:"Semisynthetic aminoglycoside (kanamycin derivative) — 30S inhibitor, resistant to most aminoglycoside-modifying enzymes", paed:{mgPerKg:7.5,min:7.5,max:7.5,maxDose:500,freq:"Every 12 h BD"}, adult:{fixed:15,max:15,freq:"Once daily × mg/kg",maxDaily:1500}, routes:"IV / IM", note:"Reserved for gentamicin-resistant organisms. High oto/nephrotoxicity. Monitor levels strictly." },
+            tobramycin:   { name:"Tobramycin", formula:"Aminoglycoside — 30S inhibitor, enhanced anti-pseudomonal activity vs gentamicin", paed:{mgPerKg:2.5,min:2.5,max:3.3,maxDose:80,freq:"Every 8 h"}, adult:{fixed:3,max:5,freq:"Once daily × mg/kg",maxDaily:null}, routes:"IV / IM / Inhaled (CF)", note:"Anti-pseudomonal. Used in CF (inhaled). Similar monitoring to gentamicin." },
+        }
+    },
+
+    nitroimidazole: {
+        label: "Nitroimidazoles",
+        drugs: {
+            metronidazole: { name:"Metronidazole", formula:"5-nitroimidazole — DNA strand breakage via reduction of nitro group (anaerobes/protozoa)", paed:{mgPerKg:7.5,min:7.5,max:7.5,maxDose:400,freq:"Every 8 h TDS"}, adult:{fixed:400,max:400,freq:"Every 8 h TDS",maxDaily:2400}, routes:"Oral / IV / PR", note:"Avoid alcohol (disulfiram-like reaction). Metallic taste. Complete full course. Antiprotozoal and anaerobic coverage." },
+            tinidazole:   { name:"Tinidazole", formula:"2nd gen 5-nitroimidazole — similar mechanism with longer half-life (anti-anaerobe/protozoal)", paed:{mgPerKg:50,min:50,max:50,maxDose:2000,freq:"Single dose or once daily"}, adult:{fixed:2000,max:2000,freq:"Single dose",maxDaily:2000}, routes:"Oral", note:"Longer half-life than metronidazole. Single-dose regimens possible. Fewer GI side effects." },
+            ornidazole:   { name:"Ornidazole", formula:"5-nitroimidazole derivative — similar mechanism, better GI tolerability profile", paed:{mgPerKg:25,min:25,max:25,maxDose:500,freq:"Every 12 h BD"}, adult:{fixed:500,max:500,freq:"Every 12 h BD",maxDaily:1000}, routes:"Oral / IV", note:"Better GI tolerability. Avoid alcohol. Used for amoebiasis, giardiasis, anaerobic infections." },
+        }
+    },
+
+    sulfonamide: {
+        label: "Sulfonamides / Antifolates",
+        drugs: {
+            trimethoprim: { name:"Trimethoprim", formula:"Dihydrofolate reductase inhibitor — antifolate (blocks bacterial DHF → THF conversion)", paed:{mgPerKg:4,min:4,max:4,maxDose:200,freq:"Every 12 h BD"}, adult:{fixed:200,max:200,freq:"Every 12 h BD",maxDaily:400}, routes:"Oral", note:"UTI first-line. Avoid in first trimester. Monitor FBC in prolonged use." },
+            cotrimoxazole: { name:"Co-trimoxazole (SMX/TMP)", formula:"Sulfonamide + DHFR inhibitor — dual sequential folate synthesis blockade (bactericidal synergy)", paed:{mgPerKg:6,min:6,max:6,maxDose:480,freq:"Every 12 h BD (dose as TMP component)"}, adult:{fixed:960,max:960,freq:"Every 12 h BD",maxDaily:1920}, routes:"Oral / IV", note:"Dose in mg of combined product (480 mg = 80/400). Avoid in G6PD deficiency, sulfa allergy, neonates." },
+        }
+    },
+
+    tetracycline: {
+        label: "Tetracyclines",
+        drugs: {
+            doxycycline:  { name:"Doxycycline", formula:"Tetracycline — 30S ribosomal subunit inhibitor (bacteriostatic), long half-life", paed:{mgPerKg:null}, adult:{fixed:100,max:200,freq:"Once or twice daily",maxDaily:200}, routes:"Oral / IV", note:"Avoid in children <8 yrs (tooth discolouration). Photosensitivity. No antacids/dairy within 2 h. Good atypical cover." },
+            tetracycline_hcl: { name:"Tetracycline HCl", formula:"Tetracycline (prototype) — 30S inhibitor, bacteriostatic, chelates divalent cations", paed:{mgPerKg:null}, adult:{fixed:250,max:500,freq:"Every 6 h QDS",maxDaily:2000}, routes:"Oral", note:"Avoid in <8 yrs and pregnancy. Take on empty stomach. Avoid dairy/antacids. High resistance rates." },
+            minocycline:  { name:"Minocycline", formula:"Semisynthetic tetracycline — enhanced CNS/tissue penetration, anti-inflammatory properties", paed:{mgPerKg:null}, adult:{fixed:100,max:100,freq:"Every 12 h BD",maxDaily:200}, routes:"Oral / IV", note:"Used for acne (long-term). Vestibular side effects. Avoid <8 yrs." },
+        }
+    },
+
+    glycopeptide: {
+        label: "Glycopeptides",
+        drugs: {
+            vancomycin:   { name:"Vancomycin", formula:"Tricyclic glycopeptide — cell wall synthesis inhibitor (D-Ala-D-Ala binding, not β-lactam)", paed:{mgPerKg:15,min:10,max:15,maxDose:500,freq:"Every 6 h QDS"}, adult:{fixed:1000,max:1500,freq:"Every 12 h (adjust by levels)",maxDaily:4000}, routes:"IV (oral for C.diff PR)", note:"MRSA drug of choice. Monitor trough levels (15–20 mg/L for serious infections). Slow infusion (red man syndrome if fast)." },
+            teicoplanin:  { name:"Teicoplanin", formula:"Glycopeptide — cell wall synthesis inhibitor (similar mechanism, longer half-life than vancomycin)", paed:{mgPerKg:10,min:10,max:10,maxDose:400,freq:"Loading: Every 12 h x3, then once daily"}, adult:{fixed:400,max:800,freq:"Loading x3 doses, then once daily",maxDaily:800}, routes:"IV / IM", note:"Once daily (after loading). Monitor trough levels. Better tolerated than vancomycin." },
+        }
+    },
+
+    carbapenem: {
+        label: "Carbapenems",
+        drugs: {
+            meropenem:    { name:"Meropenem", formula:"Group 2 carbapenem — β-lactam, ultra-broad spectrum PBP inhibitor, stable to DHP-1", paed:{mgPerKg:20,min:20,max:40,maxDose:1000,freq:"Every 8 h TDS"}, adult:{fixed:500,max:2000,freq:"Every 8 h TDS",maxDaily:6000}, routes:"IV", note:"Broadest spectrum β-lactam. Reserve for resistant organisms. Less seizure risk than imipenem." },
+            imipenem:     { name:"Imipenem/Cilastatin", formula:"Group 1 carbapenem + DHP-1 inhibitor — β-lactam, broadest spectrum (requires cilastatin to prevent renal degradation)", paed:{mgPerKg:15,min:15,max:25,maxDose:500,freq:"Every 6 h QDS"}, adult:{fixed:500,max:500,freq:"Every 6 h QDS",maxDaily:2000}, routes:"IV", note:"Cilastatin prevents renal hydrolysis. Higher seizure risk vs meropenem. Not for meningitis." },
+            ertapenem:    { name:"Ertapenem", formula:"Group 1 carbapenem — long-acting β-lactam, once-daily dosing (no anti-pseudomonal activity)", paed:{mgPerKg:15,min:15,max:15,maxDose:1000,freq:"Once daily"}, adult:{fixed:1000,max:1000,freq:"Once daily",maxDaily:1000}, routes:"IV / IM", note:"Once-daily carbapenem. No activity vs Pseudomonas/Acinetobacter. Community-acquired infections." },
+        }
+    },
+
+    oxazolidinone: {
+        label: "Oxazolidinones",
+        drugs: {
+            linezolid:    { name:"Linezolid", formula:"Oxazolidinone — 23S rRNA ribosomal inhibitor (50S subunit), prevents initiation complex formation", paed:{mgPerKg:10,min:10,max:10,maxDose:600,freq:"Every 12 h BD"}, adult:{fixed:600,max:600,freq:"Every 12 h BD",maxDaily:1200}, routes:"Oral / IV", note:"100% oral bioavailability (IV=Oral dose). MRSA and VRE. Serotonin syndrome risk with SSRIs. Monitor FBC weekly (myelosuppression)." },
+        }
+    },
+
+    lincosamide: {
+        label: "Lincosamides",
+        drugs: {
+            clindamycin:  { name:"Clindamycin", formula:"Lincosamide — 23S rRNA inhibitor (50S subunit), bacteriostatic, excellent bone/tissue penetration", paed:{mgPerKg:5,min:3,max:6,maxDose:300,freq:"Every 6–8 h"}, adult:{fixed:300,max:450,freq:"Every 6–8 h",maxDaily:1800}, routes:"Oral / IV / IM", note:"Excellent bone/skin penetration. C.difficile colitis risk. Anti-toxin production useful in necrotising fasciitis." },
+        }
+    },
+
+    // ── ANTIFUNGALS ──
+    azole_antifungal: {
+        label: "Azole Antifungals",
+        drugs: {
+            fluconazole:  { name:"Fluconazole", formula:"Triazole — lanosterol 14α-demethylase inhibitor (ergosterol synthesis blockade, cytostatic)", paed:{mgPerKg:6,min:3,max:12,maxDose:200,freq:"Once daily"}, adult:{fixed:150,max:400,freq:"Once daily",maxDaily:800}, routes:"Oral / IV", note:"Drug of choice for Candida. Poor mould coverage. Many CYP2C9 interactions. Good CNS penetration." },
+            itraconazole: { name:"Itraconazole", formula:"Triazole — CYP51 inhibitor (broader spectrum than fluconazole, includes moulds)", paed:{mgPerKg:5,min:5,max:5,maxDose:200,freq:"Once daily"}, adult:{fixed:100,max:200,freq:"Once or twice daily",maxDaily:400}, routes:"Oral (capsule/solution)", note:"Capsules need food/acid. Solution needs fasting. Many drug interactions. Aspergillus cover." },
+            voriconazole: { name:"Voriconazole", formula:"Triazole (2nd gen) — CYP51 inhibitor, broadest azole spectrum including Aspergillus/Fusarium", paed:{mgPerKg:9,min:9,max:9,maxDose:350,freq:"Every 12 h BD (IV loading then maintenance)"}, adult:{fixed:200,max:300,freq:"Every 12 h BD",maxDaily:600}, routes:"Oral / IV", note:"First-line for invasive aspergillosis. Hepatotoxicity, visual disturbances, photosensitivity. Monitor levels." },
+        }
+    },
+
+    polyene_antifungal: {
+        label: "Polyene Antifungals",
+        drugs: {
+            amphotericin_b: { name:"Amphotericin B (Liposomal)", formula:"Heptaene polyene — ergosterol binding (membrane pore formation), fungicidal for most fungi", paed:{mgPerKg:3,min:1,max:5,maxDose:300,freq:"Once daily IV"}, adult:{fixed:3,max:5,freq:"Once daily IV × mg/kg",maxDaily:null}, routes:"IV", note:"Liposomal form reduces nephrotoxicity. Broadest antifungal spectrum. IV only. Electrolyte monitoring essential." },
+            nystatin:     { name:"Nystatin", formula:"Polyene — ergosterol binding (topical/oral — too toxic for systemic use)", paed:{mgPerKg:null}, adult:{fixed:100000,max:500000,freq:"Every 6–8 h (units not mg)",maxDaily:2000000}, routes:"Oral / Topical", note:"Oral candidiasis: 100,000–500,000 units QDS. Not absorbed — topical use only. Safe in pregnancy." },
+        }
+    },
+
+    echinocandin: {
+        label: "Echinocandins",
+        drugs: {
+            caspofungin:  { name:"Caspofungin", formula:"Echinocandin — β(1,3)-D-glucan synthase inhibitor (fungal cell wall synthesis, fungicidal)", paed:{mgPerKg:70,min:50,max:70,maxDose:70,freq:"Loading 70 mg then 50 mg once daily"}, adult:{fixed:70,max:70,freq:"Loading then 50 mg once daily",maxDaily:70}, routes:"IV", note:"Paed: 70 mg/m² (BSA-based) — loading dose then 50 mg/m²/day. Excellent candida/aspergillus. Minimal drug interactions." },
+            micafungin:   { name:"Micafungin", formula:"Echinocandin — β(1,3)-D-glucan synthase inhibitor, no azole cross-resistance", paed:{mgPerKg:2,min:2,max:4,maxDose:100,freq:"Once daily"}, adult:{fixed:100,max:150,freq:"Once daily",maxDaily:150}, routes:"IV", note:"Once daily IV. Good for candida prophylaxis/treatment. Well tolerated. No renal/hepatic dose adjustment usually needed." },
+        }
+    },
+
+    // ── ANTIVIRALS ──
+    nucleoside_antiviral: {
+        label: "Nucleoside Analogue Antivirals",
+        drugs: {
+            aciclovir:    { name:"Aciclovir (Acyclovir)", formula:"Acyclic guanosine nucleoside analogue — viral thymidine kinase activated → DNA chain terminator", paed:{mgPerKg:20,min:10,max:20,maxDose:800,freq:"Every 6 h (5×/day for HSV)"}, adult:{fixed:200,max:800,freq:"5× daily (200 mg) or BD (400 mg)",maxDaily:4000}, routes:"Oral / IV / Topical", note:"Requires viral TK activation (selective). IV dose for encephalitis: 10 mg/kg every 8 h. Hydrate well to prevent crystalluria." },
+            ganciclovir:  { name:"Ganciclovir", formula:"Acyclic guanosine analogue — CMV UL97 kinase activated → viral DNA polymerase inhibitor", paed:{mgPerKg:5,min:5,max:5,maxDose:300,freq:"Every 12 h (induction)"}, adult:{fixed:5,max:5,freq:"Every 12 h BD × mg/kg (induction)",maxDaily:null}, routes:"IV", note:"CMV treatment (retinitis, colitis). Myelosuppressive — monitor FBC. Valganciclovir is oral prodrug." },
+            valaciclovir: { name:"Valaciclovir", formula:"Valyl ester prodrug of aciclovir — L-valyl esterase → aciclovir (3–5× higher bioavailability)", paed:{mgPerKg:20,min:20,max:20,maxDose:1000,freq:"Every 8–12 h"}, adult:{fixed:500,max:1000,freq:"Every 12 h BD",maxDaily:3000}, routes:"Oral", note:"Prodrug of aciclovir — much better oral bioavailability. Used for HSV, VZV, CMV prophylaxis." },
+            ribavirin:    { name:"Ribavirin", formula:"Synthetic guanosine analogue — IMPDH inhibitor (broad antiviral), RNA-dependent RNA polymerase inhibitor", paed:{mgPerKg:15,min:15,max:15,maxDose:600,freq:"Every 12 h BD (oral)"}, adult:{fixed:600,max:600,freq:"Every 12 h BD",maxDaily:1200}, routes:"Oral / Inhaled", note:"Hepatitis C, RSV, haemorrhagic fevers. Teratogenic — double contraception required. Haemolytic anaemia." },
+        }
+    },
+
+    neuraminidase_inhibitor: {
+        label: "Neuraminidase Inhibitors",
+        drugs: {
+            oseltamivir:  { name:"Oseltamivir (Tamiflu)", formula:"Carbocyclic sialic acid analogue — influenza neuraminidase inhibitor (prevents viral release from cells)", paed:{mgPerKg:null, ageWeight:true, freq:"Every 12 h BD × 5 days"}, adult:{fixed:75,max:75,freq:"Every 12 h BD × 5 days",maxDaily:150}, routes:"Oral", note:"Paed dosing by weight: <15 kg=30 mg BD, 15–23 kg=45 mg BD, 23–40 kg=60 mg BD, >40 kg=75 mg BD. Start within 48 h of symptoms." },
+            zanamivir:    { name:"Zanamivir (Relenza)", formula:"Sialic acid transition state analogue — influenza neuraminidase inhibitor (inhaled delivery)", paed:{mgPerKg:null}, adult:{fixed:10,max:10,freq:"Every 12 h BD × 5 days",maxDaily:20}, routes:"Inhaled (Diskhaler)", note:"2 inhalations (2×5 mg) BD. ≥5 yrs. Avoid in asthma/COPD (bronchospasm risk). No dose adjustment in renal failure." },
+        }
+    },
+
+    // ── ANTIMALARIALS ──
+    antimalarial_4ag: {
+        label: "4-Aminoquinolines (Antimalarials)",
+        drugs: {
+            chloroquine:  { name:"Chloroquine", formula:"4-aminoquinoline — haem polymerisation inhibitor (haemozoin formation blockade in vacuole)", paed:{mgPerKg:10,min:10,max:10,maxDose:620,freq:"Once then 5 mg/kg at 6,24,48 h"}, adult:{fixed:620,max:620,freq:"Loading then 310 mg at 6,24,48 h",maxDaily:620}, routes:"Oral", note:"High resistance in many regions. Retinal toxicity with long-term use. Doses as chloroquine base." },
+            hydroxychloroquine: { name:"Hydroxychloroquine", formula:"4-aminoquinoline — haem polymerisation inhibitor (also immunomodulatory — TLR signalling)", paed:{mgPerKg:6.5,min:5,max:6.5,maxDose:200,freq:"Once daily"}, adult:{fixed:200,max:400,freq:"Once or twice daily",maxDaily:400}, routes:"Oral", note:"Antimalarial + autoimmune (RA, SLE). Safer retinal profile than chloroquine. Monitor eyes annually." },
+        }
+    },
+
+    antimalarial_artemi: {
+        label: "Artemisinin Derivatives",
+        drugs: {
+            artesunate:   { name:"Artesunate", formula:"Endoperoxide sesquiterpene — free radical generation via iron-catalysed cleavage of endoperoxide bridge (kills all stages)", paed:{mgPerKg:2.4,min:2.4,max:2.4,maxDose:120,freq:"0, 12, 24 h, then once daily"}, adult:{fixed:2.4,max:2.4,freq:"2.4 mg/kg at 0,12,24 h then once daily × mg/kg",maxDaily:null}, routes:"IV / IM / Oral", note:"WHO-recommended for severe malaria. Rapidly clears parasites. Combine with partner drug for uncomplicated malaria." },
+            artemether:   { name:"Artemether/Lumefantrine (Coartem)", formula:"Artemisinin derivative + arylaminoalcohol — endoperoxide + haem polymerisation dual inhibition", paed:{mgPerKg:null}, adult:{fixed:80,max:80,freq:"BD × 3 days (weight-based tabs)",maxDaily:480}, routes:"Oral", note:"Paed dosing by weight (tabs: 20 mg artemether/120 mg lumefantrine): 5–15 kg=1 tab, 15–25 kg=2 tabs, 25–35 kg=3 tabs, >35 kg=4 tabs BD×3 days. Take with fatty food." },
+        }
+    },
+
+    antiprotozoal: {
+        label: "Antiprotozoals",
+        drugs: {
+            metronidazole_proto: { name:"Metronidazole (Antiprotozoal dose)", formula:"5-nitroimidazole — DNA strand breakage (higher doses for protozoal infections vs bacterial)", paed:{mgPerKg:10,min:7.5,max:10,maxDose:400,freq:"Every 8 h TDS"}, adult:{fixed:400,max:800,freq:"Every 8 h TDS",maxDaily:2400}, routes:"Oral / IV", note:"Amoebic dysentery: 10 mg/kg TDS. Giardiasis: 15 mg/kg/day. Higher doses than standard anaerobic use." },
+            albendazole:  { name:"Albendazole", formula:"Benzimidazole carbamate — β-tubulin polymerisation inhibitor (antihelmintic/antiprotozoal)", paed:{mgPerKg:15,min:15,max:15,maxDose:400,freq:"Once or twice daily (depends on indication)"}, adult:{fixed:400,max:400,freq:"Once daily or BD",maxDaily:800}, routes:"Oral", note:"Ascariasis/soil-transmitted helminths: 400 mg single dose. Hydatid: 7.5 mg/kg BD × 28 days. Take with fatty meal." },
+            mebendazole:  { name:"Mebendazole", formula:"Benzimidazole — β-tubulin inhibitor (selective — poor mammalian tubulin binding), antihelmintic", paed:{mgPerKg:null}, adult:{fixed:100,max:500,freq:"Single dose or BD × 3 days",maxDaily:1000}, routes:"Oral", note:"Threadworms: 100 mg single dose. Repeat after 2 weeks. Roundworms/hookworms: 100 mg BD×3 days. Age >2 yrs only." },
+            praziquantel:  { name:"Praziquantel", formula:"Pyrazinoisoquinoline — calcium channel disruption → muscle contraction/tegument damage (schistosomes, tapeworms)", paed:{mgPerKg:20,min:20,max:25,maxDose:600,freq:"3 doses over 1 day (schistosomiasis)"}, adult:{fixed:600,max:600,freq:"3 doses over 1 day",maxDaily:1800}, routes:"Oral", note:"For schistosomiasis: 3 doses of 20 mg/kg over one day. Neurocysticercosis: 50 mg/kg/day ÷ TDS × 15 days." },
+        }
+    },
+
+    // ── ANTIHISTAMINES ──
+    antihistamine_1g: {
+        label: "1st Gen Antihistamines (Sedating)",
+        drugs: {
+            chlorphenamine: { name:"Chlorphenamine (Chlorpheniramine)", formula:"Propylamine alkylamine — competitive H₁ receptor antagonist (also muscarinic/α1 blockade, sedating)", paed:{mgPerKg:0.1,min:0.1,max:0.1,maxDose:4,freq:"Every 6 h QDS"}, adult:{fixed:4,max:4,freq:"Every 4–6 h",maxDaily:24}, routes:"Oral / IM / IV / SC", note:"Sedating — warn about driving. Not in <2 yrs. IV: 10 mg over 1 min for anaphylaxis adjunct." },
+            promethazine:   { name:"Promethazine", formula:"Phenothiazine H₁ antagonist — strongly sedating (also D₂, muscarinic, α1 blockade)", paed:{mgPerKg:0.5,min:0.5,max:1,maxDose:25,freq:"Once or twice daily"}, adult:{fixed:25,max:50,freq:"Once or twice daily",maxDaily:100}, routes:"Oral / IM / IV", note:"Strong sedation. Avoid <2 yrs (respiratory depression). Also used as antiemetic, pre-medication." },
+            diphenhydramine: { name:"Diphenhydramine", formula:"Ethanolamine H₁ antagonist — strongly sedating, antimuscarinic (prototypic antihistamine)", paed:{mgPerKg:1,min:1,max:1.5,maxDose:25,freq:"Every 6–8 h"}, adult:{fixed:25,max:50,freq:"Every 4–6 h",maxDaily:300}, routes:"Oral / IM / IV", note:"Sedating. Anticholinergic effects. Parenteral for anaphylaxis. Also OTC sleep aid." },
+            hydroxyzine:    { name:"Hydroxyzine", formula:"Piperazine H₁ antagonist — sedating, anxiolytic (also 5-HT₂A/muscarinic blockade, no D₂ block)", paed:{mgPerKg:0.5,min:0.5,max:1,maxDose:25,freq:"Every 6–8 h"}, adult:{fixed:25,max:50,freq:"Every 6–8 h",maxDaily:300}, routes:"Oral", note:"Licensed for anxiety (short-term) and pruritus. Sedating. QT prolongation. Avoid in pregnancy (teratogenic)." },
+        }
+    },
+
+    antihistamine_2g: {
+        label: "2nd Gen Antihistamines (Non-sedating)",
+        drugs: {
+            cetirizine:   { name:"Cetirizine", formula:"Piperazine H₁ antagonist (2nd gen) — selective peripheral H₁ blockade, minimal CNS penetration", paed:{mgPerKg:0.25,min:0.25,max:0.25,maxDose:10,freq:"Once daily (≥2 yrs)"}, adult:{fixed:10,max:10,freq:"Once daily",maxDaily:10}, routes:"Oral", note:"Non-sedating. Children 2–5 yrs: 2.5 mg BD. Slight sedation at higher doses. Reduce in renal impairment." },
+            loratadine:   { name:"Loratadine", formula:"Tricyclic piperidine H₁ antagonist — peripheral selective, no anticholinergic effects", paed:{mgPerKg:null}, adult:{fixed:10,max:10,freq:"Once daily",maxDaily:10}, routes:"Oral", note:"Paed: 2–5 yrs=5 mg; ≥6 yrs=10 mg. Non-sedating. No QT effect. Minimal drug interactions." },
+            fexofenadine: { name:"Fexofenadine", formula:"Terfenadine active metabolite — peripheral H₁ antagonist, P-glycoprotein substrate (no cardiac toxicity)", paed:{mgPerKg:null}, adult:{fixed:120,max:180,freq:"Once or twice daily",maxDaily:360}, routes:"Oral", note:"Paed (6–11 yrs): 30 mg BD. Least sedating. No cardiac toxicity. Avoid grapefruit juice (reduces absorption)." },
+            desloratadine: { name:"Desloratadine", formula:"Active metabolite of loratadine — peripheral H₁ antagonist, longest-acting non-sedating antihistamine", paed:{mgPerKg:null}, adult:{fixed:5,max:5,freq:"Once daily",maxDaily:5}, routes:"Oral", note:"Paed: 1–5 yrs=1.25 mg; 6–11 yrs=2.5 mg; ≥12 yrs=5 mg. Most potent non-sedating antihistamine. Once daily." },
+            levocetirizine: { name:"Levocetirizine", formula:"R-enantiomer of cetirizine — higher H₁ receptor affinity (50% dose of cetirizine needed)", paed:{mgPerKg:null}, adult:{fixed:5,max:5,freq:"Once daily",maxDaily:5}, routes:"Oral", note:"More potent than cetirizine. Paed (6–11 yrs): 2.5 mg. Evening dose preferred. Reduce in renal impairment." },
+        }
+    },
+
+    // ── CORTICOSTEROIDS ──
+    glucocorticoid_oral: {
+        label: "Glucocorticoids — Oral",
+        drugs: {
+            prednisolone: { name:"Prednisolone", formula:"Δ1-analogue of hydrocortisone — glucocorticoid receptor agonist (11β-OH active, no 11β-HSD required)", paed:{mgPerKg:1,min:1,max:2,maxDose:40,freq:"Once daily (morning)"}, adult:{fixed:40,max:40,freq:"Once daily (morning)",maxDaily:40}, routes:"Oral", note:"Do not stop abruptly if >1 week. Morning dose mimics cortisol. Monitor blood glucose. Taper dose." },
+            methylprednisolone: { name:"Methylprednisolone", formula:"6α-methyl prednisolone — potent glucocorticoid (5× prednisolone), minimal mineralocorticoid effect", paed:{mgPerKg:1,min:0.5,max:1.5,maxDose:32,freq:"Once daily or BD"}, adult:{fixed:4,max:32,freq:"Once to four times daily",maxDaily:500}, routes:"Oral / IV", note:"IV pulse: 500 mg–1 g. Used in MS relapse, transplant rejection. Potency: 5× prednisolone." },
+            hydrocortisone: { name:"Hydrocortisone", formula:"Natural glucocorticoid (cortisol) — GR agonist, significant mineralocorticoid activity", paed:{mgPerKg:2,min:1,max:2,maxDose:50,freq:"Every 8 h TDS (stress dosing)"}, adult:{fixed:20,max:100,freq:"Every 8 h TDS",maxDaily:300}, routes:"Oral / IV / IM", note:"Replacement dose: 10 mg/m²/day. Stress dosing: 2–4× normal. IV for adrenal crisis/anaphylaxis (200 mg stat)." },
+        }
+    },
+
+    glucocorticoid_high: {
+        label: "High-potency Glucocorticoids",
+        drugs: {
+            dexamethasone: { name:"Dexamethasone", formula:"9α-fluoro-16α-methyl prednisolone — potent long-acting glucocorticoid (no mineralocorticoid activity, crosses BBB)", paed:{mgPerKg:0.15,min:0.15,max:0.3,maxDose:10,freq:"Every 6–24 h (indication dependent)"}, adult:{fixed:6,max:10,freq:"Once or twice daily",maxDaily:20}, routes:"Oral / IV / IM", note:"7× potency of prednisolone. No fluid retention. COVID-19: 6 mg OD × 10 days. Croup: single dose 0.15 mg/kg." },
+            betamethasone: { name:"Betamethasone", formula:"9α-fluoro-16β-methyl corticosteroid — potent GR agonist (foetal lung maturation), similar potency to dexamethasone", paed:{mgPerKg:null}, adult:{fixed:12,max:12,freq:"Every 24 h × 2 doses (antenatal)",maxDaily:24}, routes:"IM", note:"Antenatal use: 12 mg IM × 2 doses 24 h apart for foetal lung maturation (24–34 weeks). Topical forms for dermatology." },
+        }
+    },
+
+    mineralocorticoid: {
+        label: "Mineralocorticoids",
+        drugs: {
+            fludrocortisone: { name:"Fludrocortisone", formula:"9α-fluorocortisol — potent mineralocorticoid receptor agonist (Na⁺ retention / K⁺ excretion)", paed:{mgPerKg:0.05,min:0.05,max:0.1,maxDose:0.1,freq:"Once daily (mcg/kg — check dose)"}, adult:{fixed:0.05,max:0.2,freq:"Once daily (mg)",maxDaily:0.2}, routes:"Oral", note:"Paed: 50–200 mcg/m² once daily for CAH/Addison's. Doses in mg (0.05–0.2 mg). Monitor BP and electrolytes." },
+        }
+    },
+
+    // ── RESPIRATORY ──
+    saba: {
+        label: "Short-acting β₂ Agonists (SABA)",
+        drugs: {
+            salbutamol_oral: { name:"Salbutamol (Oral)", formula:"Resorcinol β₂-selective adrenergic agonist — bronchial smooth muscle relaxation via AC/cAMP", paed:{mgPerKg:0.1,min:0.1,max:0.1,maxDose:4,freq:"Every 6–8 h"}, adult:{fixed:4,max:4,freq:"Every 6–8 h",maxDaily:16}, routes:"Oral", note:"Inhaled preferred. Oral for when inhaler not feasible. Monitor HR and K⁺ (hypokalaemia at high doses)." },
+            salbutamol_neb: { name:"Salbutamol (Nebulised)", formula:"Resorcinol β₂ agonist — inhaled route for acute bronchospasm (higher local concentration, faster onset)", paed:{mgPerKg:0.15,min:0.15,max:0.15,maxDose:5,freq:"Every 20–30 min (acute) or 4–6 h"}, adult:{fixed:2.5,max:5,freq:"Every 4–6 h (or 20 min intervals acute)",maxDaily:null}, routes:"Nebulised", note:"Acute asthma: 0.15 mg/kg (min 2.5 mg) nebulised. Continuous nebulisation in severe cases. Spacer = nebuliser efficacy." },
+            terbutaline:  { name:"Terbutaline", formula:"Resorcinol β₂-selective agonist — similar mechanism to salbutamol (slightly longer acting)", paed:{mgPerKg:0.05,min:0.05,max:0.075,maxDose:2.5,freq:"Every 6–8 h"}, adult:{fixed:2.5,max:5,freq:"Every 6–8 h",maxDaily:15}, routes:"Oral / SC / Inhaled", note:"SC injection for acute severe asthma: 0.01 mg/kg (max 0.25 mg). Also used as tocolytic in preterm labour." },
+        }
+    },
+
+    laba: {
+        label: "Long-acting β₂ Agonists (LABA)",
+        drugs: {
+            salmeterol:   { name:"Salmeterol", formula:"Long-chain resorcinol β₂ agonist — lipophilic side chain anchors to receptor (12-h bronchodilation)", paed:{mgPerKg:null}, adult:{fixed:50,max:50,freq:"Every 12 h BD",maxDaily:100}, routes:"Inhaled", note:"Paed (≥4 yrs): 50 mcg BD inhaled. NEVER use as monotherapy without ICS. Doses in mcg." },
+            formoterol:   { name:"Formoterol (Eformoterol)", formula:"Catechol long-chain β₂ agonist — fast-onset long-acting (12 h), also has partial agonist activity", paed:{mgPerKg:null}, adult:{fixed:12,max:24,freq:"Every 12 h BD (mcg)",maxDaily:48}, routes:"Inhaled", note:"Fast onset (as fast as salbutamol). Can be used as reliever + maintenance (MART). Doses in mcg." },
+        }
+    },
+
+    anticholinergic_resp: {
+        label: "Anticholinergics — Respiratory (SAMA/LAMA)",
+        drugs: {
+            ipratropium:  { name:"Ipratropium Bromide", formula:"Quaternary ammonium — muscarinic (M3) receptor antagonist, blocks acetylcholine-mediated bronchoconstriction", paed:{mgPerKg:null}, adult:{fixed:0.5,max:0.5,freq:"Every 6–8 h (mg nebulised)",maxDaily:2}, routes:"Inhaled / Nebulised", note:"Paed: 250–500 mcg nebulised. Adjunct to salbutamol in severe asthma. Slow onset vs salbutamol. Doses in mg/mcg." },
+            tiotropium:   { name:"Tiotropium", formula:"Quaternary ammonium LAMA — kinetically selective M3 receptor antagonist (24-h bronchodilation)", paed:{mgPerKg:null}, adult:{fixed:18,max:18,freq:"Once daily (mcg)",maxDaily:18}, routes:"Inhaled (HandiHaler)", note:"COPD maintenance. 18 mcg once daily. Dry mouth common. Avoid in narrow-angle glaucoma." },
+        }
+    },
+
+    methylxanthine: {
+        label: "Methylxanthines",
+        drugs: {
+            theophylline: { name:"Theophylline", formula:"3,7-dimethylxanthine — non-selective phosphodiesterase inhibitor (increases cAMP/cGMP, bronchodilation)", paed:{mgPerKg:5,min:3,max:5,maxDose:200,freq:"Every 12 h BD (modified release)"}, adult:{fixed:200,max:400,freq:"Every 12 h BD (modified release)",maxDaily:800}, routes:"Oral / IV", note:"Narrow therapeutic index (10–20 mg/L). Monitor levels. Multiple drug interactions (CYP1A2). Tachyarrhythmias." },
+            aminophylline: { name:"Aminophylline (IV)", formula:"Theophylline ethylenediamine salt — IV-soluble form of theophylline (80% theophylline content)", paed:{mgPerKg:5,min:5,max:5,maxDose:250,freq:"Loading dose then infusion"}, adult:{fixed:250,max:500,freq:"Loading 5 mg/kg over 20 min, then infusion",maxDaily:null}, routes:"IV", note:"IV for severe/life-threatening asthma. Loading dose: 5 mg/kg over 20 min (omit if on oral theophylline). Monitor ECG." },
+        }
+    },
+
+    leukotriene_antagonist: {
+        label: "Leukotriene Receptor Antagonists",
+        drugs: {
+            montelukast:  { name:"Montelukast", formula:"Quinoline cysteinyl leukotriene receptor-1 (CysLT1) antagonist — blocks LTC4/D4/E4 bronchoconstriction", paed:{mgPerKg:null}, adult:{fixed:10,max:10,freq:"Once daily (evening)",maxDaily:10}, routes:"Oral", note:"Paed: 6 months–5 yrs=4 mg; 6–14 yrs=5 mg; ≥15 yrs=10 mg. Evening dose. Monitor mood/behaviour changes." },
+        }
+    },
+
+    inhaled_corticosteroid: {
+        label: "Inhaled Corticosteroids (ICS)",
+        drugs: {
+            beclometasone: { name:"Beclometasone Dipropionate", formula:"Halogenated glucocorticoid — local GR agonist in airways (CFC-free = extra-fine particle, ~50% lower dose)", paed:{mgPerKg:null}, adult:{fixed:200,max:400,freq:"Every 12 h BD (mcg)",maxDaily:800}, routes:"Inhaled", note:"Paed (5–12 yrs): 100–200 mcg BD. Standard MDI vs QVAR (CFC-free): different doses. Rinse mouth after use." },
+            budesonide:   { name:"Budesonide", formula:"Non-halogenated glucocorticoid ester — rapid local GR agonist (high first-pass metabolism, low systemic)", paed:{mgPerKg:null}, adult:{fixed:400,max:800,freq:"Every 12 h BD (mcg)",maxDaily:1600}, routes:"Inhaled / Nebulised", note:"Paed nebulisation: 0.5–1 mg BD. High safety profile. Also used in croup (2 mg nebulised). Doses in mcg." },
+            fluticasone:  { name:"Fluticasone Propionate", formula:"Trifluorinated glucocorticoid — highest receptor affinity ICS (longest GR retention, dose = 50% budesonide)", paed:{mgPerKg:null}, adult:{fixed:100,max:500,freq:"Every 12 h BD (mcg)",maxDaily:1000}, routes:"Inhaled", note:"Paed (4–16 yrs): 50–200 mcg BD. Most potent standard ICS. Doses in mcg. Combination inhalers available." },
+        }
+    },
+
+    // ── CNS ──
+    benzodiazepine: {
+        label: "Benzodiazepines",
+        drugs: {
+            diazepam:     { name:"Diazepam", formula:"1,4-benzodiazepine — positive allosteric GABA-A receptor modulator (chloride channel frequency ↑)", paed:{mgPerKg:0.3,min:0.3,max:0.5,maxDose:10,freq:"Single dose — repeat after 10 min"}, adult:{fixed:10,max:10,freq:"Single dose (repeat once if needed)",maxDaily:30}, routes:"Rectal / IV / IM / Oral", note:"Active seizures. Resuscitation equipment nearby. Buccal midazolam preferred in community. Long half-life." },
+            midazolam:    { name:"Midazolam", formula:"Imidazobenzodiazepine — water-soluble BZD, rapid GABA-A positive modulator (fastest onset BZD)", paed:{mgPerKg:0.2,min:0.2,max:0.3,maxDose:10,freq:"Single dose (buccal/IV)"}, adult:{fixed:10,max:10,freq:"Single dose",maxDaily:20}, routes:"Buccal / IV / IM / Intranasal", note:"Community seizure first-line (buccal). Faster onset than diazepam. Short duration. IV: sedation/anaesthesia." },
+            lorazepam:    { name:"Lorazepam", formula:"Benzodiazepine — GABA-A modulator (intermediate duration, no active metabolites)", paed:{mgPerKg:0.1,min:0.05,max:0.1,maxDose:4,freq:"Single dose IV"}, adult:{fixed:4,max:4,freq:"Single dose IV",maxDaily:8}, routes:"IV / IM", note:"IV preferred for status epilepticus in hospital. No active metabolites. Requires refrigeration." },
+            clonazepam:   { name:"Clonazepam", formula:"7-nitrobenzodiazepine — GABA-A modulator (potent, long-acting, enhanced anti-convulsant profile)", paed:{mgPerKg:0.01,min:0.01,max:0.03,maxDose:0.5,freq:"Every 8–12 h (anticonvulsant)"}, adult:{fixed:0.5,max:1,freq:"Every 8–12 h",maxDaily:20}, routes:"Oral / IV", note:"Maintenance anticonvulsant. Tolerance and dependence with long-term use. Sedation." },
+            clonazepam_panic: { name:"Clonazepam (Anxiety/Panic)", formula:"7-nitrobenzodiazepine — GABA-A modulator (anxiolytic application)", paed:{mgPerKg:null}, adult:{fixed:0.25,max:0.5,freq:"Every 12 h BD",maxDaily:4}, routes:"Oral", note:"Short-term anxiety only. High dependence potential. Avoid abrupt discontinuation." },
+        }
+    },
+
+    barbiturate: {
+        label: "Barbiturates",
+        drugs: {
+            phenobarbital: { name:"Phenobarbital (Phenobarbitone)", formula:"Barbiturate — GABA-A positive allosteric modulator (increases Cl⁻ channel duration, not frequency)", paed:{mgPerKg:20,min:15,max:20,maxDose:600,freq:"Loading dose then 5 mg/kg/day"}, adult:{fixed:200,max:300,freq:"Loading: 20 mg/kg IV, maintenance: 60–200 mg/day",maxDaily:600}, routes:"IV / Oral", note:"2nd line for status epilepticus. Long half-life (enzyme inducer — CYP induction). Monitor levels 15–40 mg/L." },
+        }
+    },
+
+    sodium_channel_blocker: {
+        label: "Sodium Channel Blockers (AEDs)",
+        drugs: {
+            phenytoin:    { name:"Phenytoin", formula:"Hydantoin — voltage-gated Na⁺ channel blocker (stabilises inactive state, membrane stabilisation)", paed:{mgPerKg:5,min:5,max:5,maxDose:300,freq:"Loading: 20 mg/kg IV, maintenance: 5 mg/kg/day"}, adult:{fixed:300,max:300,freq:"Once daily (enteric coated)",maxDaily:600}, routes:"Oral / IV", note:"Narrow TI (10–20 mg/L). Non-linear pharmacokinetics. Zero-order kinetics at high dose. Slow IV only (<50 mg/min)." },
+            carbamazepine: { name:"Carbamazepine", formula:"Dibenzazepine — voltage-gated Na⁺ channel blocker (similar to phenytoin, also partial agonist of adenosine A1)", paed:{mgPerKg:5,min:5,max:10,maxDose:200,freq:"Every 12 h BD (increase slowly)"}, adult:{fixed:200,max:400,freq:"Every 12 h BD",maxDaily:1200}, routes:"Oral", note:"Start low, increase slowly. Autoinduction (CYP3A4). HLA-B*1502 test before use (SJS risk in Asian patients)." },
+            lamotrigine:  { name:"Lamotrigine", formula:"Phenyltriazine — Na⁺ channel blocker + glutamate release inhibition (also Cav2.2 blockade)", paed:{mgPerKg:0.3,min:0.3,max:1,maxDose:50,freq:"Once or twice daily (slow titration)"}, adult:{fixed:25,max:200,freq:"Once or twice daily (titrate over weeks)",maxDaily:400}, routes:"Oral", note:"Slow titration essential (SJS risk if fast increase). Interaction with valproate (increase SJS/halve lamotrigine dose). Mood stabiliser." },
+            oxcarbazepine: { name:"Oxcarbazepine", formula:"Keto analogue of carbamazepine — prodrug → 10-OH-carbazepine (active Na⁺ channel blocker, less CYP induction)", paed:{mgPerKg:5,min:5,max:10,maxDose:300,freq:"Every 12 h BD"}, adult:{fixed:300,max:600,freq:"Every 12 h BD",maxDaily:2400}, routes:"Oral", note:"Fewer drug interactions than carbamazepine. Hyponatraemia risk. Monitor sodium levels." },
+        }
+    },
+
+    valproate_class: {
+        label: "Valproate Class",
+        drugs: {
+            sodium_valproate: { name:"Sodium Valproate", formula:"Branched-chain fatty acid — GABA transaminase inhibitor (↑GABA), Na⁺ channel blockade, T-type Ca²⁺ channel blockade", paed:{mgPerKg:10,min:10,max:20,maxDose:500,freq:"Every 12 h BD"}, adult:{fixed:500,max:1000,freq:"Every 12 h BD",maxDaily:2500}, routes:"Oral / IV", note:"Broad-spectrum AED. Teratogenic (spina bifida — AVOID in women of childbearing age unless essential). Monitor LFTs/ammonia." },
+        }
+    },
+
+    newer_aed: {
+        label: "Newer AEDs",
+        drugs: {
+            levetiracetam: { name:"Levetiracetam", formula:"Pyrrolidine — SV2A (synaptic vesicle protein) binding (unique mechanism — reduces neurotransmitter release)", paed:{mgPerKg:10,min:10,max:20,maxDose:500,freq:"Every 12 h BD"}, adult:{fixed:500,max:1500,freq:"Every 12 h BD",maxDaily:3000}, routes:"Oral / IV", note:"Few drug interactions. Renally cleared — reduce in renal impairment. Mood/behavioural side effects. Broad spectrum." },
+            gabapentin:   { name:"Gabapentin", formula:"GABA analogue — α2δ voltage-gated Ca²⁺ channel subunit binding (reduces neuronal excitability, not GABA-ergic)", paed:{mgPerKg:10,min:10,max:15,maxDose:300,freq:"Every 8 h TDS (titrate)"}, adult:{fixed:300,max:600,freq:"Every 8 h TDS",maxDaily:3600}, routes:"Oral", note:"Start low, titrate. Neuropathic pain + epilepsy. Reduce in renal failure. Abuse potential." },
+            pregabalin:   { name:"Pregabalin", formula:"α2δ Ca²⁺ channel subunit ligand — similar mechanism to gabapentin (higher affinity, linear pharmacokinetics)", paed:{mgPerKg:null}, adult:{fixed:75,max:150,freq:"Every 12 h BD",maxDaily:600}, routes:"Oral", note:"Controlled substance (Class C UK). Neuropathic pain, epilepsy, GAD. Titrate slowly. Dizziness/sedation." },
+            topiramate:   { name:"Topiramate", formula:"Sulfamate-substituted fructose — multiple mechanisms (Na⁺/Ca²⁺ channels, GABA-A agonist, AMPA/kainate antagonist, CA inhibitor)", paed:{mgPerKg:1,min:1,max:3,maxDose:50,freq:"Every 12 h BD (titrate slowly)"}, adult:{fixed:25,max:100,freq:"Every 12 h BD (titrate)",maxDaily:400}, routes:"Oral", note:"Cognitive effects ('dopamax'). Weight loss. Kidney stones (CA inhibition → ↑urine pH). Metabolic acidosis. Glaucoma." },
+        }
+    },
+
+    // ── CARDIOVASCULAR ──
+    beta_blocker: {
+        label: "Beta Blockers",
+        drugs: {
+            atenolol:     { name:"Atenolol", formula:"Cardioselective β₁ antagonist (hydrophilic) — reduces HR/cardiac output, renin secretion", paed:{mgPerKg:0.5,min:0.5,max:1,maxDose:50,freq:"Once daily"}, adult:{fixed:50,max:100,freq:"Once or twice daily",maxDaily:200}, routes:"Oral / IV", note:"Once daily. Does not cross BBB well (fewer CNS effects). Renally excreted — adjust in renal failure. Avoid in asthma." },
+            metoprolol:   { name:"Metoprolol", formula:"Cardioselective β₁ antagonist (lipophilic) — similar to atenolol but hepatically metabolised (CYP2D6)", paed:{mgPerKg:0.1,min:0.1,max:0.5,maxDose:50,freq:"Every 12 h BD"}, adult:{fixed:50,max:100,freq:"Every 12 h BD",maxDaily:400}, routes:"Oral / IV", note:"More CNS penetration than atenolol. Used in MI, heart failure. CYP2D6 variable metabolism." },
+            propranolol:  { name:"Propranolol", formula:"Non-selective β₁/β₂ antagonist (lipophilic) — also membrane stabilising, class II antiarrhythmic", paed:{mgPerKg:0.5,min:0.5,max:1,maxDose:40,freq:"Every 8–12 h"}, adult:{fixed:40,max:80,freq:"Every 8–12 h",maxDaily:320}, routes:"Oral / IV", note:"Non-selective — avoid in asthma/COPD. Also used for tremor, anxiety, thyrotoxicosis, migraine prophylaxis." },
+            carvedilol:   { name:"Carvedilol", formula:"Non-selective β₁/β₂ + α₁ antagonist — vasodilatory beta-blocker (reduces afterload in heart failure)", paed:{mgPerKg:0.1,min:0.05,max:0.2,maxDose:25,freq:"Every 12 h BD"}, adult:{fixed:3.125,max:25,freq:"Every 12 h BD (titrate)",maxDaily:50}, routes:"Oral", note:"Start low, titrate slowly. Heart failure + hypertension. α₁ blockade reduces peripheral resistance." },
+            bisoprolol:   { name:"Bisoprolol", formula:"Highly selective β₁ antagonist — most cardioselective (β₁:β₂ selectivity ratio ~75:1)", paed:{mgPerKg:null}, adult:{fixed:2.5,max:10,freq:"Once daily",maxDaily:20}, routes:"Oral", note:"Most cardioselective. Once daily compliance advantage. Heart failure, hypertension. Titrate from 1.25 mg." },
+        }
+    },
+
+    ace_inhibitor: {
+        label: "ACE Inhibitors",
+        drugs: {
+            enalapril:    { name:"Enalapril", formula:"Prodrug ethyl ester — hepatic activation → enalaprilat (competitive ACE inhibitor, zinc metallopeptidase)", paed:{mgPerKg:0.1,min:0.1,max:0.5,maxDose:5,freq:"Every 12–24 h"}, adult:{fixed:5,max:20,freq:"Once or twice daily",maxDaily:40}, routes:"Oral", note:"Start low. Check K⁺/creatinine 1–2 weeks after starting. Cough (bradykinin accumulation). Teratogenic — avoid in pregnancy." },
+            lisinopril:   { name:"Lisinopril", formula:"Lysine proline analogue — direct ACE inhibitor (no prodrug activation required, renally excreted)", paed:{mgPerKg:0.1,min:0.1,max:0.5,maxDose:5,freq:"Once daily"}, adult:{fixed:5,max:20,freq:"Once daily",maxDaily:40}, routes:"Oral", note:"Not a prodrug. Once daily. Renally excreted — reduce in renal impairment. Monitor electrolytes." },
+            ramipril:     { name:"Ramipril", formula:"Prodrug → ramiprilat — ACE inhibitor with high tissue ACE selectivity (longer duration)", paed:{mgPerKg:null}, adult:{fixed:2.5,max:10,freq:"Once or twice daily",maxDaily:10}, routes:"Oral", note:"Evidence in post-MI, heart failure, diabetic nephropathy. Long duration. Teratogenic." },
+            captopril:    { name:"Captopril", formula:"Thiol-containing dipeptide — direct ACE inhibitor (first ACE inhibitor, short-acting)", paed:{mgPerKg:0.05,min:0.05,max:0.1,maxDose:12.5,freq:"Every 8–12 h"}, adult:{fixed:12.5,max:50,freq:"Every 8 h TDS",maxDaily:150}, routes:"Oral", note:"Multiple daily dosing disadvantage. Thiol group causes taste disturbance, neutropenia. Monitor carefully." },
+        }
+    },
+
+    arb: {
+        label: "ARBs (Angiotensin-II Receptor Blockers)",
+        drugs: {
+            losartan:     { name:"Losartan", formula:"Tetrazole biphenyl — selective AT₁ receptor antagonist (no bradykinin accumulation → no ACE-cough)", paed:{mgPerKg:0.7,min:0.7,max:1,maxDose:50,freq:"Once daily"}, adult:{fixed:50,max:100,freq:"Once daily",maxDaily:100}, routes:"Oral", note:"Less cough than ACE inhibitors. Uricosuric (lowers uric acid). Renoprotective in diabetic nephropathy." },
+            valsartan:    { name:"Valsartan", formula:"Tetrazole — AT₁ receptor antagonist (non-prodrug, high AT₁/AT₂ selectivity)", paed:{mgPerKg:1,min:1,max:4,maxDose:160,freq:"Once daily"}, adult:{fixed:80,max:320,freq:"Once or twice daily",maxDaily:320}, routes:"Oral", note:"Heart failure + hypertension evidence. Once daily. Monitor electrolytes." },
+            candesartan:  { name:"Candesartan", formula:"Prodrug — active carboxylate form AT₁ antagonist (strongest AT₁ binding affinity in class)", paed:{mgPerKg:null}, adult:{fixed:8,max:32,freq:"Once daily",maxDaily:32}, routes:"Oral", note:"Paed (1–17 yrs): 0.2 mg/kg. Longest receptor binding duration. Heart failure mortality benefit." },
+            irbesartan:   { name:"Irbesartan", formula:"Non-prodrug AT₁ antagonist — partial agonist at PPAR-γ (additional metabolic benefit)", paed:{mgPerKg:null}, adult:{fixed:150,max:300,freq:"Once daily",maxDaily:300}, routes:"Oral", note:"Diabetic nephropathy evidence (IDNT trial). No active metabolites. No uricosuric effect." },
+        }
+    },
+
+    ccb_dihydro: {
+        label: "CCBs — Dihydropyridine",
+        drugs: {
+            amlodipine:   { name:"Amlodipine", formula:"Dihydropyridine — L-type voltage-gated Ca²⁺ channel blocker (vascular selectivity, 35–50 h half-life)", paed:{mgPerKg:0.1,min:0.1,max:0.3,maxDose:5,freq:"Once daily"}, adult:{fixed:5,max:10,freq:"Once daily",maxDaily:10}, routes:"Oral", note:"Once daily — long half-life (35–50 h). Ankle oedema common. No negative inotropic effect at usual doses." },
+            nifedipine:   { name:"Nifedipine (Modified Release)", formula:"Dihydropyridine — L-type Ca²⁺ channel blocker (faster onset, more reflex tachycardia than amlodipine)", paed:{mgPerKg:0.5,min:0.25,max:0.5,maxDose:30,freq:"Every 12 h BD (modified release)"}, adult:{fixed:30,max:60,freq:"Every 12 h BD (MR)",maxDaily:90}, routes:"Oral", note:"Modified release preferred. Used in Raynaud's phenomenon. Short-acting capsule — avoid (reflex tachycardia, coronary steal)." },
+            felodipine:   { name:"Felodipine", formula:"Dihydropyridine — highly vascular-selective L-type Ca²⁺ channel blocker", paed:{mgPerKg:null}, adult:{fixed:5,max:10,freq:"Once daily",maxDaily:20}, routes:"Oral", note:"Highly vascular selective. Grapefruit juice interaction (↑levels). Once daily modified release." },
+        }
+    },
+
+    loop_diuretic: {
+        label: "Loop Diuretics",
+        drugs: {
+            furosemide:   { name:"Furosemide (Frusemide)", formula:"Sulfonamide loop diuretic — Na⁺/K⁺/2Cl⁻ cotransporter (NKCC2) inhibitor in thick ascending limb of Henle", paed:{mgPerKg:1,min:0.5,max:2,maxDose:40,freq:"Once or twice daily"}, adult:{fixed:40,max:80,freq:"Once or twice daily",maxDaily:500}, routes:"Oral / IV / IM", note:"Potent diuretic. Monitor electrolytes (K⁺, Na⁺). Ototoxic at high IV doses. Give in morning to avoid nocturnal diuresis." },
+            bumetanide:   { name:"Bumetanide", formula:"Pyridine sulfonamide loop diuretic — NKCC2 inhibitor (40× more potent than furosemide, mg for mg)", paed:{mgPerKg:0.025,min:0.025,max:0.05,maxDose:1,freq:"Once or twice daily"}, adult:{fixed:1,max:2,freq:"Once or twice daily",maxDaily:10}, routes:"Oral / IV / IM", note:"Useful when furosemide resistance. Equivalent to 40 mg furosemide = 1 mg bumetanide. Same monitoring." },
+        }
+    },
+
+    thiazide: {
+        label: "Thiazide Diuretics",
+        drugs: {
+            bendroflumethiazide: { name:"Bendroflumethiazide", formula:"Thiazide benzothiadiazine — NCC (Na⁺/Cl⁻ cotransporter) inhibitor in distal convoluted tubule", paed:{mgPerKg:0.05,min:0.05,max:0.1,maxDose:2.5,freq:"Once daily (morning)"}, adult:{fixed:2.5,max:2.5,freq:"Once daily",maxDaily:5}, routes:"Oral", note:"Hypertension first-line. Mild diuretic effect. Hypokalaemia, hyperuricaemia, dyslipidaemia. Combine with K⁺-sparing diuretic." },
+            hydrochlorothiazide: { name:"Hydrochlorothiazide (HCTZ)", formula:"Prototype thiazide — NCC inhibitor in DCT, reduces cardiac output initially, then peripheral resistance long-term", paed:{mgPerKg:1,min:1,max:2,maxDose:25,freq:"Once daily"}, adult:{fixed:12.5,max:25,freq:"Once daily",maxDaily:50}, routes:"Oral", note:"Often combined in fixed-dose combinations (HCTZ + ARB etc). Monitor electrolytes." },
+            indapamide:   { name:"Indapamide", formula:"Indoline sulfonamide — thiazide-like diuretic with direct vasodilatory action (Ca²⁺ channel + NCC)", paed:{mgPerKg:null}, adult:{fixed:1.5,max:2.5,freq:"Once daily",maxDaily:2.5}, routes:"Oral", note:"Less metabolic side effects than standard thiazides. Used in elderly. Modified release (1.5 mg) preferred." },
+        }
+    },
+
+    digoxin_class: {
+        label: "Cardiac Glycosides",
+        drugs: {
+            digoxin:      { name:"Digoxin", formula:"Cardenolide steroid glycoside — Na⁺/K⁺-ATPase inhibitor → ↑intracellular Ca²⁺ → positive inotrope + AV nodal slowing", paed:{mgPerKg:null}, adult:{fixed:0.0625,max:0.25,freq:"Once daily (mcg — check dose carefully)",maxDaily:0.25}, routes:"Oral / IV", note:"Narrow TI (0.5–2 ng/mL). Paed: complex loading regimens by age/weight — consult BNF. Toxicity: nausea, yellow vision, bradycardia." },
+        }
+    },
+
+    antiplatelet: {
+        label: "Antiplatelets",
+        drugs: {
+            aspirin_ap:   { name:"Aspirin (Antiplatelet)", formula:"Salicylate — irreversible COX-1 acetylation in platelets → thromboxane A₂ synthesis inhibition (antiplatelet)", paed:{mgPerKg:null}, adult:{fixed:75,max:300,freq:"Once daily",maxDaily:300}, routes:"Oral", note:"75 mg daily for antiplatelet effect. Enteric-coated reduces GI symptoms. CONTRAINDICATED <16 yrs." },
+            clopidogrel:  { name:"Clopidogrel", formula:"Thienopyridine prodrug (CYP2C19) — irreversible P2Y₁₂ ADP receptor antagonist on platelets", paed:{mgPerKg:null}, adult:{fixed:75,max:75,freq:"Once daily",maxDaily:75}, routes:"Oral", note:"CYP2C19 poor metabolisers have reduced efficacy. PPI interaction (omeprazole). Used with aspirin post-ACS (DAPT)." },
+            ticagrelor:   { name:"Ticagrelor", formula:"Cyclopentyl triazolopyrimidine — reversible direct P2Y₁₂ receptor antagonist (no hepatic activation required)", paed:{mgPerKg:null}, adult:{fixed:90,max:90,freq:"Every 12 h BD",maxDaily:180}, routes:"Oral", note:"Reversible — unlike clopidogrel. More potent. Dyspnoea (non-pulmonary) side effect. Post-ACS + stent." },
+        }
+    },
+
+    // ── ENDOCRINE ──
+    biguanide: {
+        label: "Biguanides",
+        drugs: {
+            metformin:    { name:"Metformin", formula:"Biguanide — hepatic AMPK activation → inhibits gluconeogenesis/glycogenolysis, improves insulin sensitivity (no β-cell reliance)", paed:{mgPerKg:null}, adult:{fixed:500,max:1000,freq:"Twice or three times daily (with food)",maxDaily:2000}, routes:"Oral", note:"First-line T2DM. Weight neutral/loss. Lactic acidosis risk — withhold before contrast/surgery. No hypoglycaemia. GI side effects." },
+        }
+    },
+
+    sulfonylurea: {
+        label: "Sulfonylureas",
+        drugs: {
+            glibenclamide: { name:"Glibenclamide (Glyburide)", formula:"1st gen sulfonylurea — pancreatic β-cell K_ATP channel blocker → Ca²⁺ influx → insulin secretion (glucose-independent)", paed:{mgPerKg:null}, adult:{fixed:2.5,max:5,freq:"Once or twice daily (with meals)",maxDaily:15}, routes:"Oral", note:"Hypoglycaemia risk (especially in elderly/irregular meals). Active metabolites. Avoid in elderly — prefer gliclazide." },
+            gliclazide:   { name:"Gliclazide", formula:"2nd gen sulfonylurea — selective β-cell K_ATP channel blocker (shorter-acting, fewer active metabolites than glibenclamide)", paed:{mgPerKg:null}, adult:{fixed:40,max:80,freq:"Once or twice daily (with meals)",maxDaily:320}, routes:"Oral", note:"Safer in elderly than glibenclamide. Modified release available. Weight gain. Hypoglycaemia risk." },
+            glipizide:    { name:"Glipizide", formula:"2nd gen sulfonylurea — K_ATP channel blocker, short-acting (least hypoglycaemia in class)", paed:{mgPerKg:null}, adult:{fixed:5,max:10,freq:"Once daily (30 min before breakfast)",maxDaily:40}, routes:"Oral", note:"Shortest acting sulfonylurea — lowest hypoglycaemia risk. Take before meals. Hepatically metabolised." },
+        }
+    },
+
+    insulin_rapid: {
+        label: "Insulin",
+        drugs: {
+            insulin_rapid: { name:"Rapid-acting Insulin Analogues", formula:"Engineered insulin analogues (lispro/aspart/glulisine) — rearranged B-chain prevents hexamer formation → faster monomer absorption", paed:{mgPerKg:null}, adult:{fixed:null,max:null,freq:"Before meals (dose by glucose/carbohydrate)",maxDaily:null}, routes:"SC / IV", note:"Doses are individualised (typically 0.1–0.3 units/kg). Onset 15 min, peak 1 h. Administer 0–15 min before meal." },
+            insulin_long: { name:"Long-acting Insulin (Basal)", formula:"Glargine/detemir/degludec — modified insulin forming subcutaneous depot (slow constant absorption, peakless profile)", paed:{mgPerKg:0.2,min:0.1,max:0.3,maxDose:null,freq:"Once daily (glargine/degludec)"}, adult:{fixed:null,max:null,freq:"Once daily",maxDaily:null}, routes:"SC", note:"Starting dose 0.1–0.2 units/kg. Titrate by fasting glucose. No mixing with other insulins (glargine/degludec). Once daily." },
+        }
+    },
+
+    levothyroxine_class: {
+        label: "Thyroid Hormone",
+        drugs: {
+            levothyroxine: { name:"Levothyroxine (T4)", formula:"Synthetic L-thyroxine — prohormone converted to active T3 (deiodination); binds thyroid hormone receptors", paed:{mgPerKg:4,min:4,max:5,maxDose:100,freq:"Once daily (fasting)"}, adult:{fixed:50,max:100,freq:"Once daily (fasting — 30 min before food)",maxDaily:200}, routes:"Oral", note:"Take on empty stomach 30 min before food. Start low in elderly/cardiac patients (25 mcg). Doses in mcg. Monitor TSH 6 weekly." },
+        }
+    },
+
+    // ── GI ──
+    ppi: {
+        label: "Proton Pump Inhibitors (PPIs)",
+        drugs: {
+            omeprazole:   { name:"Omeprazole", formula:"Benzimidazole prodrug — irreversible H⁺/K⁺-ATPase (proton pump) inhibitor (acid-activated sulfenamide)", paed:{mgPerKg:0.7,min:0.7,max:1,maxDose:20,freq:"Once daily"}, adult:{fixed:20,max:40,freq:"Once daily",maxDaily:80}, routes:"Oral / IV", note:"Take before food. Long duration (irreversible — 24 h acid suppression). CYP2C19 inhibitor — clopidogrel interaction." },
+            lansoprazole: { name:"Lansoprazole", formula:"Substituted benzimidazole PPI — irreversible proton pump inhibitor (slightly higher bioavailability than omeprazole)", paed:{mgPerKg:0.7,min:0.7,max:1,maxDose:15,freq:"Once daily"}, adult:{fixed:15,max:30,freq:"Once daily",maxDaily:60}, routes:"Oral", note:"Can be opened/dissolved (useful in children/NG tubes). Less CYP2C19 interaction than omeprazole." },
+            pantoprazole: { name:"Pantoprazole", formula:"Benzimidazole sulfonamide PPI — irreversible proton pump inhibitor (fewest drug interactions in class)", paed:{mgPerKg:0.8,min:0.8,max:0.8,maxDose:20,freq:"Once daily"}, adult:{fixed:40,max:40,freq:"Once daily",maxDaily:80}, routes:"Oral / IV", note:"Fewest drug interactions. IV form for Zollinger-Ellison, upper GI bleed. Once daily before food." },
+            esomeprazole: { name:"Esomeprazole", formula:"S-enantiomer of omeprazole — benzimidazole PPI (stereoselective CYP2C19 → higher plasma levels vs omeprazole)", paed:{mgPerKg:null}, adult:{fixed:20,max:40,freq:"Once daily",maxDaily:80}, routes:"Oral / IV", note:"More consistent acid suppression than omeprazole (stereoselective metabolism). Paed: 1–11 yrs=10 mg; ≥12 yrs=20 mg." },
+        }
+    },
+
+    h2_antagonist: {
+        label: "H₂ Receptor Antagonists",
+        drugs: {
+            ranitidine_class: { name:"Famotidine", formula:"Thiazole H₂ receptor antagonist — competitive histamine H₂ blockade → reduced gastric acid secretion", paed:{mgPerKg:0.5,min:0.5,max:0.5,maxDose:20,freq:"Every 12 h BD"}, adult:{fixed:20,max:40,freq:"Every 12 h BD or once daily at night",maxDaily:40}, routes:"Oral / IV", note:"Ranitidine withdrawn globally (NDMA contamination). Famotidine now preferred H₂ antagonist. Less potent than PPIs." },
+            cimetidine:   { name:"Cimetidine", formula:"Imidazole H₂ receptor antagonist — prototype H₂ blocker (significant CYP1A2/2C9/2D6/3A4 inhibitor)", paed:{mgPerKg:5,min:5,max:10,maxDose:400,freq:"Every 6–12 h"}, adult:{fixed:400,max:400,freq:"Every 6–12 h",maxDaily:1600}, routes:"Oral / IV", note:"Multiple drug interactions via CYP inhibition (warfarin, phenytoin etc). Anti-androgenic effects. Rarely used now." },
+        }
+    },
+
+    d2_antiemetic: {
+        label: "D₂ Antagonist Antiemetics",
+        drugs: {
+            metoclopramide: { name:"Metoclopramide", formula:"Benzamide — central + peripheral D₂ receptor antagonist (also 5-HT₃ antagonist + 5-HT₄ agonist → prokinetic)", paed:{mgPerKg:0.1,min:0.1,max:0.15,maxDose:5,freq:"Every 8 h TDS"}, adult:{fixed:10,max:10,freq:"Every 8 h TDS",maxDaily:30}, routes:"Oral / IV / IM", note:"Extrapyramidal reactions (especially young <20 yrs — restrict use). Max 5 days. Also for diabetic gastroparesis." },
+            domperidone:  { name:"Domperidone", formula:"Benzimidazolone — peripheral D₂ antagonist (does not cross BBB — fewer EPS) + prokinetic", paed:{mgPerKg:0.25,min:0.25,max:0.25,maxDose:10,freq:"Every 8 h TDS (before meals)"}, adult:{fixed:10,max:10,freq:"Every 8 h TDS",maxDaily:30}, routes:"Oral / PR", note:"Max 7 days use — QT prolongation risk. Does not cross BBB — fewer extrapyramidal side effects than metoclopramide." },
+            prochlorperazine: { name:"Prochlorperazine", formula:"Piperazine phenothiazine — D₂/D₃ antagonist + H₁ + muscarinic blockade (also used in vertigo)", paed:{mgPerKg:null}, adult:{fixed:5,max:10,freq:"Every 8 h TDS",maxDaily:40}, routes:"Oral / Buccal / IM", note:"Not in children <10 kg. Buccal tablet for nausea/vomiting when PO not possible. Extrapyramidal risk." },
+        }
+    },
+
+    antiemetic_5ht3: {
+        label: "5-HT₃ Antagonist Antiemetics",
+        drugs: {
+            ondansetron:  { name:"Ondansetron", formula:"Carbazole 5-HT₃ receptor antagonist — blocks peripheral + central vagal 5-HT₃ receptors (vomiting reflex arc)", paed:{mgPerKg:0.15,min:0.1,max:0.15,maxDose:4,freq:"Every 8–12 h"}, adult:{fixed:4,max:8,freq:"Every 8–12 h",maxDaily:24}, routes:"Oral / IV / IM", note:"Gold standard antiemetic. QT prolongation (max IV 32 mg/day in adults). IV: give slowly over 15 min. Headache, constipation." },
+            granisetron:  { name:"Granisetron", formula:"Indazole 5-HT₃ receptor antagonist — selective, longer acting than ondansetron", paed:{mgPerKg:0.02,min:0.02,max:0.02,maxDose:1,freq:"Every 12 h BD or once daily"}, adult:{fixed:1,max:2,freq:"Once or twice daily",maxDaily:9}, routes:"Oral / IV / Transdermal", note:"Chemotherapy-induced N&V. Transdermal patch (3.1 mg/day) for 5 days of chemotherapy. QT risk." },
+        }
+    },
+
+    osmotic_laxative: {
+        label: "Osmotic Laxatives",
+        drugs: {
+            lactulose:    { name:"Lactulose", formula:"Synthetic disaccharide — colonic fermentation to organic acids → osmotic water retention + pH reduction (cathartic + NH₃ trap)", paed:{mgPerKg:null}, adult:{fixed:15,max:30,freq:"Every 12 h BD (adjust to 1–2 soft stools/day)",maxDaily:60}, routes:"Oral", note:"Paed: infant <1 yr=2.5 mL BD; 1–5 yrs=5 mL BD; 5–10 yrs=10 mL BD. Also for hepatic encephalopathy (15 mL TDS). Onset 48 h." },
+            macrogol:     { name:"Macrogol (Polyethylene Glycol)", formula:"High-molecular weight polymer — osmotic laxative (inert water-binding polymer → softens stool by water retention)", paed:{mgPerKg:null}, adult:{fixed:13.8,max:13.8,freq:"1 sachet (13.8 g) once daily",maxDaily:4}, routes:"Oral", note:"Paed (2–11 yrs): Movicol Paediatric. Mix in water. Dissolve completely. For faecal impaction: up to 8 sachets/day short-term." },
+        }
+    },
+
+    // ── FLUIDS ──
+    ors: {
+        label: "Oral Rehydration Solution",
+        drugs: {
+            ors_standard: { name:"ORS (Oral Rehydration Solution)", formula:"WHO/UNICEF formula — glucose-coupled Na⁺ cotransport (SGLT1) drives water absorption: Na 75 mmol/L, K 20, Cl 65, citrate 10, glucose 75", paed:{mgPerKg:null, ors:true, freq:"Ongoing until diarrhoea resolves"}, adult:{fixed:null, ors:true, freq:"200–400 mL per loose stool"}, routes:"Oral", note:"Mild dehydration: 50 mL/kg over 4 h. Moderate: 100 mL/kg over 4 h. Small frequent sips. Do not dilute." },
+        }
+    },
+
+    iv_fluid: {
+        label: "IV Crystalloids",
+        drugs: {
+            normal_saline: { name:"0.9% Sodium Chloride (Normal Saline)", formula:"Isotonic crystalloid — 154 mmol/L NaCl (slightly supraphysiological Cl⁻), volume expansion via interstitial/vascular distribution", paed:{mgPerKg:null, ml:10, mlUnit:"mL/kg (bolus)"}, adult:{fixed:null, mlFixed:"500 mL bolus",freq:"Bolus then reassess"}, routes:"IV", note:"Resuscitation bolus: 10–20 mL/kg in children; 500 mL in adults. Hyperchloraemic acidosis with large volumes. Reassess after each bolus." },
+            hartmanns:    { name:"Hartmann's Solution (Ringer's Lactate)", formula:"Balanced isotonic crystalloid — Na 131, K 5, Ca 2, Cl 111, lactate 29 mmol/L (more physiological than 0.9% NaCl)", paed:{mgPerKg:null, ml:10, mlUnit:"mL/kg (bolus)"}, adult:{fixed:null, mlFixed:"500 mL bolus",freq:"Bolus then reassess"}, routes:"IV", note:"Preferred resuscitation fluid (less hyperchloraemic acidosis). Avoid in head injury (hypotonic relative to plasma) and hyperkalaemia." },
+        }
+    },
+
+    // ── VITAMINS / MINERALS ──
+    iron_supplement: {
+        label: "Iron Supplements",
+        drugs: {
+            ferrous_sulphate: { name:"Ferrous Sulphate", formula:"Ferrous (Fe²⁺) iron — divalent metal transporter-1 (DMT-1) mediated absorption in duodenum (elemental iron: 65 mg per 200 mg tablet)", paed:{mgPerKg:3,min:3,max:6,maxDose:200,freq:"Every 8–12 h (elemental iron mg/kg)"}, adult:{fixed:200,max:200,freq:"Every 8–12 h BD or TDS",maxDaily:600}, routes:"Oral", note:"Give on empty stomach (better absorption) but with food if GI intolerance. Black stools normal. Constipation. Avoid with antacids/tea." },
+            ferrous_gluconate: { name:"Ferrous Gluconate", formula:"Fe²⁺ gluconate salt — gentler GI profile vs sulphate (elemental iron: ~12% of salt = 37 mg per 300 mg tablet)", paed:{mgPerKg:3,min:3,max:6,maxDose:300,freq:"Every 12 h BD"}, adult:{fixed:300,max:300,freq:"Every 12 h BD",maxDaily:900}, routes:"Oral", note:"Better tolerated GI-wise than ferrous sulphate. Lower elemental iron content — need higher dose. Constipation still possible." },
+            iron_iv:      { name:"IV Iron (Ferric Carboxymaltose)", formula:"Colloidal ferric (Fe³⁺) hydroxide complex — RES phagocytosis → controlled Fe³⁺ release to transferrin/ferritin", paed:{mgPerKg:15,min:10,max:20,maxDose:500,freq:"Single dose (repeat after 1 week if needed)"}, adult:{fixed:500,max:1000,freq:"Single infusion (up to 1000 mg)",maxDaily:1000}, routes:"IV", note:"For intolerance/malabsorption of oral iron. Hypersensitivity risk — observe 30 min post-infusion. Hypophosphataemia." },
+        }
+    },
+
+    vitamin_d: {
+        label: "Vitamin D",
+        drugs: {
+            colecalciferol: { name:"Colecalciferol (Vitamin D₃)", formula:"Secosteroid — hepatic 25-hydroxylation → renal 1α-hydroxylation → 1,25-(OH)₂D₃ (calcitriol) — CaSR/VDR nuclear receptor ligand", paed:{mgPerKg:null}, adult:{fixed:400,max:1000,freq:"Once daily (units/day — 400 IU standard prevention)",maxDaily:4000}, routes:"Oral", note:"Paed: 400 IU/day (all under 5 yrs UK). Deficiency treatment: 1000–2000 IU/day. Monitor 25(OH)D levels if high-dose. Doses in IU." },
+            ergocalciferol: { name:"Ergocalciferol (Vitamin D₂)", formula:"Plant-derived secosteroid — similar mechanism to D₃ (25-OH then 1α-OH activation) but shorter half-life", paed:{mgPerKg:null}, adult:{fixed:50000,max:50000,freq:"Weekly for 8–12 weeks (IU)",maxDaily:50000}, routes:"Oral", note:"High-dose weekly treatment regimens. 50,000 IU weekly for 8–12 weeks for deficiency. Less potent than D₃ for maintenance." },
+            alfacalcidol:  { name:"Alfacalcidol (1α-hydroxyvitamin D)", formula:"1α-OH vitamin D — requires only hepatic 25-hydroxylation (bypasses renal activation — useful in renal failure)", paed:{mgPerKg:0.05,min:0.05,max:0.1,maxDose:1,freq:"Once daily (mcg)"}, adult:{fixed:0.25,max:1,freq:"Once daily (mcg)",maxDaily:3}, routes:"Oral / IV", note:"For renal osteodystrophy, hypoparathyroidism. Does not require functioning kidneys to activate. Monitor Ca²⁺/phosphate. Doses in mcg." },
+        }
+    },
+
+    zinc_supplement: {
+        label: "Zinc Supplements",
+        drugs: {
+            zinc_sulphate: { name:"Zinc Sulphate", formula:"Divalent trace mineral — metalloenzyme cofactor (DNA polymerase, carbonic anhydrase, superoxide dismutase), metallothionein synthesis", paed:{mgPerKg:1,min:0.5,max:1,maxDose:20,freq:"Once daily"}, adult:{fixed:220,max:220,freq:"Once or twice daily",maxDaily:440}, routes:"Oral", note:"WHO-recommended zinc supplementation for diarrhoea: 10 mg (<6 months) or 20 mg (>6 months) × 10–14 days. Reduces duration/recurrence." },
+        }
+    },
+
+    folic_acid: {
+        label: "Folic Acid",
+        drugs: {
+            folic_acid:   { name:"Folic Acid", formula:"B₉ vitamin — DHF/THF precursor (dihydrofolate reductase substrate) → 1-carbon transfer reactions, DNA synthesis/methylation", paed:{mgPerKg:null}, adult:{fixed:0.4,max:5,freq:"Once daily (mg)",maxDaily:5}, routes:"Oral", note:"Prevention (preconception): 0.4 mg daily. Neural tube defect high-risk: 5 mg daily. Megaloblastic anaemia treatment: 5 mg daily. Check B12 before treating." },
+        }
+    },
+
+};
+
+// ══════════════════════════════════════════════
+// UI Logic
+// ══════════════════════════════════════════════
+function populateDrugs() {
+    const classKey = document.getElementById('drugClass').value;
+    const drugSel  = document.getElementById('drug');
+    drugSel.innerHTML = '';
+
+    if (!classKey || !drugClasses[classKey]) {
+        drugSel.innerHTML = '<option value="">— Select Class First —</option>';
+        return;
+    }
+
+    const classData = drugClasses[classKey];
+    for (const [key, d] of Object.entries(classData.drugs)) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = d.name;
+        drugSel.appendChild(opt);
+    }
+}
+
+function getDrug(drugKey) {
+    for (const cls of Object.values(drugClasses)) {
+        if (cls.drugs[drugKey]) return cls.drugs[drugKey];
+    }
+    return null;
+}
+
+function calculate() {
+    const age     = parseFloat(document.getElementById('age').value);
+    const weight  = parseFloat(document.getElementById('weight').value);
+    const pType   = document.getElementById('patientType').value;
+    const classKey = document.getElementById('drugClass').value;
+    const drugKey = document.getElementById('drug').value;
+
+    if (!weight || weight <= 0) { alert("Please enter a valid weight."); return; }
+    if (isNaN(age)) { alert("Please enter patient age."); return; }
+    if (!classKey) { alert("Please select a drug class."); return; }
+    if (!drugKey)  { alert("Please select a drug."); return; }
+
+    const drug = getDrug(drugKey);
+    if (!drug) { alert("Drug not found."); return; }
+
+    const isAdult = pType === 'adult';
+    const d = isAdult ? drug.adult : drug.paediatric;
+
+    document.getElementById('placeholder').style.display = 'none';
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.style.display = 'block';
+
+    let html = `
+    <div class="patient-summary">
+        <div class="ps-label">Patient</div>
+        <div class="ps-val">${age} yrs &nbsp;|&nbsp; ${weight} kg &nbsp;|&nbsp; ${isAdult ? 'Adult' : 'Paediatric'}</div>
+    </div>
+    <div class="dose-item">
+        <div class="drug-name">${drug.name}</div>
+        <div class="drug-category" style="font-size:10px;color:#64748b;line-height:1.4;margin-bottom:10px;font-style:italic;">${drug.formula}</div>
+    `;
+
+    // Contraindicated
+    if (d.contraindicated) {
+        html += `<div style="color:#dc2626;font-weight:700;font-size:14px;margin:8px 0;">CONTRAINDICATED</div>
+        <div class="dose-note" style="color:#991b1b;">${drug.note}</div>`;
+    }
+    // ORS paediatric
+    else if (d.ors) {
+        const vol = isAdult ? '200–400 mL per loose stool' : `${Math.round(50*weight)}–${Math.round(100*weight)} mL over 4 hours (50–100 mL/kg)`;
+        html += `<div class="dose-value">${vol}</div>
+        <div class="dose-range">Frequency: ${d.freq}</div>
+        <div class="dose-range" style="margin-top:4px;">Route: ${drug.routes}</div>
+        <div class="dose-note">${drug.note}</div>`;
+    }
+    // IV fluid (mL/kg)
+    else if (d.ml) {
+        html += `<div class="dose-value">${d.ml * weight} mL</div>
+        <div class="dose-range">Calculated: ${d.ml} ${d.mlUnit} × ${weight} kg</div>
+        <div class="dose-range">Route: ${drug.routes}</div>
+        <div class="dose-note">${drug.note}</div>`;
+    }
+    // IV fluid adult fixed
+    else if (!isAdult && drug.adult && drug.adult.mlFixed) {
+        html += `<div class="dose-value">${drug.adult.mlFixed}</div>
+        <div class="dose-range">Route: ${drug.routes}</div>
+        <div class="dose-note">${drug.note}</div>`;
+    }
+    // Weight-based not applicable
+    else if (!isAdult && d.mgPerKg === null && !d.ageWeight) {
+        html += `<div style="font-size:14px;color:#b45309;font-weight:600;margin:10px 0;">Weight-based dosing not applicable or adult-only drug.</div>
+        <div class="dose-note">${drug.note}</div>`;
+    }
+    // Age/weight based special (oseltamivir etc)
+    else if (!isAdult && d.ageWeight) {
+        let dose = weight < 15 ? '30 mg BD' : weight <= 23 ? '45 mg BD' : weight <= 40 ? '60 mg BD' : '75 mg BD';
+        html += `<div class="dose-value">${dose}</div>
+        <div class="dose-range">Based on weight ${weight} kg | Duration: 5 days</div>
+        <div class="dose-range">Route: ${drug.routes}</div>
+        <div class="dose-note">${drug.note}</div>`;
+    }
+    // Adult fixed dose
+    else if (isAdult) {
+        if (d.fixed === null) {
+            html += `<div style="font-size:14px;color:#b45309;font-weight:600;margin:10px 0;">Dose is individualised — see note below.</div>`;
+        } else {
+            html += `<div class="dose-value">${d.fixed}${d.max > d.fixed ? ' – '+d.max : ''} mg</div>`;
+        }
+        if (d.freq) html += `<div class="dose-range">Frequency: ${d.freq}</div>`;
+        if (d.maxDaily) html += `<div class="dose-range">Max daily: ${d.maxDaily} mg</div>`;
+        html += `<div class="dose-range" style="margin-top:4px;">Route: ${drug.routes}</div>
+        <div class="dose-note">${drug.note}</div>`;
+    }
+    // Paediatric weight-based
+    else {
+        const calcDose   = parseFloat((d.mgPerKg * weight).toFixed(2));
+        const calcMin    = parseFloat(((d.min||d.mgPerKg) * weight).toFixed(2));
+        const calcMax    = parseFloat(((d.max||d.mgPerKg) * weight).toFixed(2));
+        const cappedDose = Math.min(calcDose, d.maxDose);
+        const cappedMin  = Math.min(calcMin, d.maxDose);
+        const cappedMax  = Math.min(calcMax, d.maxDose);
+        const wasCapped  = calcDose > d.maxDose;
+
+        html += `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+            <span class="tag tag-green">Paediatric</span>
+            ${wasCapped ? '<span class="tag tag-orange">Dose capped at max</span>' : ''}
+        </div>
+        <div class="dose-value">${cappedDose} mg</div>
+        <div class="dose-range">Calculated: ${d.mgPerKg} mg/kg × ${weight} kg = ${calcDose} mg${wasCapped ? ` → capped at ${d.maxDose} mg` : ''}</div>
+        ${d.min !== d.max ? `<div class="dose-range">Range: ${cappedMin} – ${cappedMax} mg (${d.min}–${d.max} mg/kg)</div>` : ''}
+        <div class="dose-range">Max single dose: ${d.maxDose} mg</div>
+        <div class="dose-range" style="margin-top:4px;">Frequency: ${d.freq}</div>
+        <div class="dose-range">Route: ${drug.routes}</div>
+        <div class="dose-note">${drug.note}</div>`;
+    }
+
+    html += `</div>`;
+    html += disclaimer();
+    resultsDiv.innerHTML = html;
+}
+
+function disclaimer() {
+    return `<div class="disclaimer">
+        <strong>Clinical Disclaimer:</strong> This calculator is a reference aid only. Doses must be verified against current BNF, local formulary, and individual patient factors (renal/hepatic function, allergies, interactions). The prescriber bears full clinical responsibility.
+    </div>`;
+}
+
+function resetForm() {
+    document.getElementById('age').value = '';
+    document.getElementById('weight').value = '';
+    document.getElementById('patientType').value = 'paediatric';
+    document.getElementById('drugClass').value = '';
+    document.getElementById('drug').innerHTML = '<option value="">— Select Class First —</option>';
+    document.getElementById('indication').value = 'standard';
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('results').innerHTML = '';
+    document.getElementById('placeholder').style.display = 'flex';
+}
+
+document.getElementById('age').addEventListener('input', function() {
+    const age = parseFloat(this.value);
+    if (!isNaN(age)) document.getElementById('patientType').value = age >= 18 ? 'adult' : 'paediatric';
+});
+
+// ── Build Reference Table ──
+(function buildRefTable() {
+    const tbody = document.getElementById('refTableBody');
+    const shown = [];
+
+    for (const [clsKey, cls] of Object.entries(drugClasses)) {
+        for (const [dKey, d] of Object.entries(cls.drugs)) {
+            if (shown.length >= 40) break;
+            const pdose = d.paediatric && d.paediatric.mgPerKg ? `${d.paediatric.min||d.paediatric.mgPerKg}–${d.paediatric.max||d.paediatric.mgPerKg} mg/kg` : (d.paediatric && d.paediatric.ors ? 'See note' : d.paediatric && d.paediatric.ml ? `${d.paediatric.ml} mL/kg` : '—');
+            const adose = d.adult && d.adult.fixed ? `${d.adult.fixed}${d.adult.max > d.adult.fixed ? '–'+d.adult.max : ''} mg` : (d.adult && d.adult.mlFixed ? d.adult.mlFixed : '—');
+            const freq  = (d.paediatric && d.paediatric.freq) || (d.adult && d.adult.freq) || '—';
+            const maxD  = d.paediatric && d.paediatric.maxDose ? `${d.paediatric.maxDose} mg` : '—';
+
+            shown.push({name: d.name, pdose, adose, freq, maxD, route: d.routes});
+        }
+        if (shown.length >= 40) break;
+    }
+
+    shown.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.name}</td><td class="mono">${r.pdose}</td><td class="mono">${r.adose}</td><td>${r.freq}</td><td class="mono">${r.maxD}</td><td>${r.route}</td>`;
+        tbody.appendChild(tr);
+    });
+})();
+</script>
+
+</body>
+</html>
