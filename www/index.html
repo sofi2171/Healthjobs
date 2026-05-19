@@ -4,50 +4,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Health Jobs | Find Medical & Healthcare Jobs Near You</title>
-<meta name="description" content="Health Jobs Portal is Pakistan's leading digital network for healthcare pros. Find medical jobs, hire doctors, nurses, and staff instantly.">
-<meta name="keywords" content="health jobs Pakistan, medical jobs, healthcare recruitment, hire doctors, nursing jobs, pharmacist jobs, hospital jobs near me, healthjobs portal, online job portal, healthjobs uk">
-<meta name="google-site-verification" content="rnJ_XlQlZJB8Wj-J-4c5ooJH64qdaUwvZzMAIhwfNKI" />
-<link rel="canonical" href="https://healthjobs-portal.web.app/" />
-<meta property="og:title" content="Health Jobs | Find Medical & Healthcare Jobs Near You">
-<meta property="og:description" content="Pakistan's leading digital network connecting healthcare professionals. Find medical jobs, hire doctors, nurses, and pharmacists instantly.">
-<meta property="og:image" content="https://healthjobs-portal.web.app/images/logo.png">
-<meta property="og:url" content="https://healthjobs-portal.web.app/">
+<!-- Naya -->
+<meta name="description" content="Pakistan's #1 Healthcare Jobs Portal — Find nursing jobs, doctor jobs, pharmacist jobs, lab technician jobs and more. Employers can post jobs and hire medical staff instantly across Pakistan.">
+<!-- Naya -->
+<meta name="keywords" content="health jobs Pakistan, medical jobs Pakistan, healthcare jobs, hire doctors Pakistan, nursing jobs Pakistan, pharmacist jobs, hospital jobs, lab technician jobs, dispenser jobs, candidate jobs portal, employer hiring portal, healthcare recruitment Pakistan, medical staff hiring, MBBS jobs, nurse jobs Lahore, nurse jobs Karachi, nurse jobs Faisalabad, healthcare portal Pakistan">
+<meta name="google-site-verification" content="GFHk5ESPsi8qtVxsH1gHR9EucDwKNJg7j5-yLF34mKc" />
+<link rel="canonical" href="https://healthjobportal.com/" />
+<!-- Naya -->
+<title>Health Jobs Portal Pakistan | Nursing, Doctor & Medical Jobs</title>
+<!-- Naya -->
+<meta property="og:description" content="Pakistan's #1 Healthcare Jobs Portal — Find nursing, doctor, pharmacist and lab technician jobs. Post jobs and hire medical staff instantly.">
+<meta property="og:image" content="https://healthjobportal.com/images/logo.png">
+<meta property="og:url" content="https://healthjobportal.com/">
 <meta property="og:type" content="website">
 
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org/",
-  "@type": "JobPosting",
-  "title": "Medical Representative",
-  "description": "<p>We are hiring a dedicated Medical Representative.</p>",
-  "datePosted": "2026-04-30",
-  "validThrough": "2026-05-30",
-  "employmentType": "FULL_TIME",
-  "hiringOrganization": {
-    "@type": "Organization",
-    "name": "Ashraf Group",
-    "sameAs": "https://healthjobs-portal.web.app/"
-  },
-  "jobLocation": {
-    "@type": "Place",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Main Boulevard, Gulberg",
-      "addressLocality": "Lahore",
-      "addressRegion": "Punjab",
-      "postalCode": "54000",
-      "addressCountry": "PK"
-    }
-  },
-  "baseSalary": {
-    "@type": "MonetaryAmount",
-    "currency": "PKR",
-    "value": {
-      "@type": "QuantitativeValue",
-      "value": 50000,
-      "unitText": "MONTH"
-    }
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Health Jobs Portal",
+  "url": "https://healthjobportal.com/",
+  "description": "Pakistan's leading digital network for healthcare professionals",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://healthjobportal.com/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
   }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Health Jobs Portal",
+  "url": "https://healthjobportal.com/",
+  "logo": "https://healthjobportal.com/images/logo.png",
+  "sameAs": [
+    "https://t.me/healthjobsportal"
+  ]
 }
 </script>
 
@@ -70,13 +65,29 @@
 
 <link rel="preconnect" href="https://www.gstatic.com">
 <link rel="preconnect" href="https://firestore.googleapis.com">
-<link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+<link rel="icon" type="images/app.png" sizes="32x32" href="images/favicon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ffffff">
 
 <style>
+#img-menu-sheet.active { bottom: 0; display: block; }
+.post-desc.expanded {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+.read-more-btn {
+  background: none;
+  border: none;
+  color: var(--primary-blue);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 4px;
+  display: none;
+}
 /* =========================================
    1. ROOT VARIABLES & RESET
 ========================================= */
@@ -404,6 +415,118 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 
 /* =========================================
 
+    animation: slideBottomUp 0.4s ease forwards;
+    gap: 12px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@keyframes slideBottomUp {
+    from { bottom: -100%; }
+    to { bottom: 65px; } /* Bottom nav se thora upar */
+}
+
+.hp-app-card {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    gap: 12px;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+.hp-close-btn {
+    position: absolute;
+    top: 4px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f1f5f9 !important;
+    border: none !important;
+    font-size: 16px;
+    cursor: pointer;
+    color: #94a3b8 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    z-index: 10;
+}
+
+.hp-close-btn:hover {
+    background: #e2e8f0 !important;
+    color: #64748b !important;
+}
+
+.hp-icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: none !important;
+    box-shadow: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hp-icon-circle img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.hp-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.hp-title {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin: 0 0 2px 0 !important;
+    text-align: left !important;
+    line-height: 1.2;
+}
+
+.hp-subtitle {
+    font-size: 12px !important;
+    color: #64748b !important;
+    margin: 0 !important;
+    text-align: left !important;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+.hp-download-button {
+    background: #0a66c2 !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    padding: 8px 16px !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    font-size: 13px !important;
+    border-radius: 20px !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s;
+    display: inline-block !important;
+    line-height: 1.2;
+    box-shadow: none !important;
+}
+
+.hp-download-button:hover {
+    background: #004182 !important;
+}
 
 /* Ye fields hide kar do */
 .hp-desc,
@@ -421,45 +544,26 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
   .fs-search-overlay { max-width: 580px; left: 50%; transform: translateX(-50%); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); }
   footer { padding-bottom: 40px; }
 }
-#pull-to-refresh {
-    position: fixed;
-    top: -60px; /* شروع میں اسکرین سے باہر */
-    left: 0;
-    right: 0;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    transition: transform 0.2s ease;
-}
 
-.refresh-spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #007bff;
-    border-radius: 50%;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-/* جب ریفریش ہو رہا ہو تو اسے گھمانے کے لیے */
-.spinning {
-    animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
+#lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+#lightbox-overlay.active { display: flex; }
+#lightbox-img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 4px; touch-action: pan-y; }
+.lb-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.15); border: none; border-radius: 50%; width: 42px; height: 42px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; }
+.lb-arrow.left { left: 10px; }
+.lb-arrow.right { right: 10px; }
+.lb-close { position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.15); border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.lb-counter { position: absolute; bottom: 16px; color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600; }
+#img-menu-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; display: none; background: #fff; border-radius: 20px 20px 0 0; z-index: 99998; transition: bottom 0.3s ease; padding-bottom: calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(0,0,0,0.15); } background: #fff; border-radius: 20px 20px 0 0; z-index: 99998; transition: bottom 0.3s ease; padding-bottom: calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(0,0,0,0.15); } background: #fff; border-radius: 20px 20px 0 0; z-index: 99998; transition: bottom 0.3s ease; padding-bottom: calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(0,0,0,0.15); }
+#img-menu-sheet.active { bottom: 0; }
+#img-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 99997; display: none; }
+#img-menu-overlay.active { display: block; }
+.img-menu-item { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 15px; font-weight: 600; color: #0f172a; }
+.img-menu-item:last-child { border-bottom: none; }
+.img-menu-item:active { background: #f8fafc; }
+.img-menu-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
 </style>
 </head>
 <body>
-<div id="pull-to-refresh">
-    <div class="refresh-spinner"></div>
-</div>
 
 <!-- SPLASH SCREEN -->
 <div id="custom-splash" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#ffffff;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:99999;transition:opacity 0.5s ease;">
@@ -485,63 +589,6 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
     });
   }
 })();
-let startY = 0;
-const pullToRefresh = document.getElementById('pull-to-refresh');
-const spinner = pullToRefresh.querySelector('.refresh-spinner');
-
-// جب انگلی یا ماؤس اسکرین پر لگے
-window.addEventListener('touchstart', (e) => {
-    // صرف تب کام کرے جب پیج بالکل اوپر (top: 0) ہو
-    if (window.scrollY === 0) {
-        startY = e.touches[0].pageY;
-    }
-}, {passive: true});
-
-// جب اسکرین کو نیچے کھینچا جائے
-window.addEventListener('touchmove', (e) => {
-    const y = e.touches[0].pageY;
-    const pullDistance = y - startY;
-
-    if (pullDistance > 0 && window.scrollY === 0) {
-        // لوڈر کو نیچے لائیں (زیادہ سے زیادہ 80px تک)
-        const move = Math.min(pullDistance / 2, 80);
-        pullToRefresh.style.transform = `translateY(${move}px)`;
-        
-        // جیسے جیسے کھینچیں اسپنر تھوڑا مڑے
-        spinner.style.transform = `rotate(${pullDistance * 2}deg)`;
-    }
-}, {passive: true});
-
-// جب انگلی اسکرین سے ہٹا لی جائے
-window.addEventListener('touchend', (e) => {
-    const endY = e.changedTouches[0].pageY;
-    const pullDistance = endY - startY;
-
-    if (pullDistance > 100 && window.scrollY === 0) {
-        // ریفریش شروع کریں
-        pullToRefresh.style.transform = `translateY(70px)`;
-        spinner.classList.add('spinning');
-
-        // یہاں اپنا ڈیٹا لوڈ کرنے والا فنکشن کال کریں
-        console.log("Refreshing data...");
-        
-        setTimeout(() => {
-            // 2 سیکنڈ بعد واپس چھپا دیں (آپ اپنی ضرورت کے مطابق سیٹ کریں)
-            resetPullToRefresh();
-            location.reload(); // پیج ریفریش کرنے کے لیے
-        }, 1500);
-    } else {
-        resetPullToRefresh();
-    }
-});
-
-function resetPullToRefresh() {
-    pullToRefresh.style.transform = `translateY(0)`;
-    setTimeout(() => {
-        spinner.classList.remove('spinning');
-    }, 200);
-}
-
 </script>
 
 <!-- HEADER -->
@@ -591,7 +638,7 @@ function resetPullToRefresh() {
 
 <!-- MAIN -->
 <main>
-
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Healthcare & Medical Jobs in Pakistan — Health Jobs Portal</h1>
   <!-- ✅ FILTER BOXES -->
   <div class="dual-box-container">
     <div class="pro-box" id="catBox">
@@ -613,7 +660,7 @@ function resetPullToRefresh() {
         <span class="label-text" id="timeLabel">Timeline & News</span>
         <span class="f-arrow">&#9660;</span>
       </div>
-  <ul class="pro-list" id="timeList">
+<ul class="pro-list" id="timeList">
   <li class="selected" onclick="filterTime('all', this, 'Timeline & News')">Anytime</li>
   <li onclick="filterTime('active', this, '✅ Active Jobs')">Active Jobs</li>
   <li onclick="filterTime('today', this, 'Today')">Today's Posts</li>
@@ -716,7 +763,20 @@ function resetPullToRefresh() {
     <div class="footer-copy">&copy; 2026 Powered by SufianX</div>
   </div>
 </footer>
-
+<div id="lightbox-overlay">
+  <button class="lb-close" onclick="closeLightbox()"><svg viewBox="0 0 24 24" width="20" fill="white"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+  <button class="lb-arrow left" id="lb-prev" onclick="lbNav(-1)"><svg viewBox="0 0 24 24" width="22" fill="white"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button>
+  <img id="lightbox-img" src="" alt="Post Image">
+  <button class="lb-arrow right" id="lb-next" onclick="lbNav(1)"><svg viewBox="0 0 24 24" width="22" fill="white"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></button>
+  <div class="lb-counter" id="lb-counter">1 / 1</div>
+</div>
+<div id="img-menu-overlay" onclick="closeImgMenu()"></div>
+<div id="img-menu-sheet">
+  <div style="padding:14px 20px 10px;font-size:16px;font-weight:700;color:#0f172a;border-bottom:1px solid #f1f5f9;">Image Options</div>
+  <div class="img-menu-item" onclick="saveImage()"><div class="img-menu-icon" style="background:#f0fdf4;">⬇️</div>Save Image</div>
+  <div class="img-menu-item" onclick="shareImage()"><div class="img-menu-icon" style="background:#eff6ff;">🔗</div>Share Image</div>
+  <div class="img-menu-item" onclick="closeImgMenu()" style="color:#ef4444;"><div class="img-menu-icon" style="background:#fef2f2;">✕</div>Cancel</div>
+</div>
 <!-- SIDEBAR -->
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar(false)"></div>
 <div class="sidebar" id="sidebar">
@@ -737,6 +797,7 @@ function resetPullToRefresh() {
     <div class="submenu" id="tools-menu">
       <a href="cv-maker.html" class="submenu-item">CV Maker</a>
       <a href="interview.html" class="submenu-item">Interview Practise</a>
+            <a href="dosge.html" class="submenu-item">Dose calculater</a>
     </div>
     <button class="side-link" onclick="toggleSubmenu('posts-menu', this)">
       <div class="side-icon-wrap">
@@ -779,48 +840,150 @@ function resetPullToRefresh() {
     <svg viewBox="0 0 24 24" width="32" height="32" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.87 1.18-5.28 3.45-.5.34-.96.51-1.37.5-.45-.01-1.31-.25-1.95-.46-.78-.26-1.4-.4-1.34-.84.03-.22.34-.45.94-.69 3.68-1.59 6.13-2.64 7.35-3.14 3.49-1.45 4.22-1.7 4.7-1.71.11 0 .34.03.47.14.11.09.14.22.15.34-.01.07 0 .16-.01.25z"/></svg>
   </a>
 </div>
+</div>
+<!-- ✅ FILTER JAVASCRIPT — FULLY WORKING -->
 
-
-
-<!-- CAPACITOR PUSH NOTIFICATIONS -->
+<!-- DOWNLOAD POPUP SCRIPT -->
+<!-- DOWNLOAD POPUP SCRIPT -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.Capacitor && window.Capacitor.Plugins.App) {
-    window.Capacitor.Plugins.App.addListener('appUrlOpen', function(data) {
-      const url = data.url;
-
-      // posts.html ke liye
-      if (url.includes('posts.html?id=')) {
-        const postId = url.split('posts.html?id=')[1].split('&')[0];
-        if (postId) { window.location.href = 'posts.html?id=' + postId; return; }
-      }
-
-      // details.html ke liye
-      if (url.includes('details.html?id=')) {
-        const postId = url.split('details.html?id=')[1].split('&')[0];
-        if (postId) { window.location.href = 'details.html?id=' + postId; return; }
-      }
-
-      // purana format bhi support karo
-      if (url.includes('post?id=')) {
-        const postId = url.split('post?id=')[1].split('&')[0];
-        if (postId) { window.location.href = 'posts.html?id=' + postId; return; }
-      }
+(function() {
+  // Session Storage: Browser close karne ke baad dobara popup aayega
+  var popupClosed = sessionStorage.getItem('app_banner_closed');
+  
+  if (!popupClosed) {
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var popup = document.getElementById('downloadPopup');
+        if (popup) {
+          popup.style.display = 'flex';
+        }
+      }, 5000);
     });
   }
 
-  // ✅ Page load par bhi check karo — agar directly web link se aaya ho
-  const urlParams = new URLSearchParams(window.location.search);
-  const directId = urlParams.get('id');
-  const currentPage = window.location.pathname;
-  if (directId) {
-    if (currentPage.includes('posts')) {
-      window.location.href = 'posts.html?id=' + directId;
-    } else if (currentPage.includes('details')) {
-      window.location.href = 'details.html?id=' + directId;
+  window.closeAppBanner = function() {
+    var popup = document.getElementById('downloadPopup');
+    if (popup) {
+      popup.style.display = 'none';
+      // ✅ Session Storage - Tab/Browser close hone par delete ho jayega
+      sessionStorage.setItem('app_banner_closed', 'true');
     }
+  };
+})();
+window.toggleVideoPlay = function(vidId) {
+    const vid = document.getElementById(vidId);
+    const icon = document.getElementById('play-icon-' + vidId);
+    if (!vid) return;
+    if (vid.paused) { vid.play(); if (icon) icon.style.opacity = '0'; }
+    else { vid.pause(); if (icon) icon.style.opacity = '1'; }
+  };
+  window.toggleMute = function(vidId) {
+    const vid = document.getElementById(vidId);
+    const iconEl = document.getElementById('mute-icon-' + vidId);
+    if (!vid) return;
+    vid.muted = !vid.muted;
+    if (iconEl) {
+      iconEl.innerHTML = vid.muted
+        ? `<path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 19L19 20.27 20.27 19 5.27 2 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>`
+        : `<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>`;
+    }
+  };
+  const videoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const vid = entry.target;
+      const icon = document.getElementById('play-icon-' + vid.id);
+      if (entry.isIntersecting) { vid.play().catch(() => {}); if (icon) icon.style.opacity = '0'; }
+      else { vid.pause(); if (icon) icon.style.opacity = '1'; }
+    });
+  }, { threshold: 0.55 });
+  window.observeVideos = function() {
+    document.querySelectorAll('.feed-video').forEach(v => {
+      if (!v.dataset.observed) { v.dataset.observed = '1'; videoObserver.observe(v); }
+    });
+  };
+  let lbImages = [], lbIndex = 0, lbTouchStartX = 0;
+  window.openLightbox = function(url, index, allUrlsStr) {
+    try { lbImages = JSON.parse(allUrlsStr.replace(/&quot;/g, '"')); } catch(e) { lbImages = [url]; }
+    lbImages = lbImages.map(m => m.url || m);
+    lbIndex = index;
+    updateLightbox();
+    document.getElementById('lightbox-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeLightbox = function() {
+    document.getElementById('lightbox-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+  };
+  window.lbNav = function(dir) {
+    lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+    updateLightbox();
+  };
+  function updateLightbox() {
+    const img = document.getElementById('lightbox-img');
+    const counter = document.getElementById('lb-counter');
+    const prev = document.getElementById('lb-prev');
+    const next = document.getElementById('lb-next');
+    if (img) img.src = lbImages[lbIndex];
+    if (counter) counter.innerText = (lbIndex + 1) + ' / ' + lbImages.length;
+    if (prev) prev.style.display = lbImages.length > 1 ? 'flex' : 'none';
+    if (next) next.style.display = lbImages.length > 1 ? 'flex' : 'none';
   }
-});
+  document.addEventListener('touchstart', e => {
+    if (document.getElementById('lightbox-overlay').classList.contains('active')) lbTouchStartX = e.touches[0].clientX;
+  });
+  document.addEventListener('touchend', e => {
+    if (document.getElementById('lightbox-overlay').classList.contains('active')) {
+      const diff = lbTouchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) lbNav(diff > 0 ? 1 : -1);
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox-overlay').classList.contains('active')) return;
+    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === 'ArrowLeft') lbNav(-1);
+    if (e.key === 'Escape') closeLightbox();
+  });
+  let currentImgUrl = '';
+window.openImgMenu = function(url) {
+    currentImgUrl = url;
+    document.getElementById('img-menu-overlay').classList.add('active');
+    const sheet = document.getElementById('img-menu-sheet');
+    sheet.style.display = 'block';
+    setTimeout(() => sheet.classList.add('active'), 10);
+  };
+window.closeImgMenu = function() {
+    document.getElementById('img-menu-overlay').classList.remove('active');
+    const sheet = document.getElementById('img-menu-sheet');
+    sheet.classList.remove('active');
+    setTimeout(() => sheet.style.display = 'none', 300);
+  };
+  window.saveImage = async function() {
+    closeImgMenu();
+    try {
+      const res = await fetch(currentImgUrl);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl; a.download = 'health-jobs-image.jpg'; a.click();
+      URL.revokeObjectURL(blobUrl);
+    } catch(e) { window.open(currentImgUrl, '_blank'); }
+  };
+  window.shareImage = function() {
+    closeImgMenu();
+    if (navigator.share) navigator.share({ title: 'Health Jobs Portal', url: currentImgUrl });
+    else navigator.clipboard.writeText(currentImgUrl).then(() => alert('Image link copied!'));
+  };
+  window.toggleDesc = function(pid) {
+    const desc = document.getElementById('desc-' + pid);
+    const btn = document.getElementById('more-' + pid);
+    if (!desc || !btn) return;
+    const isExpanded = desc.classList.contains('expanded');
+    desc.classList.toggle('expanded', !isExpanded);
+    btn.innerText = isExpanded ? '... more' : 'Show less';
+  };
+</script>
+<!-- CAPACITOR PUSH NOTIFICATIONS -->
+<script>
 document.addEventListener('DOMContentLoaded', function () {
   if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
     var _a = window.Capacitor.Plugins, PushNotifications = _a.PushNotifications, LocalNotifications = _a.LocalNotifications;
@@ -972,7 +1135,7 @@ window.addEventListener('storage', (e) => {
   });
 
   // GLOBAL SYNC LISTENER
-  const syncRef = dbRef(dbRT, 'global_sync');
+const syncRef = dbRef(dbRT, 'global_sync');
 onValue(syncRef, (snapshot) => {
     const syncData = snapshot.val();
     if (syncData) {
@@ -1046,72 +1209,95 @@ if (
   window.currentShareType = null;
 
   // TRENDING POSTS
-async function loadTrendingPosts(forceRefresh = false) {
-    const trendingList = document.getElementById('trending-list');
-    const trendingSection = document.getElementById('trending-section');
-    if (!trendingList) return;
+async function loadTrendingPosts() {
+  const trendingList = document.getElementById('trending-list');
+  const trendingSection = document.getElementById('trending-section');
+  if (!trendingList) return;
 
-    const cachedHTML = localStorage.getItem('trending_cache_html');
-    const cachedTime = localStorage.getItem('trending_cache_time');
-    const TWO_HOURS = 2 * 60 * 60 * 1000;
+  const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
+  const now = Date.now();
 
-if (!forceRefresh && cachedHTML && cachedTime && (Date.now() - parseInt(cachedTime) < TWO_HOURS)) {
-      if (cachedHTML === "empty") trendingSection.style.display = 'none';
-      else { trendingList.innerHTML = cachedHTML; trendingSection.style.display = 'block'; }
+  // Sirf 2+ ghante purane posts ko trending mein show karo
+  // yaani createdAt <= (now - 2hours)
+  const twoHoursAgo = now - TWO_HOURS_MS;
+
+  try {
+    // Zyada posts fetch karo taake 2hr filter ke baad bhi 5 milein
+    const qTrend = query(
+      collection(db, "posts"),
+      orderBy("createdAt", "desc"),
+      limit(50)
+    );
+
+    const snap = await getDocs(qTrend);
+
+    if (snap.empty) {
+      trendingSection.style.display = 'none';
       return;
     }
 
-    const qTrend = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(15));
-    try {
-      const snap = await getDocs(qTrend);
-      if (snap.empty) {
-        trendingSection.style.display = 'none';
-        localStorage.setItem('trending_cache_html', 'empty');
-        localStorage.setItem('trending_cache_time', Date.now().toString());
-        return;
-      }
+    const todayDay = new Date().getDate();
+    let htmlStr = "";
+    let count = 0;
 
-      const timeLimit = Date.now() - (48 * 60 * 60 * 1000);
-      let htmlStr = ""; let count = 0;
-      const todayDay = new Date().getDate();
+    snap.forEach(docSnap => {
+      if (count >= 5) return;
 
-      snap.forEach(docSnap => {
-        const p = docSnap.data();
-        let postTime = p.createdAt ? (p.createdAt.toMillis ? p.createdAt.toMillis() : p.createdAt) : 0;
-        if (postTime >= timeLimit && count < 5 && p.status !== 'inactive' && p.status !== 'deleted') {
-          const title = p.title || (p.desc ? p.desc.substring(0, 45) + "..." : "Medical Update");
-          const name = p.posterName || p.authorName || 'Healthcare User';
-          const pic = p.posterPic || p.authorPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
-          let charCodeSum = 0;
-          for (let i = 0; i < docSnap.id.length; i++) charCodeSum += docSnap.id.charCodeAt(i);
-          const fakeViews = ((charCodeSum * todayDay * 17) % 800) + 200;
-          const graphIcon = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="margin-right:4px;margin-top:-1px;"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z"/></svg>`;
-          htmlStr += `
-            <div class="trend-item" onclick="handlePostClick('${docSnap.id}','${p.type || 'general_post'}')">
-              <img src="${pic}" class="trend-pic" onerror="this.src='https://ui-avatars.com/api/?name=U'">
-              <div class="trend-info">
-                <div class="trend-title">${title}</div>
-                <div class="trend-sub">${name.split(' ')[0]} • Popular</div>
-              </div>
-              <div class="trend-badge" style="color:#059669;background:#ecfdf5;display:flex;align-items:center;padding:5px 8px;border-radius:6px;">
-                ${graphIcon} ${fakeViews}
-              </div>
-            </div>`;
-          count++;
-        }
-      });
+      const p = docSnap.data();
+      let postTime = p.createdAt
+        ? (p.createdAt.toMillis ? p.createdAt.toMillis() : p.createdAt)
+        : 0;
 
-      if (count < 5) {
-        trendingSection.style.display = 'none';
-        localStorage.setItem('trending_cache_html', 'empty');
-      } else {
-        trendingList.innerHTML = htmlStr;
-        trendingSection.style.display = 'block';
-        localStorage.setItem('trending_cache_html', htmlStr);
-      }
-      localStorage.setItem('trending_cache_time', Date.now().toString());
-    } catch (e) { trendingSection.style.display = 'none'; }
+      // ✅ SIRF 2 ghante ya usse purane posts trending mein aayein
+      if (postTime > twoHoursAgo) return;
+
+      // Deleted/inactive skip
+      if (p.status === 'inactive' || p.status === 'deleted') return;
+
+      const title = p.title || (p.desc ? p.desc.substring(0, 45) + "..." : "Medical Update");
+      const name = p.posterName || p.authorName || 'Healthcare User';
+      const pic = p.posterPic || p.authorPic ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
+
+      // Fake views based on post ID (consistent har refresh mein)
+      let charCodeSum = 0;
+      for (let i = 0; i < docSnap.id.length; i++) charCodeSum += docSnap.id.charCodeAt(i);
+      const fakeViews = ((charCodeSum * todayDay * 17) % 800) + 200;
+
+      const graphIcon = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="margin-right:4px;margin-top:-1px;"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z"/></svg>`;
+
+      htmlStr += `
+        <div class="trend-item" onclick="handlePostClick('${docSnap.id}','${p.type || 'general_post'}')">
+          <img src="${pic}" class="trend-pic" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+          <div class="trend-info">
+            <div class="trend-title">${title}</div>
+            <div class="trend-sub">${name.split(' ')[0]} • Popular</div>
+          </div>
+          <div class="trend-badge" style="color:#059669;background:#ecfdf5;display:flex;align-items:center;padding:5px 8px;border-radius:6px;">
+            ${graphIcon} ${fakeViews}
+          </div>
+        </div>`;
+      count++;
+    });
+
+    if (count < 3) {
+      // Agar 3 se kam posts milein toh trending section hide karo
+      trendingSection.style.display = 'none';
+    } else {
+      trendingList.innerHTML = htmlStr;
+      trendingSection.style.display = 'block';
+    }
+
+  } catch (e) {
+    console.error("Trending load error:", e);
+    trendingSection.style.display = 'none';
   }
+}
+
+// ✅ Har 2 ghante baad auto-refresh trending
+setInterval(() => {
+  loadTrendingPosts();
+}, 2 * 60 * 60 * 1000);
 
   // UI HELPERS
   window.openPostMenu = () => { if (currentUser) toggleMenuSheet(true); else window.location.href = 'login.html'; };
@@ -1123,12 +1309,12 @@ if (!forceRefresh && cachedHTML && cachedTime && (Date.now() - parseInt(cachedTi
     if (!window.currentShareId) return;
     const post = postsArr.find(p => p.id === window.currentShareId);
     const pageName = window.currentShareType === 'general_post' ? 'details.html' : 'posts.html';
-const link = `https://healthjobportal.com/${pageName}?id=${window.currentShareId}`;
+    const link = `${window.location.origin}/${pageName}?id=${window.currentShareId}`;
     const title = post?.title ? `📢 ${post.title}\n` : "Health Jobs Portal\n";
     const desc = post?.desc ? `${post.desc.substring(0, 100)}...\n\n` : "";
-const text = `${title}${desc}Check details here: ${link}`;
+    const text = `${title}${desc}Check details here: ${link}`;
     if (platform === 'copy') { navigator.clipboard.writeText(link).then(() => alert("Link copied!")); }
-else if (platform === 'whatsapp') { window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(title + desc + link)}`, '_blank'); }
+    else if (platform === 'whatsapp') { window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank'); }
     else if (platform === 'facebook') { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank'); }
     else if (platform === 'more') { if (navigator.share) navigator.share({ title: post?.title || 'Health Jobs', text: desc, url: link }); }
     toggleShareSheet(false);
@@ -1373,13 +1559,12 @@ const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(20)
           </div>`;
         return;
       }
-
       // ✅ lastVisibleDoc update karo
       lastVisibleDoc = snap.docs[snap.docs.length - 1];
       hasMorePosts = snap.docs.length >= 20;
 
       let newAdded = 0;
-snap.forEach(d => {
+      snap.forEach(d => {
         let data = d.data();
         if (data.status !== 'inactive' && data.status !== 'deleted') {
           if (data.createdAt?.toMillis) data.createdAt = data.createdAt.toMillis();
@@ -1433,7 +1618,7 @@ snap.forEach(d => {
       const scrolled = window.innerHeight + window.scrollY;
       const total = document.body.offsetHeight;
       // ✅ 300px pehle trigger karo
-if (scrolled >= total - 150 && hasMorePosts && !isFetchingMore) {
+      if (scrolled >= total - 150 && hasMorePosts && !isFetchingMore) {
         fetchMorePosts();
       }
       scrollTimeout = null;
@@ -1482,7 +1667,7 @@ if (scrolled >= total - 150 && hasMorePosts && !isFetchingMore) {
       else if (diff < 86400000) timeAgo = Math.floor(diff / 3600000) + "h ago";
       else timeAgo = Math.floor(diff / 86400000) + "d ago";
     }
-    let typeLabel = '';
+let typeLabel = '';
 if (pType === 'candidate_post') typeLabel = 'Candidate';
 else if (pType === 'employer_post') typeLabel = 'Employer';
 else typeLabel = 'Update';
@@ -1506,12 +1691,13 @@ const locCat = pType === 'general_post'
         <img src="${posterPic}" class="post-avatar" width="44" height="44" loading="lazy" onerror="this.src='https://ui-avatars.com/api/?name=U'">
         <div><div class="user-name">${posterName}</div><div class="post-loc-info">${locCat}</div></div>
       </div>
-      <div class="post-content" onclick="handlePostClick('${p.id}','${pType}')">
-        ${p.title ? `<div class="post-title">${p.title}</div>` : ''}
-        <div class="post-desc">${escapeHtml(p.desc)}</div>
+<div class="post-content">
+        ${p.title ? `<div class="post-title" onclick="handlePostClick('${p.id}','${pType}')">${p.title}</div>` : ''}
+        <div class="post-desc" id="desc-${p.id}" onclick="handlePostClick('${p.id}','${pType}')">${escapeHtml(p.desc)}</div>
+        <button class="read-more-btn" id="more-${p.id}" onclick="event.stopPropagation();toggleDesc('${p.id}')">... more</button>
         ${linkHTML}
       </div>
-      <div onclick="handlePostClick('${p.id}','${pType}')">${renderCollage(p.media || (p.postMediaUrl ? [{ url: p.postMediaUrl, type: 'image' }] : []))}</div>
+<div>${renderCollage(p.media || (p.postMediaUrl ? [{ url: p.postMediaUrl, type: 'image' }] : []))}</div>
       <div class="stats-bar">
         <span id="l-count-${p.id}">${(p.likes || []).length} Likes</span>
         <span id="c-count-${p.id}">${p.commentsCount || 0} Comments</span>
@@ -1528,9 +1714,17 @@ const locCat = pType === 'general_post'
           <button class="cmt-btn-send" onclick="sendLocalCmt('${p.id}')">Post</button>
         </div>
       </div>`;
-    feed.appendChild(card);
-  }
 
+feed.appendChild(card);
+    requestAnimationFrame(() => {
+      const descEl = document.getElementById('desc-' + p.id);
+      const moreBtn = document.getElementById('more-' + p.id);
+      if (descEl && moreBtn && descEl.scrollHeight > descEl.clientHeight + 2) {
+        moreBtn.style.display = 'inline-block';
+      }
+      observeVideos();
+    });
+  }
   function generateTopPosters() {
     let userCounts = {}; let userDetails = {};
     postsArr.forEach(p => {
@@ -1557,19 +1751,61 @@ const locCat = pType === 'general_post'
     track.innerHTML = htmlStr + htmlStr + htmlStr;
   }
 
-  function renderCollage(media) {
-    const images = media.filter(m => m.type === 'image' || !m.type);
-    if (images.length === 0) return '';
-    const count = images.length;
-    let gridClass = count === 1 ? 'grid-1' : (count === 2 ? 'grid-2' : 'grid-3');
-    let h = `<div class="collage-box ${gridClass}">`;
-    for (let i = 0; i < Math.min(count, 3); i++) {
-      const url = images[i].url || images[i];
-      if (i === 2 && count > 3) h += `<div class="more-imgs-overlay" data-count="${count - 2}"><img src="${url}" loading="lazy"></div>`;
-      else h += `<img src="${url}" loading="lazy">`;
-    }
-    return h + `</div>`;
+function renderCollage(media) {
+  const images = media.filter(m => m.type === 'image' || !m.type);
+  const videos = media.filter(m => m.type === 'video');
+  if (media.length === 0) return '';
+  let html = '';
+  videos.forEach((v, i) => {
+    const url = v.url || v;
+    const vidId = 'vid-' + Date.now() + '-' + i;
+    html += `
+      <div style="position:relative;background:#000;overflow:hidden;margin-top:5px;">
+        <video id="${vidId}" src="${url}" class="feed-video" playsinline muted preload="metadata"
+          style="width:100%;max-height:480px;display:block;object-fit:contain;cursor:pointer;"
+          onclick="toggleVideoPlay('${vidId}')">
+        </video>
+        <div id="play-icon-${vidId}" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+          background:rgba(0,0,0,0.55);border-radius:50%;width:52px;height:52px;
+          display:flex;align-items:center;justify-content:center;pointer-events:none;transition:opacity 0.2s;">
+          <svg viewBox="0 0 24 24" width="28" fill="white"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <button onclick="toggleMute('${vidId}')" id="mute-btn-${vidId}"
+          style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.6);
+          border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;
+          display:flex;align-items:center;justify-content:center;z-index:10;">
+          <svg id="mute-icon-${vidId}" viewBox="0 0 24 24" width="18" fill="white">
+            <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 19L19 20.27 20.27 19 5.27 2 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+          </svg>
+        </button>
+      </div>`;
+  });
+  if (images.length === 0) return html;
+  const count = images.length;
+  const gridClass = count === 1 ? 'grid-1' : (count === 2 ? 'grid-2' : 'grid-3');
+  const allUrls = JSON.stringify(images.map(m => m.url || m)).replace(/"/g, '&quot;');
+  html += `<div class="collage-box ${gridClass}">`;
+  for (let i = 0; i < Math.min(count, 3); i++) {
+    const url = images[i].url || images[i];
+    const overlay = (i === 2 && count > 3) ? `<div class="more-imgs-overlay" data-count="${count - 2}">` : `<div>`;
+    html += `${overlay}
+      <div style="position:relative;width:100%;height:100%;">
+        <img src="${url}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;"
+          onclick="openLightbox('${url}', ${i}, '${allUrls}')">
+        <button onclick="event.stopPropagation();openImgMenu('${url}')"
+          style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.5);border:none;
+          border-radius:50%;width:30px;height:30px;cursor:pointer;display:flex;
+          align-items:center;justify-content:center;z-index:5;">
+          <svg viewBox="0 0 24 24" width="16" fill="white">
+            <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
+          </svg>
+        </button>
+      </div>
+    </div>`;
   }
+  html += `</div>`;
+  return html;
+}
 
   window.doLike = async (pid, btn) => {
     if (!currentUser) return window.location.href = 'login.html';
@@ -1587,7 +1823,14 @@ const locCat = pType === 'general_post'
       localStorage.setItem(CACHE_KEY, JSON.stringify(postsArr.slice(0, 50)));
     }
   };
-
+window.toggleDesc = function(pid) {
+    const desc = document.getElementById('desc-' + pid);
+    const btn = document.getElementById('more-' + pid);
+    if (!desc || !btn) return;
+    const isExpanded = desc.classList.contains('expanded');
+    desc.classList.toggle('expanded', !isExpanded);
+    btn.innerText = isExpanded ? '... more' : 'Show less';
+  };
   window.toggleLocalCmts = (pid) => {
     if (!currentUser) return window.location.href = 'login.html';
     const box = document.getElementById(`cmt-box-${pid}`);
