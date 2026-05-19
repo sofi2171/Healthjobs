@@ -3,41 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <title>Post Your Medical Profile | Find Healthcare Work | Health Jobs</title>
-<meta name="description" content="Create a professional healthcare profile on Health Jobs. Get found by hospitals for doctor, nursing, and pharmacist roles. Broadcast your skills today.">
-    <meta name="keywords" content="medical job seekers, healthcare cv, find nursing work, doctor availability, medical professional profile Pakistan, pharmacist jobs">
+<title>Post Medical Profile | Doctors, Nurses & Healthcare Jobs Pakistan</title>
+<meta name="description" content="Post your medical profile on Health Jobs Portal Pakistan. Doctors, nurses, pharmacists and lab technicians can broadcast their availability and get hired by top hospitals instantly.">
+<meta name="keywords" content="post medical profile Pakistan, healthcare job seekers, nursing jobs Pakistan, doctor jobs Pakistan, pharmacist jobs Pakistan, lab technician jobs, candidate profile healthcare, medical cv Pakistan, find healthcare work, hospital jobs Pakistan, post availability healthcare, medical professional Pakistan, nurse vacancy Pakistan, MBBS doctor jobs, dispenser jobs Pakistan">
     <meta name="author" content="Health Jobs Portal">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <link rel="canonical" href="https://healthjobs-portal.web.app/candidate.html">
+    <link rel="canonical" href="https://healthjobportal.com/candidate.html">
 
     <meta property="og:type" content="profile">
-    <meta property="og:url" content="https://healthjobs-portal.web.app/candidate.html">
+    <meta property="og:url" content="https://healthjobportal.com/candidate.html">
     <meta property="og:title" content="Healthcare Professionals: Get Hired Instantly">
     <meta property="og:description" content="Post your availability and connect with top medical facilities in your city. Broadcast your CV now.">
-    <meta property="og:image" content="https://healthjobs-portal.web.app/images/logo.png">
+    <meta property="og:image" content="https://healthjobportal.com/images/logo.png">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Post Your Medical Profile | Health Jobs">
     <meta name="twitter:description" content="Healthcare Professionals: Post your availability and let top hospitals reach out to you.">
-    <meta name="twitter:image" content="https://healthjobs-portal.web.app/images/logo.png">
+    <meta name="twitter:image" content="https://healthjobportal.com/images/logo.png">
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "Candidate Availability Portal",
-      "description": "A platform for healthcare professionals to post their skills and find work opportunities.",
-      "publisher": {
-        "@type": "Organization",
-        "name": "Health Jobs Portal",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://healthjobs-portal.web.app/images/logo.png"
-        }
-      }
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Post Medical Profile | Health Jobs Portal Pakistan",
+  "description": "Post your healthcare profile and get hired by top hospitals in Pakistan. For doctors, nurses, pharmacists and all medical professionals.",
+  "url": "https://healthjobportal.com/candidate.html",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Health Jobs Portal",
+    "url": "https://healthjobportal.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://healthjobportal.com/images/logo.png"
     }
-    </script>
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://healthjobportal.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Post Medical Profile",
+        "item": "https://healthjobportal.com/candidate.html"
+      }
+    ]
+  }
+}
+</script>
     <style>
 
         :root {
@@ -202,8 +220,8 @@
             </a>
         </div>
     </header>
-
-    <main>
+      <main>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Post Medical Profile — Doctors Nurses Pharmacists Jobs Pakistan</h1>
         <div class="form-card">
             <div class="form-header">
                 <h1>Post Availability Profile</h1>
@@ -357,9 +375,9 @@
             <a href="profile.html">My Profile</a>
             <a href="privcy.html">Privacy Policy</a>
         </div>
-        <div class="footer-copy">
-            &copy; 2026 powered by SufianX<li>All rights reserved</li>
-        </div>
+<div class="footer-copy">
+    &copy; 2026 powered by SufianX — All rights reserved
+</div>
     </footer>
 
     <nav class="bottom-nav">
@@ -768,27 +786,22 @@ isExpired: false
                 // --- VERCEL BACKEND CALL FOR NOTIFICATION ---
 // ✅ 1. EMAIL NOTIFICATION - نئی پوسٹ پر
 // ✅ نئی پوسٹ پر - Email Notificatio
-try {
-    await fetch('https://nodemails.vercel.app/api/send-notification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
-    type: 'new-post',
-    postId: docRef.id,
-    title: title,
-    category: category,
-    location: jobLocation,
-    salary: salary,
-    posterName: posterNameDisplay,
-    posterId: currentUser.uid,
-    postType: 'candidate_post',
-    link: 'https://healthjobs-portal.web.app/posts.html?id=' + docRef.id
-})
-});
-    console.log("✅ Matched users notified.");
-} catch (notifyErr) {
-    console.error("❌ Notify error:", notifyErr);
-}
+fetch('https://nodemails.vercel.app/api/send-notification', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        type: 'new-post',
+        postId: docRef.id,
+        title: title,
+        category: category,
+        location: jobLocation,
+        salary: salary,
+        posterName: posterNameDisplay,
+        posterId: currentUser.uid,
+        postType: 'candidate_post',
+        link: 'https://healthjobportal.com/posts.html?id=' + docRef.id
+    })
+}).catch(err => console.error("❌ Email error:", err));
 
 // ✅ 2. EXPIRED POSTS HANDLER - الگ URL
 fetch('https://backend-posts-details.vercel.app/api/update-post', {
@@ -817,7 +830,7 @@ fetch('https://backend-posts-details.vercel.app/api/update-post', {
                             location: jobLocation,
                             salary: salary,
                             mediaUrl: uploadedMediaData.length > 0 ? uploadedMediaData[0].url : null,
-                            link: "https://healthjobs-portal.web.app/posts.html?id=" + docRef.id
+                            link: "https://healthjobportal.com/posts.html?id=" + docRef.id
                         })
                     });
                     console.log("✅ Telegram Alert Sent!");
