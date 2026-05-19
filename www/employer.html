@@ -9,18 +9,18 @@
     <meta name="keywords" content="hire doctors, nursing jobs, healthcare recruitment Pakistan, medical staff vacancy, post doctor job free, hire pharmacist, hospital jobs portal">
     <meta name="author" content="Health Jobs Portal">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <link rel="canonical" href="https://healthjobs-portal.web.app/employer.html">
+    <link rel="canonical" href="https://healthjobportal.com/employer.html">
 
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://healthjobs-portal.web.app/employer.html">
+    <meta property="og:url" content="https://healthjobportal.com/employer.html">
     <meta property="og:title" content="Hire Healthcare Talent - Post a Job on Health Jobs">
     <meta property="og:description" content="The fastest way to find medical staff. Post your clinic or hospital vacancy today and hire top talent.">
-    <meta property="og:image" content="https://healthjobs-portal.web.app/images/logo.png">
+    <meta property="og:image" content="https://healthjobportal.com/images/logo.png">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Post a Healthcare Job | Health Jobs Portal">
     <meta name="twitter:description" content="Connect with verified healthcare professionals in your city. Post a job for free.">
-    <meta name="twitter:image" content="https://healthjobs-portal.web.app/images/logo.png">
+    <meta name="twitter:image" content="https://healthjobportal.com/images/logo.png">
 
     <script type="application/ld+json">
     {
@@ -33,7 +33,7 @@
         "name": "Health Jobs Portal",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://healthjobs-portal.web.app/images/logo.png"
+          "url": "https://healthjobportal.com/images/logo.png"
         }
       }
     }
@@ -768,27 +768,22 @@ isExpired: false
                 // 3. --- VERCEL BACKEND CALL FOR NOTIFICATION ---
 // ✅ 1. EMAIL NOTIFICATION - نئی پوسٹ پر
 // ✅ نئی پوسٹ پر - Email Notification
-try {
-    await fetch('https://nodemails.vercel.app/api/send-notification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
-            type: 'new-post',
-            postId: docRef.id,
-            title: title,
-            category: category,
-            location: jobLocation,
-            salary: salary,
-            posterName: posterNameDisplay,
-            posterId: currentUser.uid,
-            postType: 'employer_post',
-            link: 'https://healthjobs-portal.web.app/posts.html?id=' + docRef.id
-        })
-    });
-    console.log("✅ Email sent!");
-} catch (emailErr) {
-    console.error("❌ Email error:", emailErr);
-}
+fetch('https://nodemails.vercel.app/api/send-notification', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        type: 'new-post',
+        postId: docRef.id,
+        title: title,
+        category: category,
+        location: jobLocation,
+        salary: salary,
+        posterName: posterNameDisplay,
+        posterId: currentUser.uid,
+        postType: 'employer_post',
+        link: 'https://healthjobportal.com/posts.html?id=' + docRef.id
+    })
+}).catch(err => console.error("❌ Email error:", err));
 
 // ✅ 2. EXPIRED POSTS HANDLER - الگ URL
 // Background mein expiry save karo — await nahi taake post publish fast rahe
@@ -822,7 +817,7 @@ try {
             location: jobLocation,
             salary: salary,
             mediaUrl: uploadedMediaData.length > 0 ? uploadedMediaData[0].url : null, // Pehli pic uthaega
-            link: "https://healthjobs-portal.web.app/posts.html?id=" + docRef.id // Direct post ka link
+            link: "https://healthjobportal.com/posts.html?id=" + docRef.id // Direct post ka link
         })
     });
     console.log("✅ Telegram Alert Sent!");
