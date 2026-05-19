@@ -981,50 +981,51 @@ window.closeImgMenu = function() {
 
   const pageName = postType === 'general_post' ? 'details.html' : 'posts.html';
   const postUrl = postId
-    ? `${window.location.origin}/${pageName}?id=${postId}`
-    : window.location.href;
+    ? `https://healthjobportal.com/${pageName}?id=${postId}`
+    : 'https://healthjobportal.com';
 
-  // ✅ Capacitor app check
-  if (window.Capacitor && window.Capacitor.Plugins.Share) {
-    const { Share, Filesystem, Directory } = window.Capacitor.Plugins;
+  // ✅ Capacitor Native App
+  if (window.Capacitor && window.Capacitor.Plugins.Share && window.Capacitor.Plugins.Filesystem) {
+    const Share = window.Capacitor.Plugins.Share;
+    const Filesystem = window.Capacitor.Plugins.Filesystem;
 
     try {
-      // Image download karke local save karo
+      // Image fetch karke base64 banao
       const response = await fetch(currentImgUrl);
       const blob = await response.blob();
       
-      // Blob ko base64 banao
       const base64 = await new Promise((resolve) => {
         const reader = new FileReader();
         reader.onloadend = () => resolve(reader.result.split(',')[1]);
         reader.readAsDataURL(blob);
       });
 
-      // Local file system mein save karo
+      // Cache mein save karo
       const fileName = 'healthjobs_' + Date.now() + '.jpg';
       await Filesystem.writeFile({
         path: fileName,
         data: base64,
-        directory: Directory.Cache
+        directory: 'CACHE'
       });
 
-      // Local file ka URI lo
-      const fileUri = await Filesystem.getUri({
+      // File URI lo
+      const fileResult = await Filesystem.getUri({
         path: fileName,
-        directory: Directory.Cache
+        directory: 'CACHE'
       });
 
-      // ✅ Image + Link dono ek saath share karo — native Android/iOS
+      // ✅ Image + Link dono ek saath
       await Share.share({
         title: 'Health Jobs Portal',
         text: '🏥 Poori detail yahan dekho:\n' + postUrl,
-        url: fileUri.uri,
+        url: fileResult.uri,
         dialogTitle: 'Share via'
       });
 
     } catch (err) {
+      console.log('Share error:', err);
+      // Fallback sirf link
       if (err.message !== 'Share canceled') {
-        // Fallback — sirf link share
         try {
           await Share.share({
             title: 'Health Jobs Portal',
@@ -1044,7 +1045,11 @@ window.closeImgMenu = function() {
       const file = new File([blob], 'healthjobs.jpg', { type: blob.type });
 
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file] });
+        await navigator.share({
+          files: [file],
+          title: 'Health Jobs Portal',
+          text: '🏥 Poori detail yahan dekho:\n' + postUrl
+        });
       } else if (navigator.share) {
         await navigator.share({
           title: 'Health Jobs Portal',
