@@ -6,10 +6,10 @@
     
     <title>Medical News | Health Jobs Portal</title>
     <meta name="description" content="Latest medical news and updates for healthcare professionals in Pakistan.">
-    <link rel="canonical" href="https://healthjobs-portal.web.app/news.html">
+    <link rel="canonical" href="https://healthjobportal.com/news.html">
     <meta property="og:title" content="Medical News - Health Jobs Portal">
     <meta property="og:description" content="Latest medical news and updates for healthcare professionals.">
-    <meta property="og:image" content="https://healthjobs-portal.web.app/images/logo.png">
+    <meta property="og:image" content="https://healthjobportal.com/images/logo.png">
     
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
     <link rel="preconnect" href="https://www.gstatic.com">
@@ -287,8 +287,9 @@
             const likesCount = (post.likes || []).length;
             const commentsCount = post.commentsCount || 0;
             
+const postUrl = post.slug ? `/updates/${post.slug}` : `details.html?id=${postId}`;
             return `
-                <div class="news-card" onclick="window.location.href='details.html?id=${postId}'">
+                <div class="news-card" onclick="window.location.href='${postUrl}'">
                     <div class="news-card-header">
                         ${hasImage ? `<img src="${thumbnail}" class="news-thumbnail" alt="News" loading="lazy" onerror="this.style.display='none'">` : ''}
                         <div style="flex:1; min-width:0;">
@@ -309,7 +310,7 @@
                             <img src="${authorPic}" alt="${authorName}" onerror="this.style.display='none'">
                             <span>${escapeHtml(authorName.split(' ')[0])}</span>
                         </div>
-                        <a href="details.html?id=${postId}" class="read-more-btn" onclick="event.stopPropagation()">
+<a href="${postUrl}" class="read-more-btn" onclick="event.stopPropagation()">
                             Read More
                             <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                         </a>
