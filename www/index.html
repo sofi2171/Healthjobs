@@ -72,10 +72,36 @@
 <meta name="theme-color" content="#ffffff">
 
 <style>
-#img-menu-sheet.active { bottom: 0; display: block; }
+.side-icon-menu_book {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.side-icon-menu_book svg {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  fill: #0b1b3f;
+}
+#img-menu-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; display: none; background: #fff; border-radius: 20px 20px 0 0; z-index: 99998; transition: bottom 0.3s ease; padding-bottom: calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(0,0,0,0.15); } background: #fff; border-radius: 20px 20px 0 0; z-index: 99998; ...
+.post-desc {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #334155;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
+
 .post-desc.expanded {
-  -webkit-line-clamp: unset;
-  overflow: visible;
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  -webkit-box-orient: unset !important;
+  overflow: visible !important;
 }
 .read-more-btn {
   background: none;
@@ -414,7 +440,28 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 .telegram-close-btn { position: absolute; top: -4px; left: -4px; background-color: #222; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.4); z-index: 10000; padding-bottom: 2px; }
 
 /* =========================================
+   14. DOWNLOAD POPUP
+========================================= */
 
+/* =========================================
+   14. DOWNLOAD POPUP - PROFESSIONAL
+========================================= */
+/* =========================================
+   DOWNLOAD POPUP - LinkedIn Style
+========================================= */
+.hp-popup-overlay {
+    display: none;
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 16px;
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
     animation: slideBottomUp 0.4s ease forwards;
     gap: 12px;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -553,7 +600,7 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 .lb-arrow.right { right: 10px; }
 .lb-close { position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.15); border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .lb-counter { position: absolute; bottom: 16px; color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600; }
-#img-menu-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; display: none; background: #fff; border-radius: 20px 20px 0 0; z-index: 99998; transition: bottom 0.3s ease; padding-bottom: calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(0,0,0,0.15); } background: #fff; border-radius: 20px 20px 0 0; z-index: 99998; transition: bottom 0.3s ease; padding-bottom: calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(0,0,0,0.15); } background: #fff; border-radius: 20px 20px 0 0; z-index: 99998; transition: bottom 0.3s ease; padding-bottom: calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(0,0,0,0.15); }
+#img-menu-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; display: none; background: #fff; border-radius: 20px 20px 0 0; z-index: 99998; transition: bottom 0.3s ease; padding-bottom: calc(20px + env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(0,0,0,0.15); }
 #img-menu-sheet.active { bottom: 0; }
 #img-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 99997; display: none; }
 #img-menu-overlay.active { display: block; }
@@ -797,8 +844,8 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
     <div class="submenu" id="tools-menu">
       <a href="cv-maker.html" class="submenu-item">CV Maker</a>
       <a href="interview.html" class="submenu-item">Interview Practise</a>
+            <a href="hospital.html" class="submenu-item">Nearby Hospital</a>
             <a href="dosge.html" class="submenu-item">Dose calculater</a>
-      <a href="hospital.html" class="submenu-item">Nearby Hospitals</a>
     </div>
     <button class="side-link" onclick="toggleSubmenu('posts-menu', this)">
       <div class="side-icon-wrap">
@@ -817,7 +864,15 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
         <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
         My Posts
       </div>
-    </a>
+      <a>    <hr style="border:0;border-top:1px solid #e2e8f0;margin:10px 20px;">
+<a href="notes.html" class="side-link">
+  <div class="side-icon-menu_book">
+    <svg viewBox="0 0 24 24">
+      <path d="M21 4H7c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14V4zm-2 14H7V6h12v12zM3 6H1v14c0 1.1.9 2 2 2h14v-2H3V6z"/>
+    </svg>
+    <span>Important Notes</span>
+  </div>
+</a>
     <hr style="border:0;border-top:1px solid #e2e8f0;margin:10px 20px;">
     <a href="about.html" class="side-link">
       <div class="side-icon-wrap">
@@ -841,11 +896,9 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
     <svg viewBox="0 0 24 24" width="32" height="32" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.87 1.18-5.28 3.45-.5.34-.96.51-1.37.5-.45-.01-1.31-.25-1.95-.46-.78-.26-1.4-.4-1.34-.84.03-.22.34-.45.94-.69 3.68-1.59 6.13-2.64 7.35-3.14 3.49-1.45 4.22-1.7 4.7-1.71.11 0 .34.03.47.14.11.09.14.22.15.34-.01.07 0 .16-.01.25z"/></svg>
   </a>
 </div>
-</div>
-<!-- ✅ FILTER JAVASCRIPT — FULLY WORKING -->
 
-<!-- DOWNLOAD POPUP SCRIPT -->
-<!-- DOWNLOAD POPUP SCRIPT -->
+
+
 <script>
 (function() {
   // Session Storage: Browser close karne ke baad dobara popup aayega
@@ -893,10 +946,23 @@ window.toggleVideoPlay = function(vidId) {
     entries.forEach(entry => {
       const vid = entry.target;
       const icon = document.getElementById('play-icon-' + vid.id);
-      if (entry.isIntersecting) { vid.play().catch(() => {}); if (icon) icon.style.opacity = '0'; }
-      else { vid.pause(); if (icon) icon.style.opacity = '1'; }
+      if (entry.isIntersecting) {
+    // پہلے سب videos pause کرو
+    document.querySelectorAll('.feed-video').forEach(v => {
+        if (v !== vid) {
+            v.pause();
+            const ic = document.getElementById('play-icon-' + v.id);
+            if (ic) ic.style.opacity = '1';
+        }
     });
-  }, { threshold: 0.55 });
+    vid.play().catch(() => {});
+    if (icon) icon.style.opacity = '0';
+} else {
+    vid.pause();
+    if (icon) icon.style.opacity = '1';
+}
+    });
+}, { threshold: 0.3 });
   window.observeVideos = function() {
     document.querySelectorAll('.feed-video').forEach(v => {
       if (!v.dataset.observed) { v.dataset.observed = '1'; videoObserver.observe(v); }
@@ -969,7 +1035,7 @@ window.closeImgMenu = function() {
       URL.revokeObjectURL(blobUrl);
     } catch(e) { window.open(currentImgUrl, '_blank'); }
   };
-  window.shareImage = async function() {
+window.shareImage = async function() {
   closeImgMenu();
 
   let postId = null;
@@ -982,90 +1048,46 @@ window.closeImgMenu = function() {
 
   const pageName = postType === 'general_post' ? 'details.html' : 'posts.html';
   const postUrl = postId
-    ? `https://healthjobportal.com/${pageName}?id=${postId}`
-    : 'https://healthjobportal.com';
+    ? `${window.location.origin}/${pageName}?id=${postId}`
+    : window.location.href;
 
-  // ✅ Capacitor Native App
-  if (window.Capacitor && window.Capacitor.Plugins.Share && window.Capacitor.Plugins.Filesystem) {
-    const Share = window.Capacitor.Plugins.Share;
-    const Filesystem = window.Capacitor.Plugins.Filesystem;
+  try {
+    const response = await fetch(currentImgUrl);
+    const blob = await response.blob();
+    const file = new File([blob], 'healthjobs.jpg', { type: blob.type });
 
-    try {
-      // Image fetch karke base64 banao
-      const response = await fetch(currentImgUrl);
-      const blob = await response.blob();
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
       
-      const base64 = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result.split(',')[1]);
-        reader.readAsDataURL(blob);
-      });
-
-      // Cache mein save karo
-      const fileName = 'healthjobs_' + Date.now() + '.jpg';
-      await Filesystem.writeFile({
-        path: fileName,
-        data: base64,
-        directory: 'CACHE'
-      });
-
-      // File URI lo
-      const fileResult = await Filesystem.getUri({
-        path: fileName,
-        directory: 'CACHE'
-      });
-
-      // ✅ Image + Link dono ek saath
-      await Share.share({
-        title: 'Health Jobs Portal',
-        text: 'Click the link below for complete details.:\n' + postUrl,
-        url: fileResult.uri,
-        dialogTitle: 'Share via'
-      });
-
-    } catch (err) {
-      console.log('Share error:', err);
-      // Fallback sirf link
-      if (err.message !== 'Share canceled') {
-        try {
-          await Share.share({
-            title: 'Health Jobs Portal',
-            text: '🏥 Health Jobs Portal',
-            url: postUrl,
-            dialogTitle: 'Share via'
-          });
-        } catch(e) {}
-      }
-    }
-
-  } else {
-    // ✅ Web browser fallback
-    try {
-      const response = await fetch(currentImgUrl);
-      const blob = await response.blob();
-      const file = new File([blob], 'healthjobs.jpg', { type: blob.type });
-
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: 'Health Jobs Portal',
-          text: '🏥 Poori detail yahan dekho:\n' + postUrl
-        });
-      } else if (navigator.share) {
+      // Step 1: Image share karo
+      await navigator.share({ files: [file] });
+      
+      // Step 2: Jab image share ho jaye — link ke liye confirm pucho
+      const sendLink = confirm('Image share ho gayi! 🎉\nAb post ka link bhi share karna chahte ho?');
+      if (sendLink) {
         await navigator.share({
           title: 'Health Jobs Portal',
-          text: '🏥 Health Jobs Portal',
+          text: '🏥 Poori detail yahan dekho:',
           url: postUrl
         });
-      } else {
+      }
+
+    } else if (navigator.share) {
+      await navigator.share({
+        title: 'Health Jobs Portal',
+        text: '🏥 Health Jobs Portal',
+        url: postUrl
+      });
+    } else {
+      await navigator.clipboard.writeText(postUrl);
+      alert('Post link copied!');
+    }
+
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      try {
         await navigator.clipboard.writeText(postUrl);
         alert('Post link copied!');
-      }
-    } catch(err) {
-      if (err.name !== 'AbortError') {
-        await navigator.clipboard.writeText(postUrl);
-        alert('Post link copied!');
-      }
+      } catch(e) {}
     }
   }
 };
@@ -1074,9 +1096,22 @@ window.closeImgMenu = function() {
     const btn = document.getElementById('more-' + pid);
     if (!desc || !btn) return;
     const isExpanded = desc.classList.contains('expanded');
-    desc.classList.toggle('expanded', !isExpanded);
-    btn.innerText = isExpanded ? '... more' : 'Show less';
-  };
+    if (!isExpanded) {
+        desc.style.display = 'block';
+        desc.style.webkitLineClamp = 'unset';
+        desc.style.webkitBoxOrient = 'unset';
+        desc.style.overflow = 'visible';
+        desc.classList.add('expanded');
+        btn.innerText = 'Show less';
+    } else {
+        desc.style.display = '';
+        desc.style.webkitLineClamp = '';
+        desc.style.webkitBoxOrient = '';
+        desc.style.overflow = '';
+        desc.classList.remove('expanded');
+        btn.innerText = '... more';
+    }
+};
 </script>
 <!-- CAPACITOR PUSH NOTIFICATIONS -->
 <script>
@@ -1401,25 +1436,63 @@ setInterval(() => {
   window.toggleShareSheet = (show) => { document.getElementById('share-overlay').classList.toggle('active', show); document.getElementById('share-sheet').classList.toggle('active', show); };
   window.openShare = (id, type) => { window.currentShareId = id; window.currentShareType = type; toggleShareSheet(true); };
 
-  window.executeShare = (platform) => {
+  window.executeShare = function(platform) {
     if (!window.currentShareId) return;
-    const post = postsArr.find(p => p.id === window.currentShareId);
-    const pageName = window.currentShareType === 'general_post' ? 'details.html' : 'posts.html';
-    const link = `${window.location.origin}/${pageName}?id=${window.currentShareId}`;
-    const title = post?.title ? `📢 ${post.title}\n` : "Health Jobs Portal\n";
-    const desc = post?.desc ? `${post.desc.substring(0, 100)}...\n\n` : "";
-    const text = `${title}${desc}Check details here: ${link}`;
-    if (platform === 'copy') { navigator.clipboard.writeText(link).then(() => alert("Link copied!")); }
-    else if (platform === 'whatsapp') { window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank'); }
-    else if (platform === 'facebook') { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank'); }
-    else if (platform === 'more') { if (navigator.share) navigator.share({ title: post?.title || 'Health Jobs', text: desc, url: link }); }
+    const sharePost = postsArr.find(p => p.id === window.currentShareId);
+const shareType = sharePost?.type || window.currentShareType;
+const link = sharePost?.slug 
+    ? window.location.origin + (shareType === 'general_post' ? '/updates/' : '/jobs/') + sharePost.slug
+    : window.location.origin + '/' + (shareType === 'general_post' ? 'details.html' : 'posts.html') + '?id=' + window.currentShareId;
+    const title = sharePost?.title ? '📢 ' + sharePost.title + '\n' : 'Health Jobs Portal\n';
+    const desc = sharePost?.desc ? sharePost.desc.substring(0, 100) + '...\n\n' : '';
+    const text = title + desc + 'Check details here: ' + link;
+    if (platform === 'copy') { 
+        navigator.clipboard.writeText(link).then(() => alert('Link copied!')); 
+    } else if (platform === 'whatsapp') { 
+        window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(text), '_blank'); 
+    } else if (platform === 'facebook') { 
+        window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(link), '_blank'); 
+    } else if (platform === 'more') { 
+        if (navigator.share) navigator.share({ title: sharePost?.title || 'Health Jobs', text: desc, url: link }); 
+    }
     toggleShareSheet(false);
-  };
+};
 
-  window.handlePostClick = (postId, postType) => {
-    if (!currentUser) return window.location.href = 'login.html';
-    location.href = postType === 'general_post' ? `details.html?id=${postId}` : `posts.html?id=${postId}`;
-  };
+
+window.handlePostClick = function(postId, postType) {
+    if (!currentUser) { window.location.href = 'login.html'; return; }
+    const post = postsArr.find(p => p.id === postId);
+    const slug = post?.slug;
+    const type = post?.type || postType;
+
+    // ✅ View track karo
+    try {
+        const key = 'viewed_' + postId;
+        if (!sessionStorage.getItem(key)) {
+            sessionStorage.setItem(key, '1');
+            fetch('https://backend-posts-details.vercel.app/api/update-post', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    postId: slug || postId,
+                    updatedData: { views: (post?.views || 0) + 1 }
+                })
+            }).catch(() => {});
+        }
+    } catch(e) {}
+
+    if (slug) {
+        if (type === 'general_post') {
+            location.href = '/updates/' + slug;
+        } else {
+            location.href = '/jobs/' + slug;
+        }
+    } else {
+        location.href = type === 'general_post' 
+            ? 'details.html?id=' + postId 
+            : 'posts.html?id=' + postId;
+    }
+};
 
   function escapeHtml(unsafe) {
     if (!unsafe) return "";
@@ -1476,7 +1549,7 @@ setInterval(() => {
     window.triggerLiveSearch();
   };
 
-  window.triggerLiveSearch = () => {
+window.triggerLiveSearch = () => {
     const q = document.getElementById('fs-search-in').value.trim().toLowerCase();
     const resultsBox = document.getElementById('fs-search-results');
     const clearBtn = document.getElementById('fs-clear-btn');
@@ -1531,7 +1604,14 @@ setInterval(() => {
 
     resultsBox.innerHTML = finalResults.map(r => {
       const isUser = r.type === 'user' || r.type === 'profile';
-      const link = isUser ? `wid.html?uid=${r.id}` : (r.type === 'general_post' ? `details.html?id=${r.id}` : `posts.html?id=${r.id}`);
+      const foundPost = (window.postsArr || []).find(p => p.id === r.id);
+const link = isUser
+    ? 'wid.html?uid=' + r.id
+    : (foundPost?.slug
+        ? (foundPost.type === 'general_post' ? '/updates/' : '/jobs/') + foundPost.slug
+        : (r.type === 'general_post' 
+            ? 'details.html?id=' + r.id 
+            : 'posts.html?id=' + r.id));
       let dateStr = '';
       if (!isUser && r.createdAt) {
         const diff = now - r.createdAt;
@@ -1562,80 +1642,142 @@ setInterval(() => {
 
   // SEARCH INDEX
   const searchIndexRef = dbRef(dbRT, 'search_index');
-  onValue(searchIndexRef, (snapshot) => {
+onValue(searchIndexRef, (snapshot) => {
     const data = snapshot.val();
     window.searchIndexData = data ? Object.values(data) : [];
-  });
+    // Agar search box open hai to refresh karo
+    const searchInput = document.getElementById('fs-search-in');
+    if (searchInput && searchInput.value.trim().length >= 2) {
+        window.triggerLiveSearch();
+    }
+});
 
   // ✅ HYBRID FEED — MAIN FIX HERE
-  window.loadInitialPosts = function () {
+window.loadInitialPosts = function () {
+    const ssrFeed = document.getElementById('feed');
+    const ssrCards = ssrFeed ? ssrFeed.querySelectorAll('.post-card') : [];
+
+    if (ssrCards.length > 0 && window.__SSR_POSTS__ && window.__SSR_POSTS__.length > 0) {
+        window.postsArr = window.__SSR_POSTS__;
+        postsArr = window.postsArr;
+        localStorage.setItem(CACHE_KEY, JSON.stringify(postsArr.slice(0, 50)));
+        document.getElementById('loading').classList.add('hidden');
+        ssrCards.forEach(card => {
+            const pid = card.dataset.id;
+            const descEl = document.getElementById('desc-' + pid);
+            const moreBtn = document.getElementById('more-' + pid);
+            if (descEl && moreBtn && descEl.scrollHeight > descEl.clientHeight + 2) {
+                moreBtn.style.display = 'inline-block';
+            }
+        });
+        startLiveSync();
+        return;
+    }
+
     const TEN_MINUTES = 10 * 60 * 1000;
     if (localStorage.getItem('last_active_time') && (Date.now() - parseInt(localStorage.getItem('last_active_time')) > TEN_MINUTES)) {
-      localStorage.removeItem(CACHE_KEY);
+        localStorage.removeItem(CACHE_KEY);
     }
 
     const cachedDataStr = localStorage.getItem(CACHE_KEY);
     if (cachedDataStr) {
-      try {
-        const cached = JSON.parse(cachedDataStr);
-        // ✅ DONO ko update karo
-        window.postsArr = cached;
-        postsArr = window.postsArr;
-        // ✅ فلٹر چیک کریں
-if (window.catActive && window.catActive !== 'all' || window.timeActive && window.timeActive !== 'all') {
-    if (typeof window.renderFiltered === 'function') window.renderFiltered();
-} else {
-    renderEverything();
-}
-        document.getElementById('loading').classList.add('hidden');
-      } catch (e) {}
-    } else {
-      postsArr = [];
-      window.postsArr = [];
-      document.getElementById('feed').innerHTML = "";
-      document.getElementById('loading').classList.remove('hidden');
-    }
-
-const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(20));
-    onSnapshot(q, (snapshot) => {
-      let livePosts = [];
-      let snapshotIds = [];
-      snapshot.forEach((docItem) => {
-        snapshotIds.push(docItem.id);
-        let data = docItem.data();
-        if (data.status !== 'inactive' && data.status !== 'deleted') {
-          if (data.createdAt?.toMillis) data.createdAt = data.createdAt.toMillis();
-          livePosts.push({ id: docItem.id, ...data });
+        try {
+            const cached = JSON.parse(cachedDataStr);
+            window.postsArr = cached;
+            postsArr = window.postsArr;
+            if (window.catActive !== 'all' || window.timeActive !== 'all') {
+                if (typeof window.renderFiltered === 'function') window.renderFiltered();
+            } else {
+                renderEverything();
+            }
+            document.getElementById('loading').classList.add('hidden');
+            startLiveSync();
+        } catch (e) {
+            console.error("Cache error:", e);
+            postsArr = [];
+            window.postsArr = [];
+            startLiveSync();
         }
-      });
+    } else {
+        postsArr = [];
+        window.postsArr = [];
+        document.getElementById('feed').innerHTML = "";
+        document.getElementById('loading').classList.remove('hidden');
+        startLiveSync();
+    }
+};
 
-      const restOfPosts = postsArr.filter(p => !snapshotIds.includes(p.id));
-      const updatedFullArr = [...livePosts, ...restOfPosts].filter(p => p.status !== 'deleted');
-      localStorage.setItem(CACHE_KEY, JSON.stringify(updatedFullArr.slice(0, 50)));
+function startLiveSync() {
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(20));
+    onSnapshot(q, (snapshot) => {
+        if (snapshot.empty) {
+            document.getElementById('feed').innerHTML = '<div style="text-align:center;padding:60px;color:#64748b;"><div style="font-size:50px;margin-bottom:15px;">📭</div><div style="font-size:16px;font-weight:700;">No Posts Yet</div><div style="font-size:13px;margin-top:5px;">Be the first to share a healthcare update!</div></div>';
+            document.getElementById('loading').classList.add('hidden');
+            return;
+        }
 
-      let myUid = localStorage.getItem('my_uid') || currentUser?.uid;
-      let installTime = parseInt(localStorage.getItem('app_install_time_' + myUid)) || (Date.now() - 86400000);
-      localStorage.setItem('app_install_time_' + myUid, installTime);
-      let lastReadTime = parseInt(localStorage.getItem('last_notif_read_time_' + myUid)) || installTime;
+        let livePosts = [];
+        let snapshotIds = [];
 
-      let newUpdatesCount = livePosts.filter(p => p.posterId !== myUid && p.authorId !== myUid && p.createdAt > lastReadTime).length;
-      const badge = document.getElementById('notif-badge');
-      if (newUpdatesCount > 0) { badge.innerText = newUpdatesCount > 9 ? '9+' : newUpdatesCount; badge.classList.remove('hidden'); }
-      else badge.classList.add('hidden');
+        snapshot.forEach((docItem) => {
+            snapshotIds.push(docItem.id);
+            let data = docItem.data();
+            if (data.status !== 'inactive' && data.status !== 'deleted') {
+                if (data.createdAt?.toMillis) data.createdAt = data.createdAt.toMillis();
+                livePosts.push({ id: docItem.id, ...data });
+            }
+        });
 
-      postsArr = updatedFullArr;
-      window.postsArr = updatedFullArr;
+        const feed = document.getElementById('feed');
+        const existingCards = feed.querySelectorAll('.post-card');
 
-      renderEverything();
-      document.getElementById('loading').classList.add('hidden');
+        if (existingCards.length === 0 || !localStorage.getItem(CACHE_KEY)) {
+            feed.innerHTML = '';
+            livePosts.forEach(p => appendPostToDOM(p));
+            document.getElementById('loading').classList.add('hidden');
+        } else {
+            livePosts.forEach(p => {
+                if (!document.getElementById('card-' + p.id)) {
+                    appendPostToDOM(p);
+                    const newCard = document.getElementById('card-' + p.id);
+                    if (newCard && feed.firstChild) {
+                        feed.insertBefore(newCard, feed.firstChild);
+                    }
+                }
+            });
+        }
 
-      // ✅ lastVisibleDoc properly save karo raw Firestore doc se
-      if (!snapshot.empty) {
-        lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
-        hasMorePosts = snapshot.docs.length >= 20;
-      }
+        const restOfPosts = postsArr.filter(p => !snapshotIds.includes(p.id));
+        const updatedArr = [...livePosts, ...restOfPosts].filter(p => p.status !== 'deleted');
+        window.postsArr = updatedArr;
+        postsArr = updatedArr;
+        localStorage.setItem(CACHE_KEY, JSON.stringify(updatedArr.slice(0, 50)));
+
+        if (!snapshot.empty) {
+            lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
+            hasMorePosts = snapshot.docs.length >= 20;
+        }
+
+        let myUid = localStorage.getItem('my_uid') || currentUser?.uid;
+        let installTime = parseInt(localStorage.getItem('app_install_time_' + myUid)) || (Date.now() - 86400000);
+        localStorage.setItem('app_install_time_' + myUid, installTime);
+        let lastReadTime = parseInt(localStorage.getItem('last_notif_read_time_' + myUid)) || installTime;
+        let newUpdatesCount = livePosts.filter(p => p.posterId !== myUid && p.authorId !== myUid && p.createdAt > lastReadTime).length;
+
+        const badge = document.getElementById('notif-badge');
+        if (newUpdatesCount > 0) {
+            badge.innerText = newUpdatesCount > 9 ? '9+' : newUpdatesCount;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+
+        generateTopPosters();
+    }, (error) => {
+        console.error("Live sync error:", error);
+        document.getElementById('loading').innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;"><div style="font-size:40px;margin-bottom:10px;">⚠️</div>Error loading posts.<br><button onclick="location.reload()" style="margin-top:15px;padding:10px 25px;background:#0a66c2;color:#fff;border:none;border-radius:20px;font-weight:600;cursor:pointer;">🔄 Refresh Page</button></div>';
     });
-  };
+}
 
   async function fetchMorePosts() {
     if (isFetchingMore || !hasMorePosts || !lastVisibleDoc) return;
@@ -1858,7 +2000,7 @@ function renderCollage(media) {
     html += `
       <div style="position:relative;background:#000;overflow:hidden;margin-top:5px;">
         <video id="${vidId}" src="${url}" class="feed-video" playsinline muted preload="metadata"
-          style="width:100%;max-height:480px;display:block;object-fit:contain;cursor:pointer;"
+style="width:100%;max-height:400px;display:block;object-fit:cover;cursor:pointer;"
           onclick="toggleVideoPlay('${vidId}')">
         </video>
         <div id="play-icon-${vidId}" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
@@ -2012,7 +2154,14 @@ window.toggleDesc = function(pid) {
         savedCity = uData.city || "";
         userCity = savedCity;
         const userSearchRef = dbRef(dbRT, `search_index/${user.uid}`);
-        set(userSearchRef, { id: user.uid, t: userNameForPic, p: uData.profession || uData.role || "Healthcare Professional", loc: userCity || "Pakistan", pic: uData.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(userNameForPic)}`, type: 'profile' }).catch(() => {});
+set(userSearchRef, { 
+    id: user.uid, 
+    t: userNameForPic, 
+    p: uData.qualification || uData.profession || uData.role || "Healthcare Professional",
+    loc: userCity || "Pakistan", 
+    pic: uData.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(userNameForPic)}`, 
+    type: 'profile' 
+}).catch(() => {});
       }
 
       if ("Notification" in window) {
