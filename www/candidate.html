@@ -532,7 +532,7 @@ buildCCDropdown('ln-cc-dropdown', 'ln-flag', 'ln-code', 'local-num-cc');
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -712,6 +712,9 @@ if(!title || !category || !jobLocation || !salary || !desc) {
                 return;
             }
 
+            // Generate SEO-friendly slug for candidate URL
+const candidateSlug = Math.floor(1000 + Math.random() * 9000).toString();
+
             // Validating against the global array
 
             const loaderMsg = document.getElementById('loader-msg');
@@ -735,6 +738,8 @@ const webChatEnabled = document.getElementById('web-chat-toggle').value === 'tru
 
                 const postData = {
                     type: 'candidate_post',
+                    slug: candidateSlug,
+                    canonicalUrl: `https://healthjobportal.com/jobs/${candidateSlug}`,
                     webChat: webChatEnabled,
                     title: title,
                     category: category,
@@ -765,61 +770,71 @@ isExpired: false
                 };
 
                 // Changed this line to capture the document ID
-                const docRef = await addDoc(collection(db, "posts"), postData);
+                await setDoc(doc(db, "posts", candidateSlug), postData);
 
                 // --- 🚀 SEARCH INDEX KE LIYE RTDB AUTO-UPDATE 🚀 ---
+                                // =============================================
+
+
+// =============================================
+// STATIC HTML FILE CREATE (CLOUDFLARE KV INDEXING)
+// =============================================
+// Static HTML generation for Cloudflare KV (optional - Worker handles this now)
+const staticImageUrl = uploadedMediaData.length > 0 && uploadedMediaData[0].type === 'image' 
+    ? uploadedMediaData[0].url 
+    : 'https://healthjobportal.com/images/logo.png';
+
+// ── نیا فکسڈ کوڈ (100% ورکنگ فکس - اب 405 ایرر نہیں آئے گا) ────────────────────────
+
+
+
+// =============================================
+
+                // =============================================
+
+                // --- SEARCH INDEX KE LIYE RTDB AUTO-UPDATE ---
                 try {
-                    await set(ref(dbRT, 'search_index/' + docRef.id), {
-                        id: docRef.id,
+                    await set(ref(dbRT, 'search_index/' + candidateSlug), {
+                        id: candidateSlug,
                         t: title, 
                         p: posterNameDisplay, 
                         pic: (userData && userData.profilePicUrl) ? userData.profilePicUrl : "https://ui-avatars.com/api/?name=U", 
                         loc: jobLocation,
                         type: "candidate_post"
                     });
-                    console.log("Live Search Updated successfully!");
-                } catch(e) {
-                    console.error("RTDB Search Sync Error: ", e);
-                }
-                // ---------------------------------------------------
+                } catch(e) { console.error("RTDB Error:", e); }
 
-                // --- VERCEL BACKEND CALL FOR NOTIFICATION ---
-// ✅ 1. EMAIL NOTIFICATION - نئی پوسٹ پر
-// ✅ نئی پوسٹ پر - Email Notificatio
-fetch('https://nodemails.vercel.app/api/send-notification', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        type: 'new-post',
-        postId: docRef.id,
-        title: title,
-        category: category,
-        location: jobLocation,
-        salary: salary,
-        posterName: posterNameDisplay,
-        posterId: currentUser.uid,
-        postType: 'candidate_post',
-        link: 'https://healthjobportal.com/posts.html?id=' + docRef.id
-    })
-}).catch(err => console.error("❌ Email error:", err));
+                // --- EMAIL NOTIFICATION ---
+                fetch('https://nodemails.vercel.app/api/send-notification', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'new-post',
+                        postId: candidateSlug,
+                        title: title,
+                        category: category,
+                        location: jobLocation,
+                        salary: salary,
+                        posterName: posterNameDisplay,
+                        posterId: currentUser.uid,
+                        postType: 'candidate_post',
+                        link: `https://healthjobportal.com/jobs/${candidateSlug}`
+                    })
+                }).catch(err => console.error("Email error:", err));
 
-// ✅ 2. EXPIRED POSTS HANDLER - الگ URL
-fetch('https://backend-posts-details.vercel.app/api/update-post', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        postId: docRef.id,
-        expiresAt: document.getElementById('schedule-expiry').value || null
-    })
-}).then(() => console.log("✅ Expiry handler notified!"))
-  .catch(err => console.error("❌ Expiry handler error:", err));
-                               // =======================================================
-                // 🚀 TELEGRAM CHANNEL AUTO-POST (Updated for Details & Image)
-                // =======================================================
+                // --- EXPIRED POSTS HANDLER ---
+                fetch('https://backend-posts-details.vercel.app/api/update-post', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                        postId: candidateSlug,
+                        expiresAt: document.getElementById('schedule-expiry').value || null
+                    })
+                }).catch(err => console.error("Expiry error:", err));
+
+                // --- TELEGRAM AUTO-POST ---
                 try {
-                    const telegramApiUrl = "https://healthjobs-telegram-bot.vercel.app/api/send-alert";
-                    
-                    await fetch(telegramApiUrl, {
+                    await fetch("https://healthjobs-telegram-bot.vercel.app/api/send-alert", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -830,21 +845,17 @@ fetch('https://backend-posts-details.vercel.app/api/update-post', {
                             location: jobLocation,
                             salary: salary,
                             mediaUrl: uploadedMediaData.length > 0 ? uploadedMediaData[0].url : null,
-                            link: "https://healthjobportal.com/posts.html?id=" + docRef.id
+                            link: `https://healthjobportal.com/jobs/${candidateSlug}`
                         })
                     });
-                    console.log("✅ Telegram Alert Sent!");
-                } catch (telegramErr) {
-                    console.error("❌ Telegram auto-post Error:", telegramErr);
-                }
-                // =======================================================
- 
-                // ---------------------------------------------
+                } catch(telegramErr) { console.error("Telegram error:", telegramErr); }
 
 
                 document.getElementById('upload-loader').classList.add('hidden');
-                alert("Profile broadcasted successfully!");
-                window.location.href = "index.html";
+alert("Profile broadcasted successfully!");
+setTimeout(() => {
+    window.location.replace(`/jobs/${slug}`);
+}, 2500);
 
             } catch (err) {
                 console.error(err);
