@@ -102,10 +102,12 @@
         .dropdown-item.delete:hover { background: #fef2f2; color: #b31404; }
 
         /* --- Stats Row --- */
-        .post-stats { display: flex; gap: 15px; border-top: 1px solid var(--border-color); padding-top: 15px; font-size: 13px; color: var(--text-secondary); font-weight: 500;}
-        .stat-item { display: flex; align-items: center; gap: 5px; }
-        .stat-item svg { width: 16px; height: 16px; fill: currentColor; }
-
+.post-stats { display: flex; gap: 15px; border-top: 1px solid var(--border-color); padding-top: 15px; font-size: 13px; color: var(--text-secondary); font-weight: 500; align-items: center; }
+.stat-item { display: flex; align-items: center; gap: 5px; }
+.stat-item svg { width: 16px; height: 16px; fill: currentColor; }
+.stats-btn { margin-left: auto; background: none; border: none; font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 5px 8px; border-radius: 6px; transition: 0.2s; }
+.stats-btn:hover { background: #f1f5f9; color: var(--primary-blue); }
+.stats-btn svg { width: 14px; height: 14px; fill: currentColor; }
         /* --- Empty State --- */
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         .empty-state svg { width: 60px; height: 60px; fill: #cbd5e1; margin-bottom: 15px; }
@@ -170,8 +172,8 @@
                 <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
             </a>
             <a href="index.html" class="logo-container">
-                <img src="images/logo.png" alt="Near Jobs" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
-                <span id="logo-fallback" style="font-size: 20px; font-weight: 700; color: var(--primary-blue); display: none;">Near Jobs</span>
+                <img src="images/logo.png" alt="Health Jobs" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+                <span id="logo-fallback" style="font-size: 20px; font-weight: 700; color: var(--primary-blue); display: none;">Health Jobs</span>
             </a>
         </div>
     </header>
@@ -190,43 +192,6 @@
 
         <div id="posts-container"></div>
     </main>
-
-<!-- STATS MODAL -->
-    <div class="modal-overlay" id="stats-modal">
-        <div class="modal-content" style="max-width:500px;padding:0;overflow:hidden;">
-            <div style="background:#0a66c2;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;">
-                <div style="color:white;font-size:16px;font-weight:700;" id="stats-modal-title">Post Stats</div>
-                <button onclick="document.getElementById('stats-modal').style.display='none'" style="background:rgba(255,255,255,0.2);border:none;color:white;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;">✕</button>
-            </div>
-
-            <!-- Stats Numbers -->
-            <div style="display:flex;gap:0;border-bottom:1px solid #e2e8f0;" id="stats-numbers">
-                <div style="flex:1;padding:16px;text-align:center;border-right:1px solid #e2e8f0;">
-                    <div id="stat-likes-count" style="font-size:24px;font-weight:800;color:#0a66c2;">0</div>
-                    <div style="font-size:12px;color:#64748b;font-weight:600;">Likes</div>
-                </div>
-                <div style="flex:1;padding:16px;text-align:center;border-right:1px solid #e2e8f0;">
-                    <div id="stat-comments-count" style="font-size:24px;font-weight:800;color:#0a66c2;">0</div>
-                    <div style="font-size:12px;color:#64748b;font-weight:600;">Comments</div>
-                </div>
-                <div style="flex:1;padding:16px;text-align:center;">
-                    <div id="stat-whatsapp-count" style="font-size:24px;font-weight:800;color:#25D366;">📞</div>
-                    <div style="font-size:12px;color:#64748b;font-weight:600;">WhatsApp</div>
-                </div>
-            </div>
-
-            <!-- Tabs -->
-            <div style="display:flex;border-bottom:1px solid #e2e8f0;">
-                <button id="tab-likes" onclick="switchTab('likes')" style="flex:1;padding:12px;border:none;background:none;font-size:13px;font-weight:700;color:#0a66c2;border-bottom:2px solid #0a66c2;cursor:pointer;">❤️ Likes</button>
-                <button id="tab-comments" onclick="switchTab('comments')" style="flex:1;padding:12px;border:none;background:none;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;">💬 Comments</button>
-            </div>
-
-            <!-- Content -->
-            <div id="stats-content" style="max-height:350px;overflow-y:auto;padding:12px;">
-                <div style="text-align:center;padding:20px;color:#94a3b8;">Loading...</div>
-            </div>
-        </div>
-    </div>
 
     <div class="modal-overlay" id="create-options-modal">
         <div class="modal-content" style="max-width: 400px; padding: 20px;">
@@ -257,6 +222,7 @@
             
             <input type="hidden" id="edit-post-id">
             <input type="hidden" id="edit-post-type">
+            <input type="hidden" id="edit-post-slug">
             
             <div class="form-group">
                 <label id="title-label">Title / Headline</label>
@@ -368,10 +334,11 @@
         const POSTS_PER_PAGE = 5;
 
         const CACHE_KEY = "health_jobs_hybrid_cache"; 
-const BACKEND_URL        = "https://backend-posts-details.vercel.app/api/update-post";
-const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-post";
+        const BACKEND_URL = "https://backend-posts-details.vercel.app/api/update-post";
+        const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-post";
+           const BACKEND_INVALIDATE_URL = "https://worker-kv-updates-post.vercel.app/api/invalidate-cache";
 
-        // --- Cache Helpers ---
+        // ✅ Cache Helpers
         function removePostFromLocalCache(postId) {
             try {
                 let cachedDataStr = localStorage.getItem(CACHE_KEY);
@@ -396,7 +363,26 @@ const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-
             } catch (error) { console.error("Cache update error:", error); }
         }
 
-        // --- Close Modals on Outside Click ---
+        // ✅ KV Cache Invalidation
+async function invalidateKVCache(slug, postType) {
+    if (!slug) return;
+    try {
+        const idToken = await currentUser.getIdToken();
+        await fetch(BACKEND_INVALIDATE_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            },
+            body: JSON.stringify({ slug, type: postType || "both" })
+        });
+        console.log("✅ KV Cache invalidated:", slug, postType);
+    } catch (err) {
+        console.log("⚠️ KV invalidation error:", err.message);
+    }
+}
+
+        // Close Modals on Outside Click
         document.addEventListener('click', function(e) {
             if(!e.target.closest('.menu-container')) {
                 document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
@@ -406,7 +392,7 @@ const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-
             }
         });
 
-        // --- Auth Guard ---
+        // Auth Guard
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -417,7 +403,7 @@ const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-
             }
         });
 
-        // --- Fetch All Posts & Start Pagination ---
+        // Fetch All Posts
         async function fetchMyPosts() {
             const container = document.getElementById('posts-container');
             const loader = document.getElementById('loader');
@@ -443,7 +429,6 @@ const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-
                 if (myPostsArray.length === 0) {
                     emptyState.classList.remove('hidden');
                 } else {
-                    // Sort latest posts first
                     myPostsArray.sort((a, b) => {
                         const dateA = a.createdAt ? a.createdAt.toMillis() : 0;
                         const dateB = b.createdAt ? b.createdAt.toMillis() : 0;
@@ -451,7 +436,7 @@ const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-
                     });
                     
                     currentDisplayIndex = 0;
-                    window.loadMorePosts(); // Start showing first 5 posts
+                    window.loadMorePosts();
                 }
             } catch (error) {
                 console.error(error);
@@ -459,11 +444,11 @@ const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-
             }
         }
 
-        // --- Load More Posts Logic (5 by 5) ---
+        // Load More Posts (Pagination)
         window.loadMorePosts = () => {
             const container = document.getElementById('posts-container');
             const existingBtn = document.getElementById('load-more-btn');
-            if (existingBtn) existingBtn.remove(); // Hata dein pehle wala button
+            if (existingBtn) existingBtn.remove();
 
             const endIndex = Math.min(currentDisplayIndex + POSTS_PER_PAGE, myPostsArray.length);
             const postsToRender = myPostsArray.slice(currentDisplayIndex, endIndex);
@@ -472,7 +457,6 @@ const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-
 
             currentDisplayIndex = endIndex;
 
-            // Agar aur posts baqi hain, toh naya button dikhayen
             if (currentDisplayIndex < myPostsArray.length) {
                 const btn = document.createElement('button');
                 btn.id = 'load-more-btn';
@@ -485,7 +469,7 @@ const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-
             }
         };
 
-        // --- UI Renders ---
+        // Render Post
         function generateMediaHTML(mediaArray) {
             if (!mediaArray || mediaArray.length === 0) return '';
             const visualMedia = mediaArray.filter(m => m.type === 'image' || m.type === 'video');
@@ -578,20 +562,18 @@ const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-
                 ${linkHTML}
                 ${mediaHTML}
 <div class="post-stats">
-                    <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg> ${likesCount} Likes</div>
-                    <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"></path></svg> ${commentsCount} Comments</div>
-                    <div class="stat-item" style="margin-left:auto;">
-<button onclick="goToStats('${post.id}','${post.type || 'general_post'}')" style="background:#f0f7ff;border:1px solid #bfdbfe;color:#0a66c2;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z"/></svg>
-                            Stats
-                        </button>
-                    </div>
-                </div>
+    <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg> ${likesCount} Likes</div>
+    <div class="stat-item"><svg viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"></path></svg> ${commentsCount} Comments</div>
+    <button class="stats-btn" onclick="location.href='post-stats.html?id=${post.slug || post.id}'"
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        Stats
+    </button>
+</div>
             `;
             container.appendChild(card);
         }
 
-        // --- Global Actions (Attached to window) ---
+        // Global Actions
         window.toggleMenu = (postId) => {
             document.querySelectorAll('.dropdown-menu').forEach(menu => {
                 if(menu.id !== `menu-${postId}`) menu.classList.remove('show');
@@ -599,51 +581,69 @@ const BACKEND_DELETE_URL = "https://backend-posts-details.vercel.app/api/delete-
             document.getElementById(`menu-${postId}`).classList.toggle('show');
         };
 
+        // ✅ DELETE POST WITH KV INVALIDATION
         window.deletePost = async (postId) => {
             if(confirm("Permanently delete this post everywhere?")) {
                 try {
-                    // Backend sync to notify global users
-await fetch(BACKEND_DELETE_URL, {
+                    const post = myPostsArray.find(p => p.id === postId);
+                    
+                    // Backend DELETE
+                    await fetch(BACKEND_DELETE_URL, {
                         method: 'DELETE',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ postId: postId })
                     });
 
-                    // Firestore delete backend handle kar raha hai — yahan zarurat nahi
-                    // await deleteDoc(doc(db, "posts", postId));
+                    // ✅ KV CACHE INVALIDATION
+                    if (post && post.slug) {
+    await invalidateKVCache(post.slug, post.type);
+}
                     
+                    // UI Update
                     document.getElementById(`post-${postId}`).remove();
                     myPostsArray = myPostsArray.filter(p => p.id !== postId);
                     removePostFromLocalCache(postId);
 
                     if(myPostsArray.length === 0) document.getElementById('empty-state').classList.remove('hidden');
+                    
+                    alert("Post deleted successfully!");
                 } catch (error) { 
-                    alert("Failed to delete post."); 
+                    alert("Failed to delete post: " + error.message); 
                 }
             }
         };
 
+        // ✅ TOGGLE POST STATUS WITH KV INVALIDATION
         window.togglePostStatus = async (postId, currentStatus) => {
             const newStatus = currentStatus === 'inactive' ? 'active' : 'inactive';
             document.getElementById(`menu-${postId}`).classList.remove('show');
             
             try {
+                const post = myPostsArray.find(p => p.id === postId);
+                
                 await fetch(BACKEND_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ postId: postId, updatedData: { status: newStatus } })
                 });
 
-                // ✅ دونوں صورتوں میں cache مکمل clear
+                // ✅ KV CACHE INVALIDATION
+if (post && post.slug) {
+    await invalidateKVCache(post.slug, post.type);
+}
+
+                // Cache clear
                 localStorage.removeItem(CACHE_KEY);
                 removePostFromLocalCache(postId);
                 
                 fetchMyPosts(); 
+                alert("Status updated!");
             } catch (error) {
-                alert("Status sync failed.");
+                alert("Failed to update status: " + error.message);
             }
         };
 
+        // ✅ EDIT MODAL WITH KV INVALIDATION
         window.openEditModal = (postId) => {
             const post = myPostsArray.find(p => p.id === postId);
             if(!post) return;
@@ -654,6 +654,7 @@ await fetch(BACKEND_DELETE_URL, {
             
             document.getElementById('edit-post-id').value = post.id;
             document.getElementById('edit-post-type').value = post.type || 'job';
+            document.getElementById('edit-post-slug').value = post.slug || '';
             document.getElementById('edit-title').value = post.title || "";
             document.getElementById('edit-desc').value = post.desc || "";
 
@@ -679,8 +680,10 @@ await fetch(BACKEND_DELETE_URL, {
             document.getElementById('edit-modal').style.display = 'none'; 
         };
 
+        // ✅ SAVE EDITED POST WITH KV INVALIDATION
         window.saveEditedPost = async () => {
             const postId = document.getElementById('edit-post-id').value;
+            const postSlug = document.getElementById('edit-post-slug').value;
             const postType = document.getElementById('edit-post-type').value;
             const newTitle = document.getElementById('edit-title').value.trim();
             const newDesc = document.getElementById('edit-desc').value.trim();
@@ -708,17 +711,23 @@ await fetch(BACKEND_DELETE_URL, {
                     updateData.location = document.getElementById('edit-location').value.trim();
                 }
 
-                // Backend Sync Call
+                // Backend Sync
                 const response = await fetch(BACKEND_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ postId, updatedData: updateData })
                 });
 
-if (response.ok) {
-                    // ✅ Cache مکمل clear تاکہ سب کو fresh data ملے
+                if (response.ok) {
+                    // ✅ KV CACHE INVALIDATION
+                    if (postSlug) {
+    await invalidateKVCache(postSlug, postType);
+}
+
+                    // Local cache clear
                     localStorage.removeItem(CACHE_KEY);
                     updatePostInLocalCache(postId, updateData);
+                    
                     closeEditModal();
                     fetchMyPosts(); 
                     alert("Updated & Synced Successfully!");
@@ -732,195 +741,7 @@ if (response.ok) {
                 btn.disabled = false;
             }
         };
-// ==========================================
-        // 📊 STATS MODAL
-        // ==========================================
-
-        let currentStatsPostId = null;
-        let currentStatsTab = 'likes';
-        let currentStatsPost = null;
-window.goToStats = (postId, postType) => {
-            location.href = `stats.html?id=${postId}`;
-        };
-        window.openStatsModal = async (postId, postType) => {
-            currentStatsPostId = postId;
-            currentStatsPost = myPostsArray.find(p => p.id === postId);
-            currentStatsTab = 'likes';
-
-            const modal = document.getElementById('stats-modal');
-            modal.style.display = 'flex';
-
-            // Title
-            const title = currentStatsPost?.title || 'Post Stats';
-            document.getElementById('stats-modal-title').innerText = title.length > 30 ? title.substring(0,30)+'...' : title;
-
-            // Stats numbers
-            const likesArr = currentStatsPost?.likes || [];
-            const commentsCount = currentStatsPost?.commentsCount || 0;
-            document.getElementById('stat-likes-count').innerText = likesArr.length;
-            document.getElementById('stat-comments-count').innerText = commentsCount;
-
-            // WhatsApp number
-            const wa = currentStatsPost?.whatsapp || '';
-            document.getElementById('stat-whatsapp-count').innerText = wa ? wa : 'N/A';
-
-            // Tab reset
-            document.getElementById('tab-likes').style.color = '#0a66c2';
-            document.getElementById('tab-likes').style.borderBottom = '2px solid #0a66c2';
-            document.getElementById('tab-likes').style.fontWeight = '700';
-            document.getElementById('tab-comments').style.color = '#64748b';
-            document.getElementById('tab-comments').style.borderBottom = 'none';
-            document.getElementById('tab-comments').style.fontWeight = '600';
-
-            loadLikesTab(postId, likesArr);
-        };
-
-        window.switchTab = async (tab) => {
-            currentStatsTab = tab;
-            const likesBtn = document.getElementById('tab-likes');
-            const cmtBtn = document.getElementById('tab-comments');
-
-            if (tab === 'likes') {
-                likesBtn.style.color = '#0a66c2'; likesBtn.style.borderBottom = '2px solid #0a66c2'; likesBtn.style.fontWeight = '700';
-                cmtBtn.style.color = '#64748b'; cmtBtn.style.borderBottom = 'none'; cmtBtn.style.fontWeight = '600';
-                loadLikesTab(currentStatsPostId, currentStatsPost?.likes || []);
-            } else {
-                cmtBtn.style.color = '#0a66c2'; cmtBtn.style.borderBottom = '2px solid #0a66c2'; cmtBtn.style.fontWeight = '700';
-                likesBtn.style.color = '#64748b'; likesBtn.style.borderBottom = 'none'; likesBtn.style.fontWeight = '600';
-                loadCommentsTab(currentStatsPostId);
-            }
-        };
-
-        async function loadLikesTab(postId, likesArr) {
-            const content = document.getElementById('stats-content');
-            if (!likesArr || likesArr.length === 0) {
-                content.innerHTML = '<div style="text-align:center;padding:30px;color:#94a3b8;font-size:13px;">❤️ No likes yet</div>';
-                return;
-            }
-            content.innerHTML = '<div style="text-align:center;padding:15px;color:#94a3b8;font-size:12px;">Loading likes...</div>';
-            try {
-                let html = '';
-                for (const uid of likesArr.slice(0, 30)) {
-                    try {
-                        const userSnap = await getDoc(doc(db, "users", uid));
-                        if (userSnap.exists()) {
-                            const u = userSnap.data();
-                            const name = u.fullName || u.facilityName || 'Healthcare User';
-                            const pic = u.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}`;
-                            const role = u.profession || u.role || 'Healthcare Professional';
-                            html += `
-                                <div onclick="location.href='wid.html?uid=${uid}'" style="display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #f1f5f9;cursor:pointer;">
-                                    <img src="${pic}" width="40" height="40" style="border-radius:50%;object-fit:cover;border:1px solid #e2e8f0;" onerror="this.src='https://ui-avatars.com/api/?name=U'">
-                                    <div>
-                                        <div style="font-size:13px;font-weight:700;color:#0f172a;">❤️ ${name}</div>
-                                        <div style="font-size:11px;color:#64748b;">${role}</div>
-                                    </div>
-                                </div>`;
-                        }
-                    } catch(e) {}
-                }
-                content.innerHTML = html || '<div style="text-align:center;padding:30px;color:#94a3b8;">No data</div>';
-            } catch(e) {
-                content.innerHTML = '<div style="text-align:center;padding:20px;color:red;font-size:12px;">Error loading likes</div>';
-            }
-        }
-
-        async function loadCommentsTab(postId) {
-            const content = document.getElementById('stats-content');
-            content.innerHTML = '<div style="text-align:center;padding:15px;color:#94a3b8;font-size:12px;">Loading comments...</div>';
-            try {
-                const snap = await getDocs(query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc")));
-                if (snap.empty) {
-                    content.innerHTML = '<div style="text-align:center;padding:30px;color:#94a3b8;font-size:13px;">💬 No comments yet</div>';
-                    return;
-                }
-                let html = '';
-                snap.forEach(d => {
-                    const c = d.data();
-                    const pic = c.userPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.userName || 'U')}`;
-                    html += `
-                        <div onclick="location.href='wid.html?uid=${c.userId}'" style="display:flex;gap:10px;padding:10px;border-bottom:1px solid #f1f5f9;cursor:pointer;align-items:flex-start;">
-                            <img src="${pic}" width="36" height="36" style="border-radius:50%;object-fit:cover;border:1px solid #e2e8f0;flex-shrink:0;" onerror="this.src='https://ui-avatars.com/api/?name=U'">
-                            <div style="flex:1;">
-                                <div style="font-size:13px;font-weight:700;color:#0f172a;">${c.userName || 'User'}</div>
-                                <div style="font-size:13px;color:#334155;margin-top:3px;line-height:1.4;">${c.text}</div>
-                            </div>
-                        </div>`;
-                });
-                content.innerHTML = html;
-            } catch(e) {
-                content.innerHTML = '<div style="text-align:center;padding:20px;color:red;font-size:12px;">Error loading comments</div>';
-            }
-        }
     </script>
-    <script>
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
-        const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
-
-        const handleCallRedirect = (data) => {
-            if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
-                let callerUid = data.callerUid || data.uid;
-                if(callerUid) {
-                    setTimeout(() => {
-                        window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
-                    }, 500);
-                }
-            }
-        };
-
-        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-            handleCallRedirect(notification.notification.data);
-        });
-
-        PushNotifications.addListener('pushNotificationReceived', async (notification) => {
-            const data = notification.data || {};
-            
-            // ❌ AGAR CANCEL KA SIGNAL AAYE TOH NOTIFICATION GAYAB KAR DO
-            if (data.action === "cancel_call") {
-                console.log("Call Cancelled! Removing Notifications...");
-                if (LocalNotifications) {
-                    await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
-                }
-                await PushNotifications.removeAllDeliveredNotifications();
-                
-                // Agar user ghalti se chat.html par hi betha hai, toh UI bhi band kar do
-                if (typeof closeWebRTC === 'function') { closeWebRTC(); }
-                return; // Code yahin rok do
-            }
-
-            // 📞 AGAR CALL AAYE TOH NOTIFICATION DIKHAO
-            if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
-                handleCallRedirect(data);
-                
-                if (LocalNotifications) {
-                    await LocalNotifications.schedule({
-                        notifications: [{
-                            title: notification.title || "Incoming Call",
-                            body: "Calling...",
-                            id: 999, // Yeh ID cancel karne ke kaam aati hai
-                            sound: "ringing.mp3",
-                            extra: data,
-                            android: {
-                                channelId: "high_importance_channel",
-                                importance: 5,
-                                visibility: 1,
-                                fullScreenIntent: true
-                            }
-                        }]
-                    });
-                }
-            }
-        });
-
-        if (LocalNotifications) {
-            LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
-                handleCallRedirect(notification.notification.extra);
-            });
-        }
-    }
-});
-</script>
 
 </body>
 </html>
