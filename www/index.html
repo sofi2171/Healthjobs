@@ -8,15 +8,23 @@
 <meta name="description" content="Pakistan's #1 Healthcare Jobs Portal — Find nursing jobs, doctor jobs, pharmacist jobs, lab technician jobs and more. Employers can post jobs and hire medical staff instantly across Pakistan.">
 <!-- Naya -->
 <meta name="keywords" content="health jobs Pakistan, medical jobs Pakistan, healthcare jobs, hire doctors Pakistan, nursing jobs Pakistan, pharmacist jobs, hospital jobs, lab technician jobs, dispenser jobs, candidate jobs portal, employer hiring portal, healthcare recruitment Pakistan, medical staff hiring, MBBS jobs, nurse jobs Lahore, nurse jobs Karachi, nurse jobs Faisalabad, healthcare portal Pakistan">
+<script>
+  var ahrefs_analytics_script = document.createElement('script');
+  ahrefs_analytics_script.async = true;
+  ahrefs_analytics_script.src = 'https://analytics.ahrefs.com/analytics.js';
+  ahrefs_analytics_script.setAttribute('data-key', 'ZA7FYOQyTaxng+bIPIjgDg');
+  document.getElementsByTagName('head')[0].appendChild(ahrefs_analytics_script);
+</script>
 <meta name="google-site-verification" content="GFHk5ESPsi8qtVxsH1gHR9EucDwKNJg7j5-yLF34mKc" />
 <link rel="canonical" href="https://healthjobportal.com/" />
 <!-- Naya -->
-<title>Health Jobs Portal Pakistan | Nursing, Doctor & Medical Jobs</title>
-<!-- Naya -->
-<meta property="og:description" content="Pakistan's #1 Healthcare Jobs Portal — Find nursing, doctor, pharmacist and lab technician jobs. Post jobs and hire medical staff instantly.">
+<meta property="og:title" content="Health Jobs Portal — Pakistan's #1 Healthcare Jobs">
+<meta property="og:description" content="Find nursing, doctor, pharmacist & medical jobs across Pakistan. Post or apply now!">
 <meta property="og:image" content="https://healthjobportal.com/images/logo.png">
 <meta property="og:url" content="https://healthjobportal.com/">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Health Jobs Portal">
+<meta name="google-adsense-account" content="ca-pub-1291348510465369">
 
 <script type="application/ld+json">
 {
@@ -65,13 +73,45 @@
 
 <link rel="preconnect" href="https://www.gstatic.com">
 <link rel="preconnect" href="https://firestore.googleapis.com">
-<link rel="icon" type="images/app.png" sizes="32x32" href="images/favicon.png">
-<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+<link rel="icon" type="images/app.png" sizes="32x32" href="images/app.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/app.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/app.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ffffff">
 
 <style>
+#incomplete-banner {
+    display: none;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: white;
+    padding: 10px 16px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    position: sticky;
+    top: 65px;
+    z-index: 999;
+    box-shadow: 0 2px 8px rgba(220,38,38,0.3);
+    min-height: 40px;
+}
+
+#incomplete-banner a {
+    color: white;
+    text-decoration: underline;
+    margin-left: 6px;
+}
+#incomplete-banner .banner-close {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+}
 .side-icon-menu_book {
   display: flex;
   align-items: center;
@@ -129,12 +169,12 @@
 }
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background-color: var(--bg-body); color: var(--text-main); padding-top: 70px; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; margin: 0; }
-main { flex: 1 0 auto; max-width: 580px; width: 100%; margin: 0 auto; padding: 0 0 80px 0; }
+main { flex: 1 0 auto; max-width: 580px; width: 100%; margin: 0 auto; padding: 0 0 80px 0; min-height: calc(100vh - 65px - 200px); }
 
 /* =========================================
    2. HEADER
 ========================================= */
-header { background-color: var(--bg-white); padding: 0 16px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 65px; z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+header { background-color: var(--bg-white); padding: 0 16px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 65px; z-index: 9999; border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
 .logo-img { height: 38px !important; width: auto; cursor: pointer; object-fit: contain; }
 .header-right { display: flex; align-items: center; gap: 14px; justify-content: flex-end; flex: 1; }
 .icon-wrap { position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; transition: 0.2s; color: var(--text-main); }
@@ -231,24 +271,86 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
 .pro-list li.news-li:hover { background: #e0f2fe; }
 
 /* =========================================
-   4. TOP POSTERS CAROUSEL
+   4. SITE INTRO BANNER
 ========================================= */
-.top-posters-wrap { background: var(--bg-white); padding: 12px 0; border-bottom: 1px solid var(--border-color); margin-bottom: 12px; width: 100%; overflow: hidden; display: none; }
-.top-posters-track { display: flex; gap: 12px; width: max-content; animation: scrollMarquee 30s linear infinite; padding-left: 15px; }
+.site-intro-banner {
+  text-align: center;
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  margin: 10px 10px 0;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.top-posters-wrap { overflow: hidden; }
+.top-posters-track { 
+  display: flex; 
+  gap: 12px; 
+  width: max-content; 
+  padding-left: 15px;
+  will-change: transform;
+  animation: scrollMarquee 120s linear infinite;
+}
 .top-posters-track:hover { animation-play-state: paused; }
-@keyframes scrollMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 6px)); } }
+@keyframes scrollMarquee { 
+  0%   { transform: translateX(0); } 
+  100% { transform: translateX(calc(-33.333% - 4px)); } 
+}
 .top-poster-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex-shrink: 0; width: 64px; }
 .top-poster-ring { width: 58px; height: 58px; border-radius: 50%; border: 2px solid var(--primary-blue); padding: 2px; display: flex; justify-content: center; align-items: center; margin-bottom: 6px; }
 .top-poster-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .top-poster-name { font-size: 11px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
-
+/* ── Verified Badge ─────────────────────────── */
+.post-avatar-wrap {
+  position: relative;
+  display: inline-block;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.post-avatar-wrap .post-avatar {
+  margin-right: 0;
+}
+.verified-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  background: #0a66c2;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.verified-badge svg {
+  width: 10px;
+  height: 10px;
+  fill: white;
+}
+/* Top posters carousel میں بھی */
+.top-poster-ring-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+.top-poster-ring-wrap .verified-badge {
+  width: 16px;
+  height: 16px;
+  bottom: -1px;
+  right: -1px;
+}
 /* =========================================
    5. POST CARDS & FEED
 ========================================= */
 .feed-container { padding: 0 12px; }
 .post-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 16px; padding-top: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(15,23,42,0.04); display: flex; flex-direction: column; transition: transform 0.2s; }
 .post-header { display: flex; padding: 0 16px 12px; align-items: center; cursor: pointer; }
-.post-avatar { width: 44px; height: 44px; border-radius: 50%; margin-right: 12px; border: 1px solid #f1f5f9; object-fit: cover; }
+.post-avatar { width: 44px; height: 44px; border-radius: 50%; margin-right: 12px; border: 1px solid #f1f5f9; object-fit: cover; background: #f1f5f9; opacity: 0; transition: opacity 0.2s ease; }
+.post-avatar.img-loaded { opacity: 1; }
 .user-name { font-size: 15px; font-weight: 700; color: var(--text-main); }
 .post-loc-info { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-top: 2px; }
 .post-content { padding: 0 16px 12px; cursor: pointer; }
@@ -257,12 +359,14 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
 
 /* Image Collage */
 .collage-box { display: grid; gap: 2px; background: #fff; margin-top: 5px; cursor: pointer; border-radius: 0; overflow: hidden; border-top: 1px solid #f8fafc; border-bottom: 1px solid #f8fafc; }
-.grid-1 { grid-template-columns: 1fr; }
-.grid-1 img { width: 100%; max-height: 400px; object-fit: contain; background: #f8fafc; display: block; }
+.grid-1 { grid-template-columns: 1fr; min-height: 280px; }
+.grid-1 img { width: 100%; max-height: 400px; min-height: 280px; object-fit: contain; background: #f8fafc; display: block; opacity: 0; transition: opacity 0.25s ease; }
 .grid-2 { grid-template-columns: 1fr 1fr; }
-.grid-2 img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+.grid-2 img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f8fafc; opacity: 0; transition: opacity 0.25s ease; }
 .grid-3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-.grid-3 img:first-child { grid-row: span 2; width: 100%; height: 100%; object-fit: cover; }
+.grid-3 img:first-child { grid-row: span 2; width: 100%; height: 100%; object-fit: cover; background: #f8fafc; opacity: 0; transition: opacity 0.25s ease; }
+.grid-3 img:not(:first-child) { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f8fafc; opacity: 0; transition: opacity 0.25s ease; }
+.collage-box img.img-loaded { opacity: 1 !important; }
 .grid-3 img:not(:first-child) { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
 .more-imgs-overlay { position: relative; }
 .more-imgs-overlay::after { content: "+" attr(data-count); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; pointer-events: none; }
@@ -275,17 +379,231 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
 .action-btn.liked { color: var(--primary-blue); }
 .action-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
-/* Comments */
-.cmt-section { padding: 16px; background: #f8fafc; display: none; }
-.cmt-list { max-height: 250px; overflow-y: auto; margin-bottom: 12px; }
-.cmt-item { background: #fff; padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0; position: relative; }
-.cmt-user { font-weight: 700; font-size: 13px; color: var(--text-main); margin-bottom: 4px; display: block; }
-.cmt-txt { font-size: 13.5px; color: #475569; line-height: 1.4; word-break: break-word; }
-.cmt-ctrl { position: absolute; top: 12px; right: 12px; display: flex; gap: 10px; }
-.cmt-btn { background: none; border: none; font-size: 11px; cursor: pointer; font-weight: 600; color: var(--text-secondary); }
-.cmt-input-box { display: flex; gap: 8px; }
-.cmt-input { flex: 1; padding: 10px 16px; border: 1px solid var(--border-color); border-radius: 20px; outline: none; font-size: 14px; background: #fff; }
-.cmt-btn-send { background: var(--primary-blue); color: #fff; border: none; padding: 0 16px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px; }
+/* ── Comments ─────────────────────────────── */
+.cmt-section { padding: 12px 16px 16px; background: #f8fafc; display: none; }
+.cmt-list { max-height: 400px; overflow-y: auto; margin-bottom: 10px; }
+
+.cmt-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  position: relative;
+  user-select: none;
+}
+.cmt-avatar {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  margin-top: 2px;
+}
+.cmt-bubble {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #e8edf2;
+  border-radius: 0 10px 10px 10px;
+  padding: 8px 10px;
+  min-width: 0;
+}
+.cmt-user {
+  font-weight: 700;
+  font-size: 12px;
+  color: #0f172a;
+  display: block;
+  margin-bottom: 2px;
+}
+.cmt-txt {
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.4;
+  word-break: break-word;
+}
+.cmt-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+.cmt-like-btn, .cmt-dislike-btn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  padding: 2px 5px;
+  border-radius: 6px;
+  transition: 0.15s;
+}
+.cmt-like-btn:hover    { background: #f1f5f9; color: #0a66c2; }
+.cmt-dislike-btn:hover { background: #f1f5f9; color: #ef4444; }
+.cmt-like-btn.active    { color: #0a66c2; }
+.cmt-dislike-btn.active { color: #ef4444; }
+.cmt-like-btn svg, .cmt-dislike-btn svg { width: 12px; height: 12px; fill: currentColor; }
+
+.cmt-reply-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  padding: 2px 5px;
+  border-radius: 6px;
+  transition: 0.15s;
+}
+.cmt-reply-btn:hover { background: #f1f5f9; color: #0a66c2; }
+
+.cmt-3dot {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #cbd5e1;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1;
+  margin-left: auto;
+  transition: 0.15s;
+}
+.cmt-3dot:hover { background: #f1f5f9; color: #64748b; }
+
+/* Replies toggle */
+.replies-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0a66c2;
+  padding: 2px 0;
+  margin-left: 38px;
+  margin-bottom: 4px;
+  transition: 0.15s;
+}
+.replies-toggle-btn svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+  transition: transform 0.2s;
+}
+.replies-toggle-btn.open svg { transform: rotate(180deg); }
+
+.replies-list { margin-left: 38px; margin-bottom: 4px; }
+.reply-item {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 7px;
+}
+.reply-avatar {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  margin-top: 2px;
+}
+.reply-bubble {
+  flex: 1;
+  background: #f0f7ff;
+  border: 1px solid #dbeafe;
+  border-radius: 0 10px 10px 10px;
+  padding: 6px 9px;
+}
+
+/* Reply input */
+.reply-input-row {
+  display: flex;
+  gap: 6px;
+  margin-left: 38px;
+  margin-bottom: 6px;
+  align-items: center;
+}
+.reply-input {
+  flex: 1;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  outline: none;
+  font-size: 12px;
+  padding: 6px 12px;
+  background: #fff;
+  color: #0f172a;
+}
+.reply-send-btn {
+  background: #0a66c2;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* Context menu — simple, no emoji */
+.cmt-ctx-menu {
+  position: fixed;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+  z-index: 99999;
+  min-width: 140px;
+  overflow: hidden;
+  animation: ctxFadeIn 0.12s ease;
+}
+@keyframes ctxFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.cmt-ctx-item {
+  display: flex;
+  align-items: center;
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  cursor: pointer;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.12s;
+}
+.cmt-ctx-item:last-child { border-bottom: none; }
+.cmt-ctx-item:hover { background: #f8fafc; }
+.cmt-ctx-item.danger { color: #ef4444; }
+
+/* Main comment input */
+.cmt-input-box { display: flex; gap: 8px; align-items: center; }
+.cmt-input {
+  flex: 1;
+  padding: 8px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  outline: none;
+  font-size: 13px;
+  background: #fff;
+}
+.cmt-btn-send {
+  background: var(--primary-blue);
+  color: #fff;
+  border: none;
+  padding: 0 14px;
+  height: 36px;
+  border-radius: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 12px;
+}
 
 /* =========================================
    6. BOTTOM NAV
@@ -307,7 +625,7 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
     min-width: 20px; 
     height: 20px; 
     border-radius: 50%; 
-    display: flex !important;
+    display: none;
     justify-content: center; 
     align-items: center; 
     border: 2px solid white; 
@@ -316,6 +634,9 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
     z-index: 10; 
     line-height: 1;
 }
+/* ✅ Badge "ring" pop animation (pehle missing thi) */
+@keyframes badgePop { 0% { transform: scale(1); } 45% { transform: scale(1.4); } 100% { transform: scale(1); } }
+.nav-badge.pop { animation: badgePop 0.25s ease; }
 
 /* =========================================
    7. BOTTOM SHEETS
@@ -379,11 +700,11 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
 /* =========================================
    9. SIDEBAR
 ========================================= */
-.sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(2px); z-index: 3000; opacity: 0; visibility: hidden; transition: 0.3s ease; }
+.sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(2px); z-index: 998;opacity: 0; visibility: hidden; transition: 0.3s ease; }
 .sidebar-overlay.active { opacity: 1; visibility: visible; }
-.sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--bg-white); z-index: 3001; transition: right 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+.sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--bg-white); z-index: 999;transition: right 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: -5px 0 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
 .sidebar.active { right: 0; }
-.sidebar-header { padding: 25px 20px 20px; background: #f8fafc; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; position: relative; }
+.sidebar-header { padding: 25px 20px 20px; background: #f8fafc; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; position: relative; margin-top: 65px; }
 .sidebar-close { position: absolute; top: 15px; right: 15px; background: #e2e8f0; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 20px; color: var(--text-secondary); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
 .sidebar-close:active { background: #cbd5e1; }
 .sidebar-dp { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-blue); margin-bottom: 10px; background: #fff; }
@@ -419,7 +740,29 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
 .spinner { width: 30px; height: 30px; border: 3px solid #e2e8f0; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
 .hidden { display: none !important; opacity: 0; pointer-events: none; }
-
+/* ===== SKELETON LOADER ===== */
+.skeleton-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  padding: 16px;
+  overflow: hidden;
+}
+.skeleton-line {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.sk-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.sk-avatar { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; }
+.sk-img { width: 100%; height: 280px; border-radius: 8px; margin-top: 10px; }
+.skeleton-card { min-height: 420px; }
 /* =========================================
    12. FOOTER
 ========================================= */
@@ -434,7 +777,18 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 /* =========================================
    13. TELEGRAM BUTTON
 ========================================= */
-.telegram-floating-container { position: fixed; bottom: 90px; right: 20px; z-index: 9999; }
+.telegram-floating-container { 
+    position: fixed; 
+    bottom: 90px; 
+    right: 20px; 
+    z-index: 9999; 
+}
+@media (min-width: 768px) {
+    .telegram-floating-container {
+        right: auto;
+        left: 20px;
+    }
+}
 .telegram-btn { display: flex; justify-content: center; align-items: center; width: 55px; height: 55px; background-color: #2CA5E0; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; text-decoration: none; }
 .telegram-btn:active { transform: scale(0.95); }
 .telegram-close-btn { position: absolute; top: -4px; left: -4px; background-color: #222; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.4); z-index: 10000; padding-bottom: 2px; }
@@ -447,25 +801,7 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
    14. DOWNLOAD POPUP - PROFESSIONAL
 ========================================= */
 /* =========================================
-   DOWNLOAD POPUP - LinkedIn Style
-========================================= */
-.hp-popup-overlay {
-    display: none;
-    position: fixed;
-    bottom: -100%;
-    left: 0;
-    width: 100%;
-    background: #ffffff;
-    z-index: 999999;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 16px;
-    border-top: 1px solid #e2e8f0;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
-    animation: slideBottomUp 0.4s ease forwards;
-    gap: 12px;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-}
+
 
 @keyframes slideBottomUp {
     from { bottom: -100%; }
@@ -608,6 +944,71 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 .img-menu-item:last-child { border-bottom: none; }
 .img-menu-item:active { background: #f8fafc; }
 .img-menu-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes tickerRun {
+  0%   { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+#news-ticker-track:hover {
+  animation-play-state: paused;
+}
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.ticker-item:hover { color: #bfdbfe; }
+.ticker-sep {
+  color: rgba(255,255,255,0.4);
+  font-size: 14px;
+  padding: 8px 4px;
+  display: inline-block;
+}
+@keyframes pulse-new {
+  0%   { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); }
+  70%  { box-shadow: 0 0 0 5px rgba(239,68,68,0); }
+  100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+}
+#main-content-wrapper {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+  pointer-events: all;
+}
+#main-content-wrapper.ready {
+  opacity: 1;
+  pointer-events: all;
+}
+.page-loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #fff;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  transition: opacity 0.4s ease;
+}
+.page-loader.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+.page-loader-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
 </style>
 </head>
 <body>
@@ -619,25 +1020,27 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 </div>
 
 <script>
-(function() {
+(function(){
   var splash = document.getElementById('custom-splash');
   var hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
+  
   if (hasSeenSplash) {
     if (splash) { splash.style.display = 'none'; splash.remove(); }
   } else {
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        if (splash) {
-          splash.style.opacity = '0';
-          sessionStorage.setItem('hasSeenSplash', 'true');
-          setTimeout(function() { splash.remove(); }, 500);
-        }
-      }, 2500);
-    });
+    sessionStorage.setItem('hasSeenSplash', 'true');
   }
+  
+  // ✅ Force hide splash after 3 seconds
+  setTimeout(function() {
+    if (splash) {
+      splash.style.opacity = '0';
+      setTimeout(function() {
+        if (splash) { splash.style.display = 'none'; splash.remove(); }
+      }, 400);
+    }
+  }, 3000);
 })();
 </script>
-
 <!-- HEADER -->
 <header>
   <img src="images/logo.png" class="logo-img" width="140" height="38" onclick="window.scrollTo(0,0)" alt="Health Jobs Portal Logo" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
@@ -649,11 +1052,17 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4v-2h6v2h-4c0 1.1-.9 2-2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v2h16v-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
       <div id="notif-badge" class="notif-badge hidden">0</div>
     </div>
-    <div class="icon-wrap" style="background:transparent;" onclick="toggleSidebar(true)">
+<div class="icon-wrap" style="background:transparent;position:relative;" onclick="toggleSidebar(true)">
       <svg viewBox="0 0 24 24" width="28" height="28" fill="var(--text-main)"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      <span style="position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;font-size:8px;font-weight:800;padding:2px 4px;border-radius:4px;letter-spacing:0.5px;box-shadow:0 0 0 0 rgba(239,68,68,0.7);animation:pulse-new 1.5s infinite;">NEW</span>
     </div>
   </div>
 </header>
+<div id="incomplete-banner">
+    ⚠️ Your profile is incomplete. Complete it for better results!
+    <a href="profile.html">Complete Profile →</a>
+    <button class="banner-close" onclick="dismissBanner()">✕</button>
+</div>
 
 <!-- FULL SCREEN SEARCH -->
 <div id="fs-search-overlay" class="fs-search-overlay hidden">
@@ -684,6 +1093,9 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 </div>
 
 <!-- MAIN -->
+
+<div id="main-content-wrapper">
+
 <main>
 <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Healthcare & Medical Jobs in Pakistan — Health Jobs Portal</h1>
   <!-- ✅ FILTER BOXES -->
@@ -718,17 +1130,34 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
     </div>
   </div>
 
-  <!-- TOP POSTERS -->
-  <div class="top-posters-wrap" id="top-posters-wrap">
-    <div class="top-posters-track" id="top-posters-track"></div>
-  </div>
+<!-- WEBSITE INTRO BANNER -->
+<div class="site-intro-banner">
+  Pakistan's #1 Healthcare Jobs Platform
+</div>
 
+<!-- NEWS TICKER -->
+<div id="news-ticker-wrap" style="background:#0a66c2;padding:0;overflow:hidden;display:none;border-bottom:1px solid #004182;min-height:34px;">
+  <div style="display:flex;align-items:center;">
+    <div style="background:#ef4444;color:#fff;font-size:11px;font-weight:800;padding:8px 12px;white-space:nowrap;flex-shrink:0;letter-spacing:0.5px;">
+      📰 MEDICAL NEWS
+    </div>
+    <div style="overflow:hidden;flex:1;">
+      <div id="news-ticker-track" style="display:flex;gap:0;white-space:nowrap;animation:tickerScroll 10s linear infinite;">
+      </div>
+    </div>
+  </div>
+</div>
   <!-- TRENDING -->
-  <div class="trending-wrap" id="trending-section" style="display:none;background:#fff;margin-bottom:12px;border-bottom:1px solid var(--border-color);padding:15px 0;">
+<div class="trending-wrap" id="trending-section" style="display:none;background:#fff;margin-bottom:12px;border-bottom:1px solid var(--border-color);padding:15px 0;min-height:230px;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:0 15px 12px;">
-      <h2 style="font-size:16px;font-weight:800;color:var(--text-main);display:flex;align-items:center;gap:8px;">
+<h2 style="font-size:16px;font-weight:800;color:var(--text-main);display:flex;align-items:center;gap:8px;">
         <span style="font-size:18px;">🔥</span> Trending Today
       </h2>
+      <div id="jobs-avail-badge" style="display:flex;align-items:center;gap:6px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:5px 10px;">
+  <span style="width:7px;height:7px;border-radius:50%;background:#16a34a;display:inline-block;flex-shrink:0;"></span>
+  <span id="jobs-avail-count" style="font-size:13px;font-weight:700;color:#0f172a;">0</span>
+  <span style="font-size:12px;font-weight:500;color:#64748b;">Available Jobs</span>
+</div>
     </div>
     <div id="trending-list" style="display:flex;flex-direction:column;gap:10px;padding:0 15px;"></div>
   </div>
@@ -803,9 +1232,8 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
       <a href="about.html">About Us</a>
       <a href="terms.html">Terms</a>
       <a href="privcy.html">Privacy Policy</a>
-      <a href="simple.html">Share Update</a>
-      <a href="employer.html">Post Job</a>
-      <a href="candidate.html">Post Profile</a>
+      <a href="contact.html">Contact us </a>
+      <a href="refund.html">Refund policy </a>
     </div>
     <div class="footer-copy">&copy; 2026 Powered by SufianX</div>
   </div>
@@ -827,25 +1255,40 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 <!-- SIDEBAR -->
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar(false)"></div>
 <div class="sidebar" id="sidebar">
-  <div class="sidebar-header">
+<div class="sidebar-header">
     <button class="sidebar-close" onclick="toggleSidebar(false)">&times;</button>
-    <img src="https://ui-avatars.com/api/?name=User" id="sidebar-pic" class="sidebar-dp" width="60" height="60" loading="lazy">
-    <div class="sidebar-name" id="sidebar-name-text">Loading...</div>
-    <a href="profile.html" class="sidebar-view-profile">View Profile</a>
-  </div>
+    
+    <!-- Logged IN -->
+    <div id="sidebar-logged-in" style="display:none;">
+        <img src="https://ui-avatars.com/api/?name=User" id="sidebar-pic" class="sidebar-dp" width="60" height="60" loading="lazy">
+        <div class="sidebar-name" id="sidebar-name-text">Loading...</div>
+        <a href="profile.html" class="sidebar-view-profile">View Profile</a>
+    </div>
+
+    <!-- Logged OUT -->
+    <div id="sidebar-logged-out" style="display:block;">
+        <div style="font-size:40px;margin-bottom:10px;">👤</div>
+        <div style="font-size:15px;font-weight:700;color:#0f172a;margin-bottom:4px;">Welcome to Health Jobs</div>
+        <div style="font-size:12px;color:#64748b;margin-bottom:16px;">Login or create an account</div>
+        <div style="display:flex;gap:8px;">
+            <a href="login.html" style="flex:1;background:#0a66c2;color:#fff;text-align:center;padding:9px 0;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;">Login</a>
+            <a href="login.html" style="flex:1;background:#f1f5f9;color:#0f172a;text-align:center;padding:9px 0;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid #e2e8f0;">Register</a>
+        </div>
+    </div>
+</div>
   <div class="sidebar-menu">
-    <button class="side-link" onclick="toggleSubmenu('tools-menu', this)">
+<button class="side-link" onclick="toggleSubmenu('tools-menu', this)">
       <div class="side-icon-wrap">
         <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
-        Tools
+        Tools <span style="background:#ef4444;color:#fff;font-size:8px;font-weight:800;padding:2px 5px;border-radius:4px;margin-left:6px;animation:pulse-new 1.5s infinite;">NEW</span>
       </div>
       <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
     </button>
     <div class="submenu" id="tools-menu">
-      <a href="cv-maker.html" class="submenu-item">CV Maker</a>
-      <a href="interview.html" class="submenu-item">Interview Practise</a>
-            <a href="hospital.html" class="submenu-item">Nearby Hospital</a>
-            <a href="dosge.html" class="submenu-item">Dose calculater</a>
+<a href="dosge.html" class="submenu-item">Dosage calculator</a>
+<a href="interview.html" class="submenu-item">Interview Practise</a>
+<a href="cv-maker.html" class="submenu-item">Cv maker <span style="background:#ef4444;color:#fff;font-size:7px;font-weight:800;padding:1px 4px;border-radius:3px;margin-left:4px;animation:pulse-new 1.5s infinite;">NEW</span></a>
+<a href="id.html" class="submenu-item">Medical ID Card <span style="background:#ef4444;color:#fff;font-size:7px;font-weight:800;padding:1px 4px;border-radius:3px;margin-left:4px;animation:pulse-new 1.5s infinite;">NEW</span></a>
     </div>
     <button class="side-link" onclick="toggleSubmenu('posts-menu', this)">
       <div class="side-icon-wrap">
@@ -870,7 +1313,7 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
     <svg viewBox="0 0 24 24">
       <path d="M21 4H7c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14V4zm-2 14H7V6h12v12zM3 6H1v14c0 1.1.9 2 2 2h14v-2H3V6z"/>
     </svg>
-    <span>Important Notes</span>
+    <span>Important Notes <span style="background:#ef4444;color:#fff;font-size:7px;font-weight:800;padding:1px 4px;border-radius:3px;margin-left:4px;animation:pulse-new 1.5s infinite;">NEW</span></span>
   </div>
 </a>
     <hr style="border:0;border-top:1px solid #e2e8f0;margin:10px 20px;">
@@ -888,17 +1331,11 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
     </a>
   </div>
 </div>
-
-<!-- TELEGRAM BUTTON -->
-<div id="tg-widget" class="telegram-floating-container">
-  <button class="telegram-close-btn" onclick="document.getElementById('tg-widget').style.display='none'">&times;</button>
-  <a href="https://t.me/healthjobsportal" target="_blank" class="telegram-btn">
-    <svg viewBox="0 0 24 24" width="32" height="32" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.87 1.18-5.28 3.45-.5.34-.96.51-1.37.5-.45-.01-1.31-.25-1.95-.46-.78-.26-1.4-.4-1.34-.84.03-.22.34-.45.94-.69 3.68-1.59 6.13-2.64 7.35-3.14 3.49-1.45 4.22-1.7 4.7-1.71.11 0 .34.03.47.14.11.09.14.22.15.34-.01.07 0 .16-.01.25z"/></svg>
-  </a>
 </div>
+<!-- ✅ FILTER JAVASCRIPT — FULLY WORKING -->
 
-
-
+<!-- DOWNLOAD POPUP SCRIPT -->
+<!-- DOWNLOAD POPUP SCRIPT -->
 <script>
 (function() {
   // Session Storage: Browser close karne ke baad dobara popup aayega
@@ -1112,6 +1549,61 @@ window.shareImage = async function() {
         btn.innerText = '... more';
     }
 };
+// ── Verified یوزرز کا set بناؤ (5+ پوسٹ والے) ──────────────────
+function buildVerifiedSet() {
+  const countMap = {};
+  (window.postsArr || []).forEach(p => {
+    if (p.status === 'deleted' || p.status === 'inactive') return;
+    const uid = p.posterId || p.authorId;
+    if (!uid) return;
+    countMap[uid] = (countMap[uid] || 0) + 1;
+  });
+  // 5+ پوسٹ والے verified
+  const newVerifiedUids = new Set(
+    Object.keys(countMap).filter(uid => countMap[uid] >= 5)
+  );
+
+  // پرانے اور نئے compare کرو — صرف تبدیلی ہو تو Firestore update کرو
+  const prevVerified = window.verifiedUids || new Set();
+  window.verifiedUids = newVerifiedUids;
+
+  // نئے verified ہونے والے
+  const toVerify = [...newVerifiedUids].filter(uid => !prevVerified.has(uid));
+  // verified سے ہٹنے والے
+  const toUnverify = [...prevVerified].filter(uid => !newVerifiedUids.has(uid));
+
+  if (toVerify.length || toUnverify.length) {
+    syncVerifiedToFirestore(toVerify, toUnverify);
+  }
+}
+
+// ── Firestore میں isVerified field sync کرو ──────────────────────
+async function syncVerifiedToFirestore(toVerify, toUnverify) {
+  if (typeof db === 'undefined') return;
+  try {
+    const batch = writeBatch(db);
+    toVerify.forEach(uid => {
+      batch.update(doc(db, 'users', uid), { isVerified: true });
+    });
+    toUnverify.forEach(uid => {
+      batch.update(doc(db, 'users', uid), { isVerified: false });
+    });
+    await batch.commit();
+    console.log(`Verified sync: +${toVerify.length} verified, -${toUnverify.length} unverified`);
+
+    // Worker KV cache بھی clear کرو تاکہ فوری اثر ہو
+    const allChanged = [...toVerify, ...toUnverify];
+    if (allChanged.length) {
+      fetch('/api/clear-verified-cache', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uids: allChanged })
+      }).catch(() => {});
+    }
+  } catch(e) {
+    console.warn('Verified sync error:', e);
+  }
+}
 </script>
 <!-- CAPACITOR PUSH NOTIFICATIONS -->
 <script>
@@ -1172,8 +1664,24 @@ window.addEventListener("load", async function () {
 
 <!-- ✅ MAIN FIREBASE MODULE SCRIPT -->
 <script type="module">
+  window.shouldSendNotification = async function(uid, type) {
+    return true;
+};
+window.onerror = function(){ return true; };
+window.onunhandledrejection = function(){ return true; };
   const notifSound = new Audio('audio/notifications.mp3');
-  let lastKnownUnreadCount = parseInt(localStorage.getItem('global_unread_chats')) || 0;
+  // ✅ FIX: badge ab per-UID localStorage key mein store hoga, taake doosre account
+  // par switch karne se purana badge "leak" na ho
+  function chatBadgeKey() {
+    let uid = null;
+    try { uid = currentUser && currentUser.uid; } catch (e) { /* TDZ - not declared yet, ignore */ }
+    uid = uid || localStorage.getItem('my_uid');
+    return uid ? ('unread_chats_' + uid) : null;
+  }
+  let lastKnownUnreadCount = (() => {
+    const k = chatBadgeKey();
+    return k ? (parseInt(localStorage.getItem(k)) || 0) : 0;
+  })();
 window.updateChatBadgeWithSound = function (newCount, isInitialLoad = false) {
     let homeBadge = document.getElementById('chat-badge');
     
@@ -1207,7 +1715,7 @@ window.updateChatBadgeWithSound = function (newCount, isInitialLoad = false) {
             // ✅ Ring SIRF tab jab naye messages aaye (count बढ़ा)
             if (newCount > lastKnownUnreadCount) {
                 homeBadge.classList.add('pop');
-                setTimeout(() => homeBadge.classList.remove('pop'), 200);
+                setTimeout(() => homeBadge.classList.remove('pop'), 250);
                 notifSound.play().catch(e => console.log("Sound blocked:", e));
             }
         } else {
@@ -1222,23 +1730,25 @@ window.updateChatBadgeWithSound = function (newCount, isInitialLoad = false) {
     lastKnownUnreadCount = newCount;
 };
   window.addEventListener('load', () => {
-    let unreadCount = parseInt(localStorage.getItem('global_unread_chats')) || 0;
+    const k = chatBadgeKey();
+    let unreadCount = k ? (parseInt(localStorage.getItem(k)) || 0) : 0;
     window.updateChatBadgeWithSound(unreadCount, true);
   });
 
   // ✅ Badge update - localStorage + Realtime DB dono se
 window.addEventListener('storage', (e) => {
-    if (e.key === 'global_unread_chats') {
-        let unreadCount = parseInt(localStorage.getItem('global_unread_chats')) || 0;
+    const k = chatBadgeKey();
+    if (k && e.key === k) {
+        let unreadCount = parseInt(localStorage.getItem(k)) || 0;
         window.updateChatBadgeWithSound(unreadCount);
     }
 });
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getDatabase, ref as dbRef, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+  import { getDatabase, ref as dbRef, onValue, set, onDisconnect, serverTimestamp as rtServerTimestamp, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
   import { getMessaging, getToken, isSupported } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
-  import { initializeFirestore, persistentLocalCache, collection, query, orderBy, limit, startAfter, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove, addDoc, serverTimestamp, deleteDoc, onSnapshot, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { initializeFirestore, persistentLocalCache, collection, query, where, orderBy, limit, startAfter, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove, addDoc, serverTimestamp, deleteDoc, onSnapshot, increment, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
   const mainConfig = {
     apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
@@ -1293,7 +1803,7 @@ if (
   localStorage.removeItem('trending_cache_html');
   localStorage.removeItem('trending_cache_time');
   if (typeof loadTrendingPosts === 'function') loadTrendingPosts(true);
-  console.log('🗑️ Post removed from UI:', pid);
+
 
 } else {
   localStorage.removeItem('trending_cache_html');
@@ -1347,6 +1857,26 @@ async function loadTrendingPosts() {
 
   const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
   const now = Date.now();
+  // ✅ 2 ghante ka cache check
+  const TCACHE = localStorage.getItem('trending_cache');
+  if (TCACHE) {
+    try {
+      const parsed = JSON.parse(TCACHE);
+      if ((now - parsed.time) < TWO_HOURS_MS && parsed.html) {
+        trendingList.innerHTML = parsed.html;
+        trendingSection.style.display = 'block';
+        // Available jobs count — postsArr سے، کوئی Firestore read نہیں
+const now2 = Date.now();
+const availCount = (window.postsArr || []).filter(p => 
+  (p.type === 'employer_post' || p.type === 'candidate_post') &&
+  p.status !== 'deleted' && p.status !== 'inactive'
+).length;
+const countEl = document.getElementById('jobs-avail-count');
+if (countEl) countEl.innerText = availCount;
+        return; // ✅ Firestore read nahi hogi
+      }
+    } catch(e) {}
+  }
 
   // Sirf 2+ ghante purane posts ko trending mein show karo
   // yaani createdAt <= (now - 2hours)
@@ -1354,35 +1884,15 @@ async function loadTrendingPosts() {
 
   try {
     // Zyada posts fetch karo taake 2hr filter ke baad bhi 5 milein
-    const qTrend = query(
-      collection(db, "posts"),
-      orderBy("createdAt", "desc"),
-      limit(50)
-    );
-
-    const snap = await getDocs(qTrend);
-
-    if (snap.empty) {
-      trendingSection.style.display = 'none';
-      return;
-    }
-
+const arr = window.postsArr || [];
     const todayDay = new Date().getDate();
     let htmlStr = "";
     let count = 0;
 
-    snap.forEach(docSnap => {
+    arr.forEach(p => {
       if (count >= 5) return;
-
-      const p = docSnap.data();
-      let postTime = p.createdAt
-        ? (p.createdAt.toMillis ? p.createdAt.toMillis() : p.createdAt)
-        : 0;
-
-      // ✅ SIRF 2 ghante ya usse purane posts trending mein aayein
+      const postTime = p.createdAt || 0;
       if (postTime > twoHoursAgo) return;
-
-      // Deleted/inactive skip
       if (p.status === 'inactive' || p.status === 'deleted') return;
 
       const title = p.title || (p.desc ? p.desc.substring(0, 45) + "..." : "Medical Update");
@@ -1390,15 +1900,14 @@ async function loadTrendingPosts() {
       const pic = p.posterPic || p.authorPic ||
         `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
 
-      // Fake views based on post ID (consistent har refresh mein)
       let charCodeSum = 0;
-      for (let i = 0; i < docSnap.id.length; i++) charCodeSum += docSnap.id.charCodeAt(i);
+      for (let i = 0; i < p.id.length; i++) charCodeSum += p.id.charCodeAt(i);
       const fakeViews = ((charCodeSum * todayDay * 17) % 800) + 200;
 
       const graphIcon = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="margin-right:4px;margin-top:-1px;"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z"/></svg>`;
 
       htmlStr += `
-        <div class="trend-item" onclick="handlePostClick('${docSnap.id}','${p.type || 'general_post'}')">
+        <div class="trend-item" onclick="handlePostClick('${p.id}','${p.type || 'general_post'}')">
           <img src="${pic}" class="trend-pic" onerror="this.src='https://ui-avatars.com/api/?name=U'">
           <div class="trend-info">
             <div class="trend-title">${title}</div>
@@ -1411,15 +1920,19 @@ async function loadTrendingPosts() {
       count++;
     });
 
-    if (count < 3) {
-      // Agar 3 se kam posts milein toh trending section hide karo
+if (count < 3) {
       trendingSection.style.display = 'none';
     } else {
       trendingList.innerHTML = htmlStr;
       trendingSection.style.display = 'block';
+      try {
+        localStorage.setItem('trending_cache', JSON.stringify({
+          time: now,
+          html: htmlStr
+        }));
+      } catch(e) {}
     }
-
-  } catch (e) {
+  } catch (e) {   // ← outer catch
     console.error("Trending load error:", e);
     trendingSection.style.display = 'none';
   }
@@ -1444,7 +1957,13 @@ const link = sharePost?.slug
     ? window.location.origin + (shareType === 'general_post' ? '/updates/' : '/jobs/') + sharePost.slug
     : window.location.origin + '/' + (shareType === 'general_post' ? 'details.html' : 'posts.html') + '?id=' + window.currentShareId;
     const title = sharePost?.title ? '📢 ' + sharePost.title + '\n' : 'Health Jobs Portal\n';
-    const desc = sharePost?.desc ? sharePost.desc.substring(0, 100) + '...\n\n' : '';
+    const tempDiv = document.createElement('div');
+
+tempDiv.innerHTML = sharePost?.desc || '';
+
+const plainDesc = tempDiv.textContent || tempDiv.innerText || '';
+
+const desc = plainDesc ? plainDesc.substring(0, 100) + '...\n\n' : '';
     const text = title + desc + 'Check details here: ' + link;
     if (platform === 'copy') { 
         navigator.clipboard.writeText(link).then(() => alert('Link copied!')); 
@@ -1605,11 +2124,13 @@ window.triggerLiveSearch = () => {
     resultsBox.innerHTML = finalResults.map(r => {
       const isUser = r.type === 'user' || r.type === 'profile';
       const foundPost = (window.postsArr || []).find(p => p.id === r.id);
+const postSlug = foundPost?.slug || r.slug;
+const postType = foundPost?.type || r.type;
 const link = isUser
     ? 'wid.html?uid=' + r.id
-    : (foundPost?.slug
-        ? (foundPost.type === 'general_post' ? '/updates/' : '/jobs/') + foundPost.slug
-        : (r.type === 'general_post' 
+    : (postSlug
+        ? (postType === 'general_post' ? '/updates/' : '/jobs/') + postSlug
+        : (postType === 'general_post' 
             ? 'details.html?id=' + r.id 
             : 'posts.html?id=' + r.id));
       let dateStr = '';
@@ -1639,7 +2160,21 @@ const link = isUser
       btn.classList.remove('active');
     }
   });
-
+// ✅ Jobs count — Realtime DB سے صرف 1 read
+const jobsCountRef = dbRef(dbRT, 'jobs_count');
+onValue(jobsCountRef, (snap) => {
+  const count = snap.val() || 0;
+  const el = document.getElementById('jobs-avail-count');
+  if (!el) return;
+  let start = 0;
+  const duration = 800;
+  const step = Math.ceil(count / (duration / 30));
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= count) { start = count; clearInterval(timer); }
+    el.innerText = start;
+  }, 30);
+});
   // SEARCH INDEX
   const searchIndexRef = dbRef(dbRT, 'search_index');
 onValue(searchIndexRef, (snapshot) => {
@@ -1674,22 +2209,47 @@ window.loadInitialPosts = function () {
         return;
     }
 
-    const TEN_MINUTES = 10 * 60 * 1000;
-    if (localStorage.getItem('last_active_time') && (Date.now() - parseInt(localStorage.getItem('last_active_time')) > TEN_MINUTES)) {
+    const THIRTY_MINUTES = 30 * 60 * 1000;
+    if (localStorage.getItem('last_active_time') && (Date.now() - parseInt(localStorage.getItem('last_active_time')) > THIRTY_MINUTES)) {
         localStorage.removeItem(CACHE_KEY);
     }
 
-    const cachedDataStr = localStorage.getItem(CACHE_KEY);
+const cachedDataStr = localStorage.getItem(CACHE_KEY);
     if (cachedDataStr) {
         try {
             const cached = JSON.parse(cachedDataStr);
             window.postsArr = cached;
             postsArr = window.postsArr;
-            if (window.catActive !== 'all' || window.timeActive !== 'all') {
-                if (typeof window.renderFiltered === 'function') window.renderFiltered();
-            } else {
-                renderEverything();
+
+            const feed = document.getElementById('feed');
+            if (feed && feed.children.length === 0) {
+                // ✅ پہلے skeleton دکھاؤ
+                feed.innerHTML = [1,2,3,4].map(() => `
+                  <div class="skeleton-card">
+                    <div class="sk-header">
+                      <div class="skeleton-line sk-avatar"></div>
+                      <div style="flex:1;">
+                        <div class="skeleton-line" style="height:13px;width:55%;margin-bottom:8px;"></div>
+                        <div class="skeleton-line" style="height:11px;width:38%;"></div>
+                      </div>
+                    </div>
+                    <div class="skeleton-line" style="height:14px;width:80%;margin-bottom:8px;"></div>
+                    <div class="skeleton-line" style="height:14px;width:65%;margin-bottom:8px;"></div>
+                    <div class="skeleton-line" style="height:14px;width:72%;margin-bottom:12px;"></div>
+                    <div class="skeleton-line sk-img"></div>
+                  </div>`).join('');
+
+                // ✅ 300ms بعد real posts render کرو
+                setTimeout(() => {
+                    feed.innerHTML = '';
+                    buildVerifiedSet();
+                    cached.forEach(p => appendPostToDOM(p));
+                    generateTopPosters();
+                    loadNewsTicker();
+                    loadTrendingPosts();
+                }, 300);
             }
+
             document.getElementById('loading').classList.add('hidden');
             startLiveSync();
         } catch (e) {
@@ -1698,18 +2258,44 @@ window.loadInitialPosts = function () {
             window.postsArr = [];
             startLiveSync();
         }
-    } else {
+} else {
         postsArr = [];
         window.postsArr = [];
-        document.getElementById('feed').innerHTML = "";
-        document.getElementById('loading').classList.remove('hidden');
+        // ✅ Skeleton cards دکھاؤ — blank page نہیں
+        const feed = document.getElementById('feed');
+        feed.innerHTML = [1,2,3,4].map(() => `
+          <div class="skeleton-card">
+            <div class="sk-header">
+              <div class="skeleton-line sk-avatar"></div>
+              <div style="flex:1;">
+                <div class="skeleton-line" style="height:13px;width:55%;margin-bottom:8px;"></div>
+                <div class="skeleton-line" style="height:11px;width:38%;"></div>
+              </div>
+            </div>
+            <div class="skeleton-line" style="height:14px;width:80%;margin-bottom:8px;"></div>
+            <div class="skeleton-line" style="height:14px;width:65%;margin-bottom:8px;"></div>
+            <div class="skeleton-line" style="height:14px;width:72%;margin-bottom:12px;"></div>
+            <div class="skeleton-line sk-img"></div>
+          </div>`).join('');
+        document.getElementById('loading').classList.add('hidden');
         startLiveSync();
     }
 };
 
+let syncRetryCount = 0;
+let syncUnsubscribe = null;
+
 function startLiveSync() {
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(20));
-    onSnapshot(q, (snapshot) => {
+  if (syncUnsubscribe) {
+    try { syncUnsubscribe(); } catch(e) {}
+    syncUnsubscribe = null;
+  }
+
+  const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(20));
+
+  try {
+    syncUnsubscribe = onSnapshot(q, (snapshot) => {
+      syncRetryCount = 0;
         if (snapshot.empty) {
             document.getElementById('feed').innerHTML = '<div style="text-align:center;padding:60px;color:#64748b;"><div style="font-size:50px;margin-bottom:15px;">📭</div><div style="font-size:16px;font-weight:700;">No Posts Yet</div><div style="font-size:13px;margin-top:5px;">Be the first to share a healthcare update!</div></div>';
             document.getElementById('loading').classList.add('hidden');
@@ -1727,25 +2313,86 @@ function startLiveSync() {
                 livePosts.push({ id: docItem.id, ...data });
             }
         });
+// ── New Post Notification ─────────────────────────────────────────
+// ── New Post Notification with Settings Check ─────────────────────
+const lastSeenPostTime = parseInt(localStorage.getItem('last_seen_post_time')) || 0;
 
+if (lastSeenPostTime > 0 && currentUser?.uid) {
+    livePosts.forEach(async (p) => {
+        const postTime = p.createdAt || 0;
+        if (
+            postTime > lastSeenPostTime &&
+            p.posterId !== currentUser.uid &&
+            p.authorId !== currentUser.uid
+        ) {
+            const alreadyNotified = localStorage.getItem('notif_sent_' + p.id);
+            if (alreadyNotified) return;
+            
+            // ✅ CHECK IF USER WANTS NEW POST NOTIFICATIONS
+            const canSend = await window.shouldSendNotification(currentUser.uid, 'new_post');
+            if (!canSend) return;
+
+            try {
+                await addDoc(collection(db, "notifications"), {
+                    toUid: currentUser.uid,
+                    fromUid: p.posterId || p.authorId || "system",
+                    fromName: p.posterName || p.authorName || "Healthcare User",
+                    fromPic: p.posterPic || p.authorPic || "",
+                    type: "new_post",
+                    postId: p.id,
+                    postSlug: p.slug || "",
+                    postType: p.type || "general_post",
+                    message: "shared a new post",
+                    createdAt: Date.now(),
+                    read: false
+                });
+                localStorage.setItem('notif_sent_' + p.id, '1');
+            } catch(e) {
+                
+            }
+        }
+    });
+}
+
+if (livePosts.length > 0) {
+    const latestTime = Math.max(...livePosts.map(p => p.createdAt || 0));
+    if (latestTime > lastSeenPostTime) {
+        localStorage.setItem('last_seen_post_time', latestTime.toString());
+    }
+}
+// ─────────────────────────────────────────────────────────────────
         const feed = document.getElementById('feed');
         const existingCards = feed.querySelectorAll('.post-card');
 
-        if (existingCards.length === 0 || !localStorage.getItem(CACHE_KEY)) {
-            feed.innerHTML = '';
-            livePosts.forEach(p => appendPostToDOM(p));
-            document.getElementById('loading').classList.add('hidden');
+        const isFiltered = (window.catActive && window.catActive !== 'all') ||
+                         (window.timeActive && window.timeActive !== 'all');
+
+      if (existingCards.length === 0 || !localStorage.getItem(CACHE_KEY)) {
+        feed.innerHTML = '';
+        if (isFiltered) {
+          // فلٹر لگا ہے — filtered render کرو
+          if (typeof window.renderFiltered === 'function') window.renderFiltered();
         } else {
-            livePosts.forEach(p => {
-                if (!document.getElementById('card-' + p.id)) {
-                    appendPostToDOM(p);
-                    const newCard = document.getElementById('card-' + p.id);
-                    if (newCard && feed.firstChild) {
-                        feed.insertBefore(newCard, feed.firstChild);
-                    }
-                }
-            });
+          livePosts.forEach(p => appendPostToDOM(p));
         }
+        document.getElementById('loading').classList.add('hidden');
+      } else {
+        livePosts.forEach(p => {
+          if (!document.getElementById('card-' + p.id)) {
+            if (!isFiltered) {
+              appendPostToDOM(p);
+              const newCard = document.getElementById('card-' + p.id);
+              if (newCard && feed.firstChild) {
+                feed.insertBefore(newCard, feed.firstChild);
+              }
+            }
+          }
+        });
+        // فلٹر لگا ہے تو re-render کرو
+        if (isFiltered) {
+          if (typeof window.renderFiltered === 'function') window.renderFiltered();
+        }
+      }
 
         const restOfPosts = postsArr.filter(p => !snapshotIds.includes(p.id));
         const updatedArr = [...livePosts, ...restOfPosts].filter(p => p.status !== 'deleted');
@@ -1771,12 +2418,44 @@ function startLiveSync() {
         } else {
             badge.classList.add('hidden');
         }
+buildVerifiedSet();
 
-        generateTopPosters();
-    }, (error) => {
+const wrapper = document.getElementById('main-content-wrapper');
+
+const splash = document.getElementById('custom-splash');
+if (splash) {
+  splash.style.opacity = '0';
+  setTimeout(() => {
+    splash.style.display = 'none';
+  }, 400);
+} else {
+  if (wrapper) wrapper.classList.add('ready');
+}
+
+generateTopPosters();
+loadNewsTicker();
+        // Available jobs count — real-time update
+        const availCount = (window.postsArr || []).filter(p => 
+          (p.type === 'employer_post' || p.type === 'candidate_post') &&
+          p.status !== 'deleted' && p.status !== 'inactive'
+        ).length;
+        const countEl = document.getElementById('jobs-avail-count');
+        if (countEl) countEl.innerText = availCount;  
+}, (error) => {
         console.error("Live sync error:", error);
-        document.getElementById('loading').innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;"><div style="font-size:40px;margin-bottom:10px;">⚠️</div>Error loading posts.<br><button onclick="location.reload()" style="margin-top:15px;padding:10px 25px;background:#0a66c2;color:#fff;border:none;border-radius:20px;font-weight:600;cursor:pointer;">🔄 Refresh Page</button></div>';
+        // ✅ بند نہیں ہوگا — خود retry کرے گا
+        const delays = [1000, 2000, 4000, 8000, 15000, 30000];
+        const delay = delays[Math.min(syncRetryCount, delays.length - 1)];
+        syncRetryCount++;
+        console.log(`Retry ${syncRetryCount} in ${delay/1000}s...`);
+        setTimeout(() => startLiveSync(), delay);
     });
+  } catch(e) {
+    console.error("startLiveSync crash:", e);
+    const delay = Math.min(30000, 1000 * Math.pow(2, syncRetryCount));
+    syncRetryCount++;
+    setTimeout(() => startLiveSync(), delay);
+  }
 }
 
   async function fetchMorePosts() {
@@ -1835,7 +2514,7 @@ function startLiveSync() {
       // ✅ Cache update karo
       localStorage.setItem(CACHE_KEY, JSON.stringify(postsArr.slice(0, 100)));
 
-      console.log(`✅ ${newAdded} nai posts load hui`);
+      
 
     } catch (e) {
       console.error("fetchMorePosts error:", e);
@@ -1864,6 +2543,7 @@ function startLiveSync() {
   });
 
   function renderEverything() {
+    buildVerifiedSet(); // ← یہاں add کرو
     if (userCity && postsArr.length > 0) {
       const cityLower = userCity.toLowerCase().trim();
       const userWords = cityLower.split(/[\s,]+/).filter(w => w.length > 2);
@@ -1888,6 +2568,13 @@ function startLiveSync() {
     document.getElementById('no-res').classList.toggle('hidden', postsArr.length !== 0);
     postsArr.forEach(p => appendPostToDOM(p));
     generateTopPosters();
+    // Available jobs count update
+    const availCount = (window.postsArr || []).filter(p => 
+      (p.type === 'employer_post' || p.type === 'candidate_post') &&
+      p.status !== 'deleted' && p.status !== 'inactive'
+    ).length;
+    const countEl = document.getElementById('jobs-avail-count');
+    if (countEl) countEl.innerText = availCount;
   }
 
   function appendPostToDOM(p) {
@@ -1926,12 +2613,22 @@ const locCat = pType === 'general_post'
     card.id = `card-${p.id}`;
     card.innerHTML = `
       <div class="post-header" onclick="location.href='wid.html?uid=${p.posterId || p.authorId}'">
-        <img src="${posterPic}" class="post-avatar" width="44" height="44" loading="lazy" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+<div class="post-avatar-wrap">
+<img src="${posterPic}" class="post-avatar" width="44" height="44" loading="lazy"
+    onload="this.classList.add('img-loaded')"
+    onerror="this.src='https://ui-avatars.com/api/?name=U';this.classList.add('img-loaded')">
+  ${(window.verifiedUids || new Set()).has(p.posterId || p.authorId) ? `
+  <div class="verified-badge" title="Active Contributor">
+    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  </div>` : ''}
+</div>
         <div><div class="user-name">${posterName}</div><div class="post-loc-info">${locCat}</div></div>
       </div>
 <div class="post-content">
         ${p.title ? `<div class="post-title" onclick="handlePostClick('${p.id}','${pType}')">${p.title}</div>` : ''}
-        <div class="post-desc" id="desc-${p.id}" onclick="handlePostClick('${p.id}','${pType}')">${escapeHtml(p.desc)}</div>
+<div class="post-desc" id="desc-${p.id}" onclick="...">
+    ${p.desc || ''}
+</div>
         <button class="read-more-btn" id="more-${p.id}" onclick="event.stopPropagation();toggleDesc('${p.id}')">... more</button>
         ${linkHTML}
       </div>
@@ -1952,7 +2649,16 @@ const locCat = pType === 'general_post'
           <button class="cmt-btn-send" onclick="sendLocalCmt('${p.id}')">Post</button>
         </div>
       </div>`;
-
+// Enter key support
+const cmtInput = card.querySelector(`#cmt-in-${p.id}`);
+if (cmtInput) {
+    cmtInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            window.sendLocalCmt(p.id);
+        }
+    });
+}
 feed.appendChild(card);
     requestAnimationFrame(() => {
       const descEl = document.getElementById('desc-' + p.id);
@@ -1964,30 +2670,115 @@ feed.appendChild(card);
     });
   }
   function generateTopPosters() {
-    let userCounts = {}; let userDetails = {};
-    postsArr.forEach(p => {
-      let uid = p.posterId || p.authorId;
-      if (uid) {
-        userCounts[uid] = (userCounts[uid] || 0) + 1;
-        if (!userDetails[uid]) userDetails[uid] = {
-          name: p.posterName || p.authorName || p.fullName || p.facilityName || 'User',
-          pic: p.posterPic || p.authorPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.posterName || 'U')}`
-        };
-      }
-    });
-    let topUsers = Object.keys(userCounts).filter(uid => userCounts[uid] >= 2)
-      .map(uid => ({ uid, count: userCounts[uid], ...userDetails[uid] }))
-      .sort((a, b) => b.count - a.count);
-    const wrap = document.getElementById('top-posters-wrap');
+  const POSTERS_CACHE_KEY = 'hjp_top_posters_v2';
+  const CACHE_TTL = 25 * 60 * 1000; // 25 منٹ
+
+  // ── Helper: DOM میں render کرو ──────────────────────────────────
+  function renderTopPosters(users) {
+    const wrap  = document.getElementById('top-posters-wrap');
     const track = document.getElementById('top-posters-track');
-    if (topUsers.length === 0) { wrap.style.display = 'none'; return; }
+    if (!wrap || !track) return;
+
+    if (!users || users.length === 0) {
+      wrap.style.display = 'none';
+      return;
+    }
+
     wrap.style.display = 'block';
     let htmlStr = '';
-    topUsers.forEach(u => {
-      htmlStr += `<div class="top-poster-item" onclick="location.href='wid.html?uid=${u.uid}'"><div class="top-poster-ring"><img src="${u.pic}" alt="${u.name}"></div><span class="top-poster-name">${u.name.split(' ')[0]}</span></div>`;
+    users.forEach(u => {
+      const firstName = (u.name || u.t || 'User').split(' ')[0];
+      const pic = u.pic || u.p ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName)}`;
+      const uid = u.uid || u.id;
+const isVerified = (window.verifiedUids || new Set()).has(uid);
+htmlStr += `
+  <div class="top-poster-item" onclick="location.href='wid.html?uid=${uid}'">
+    <div class="top-poster-ring-wrap">
+      <div class="top-poster-ring">
+        <img src="${pic}" alt="${firstName}"
+          onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(firstName)}'">
+      </div>
+      ${isVerified ? `
+      <div class="verified-badge" title="Active Contributor">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>` : ''}
+    </div>
+    <span class="top-poster-name">${firstName}</span>
+  </div>`;
     });
-    track.innerHTML = htmlStr + htmlStr + htmlStr;
+
+    // تین بار دہراؤ تاکہ marquee smooth لگے
+// پہلے opacity 0 کرو
+track.style.opacity = '0';
+track.style.transition = 'none';
+track.innerHTML = htmlStr + htmlStr + htmlStr;
+
+// پھر smoothly fade in کرو
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    track.style.transition = 'opacity 0.5s ease';
+    track.style.opacity = '1';
+  });
+});
   }
+
+  // ── Step 1: Cache چیک کرو ───────────────────────────────────────
+  try {
+    const cached = localStorage.getItem(POSTERS_CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (parsed.t && (Date.now() - parsed.t) < CACHE_TTL && parsed.d?.length > 0) {
+        renderTopPosters(parsed.d);
+        return; // ✅ cache سے، کوئی read نہیں
+      }
+    }
+  } catch(e) {}
+
+  // ── Step 2: search_index سے سب یوزرز لو (پہلے سے loaded ہے) ───
+  // window.searchIndexData پہلے سے onValue سے fill ہو چکا ہے
+  const allUsers = (window.searchIndexData || []).filter(u => 
+    u.type === 'profile' || u.type === 'user'
+  );
+
+  if (allUsers.length === 0) {
+    // ابھی لوڈ نہیں ہوا — 1.5 سیکنڈ بعد دوبارہ
+    setTimeout(generateTopPosters, 1500);
+    return;
+  }
+
+  // ── Step 3: ایک جیسا پہلا نام ہو تو صرف 2 رکھو ────────────────
+  const nameTracker = {};
+  const finalUsers  = [];
+
+  // Shuffle کرو تاکہ ہر بار مختلف یوزرز آئیں
+  const shuffled = [...allUsers].sort(() => Math.random() - 0.5);
+
+  shuffled.forEach(u => {
+    const name = u.t || u.name || 'User';
+    const firstName = name.trim().split(' ')[0].toLowerCase();
+    const seen = nameTracker[firstName] || 0;
+    if (seen < 2) {
+      finalUsers.push({
+        uid:  u.id  || u.uid,
+        name: name,
+        pic:  u.pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}`
+      });
+      nameTracker[firstName] = seen + 1;
+    }
+  });
+
+  // ── Step 4: Cache میں محفوظ کرو ────────────────────────────────
+  try {
+    localStorage.setItem(POSTERS_CACHE_KEY, JSON.stringify({
+      t: Date.now(),
+      d: finalUsers
+    }));
+  } catch(e) {}
+
+  // ── Step 5: Render کرو ──────────────────────────────────────────
+  renderTopPosters(finalUsers);
+}
 
 function renderCollage(media) {
   const images = media.filter(m => m.type === 'image' || !m.type);
@@ -2026,9 +2817,10 @@ style="width:100%;max-height:400px;display:block;object-fit:cover;cursor:pointer
   for (let i = 0; i < Math.min(count, 3); i++) {
     const url = images[i].url || images[i];
     const overlay = (i === 2 && count > 3) ? `<div class="more-imgs-overlay" data-count="${count - 2}">` : `<div>`;
-    html += `${overlay}
+html += `${overlay}
       <div style="position:relative;width:100%;height:100%;">
-        <img src="${url}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;"
+        <img src="${url}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;"
+          onload="this.classList.add('img-loaded')"
           onclick="openLightbox('${url}', ${i}, '${allUrls}')">
         <button onclick="event.stopPropagation();openImgMenu('${url}')"
           style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.5);border:none;
@@ -2045,22 +2837,68 @@ style="width:100%;max-height:400px;display:block;object-fit:cover;cursor:pointer
   return html;
 }
 
-  window.doLike = async (pid, btn) => {
+window.doLike = async (pid, btn) => {
     if (!currentUser) return window.location.href = 'login.html';
     const isL = btn.classList.contains('liked');
     btn.classList.toggle('liked');
     const countEl = document.getElementById(`l-count-${pid}`);
     countEl.innerText = (parseInt(countEl.innerText) + (isL ? -1 : 1)) + " Likes";
-    await updateDoc(doc(db, "posts", pid), { likes: isL ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid) });
+
+    await updateDoc(doc(db, "posts", pid), { 
+        likes: isL ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid) 
+    });
+
+    // Cache update
     let postIndex = postsArr.findIndex(p => p.id === pid);
     if (postIndex > -1) {
-      if (!postsArr[postIndex].likes) postsArr[postIndex].likes = [];
-      postsArr[postIndex].likes = isL
-        ? postsArr[postIndex].likes.filter(id => id !== currentUser.uid)
-        : [...postsArr[postIndex].likes, currentUser.uid];
-      localStorage.setItem(CACHE_KEY, JSON.stringify(postsArr.slice(0, 50)));
+        if (!postsArr[postIndex].likes) postsArr[postIndex].likes = [];
+        postsArr[postIndex].likes = isL
+            ? postsArr[postIndex].likes.filter(id => id !== currentUser.uid)
+            : [...postsArr[postIndex].likes, currentUser.uid];
+        localStorage.setItem(CACHE_KEY, JSON.stringify(postsArr.slice(0, 50)));
     }
-  };
+
+    // Like notification — صرف like کرتے وقت، unlike نہیں
+    // Like notification with settings check
+if (!isL) {
+    try {
+        const likedPost = postsArr.find(p => p.id === pid);
+        const ownerId = likedPost?.posterId;
+        if (ownerId && ownerId !== currentUser.uid) {
+const canSend = await window.shouldSendNotification(ownerId, 'message');
+            if (canSend) {
+                await addDoc(collection(db, "notifications"), {
+                    toUid: ownerId,
+                    fromUid: currentUser.uid,
+                    fromName: currentUserProfile?.name || "Someone",
+                    fromPic: currentUserProfile?.pic || "",
+                    type: "like",
+                    postId: pid,
+                    message: "liked your post",
+                    createdAt: Date.now(),
+                    read: false
+                });
+
+                // ✅ Push Notification via server
+                fetch('https://notication-healthjobs.vercel.app/api/reaction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type:        'like',
+                        postId:      pid,
+                        postSlug:    likedPost?.slug || '',
+                        postTitle:   likedPost?.title || '',
+                        postOwnerId: ownerId,
+                        actorName:   currentUserProfile?.name || 'Someone',
+                        actorUid:    currentUser.uid,
+                        actorPhoto:  currentUserProfile?.pic || ''
+                    })
+                }).catch(() => {});
+            }
+        }
+    } catch(e) {  }
+}
+};
 window.toggleDesc = function(pid) {
     const desc = document.getElementById('desc-' + pid);
     const btn = document.getElementById('more-' + pid);
@@ -2069,75 +2907,658 @@ window.toggleDesc = function(pid) {
     desc.classList.toggle('expanded', !isExpanded);
     btn.innerText = isExpanded ? '... more' : 'Show less';
   };
-  window.toggleLocalCmts = (pid) => {
-    if (!currentUser) return window.location.href = 'login.html';
-    const box = document.getElementById(`cmt-box-${pid}`);
-    box.style.display = box.style.display === 'block' ? 'none' : 'block';
-    if (box.style.display === 'block') {
-      const list = document.getElementById(`cmt-list-${pid}`);
-      list.innerHTML = "<div style='text-align:center;padding:10px;color:#888;'>Loading...</div>";
-      onSnapshot(query(collection(db, "posts", pid, "comments"), orderBy("createdAt", "asc")), (snap) => {
-        list.innerHTML = "";
-        document.getElementById(`c-count-${pid}`).innerText = snap.size + " Comments";
+// ── Active Listeners ──────────────────────────────────────────────
+const activeCommentListeners = {};
+
+// ── Context Menu ──────────────────────────────────────────────────
+window.closeCmtCtxMenu = function() {
+  const m = document.getElementById('cmt-ctx-global');
+  if (m) m.remove();
+};
+document.addEventListener('click', window.closeCmtCtxMenu);
+
+function showCmtCtxMenu(e, pid, cid, isMe) {
+  closeCmtCtxMenu();
+  if (!isMe) return;
+  e.preventDefault();
+  e.stopPropagation();
+
+  const menu = document.createElement('div');
+  menu.className = 'cmt-ctx-menu';
+  menu.id = 'cmt-ctx-global';
+  menu.innerHTML = `
+    <div class="cmt-ctx-item"
+      onclick="closeCmtCtxMenu();editLocalCmt('${pid}','${cid}')">Edit</div>
+    <div class="cmt-ctx-item danger"
+      onclick="closeCmtCtxMenu();deleteLocalCmt('${pid}','${cid}')">Delete</div>`;
+
+  let x = e.clientX || (e.touches?.[0]?.clientX) || 80;
+  let y = e.clientY || (e.touches?.[0]?.clientY) || 80;
+  menu.style.left = Math.min(x, window.innerWidth - 160) + 'px';
+  menu.style.top  = Math.min(y, window.innerHeight - 100) + 'px';
+  document.body.appendChild(menu);
+  setTimeout(() => document.addEventListener('click', closeCmtCtxMenu, { once: true }), 50);
+}
+
+// ── Comment Like / Dislike ────────────────────────────────────────
+window.toggleCmtReaction = async function(pid, cid, type, btnEl) {
+  if (!currentUser) return location.href = 'login.html';
+  const uid = currentUser.uid;
+
+  const lBtn   = document.getElementById('lbtn-' + cid);
+  const dBtn   = document.getElementById('dbtn-' + cid);
+  const lCount = document.getElementById('lcount-' + cid);
+  const dCount = document.getElementById('dcount-' + cid);
+
+  const wasLiked    = lBtn?.classList.contains('active');
+  const wasDisliked = dBtn?.classList.contains('active');
+
+  if (type === 'like') {
+    const nowLiked = !wasLiked;
+    lBtn?.classList.toggle('active', nowLiked);
+    dBtn?.classList.remove('active');
+    if (lCount) lCount.innerText = nowLiked
+      ? (parseInt(lCount.innerText || '0') + 1) || 1
+      : Math.max(0, parseInt(lCount.innerText || '1') - 1) || '';
+    if (wasDisliked && dCount) dCount.innerText = Math.max(0, parseInt(dCount.innerText || '1') - 1) || '';
+  } else {
+    const nowDisliked = !wasDisliked;
+    dBtn?.classList.toggle('active', nowDisliked);
+    lBtn?.classList.remove('active');
+    if (dCount) dCount.innerText = nowDisliked
+      ? (parseInt(dCount.innerText || '0') + 1) || 1
+      : Math.max(0, parseInt(dCount.innerText || '1') - 1) || '';
+    if (wasLiked && lCount) lCount.innerText = Math.max(0, parseInt(lCount.innerText || '1') - 1) || '';
+  }
+
+  try {
+    const cmtRef = doc(db, "posts", pid, "comments", cid);
+    const snap = await getDoc(cmtRef);
+    if (!snap.exists()) return;
+    const data = snap.data();
+    let likes    = data.likes    || [];
+    let dislikes = data.dislikes || [];
+
+    if (type === 'like') {
+      likes    = likes.includes(uid) ? likes.filter(u => u !== uid) : [...likes, uid];
+      dislikes = dislikes.filter(u => u !== uid);
+    } else {
+      dislikes = dislikes.includes(uid) ? dislikes.filter(u => u !== uid) : [...dislikes, uid];
+      likes    = likes.filter(u => u !== uid);
+    }
+    await updateDoc(cmtRef, { likes, dislikes });
+  } catch(e) { console.error("Reaction error:", e); }
+};
+
+// ── Reply Box ─────────────────────────────────────────────────────
+window.showReplyBox = function(pid, parentCid, toName) {
+  document.querySelectorAll('.reply-input-row').forEach(b => b.remove());
+
+  const row = document.createElement('div');
+  row.className = 'reply-input-row';
+  row.id = 'reply-row-' + parentCid;
+  row.innerHTML = `
+    <input class="reply-input" id="reply-in-${parentCid}"
+      placeholder="Reply to ${escapeHtml(toName)}..." maxlength="300">
+    <button class="reply-send-btn"
+      onclick="sendReply('${pid}','${parentCid}')">Send</button>`;
+
+  // ✅ Reply row — toggle button ke baad ya comment ke baad lagao
+  const togBtn  = document.getElementById('replies-toggle-' + parentCid);
+  const replList = document.getElementById('replies-list-' + parentCid);
+  const cmtItem = document.getElementById('cmt-item-' + parentCid);
+
+  if (replList) {
+    replList.after(row);
+  } else if (togBtn) {
+    togBtn.after(row);
+  } else if (cmtItem) {
+    cmtItem.after(row);
+  }
+
+  const inp = document.getElementById('reply-in-' + parentCid);
+  if (inp) {
+    inp.focus();
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        window.sendReply(pid, parentCid);
+      }
+    });
+  }
+};
+
+// ✅ Reply بھیجنا — Optimistic UI سے فوری شو
+window.sendReply = async function(pid, parentCid) {
+  if (!currentUser) return location.href = 'login.html';
+  const inp = document.getElementById('reply-in-' + parentCid);
+  if (!inp) return;
+  const text = inp.value.trim();
+  if (!text) return;
+
+  inp.value = '';
+  inp.disabled = true;
+
+  const name = currentUserProfile?.name || currentUser.displayName || "User";
+  const pic  = currentUserProfile?.pic  ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}`;
+
+  // ✅ Optimistic reply — فوری DOM میں لگاؤ
+  const tempId = 'temp-reply-' + Date.now();
+  const tempReply = {
+    id: tempId,
+    text, userId: currentUser.uid, userName: name, userPic: pic,
+    parentId: parentCid, createdAt: Date.now(),
+    likes: [], dislikes: []
+  };
+
+  // Replies list ڈھونڈو یا بناؤ
+  let replList = document.getElementById('replies-list-' + parentCid);
+  let togBtn   = document.getElementById('replies-toggle-' + parentCid);
+
+  if (!replList) {
+    // پہلی reply — toggle button اور list بناؤ
+    togBtn = document.createElement('button');
+    togBtn.className = 'replies-toggle-btn open';
+    togBtn.id = 'replies-toggle-' + parentCid;
+    togBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg> 1 Reply`;
+    togBtn.onclick = () => window.toggleReplies(parentCid);
+
+    replList = document.createElement('div');
+    replList.className = 'replies-list';
+    replList.id = 'replies-list-' + parentCid;
+    replList.style.display = 'block';
+
+    const cmtItem = document.getElementById('cmt-item-' + parentCid);
+    const replyRow = document.getElementById('reply-row-' + parentCid);
+    if (replyRow) {
+      replyRow.before(togBtn);
+      replyRow.before(replList);
+    } else if (cmtItem) {
+      cmtItem.after(togBtn);
+      togBtn.after(replList);
+    }
+  } else {
+    // پہلے سے list ہے — count update کرو
+    replList.style.display = 'block';
+    if (togBtn) {
+      const currentCount = replList.children.length;
+      togBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg> ${currentCount + 1} ${currentCount + 1 === 1 ? 'Reply' : 'Replies'}`;
+      togBtn.classList.add('open');
+    }
+  }
+
+  // Optimistic reply DOM میں شامل کرو
+  const tempEl = buildCmtEl(tempReply, pid, true);
+  tempEl.style.opacity = '0.6';
+  replList.appendChild(tempEl);
+
+  // Input box ہٹاؤ
+  document.getElementById('reply-row-' + parentCid)?.remove();
+
+  try {
+    const newRef = await addDoc(collection(db, "posts", pid, "comments"), {
+      text, userId: currentUser.uid, userName: name, userPic: pic,
+      parentId: parentCid, createdAt: serverTimestamp()
+    });
+    await updateDoc(doc(db, "posts", pid), { commentsCount: increment(1) });
+
+    // Temp element کو real ID سے replace کرو
+    const realReply = { id: newRef.id, text, userId: currentUser.uid,
+      userName: name, userPic: pic, parentId: parentCid,
+      createdAt: Date.now(), likes: [], dislikes: [] };
+    const realEl = buildCmtEl(realReply, pid, true);
+    tempEl.replaceWith(realEl);
+
+  } catch(e) {
+    console.error("Reply send error:", e);
+    tempEl.remove(); // ناکام ہو تو ہٹاؤ
+    inp.disabled = false;
+    inp.value = text;
+  }
+};
+
+// ── Toggle Replies ────────────────────────────────────────────────
+window.toggleReplies = function(parentCid) {
+  const list = document.getElementById('replies-list-' + parentCid);
+  const btn  = document.getElementById('replies-toggle-' + parentCid);
+  if (!list || !btn) return;
+  const isOpen = list.style.display !== 'none';
+  list.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('open', !isOpen);
+};
+
+// ── Comment Element بنانا ─────────────────────────────────────────
+function buildCmtEl(c, pid, isReply) {
+  const isMe   = currentUser && (c.userId === currentUser.uid);
+  const myUid  = currentUser?.uid || '';
+  const pic    = c.userPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.userName||'U')}`;
+  const likes    = Array.isArray(c.likes)    ? c.likes    : [];
+  const dislikes = Array.isArray(c.dislikes) ? c.dislikes : [];
+  const lCount = likes.length;
+  const dCount = dislikes.length;
+  const iL     = likes.includes(myUid);
+  const iD     = dislikes.includes(myUid);
+
+  const wrap = document.createElement('div');
+  wrap.id = 'cmt-item-' + c.id;
+  wrap.className = isReply ? 'reply-item' : 'cmt-item';
+
+  const avatarClass = isReply ? 'reply-avatar' : 'cmt-avatar';
+  const bubbleClass = isReply ? 'reply-bubble' : 'cmt-bubble';
+
+  wrap.innerHTML = `
+    <img src="${pic}" class="${avatarClass}"
+      onclick="location.href='wid.html?uid=${c.userId}'"
+      onerror="this.src='https://ui-avatars.com/api/?name=U'">
+    <div class="${bubbleClass}">
+      <span class="cmt-user">${escapeHtml(c.userName || 'User')}</span>
+      <div class="cmt-txt" id="txt-${c.id}">${escapeHtml(c.text)}</div>
+      <div class="cmt-footer">
+        <button class="cmt-like-btn ${iL?'active':''}" id="lbtn-${c.id}"
+          onclick="window.toggleCmtReaction('${pid}','${c.id}','like',this)">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          <span id="lcount-${c.id}">${lCount > 0 ? lCount : ''}</span>
+        </button>
+        <button class="cmt-dislike-btn ${iD?'active':''}" id="dbtn-${c.id}"
+          onclick="window.toggleCmtReaction('${pid}','${c.id}','dislike',this)">
+          <svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>
+          <span id="dcount-${c.id}">${dCount > 0 ? dCount : ''}</span>
+        </button>
+        ${!isReply ? `<button class="cmt-reply-btn"
+          onclick="window.showReplyBox('${pid}','${c.id}','${escapeHtml(c.userName||'User')}')">Reply</button>` : ''}
+        ${isMe ? `<button class="cmt-3dot"
+          onclick="event.stopPropagation();showCmtCtxMenu(event,'${pid}','${c.id}',true)">···</button>` : ''}
+      </div>
+    </div>`;
+
+  if (isMe) {
+    let pressTimer;
+    wrap.addEventListener('touchstart', (e) => {
+      pressTimer = setTimeout(() => showCmtCtxMenu(e, pid, c.id, true), 600);
+    }, { passive: true });
+    wrap.addEventListener('touchend',  () => clearTimeout(pressTimer));
+    wrap.addEventListener('touchmove', () => clearTimeout(pressTimer));
+  }
+
+  return wrap;
+}
+
+// ── Comments Toggle — بہتر loading ───────────────────────────────
+window.toggleLocalCmts = (pid) => {
+  if (!currentUser) return location.href = 'login.html';
+  const box = document.getElementById('cmt-box-' + pid);
+  const isOpen = box.style.display === 'block';
+  box.style.display = isOpen ? 'none' : 'block';
+
+  if (!isOpen) {
+    // اگر listener پہلے سے ہے — بند کرو اور دوبارہ لگاؤ
+    if (activeCommentListeners[pid]) {
+      try { activeCommentListeners[pid](); } catch(e) {}
+      delete activeCommentListeners[pid];
+    }
+
+    const list = document.getElementById('cmt-list-' + pid);
+    list.innerHTML = `<div style="text-align:center;padding:12px;color:#94a3b8;font-size:12px;">Loading...</div>`;
+
+    // ✅ createdAt بغیر orderBy — index مسئلہ نہیں
+    const unsubscribe = onSnapshot(
+      collection(db, "posts", pid, "comments"),
+      (snap) => {
+        const countEl = document.getElementById('c-count-' + pid);
+        if (countEl) countEl.innerText = snap.size + " Comments";
+
+        // تمام comments لو اور client side sort کرو
+        const allCmts = [];
         snap.forEach(d => {
           const c = d.data();
-          const isMe = c.userId === currentUser?.uid;
-          const picSrc = c.userPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.userName || 'U')}`;
-          list.innerHTML += `<div class="cmt-item"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><img src="${picSrc}" width="28" height="28" style="border-radius:50%;object-fit:cover;border:1px solid #e2e8f0" onerror="this.src='https://ui-avatars.com/api/?name=U'"><span class="cmt-user">${c.userName}</span></div><div class="cmt-txt" id="txt-${d.id}">${escapeHtml(c.text)}</div>${isMe ? `<div class="cmt-ctrl"><button class="cmt-btn" onclick="editLocalCmt('${pid}','${d.id}')">Edit</button><button class="cmt-btn" style="color:#ef4444" onclick="deleteLocalCmt('${pid}','${d.id}')">Delete</button></div>` : ''}</div>`;
+          const ts = c.createdAt?.toMillis ? c.createdAt.toMillis()
+                   : c.createdAt?.seconds  ? c.createdAt.seconds * 1000
+                   : c.createdAt || 0;
+          allCmts.push({ id: d.id, ...c, createdAt: ts });
         });
-      });
-    }
-  };
 
-  window.sendLocalCmt = async (pid) => {
-    const inp = document.getElementById(`cmt-in-${pid}`);
-    if (!inp.value.trim() || !currentUser) return;
-    const senderName = currentUserProfile?.name || currentUser.displayName || "User";
-    const senderPic = currentUserProfile?.pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(senderName)}`;
-    await addDoc(collection(db, "posts", pid, "comments"), { text: inp.value.trim(), userId: currentUser.uid, userName: senderName, userPic: senderPic, createdAt: serverTimestamp() });
+        // Client side sort — oldest first
+        allCmts.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+        const topLevel  = allCmts.filter(c => !c.parentId);
+        const repliesMap = {};
+        allCmts.filter(c => c.parentId).forEach(r => {
+          if (!repliesMap[r.parentId]) repliesMap[r.parentId] = [];
+          repliesMap[r.parentId].push(r);
+        });
+
+        // ✅ صرف نئے add کرو، پرانے نہ ہٹاؤ (optimistic replies محفوظ رہیں)
+        const existingIds = new Set(
+          [...list.querySelectorAll('[id^="cmt-item-"]')]
+            .map(el => el.id.replace('cmt-item-', ''))
+        );
+        const newIds = new Set(topLevel.map(c => c.id));
+
+        // ہٹائے گئے comments DOM سے نکالو
+        existingIds.forEach(id => {
+          if (!newIds.has(id)) {
+            document.getElementById('cmt-item-' + id)?.remove();
+            document.getElementById('replies-toggle-' + id)?.remove();
+            document.getElementById('replies-list-' + id)?.remove();
+          }
+        });
+
+        if (topLevel.length === 0) {
+          list.innerHTML = `<div style="text-align:center;padding:16px;color:#94a3b8;font-size:12px;">No comments yet. Be first!</div>`;
+          return;
+        } else {
+          // خالی state ہٹاؤ
+          const emptyMsg = list.querySelector('div[style*="No comments"]');
+          if (emptyMsg) emptyMsg.remove();
+          const loadingMsg = list.querySelector('div[style*="Loading"]');
+          if (loadingMsg) loadingMsg.remove();
+        }
+
+        topLevel.forEach(c => {
+          const existing = document.getElementById('cmt-item-' + c.id);
+          if (!existing) {
+            // نیا comment — append کرو
+            const cmtEl = buildCmtEl(c, pid, false);
+            list.appendChild(cmtEl);
+          }
+
+          // Replies ہینڈل کرو
+          const myReplies = repliesMap[c.id] || [];
+          let replList = document.getElementById('replies-list-' + c.id);
+          let togBtn   = document.getElementById('replies-toggle-' + c.id);
+
+          if (myReplies.length > 0) {
+            if (!replList) {
+              // پہلی بار replies آئی ہیں
+              togBtn = document.createElement('button');
+              togBtn.className = 'replies-toggle-btn';
+              togBtn.id = 'replies-toggle-' + c.id;
+              togBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg> ${myReplies.length} ${myReplies.length === 1 ? 'Reply' : 'Replies'}`;
+              togBtn.onclick = () => window.toggleReplies(c.id);
+
+              replList = document.createElement('div');
+              replList.className = 'replies-list';
+              replList.id = 'replies-list-' + c.id;
+              replList.style.display = 'none';
+
+              const cmtItem = document.getElementById('cmt-item-' + c.id);
+              if (cmtItem) {
+                cmtItem.after(togBtn);
+                togBtn.after(replList);
+              }
+            } else {
+              // Count update کرو
+              togBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg> ${myReplies.length} ${myReplies.length === 1 ? 'Reply' : 'Replies'}`;
+            }
+
+            // ✅ صرف نئی replies add کرو
+            const existingReplyIds = new Set(
+              [...replList.querySelectorAll('[id^="cmt-item-"]')]
+                .map(el => el.id.replace('cmt-item-', ''))
+                .filter(id => !id.startsWith('temp-'))
+            );
+            myReplies.forEach(r => {
+              if (!existingReplyIds.has(r.id)) {
+                // temp reply کو replace کرو اگر موجود ہو
+                const tempEls = replList.querySelectorAll('[id^="cmt-item-temp-"]');
+                if (tempEls.length > 0 && r.text === tempEls[0].querySelector('.cmt-txt')?.innerText) {
+                  tempEls[0].replaceWith(buildCmtEl(r, pid, true));
+                } else {
+                  replList.appendChild(buildCmtEl(r, pid, true));
+                }
+              }
+            });
+          }
+        });
+
+        list.scrollTop = list.scrollHeight;
+      },
+      (err) => {
+        console.error("Comment listener error:", err);
+        list.innerHTML = `<div style="text-align:center;padding:16px;color:#ef4444;font-size:12px;">
+          Error loading comments. 
+          <span style="color:#0a66c2;cursor:pointer;" 
+            onclick="toggleLocalCmts('${pid}');toggleLocalCmts('${pid}')">Retry</span>
+        </div>`;
+      }
+    );
+
+    activeCommentListeners[pid] = unsubscribe;
+  }
+};
+
+// ── Comment بھیجنا ───────────────────────────────────────────────
+window.sendLocalCmt = async (pid) => {
+  const inp = document.getElementById(`cmt-in-${pid}`);
+  const text = inp.value.trim();
+  if (!text || !currentUser) return;
+
+  inp.value = "";
+  inp.disabled = true;
+
+  const senderName = currentUserProfile?.name || currentUser.displayName || "User";
+  const senderPic  = currentUserProfile?.pic  ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(senderName)}`;
+
+  // ✅ Optimistic comment — فوری شو
+  const tempId = 'temp-' + Date.now();
+  const tempCmt = { id: tempId, text, userId: currentUser.uid,
+    userName: senderName, userPic: senderPic,
+    createdAt: Date.now(), likes: [], dislikes: [] };
+  const list = document.getElementById('cmt-list-' + pid);
+  const emptyMsg = list?.querySelector('div[style*="No comments"]');
+  if (emptyMsg) emptyMsg.remove();
+  const loadMsg = list?.querySelector('div[style*="Loading"]');
+  if (loadMsg) loadMsg.remove();
+  const tempEl = buildCmtEl(tempCmt, pid, false);
+  tempEl.style.opacity = '0.6';
+  list?.appendChild(tempEl);
+  if (list) list.scrollTop = list.scrollHeight;
+
+  try {
+    const newRef = await addDoc(collection(db, "posts", pid, "comments"), {
+      text, userId: currentUser.uid,
+      userName: senderName, userPic: senderPic,
+      createdAt: serverTimestamp()
+    });
     await updateDoc(doc(db, "posts", pid), { commentsCount: increment(1) });
-    inp.value = "";
-  };
-  window.deleteLocalCmt = async (pid, cid) => {
-    if (confirm("Delete comment?")) {
-      await deleteDoc(doc(db, "posts", pid, "comments", cid));
-      await updateDoc(doc(db, "posts", pid), { commentsCount: increment(-1) });
-    }
-  };
 
-  window.editLocalCmt = async (pid, cid) => {
-    const old = document.getElementById(`txt-${cid}`).innerText;
-    const nt = prompt("Edit comment:", old);
-    if (nt && nt !== old) await updateDoc(doc(db, "posts", pid, "comments", cid), { text: nt.trim() });
-  };
+    // Real element سے replace کرو
+    const realCmt = { id: newRef.id, text, userId: currentUser.uid,
+      userName: senderName, userPic: senderPic,
+      createdAt: Date.now(), likes: [], dislikes: [] };
+    tempEl.replaceWith(buildCmtEl(realCmt, pid, false));
+
+    // Post owner کو notification
+    try {
+      const commentedPost = postsArr.find(p => p.id === pid);
+      const ownerId = commentedPost?.posterId;
+      if (ownerId && ownerId !== currentUser.uid) {
+        await addDoc(collection(db, "notifications"), {
+          toUid: ownerId, fromUid: currentUser.uid,
+          fromName: senderName, fromPic: senderPic,
+          type: "comment", postId: pid,
+          message: "commented on your post",
+          createdAt: Date.now(), read: false
+        });
+        fetch('https://notication-healthjobs.vercel.app/api/reaction', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'comment', postId: pid,
+            postSlug: commentedPost?.slug || '',
+            postTitle: commentedPost?.title || '',
+            postOwnerId: ownerId,
+            actorName: senderName, actorUid: currentUser.uid,
+            actorPhoto: senderPic, commentPreview: text
+          })
+        }).catch(() => {});
+      }
+    } catch(e) {}
+
+  } catch(e) {
+    console.error("Comment error:", e);
+    tempEl.remove();
+    inp.value = text;
+  } finally {
+    inp.disabled = false;
+    inp.focus();
+  }
+};
+
+// ── Delete — replies بھی ساتھ ڈیلیٹ ───────────────────────────
+window.deleteLocalCmt = async (pid, cid) => {
+  if (!confirm("Delete comment and all its replies?")) return;
+
+  try {
+    // ✅ پہلے اس comment کی سب replies ڈھونڈو اور ڈیلیٹ کرو
+    const repliesSnap = await getDocs(
+      query(collection(db, "posts", pid, "comments"),
+        where("parentId", "==", cid))
+    );
+
+    const deletePromises = repliesSnap.docs.map(d => deleteDoc(d.ref));
+    await Promise.all(deletePromises);
+
+    // Parent comment ڈیلیٹ کرو
+    await deleteDoc(doc(db, "posts", pid, "comments", cid));
+
+    // Count update — parent + replies
+    const totalDeleted = repliesSnap.docs.length + 1;
+    await updateDoc(doc(db, "posts", pid), {
+      commentsCount: increment(-totalDeleted)
+    });
+
+    // DOM سے ہٹاؤ
+    document.getElementById('cmt-item-' + cid)?.remove();
+    document.getElementById('replies-toggle-' + cid)?.remove();
+    document.getElementById('replies-list-' + cid)?.remove();
+
+  } catch(e) {
+    console.error("Delete error:", e);
+    alert("Delete failed. Please try again.");
+  }
+};
+
+window.editLocalCmt = async (pid, cid) => {
+  const old = document.getElementById(`txt-${cid}`)?.innerText || '';
+  const nt = prompt("Edit comment:", old);
+  if (nt && nt.trim() !== old) {
+    await updateDoc(doc(db, "posts", pid, "comments", cid), { text: nt.trim() });
+    const txtEl = document.getElementById('txt-' + cid);
+    if (txtEl) txtEl.innerText = nt.trim();
+  }
+};
 
   // AUTH & BADGE SYNC
 
 
-  onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, async (user) => {
     currentUser = user;
     if (user) {
-      const chatRoomsRef = dbRef(dbRT, 'chatRooms');
-      onValue(chatRoomsRef, (snapshot) => {
+      document.getElementById('sidebar-logged-in').style.display = 'block';
+        document.getElementById('sidebar-logged-out').style.display = 'none';
+        // ✅ STRONGER DEACTIVATED ACCOUNT CHECK
+        try {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            if (snap.exists() && snap.data().isDeactivated === true) {
+                // Clear all local data before sign out
+                localStorage.clear();
+                sessionStorage.clear();
+                const { signOut } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
+                await signOut(auth);
+                window.location.href = "login.html?account=deactivated";
+                return;
+            }
+        } catch(e) { console.log("Deactivate check error:", e); }
+
+        // ✅ GLOBAL PRESENCE: user kisi bhi page (index, chats-request, chat) par ho,
+        // online status set rahe — sirf chat.html tak mehdood na ho.
+        try {
+            const myStatusRef = dbRef(dbRT, `presence/${user.uid}`);
+            onValue(dbRef(dbRT, ".info/connected"), (snap) => {
+                if (snap.val() === true) {
+                    onDisconnect(myStatusRef).set({ state: 'offline', last_changed: rtServerTimestamp() }).then(() => {
+                        set(myStatusRef, { state: 'online', last_changed: rtServerTimestamp() });
+                    });
+                }
+            });
+        } catch(e) { console.log("Presence error:", e); }
+
+        // ✅ GLOBAL INCOMING CALL POPUP: kahin se bhi call aaye, popup dikhao
+        try {
+            const popup = document.getElementById('incoming-call-popup');
+            onValue(dbRef(dbRT, `calls/${user.uid}`), (snap) => {
+                const data = snap.val();
+                if (data && data.status === 'ringing') {
+                    document.getElementById('ic-call-pic').src = data.callerPhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.callerName || 'User')}`;
+                    document.getElementById('ic-call-name').innerText = data.callerName || 'Unknown';
+                    document.getElementById('ic-call-type').innerText = data.type === 'video' ? 'Incoming Video Call' : 'Incoming Voice Call';
+                    popup.dataset.chatId = data.chatId || '';
+                    popup.dataset.callerUid = data.callerUid || '';
+                    popup.dataset.type = data.type || 'audio';
+                    popup.style.display = 'flex';
+                } else {
+                    popup.style.display = 'none';
+                }
+            });
+
+            document.getElementById('ic-decline-btn').onclick = async () => {
+                const chatId = popup.dataset.chatId;
+                popup.style.display = 'none';
+                try { if (chatId) await update(dbRef(dbRT, `chats/${chatId}/webrtc`), { status: 'ended' }); } catch(e) {}
+                try { await remove(dbRef(dbRT, `calls/${user.uid}`)); } catch(e) {}
+            };
+
+            document.getElementById('ic-accept-btn').onclick = () => {
+                const callerUid = popup.dataset.callerUid;
+                const type = popup.dataset.type;
+                popup.style.display = 'none';
+                if (callerUid) window.location.href = `chat.html?uid=${callerUid}&startCall=true&callType=${type}`;
+            };
+        } catch(e) { console.log("Incoming call popup error:", e); }
+        
+        // ✅ COST FIX: pehle yahan poori "chatRooms" tree (sab users ke sab rooms)
+        // padhi jaati thi — ab sirf apna chhota sa "userChats/{uid}" index.
+        const userChatsRef = dbRef(dbRT, `userChats/${user.uid}`);
+        onValue(userChatsRef, (snapshot) => {
         let totalUnread = 0;
         if (snapshot.exists()) {
-          const allRooms = snapshot.val();
-          for (const roomId in allRooms) {
-            const d = allRooms[roomId];
-            if (d.participants && d.participants.includes(user.uid)) {
-              if (d.lastSenderId && d.lastSenderId !== user.uid) {
-                const readBy = d.readBy || [];
-                if (!readBy.includes(user.uid)) totalUnread++;
-              }
+          const myRooms = snapshot.val();
+          for (const roomId in myRooms) {
+            const d = myRooms[roomId];
+            if (d.lastSenderId && d.lastSenderId !== user.uid && d.isRead === false) {
+              totalUnread++;
             }
           }
         }
         if (window.updateChatBadgeWithSound) window.updateChatBadgeWithSound(totalUnread);
+        localStorage.setItem('unread_chats_' + user.uid, totalUnread);
       });
 
-      localStorage.setItem('my_uid', user.uid);
-      window.loadInitialPosts();
+localStorage.setItem('my_uid', user.uid);
+
+// ── Notifications Badge ───────────────────────────────────────────────
+onSnapshot(
+    query(collection(db, "notifications"), where("toUid", "==", user.uid), where("read", "==", false)),
+    (snap) => {
+        const badge = document.getElementById('notif-badge');
+        if (!badge) return;
+        const count = snap.size;
+        if (count > 0) {
+            badge.innerText = count > 9 ? '9+' : count;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
+);
+// ─────────────────────────────────────────────────────────────────────
+
+window.loadInitialPosts();
       loadTrendingPosts();
+      loadNewsTicker();
 
       const userSnap = await getDoc(doc(db, "users", user.uid));
       let savedCity = ""; let uData = {};
@@ -2153,6 +3574,19 @@ window.toggleDesc = function(pid) {
         localStorage.setItem('fast_sidebar_name', userNameForPic);
         savedCity = uData.city || "";
         userCity = savedCity;
+        // ===== INCOMPLETE PROFILE BANNER =====
+const bannerDismissed = localStorage.getItem(`banner_dismissed_${user.uid}`);
+if (!bannerDismissed) {
+    const isIncomplete = !uData.profilePicUrl || 
+                         !uData.city || 
+                         !uData.country ||
+                         (uData.role === 'candidate' && !uData.qualification) ||
+                         (uData.role === 'employer' && !uData.facilityType);
+    if (isIncomplete) {
+        document.getElementById('incomplete-banner').style.display = 'block';
+    }
+}
+// =====================================
         const userSearchRef = dbRef(dbRT, `search_index/${user.uid}`);
 set(userSearchRef, { 
     id: user.uid, 
@@ -2191,6 +3625,13 @@ set(userSearchRef, {
         });
       } else if (savedCity) { renderEverything(); }
     } else {
+      document.getElementById('sidebar-logged-in').style.display = 'none';
+        document.getElementById('sidebar-logged-out').style.display = 'block';
+      // 🧹 Logout par stale badge clean karo (taake doosra user purana badge na dekhe)
+      const oldUid = localStorage.getItem('my_uid');
+      if (oldUid) localStorage.removeItem('unread_chats_' + oldUid);
+      localStorage.removeItem('my_uid');
+      if (window.updateChatBadgeWithSound) window.updateChatBadgeWithSound(0, true);
       window.loadInitialPosts();
       loadTrendingPosts();
     }
@@ -2218,24 +3659,64 @@ set(userSearchRef, {
     if (!isExpanded) { menu.style.maxHeight = menu.scrollHeight + "px"; btn.classList.add('expanded'); }
   };
 
-  window.addEventListener('DOMContentLoaded', () => {
-    const cachedPic = localStorage.getItem('fast_sidebar_pic');
+window.addEventListener('DOMContentLoaded', () => {
+    const cachedPic  = localStorage.getItem('fast_sidebar_pic');
     const cachedName = localStorage.getItem('fast_sidebar_name');
-    if (cachedPic) document.getElementById('sidebar-pic').src = cachedPic;
-    if (cachedName) document.getElementById('sidebar-name-text').innerText = cachedName;
-  });
+    const myUid      = localStorage.getItem('my_uid');
 
-  window.toggleSidebar = (show) => {
+    if (myUid && cachedPic && cachedName) {
+        // پہلے سے لاگ ان — فوری show کرو، کوئی جھٹکا نہیں
+        const loggedIn  = document.getElementById('sidebar-logged-in');
+        const loggedOut = document.getElementById('sidebar-logged-out');
+        const pic       = document.getElementById('sidebar-pic');
+        const nameEl    = document.getElementById('sidebar-name-text');
+
+        if (loggedIn)  loggedIn.style.display  = 'block';
+        if (loggedOut) loggedOut.style.display  = 'none';
+        if (pic)       pic.src                  = cachedPic;
+        if (nameEl)    nameEl.innerText          = cachedName;
+    } else {
+        // لاگ ان نہیں — فوری logged out دکھاؤ
+        const loggedIn  = document.getElementById('sidebar-logged-in');
+        const loggedOut = document.getElementById('sidebar-logged-out');
+        if (loggedIn)  loggedIn.style.display  = 'none';
+        if (loggedOut) loggedOut.style.display  = 'block';
+    }
+});
+
+window.toggleSidebar = (show) => {
+    if (window.innerWidth >= 768) return; // PC پر کچھ نہ کرے
     const overlay = document.getElementById('sidebar-overlay');
     const sidebar = document.getElementById('sidebar');
     if (show) { overlay.classList.add('active'); sidebar.classList.add('active'); document.body.style.overflow = 'hidden'; }
     else { overlay.classList.remove('active'); sidebar.classList.remove('active'); document.body.style.overflow = ''; }
-  };
+};
+
+// PC پر sidebar ہمیشہ open
+function handleDesktopSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (!sidebar) return;
+    if (window.innerWidth >= 768) {
+        sidebar.style.right = '0';
+        sidebar.style.position = 'fixed';
+        sidebar.style.boxShadow = 'none';
+        sidebar.style.borderLeft = '1px solid #e2e8f0';
+        if (overlay) overlay.style.display = 'none';
+    } else {
+        sidebar.style.right = '';
+        sidebar.style.boxShadow = '';
+        sidebar.style.borderLeft = '';
+    }
+}
+window.addEventListener('load', handleDesktopSidebar);
+window.addEventListener('resize', handleDesktopSidebar);
     // ==========================================
   // 🎯 FILTER SYSTEM INSIDE MODULE
   // ==========================================
-  window.catActive = 'all';
-  window.timeActive = 'all';
+  // پچھلا فلٹر restore کرو
+  window.catActive = sessionStorage.getItem('active_cat') || 'all';
+  window.timeActive = sessionStorage.getItem('active_time') || 'all';
 
   const catKeywords = {
     'nursing': ['nurse','nursing','midwife','lhv','icu','ccu'],
@@ -2247,76 +3728,116 @@ set(userSearchRef, {
 
   const matchCat = (post, key) => {
     if (key === 'all') return true;
+    // ✅ category filter میں صرف employer_post آئیں
+    if (post.type !== 'employer_post') return false;
     const cat = (post.category||'').toLowerCase();
     const title = (post.title||'').toLowerCase();
     const desc = (post.desc||'').toLowerCase();
     const kws = catKeywords[key] || [key];
     return kws.some(kw => cat.includes(kw) || title.includes(kw) || desc.includes(kw));
   };
+window.renderFiltered = () => {
+  const arr = window.postsArr || postsArr || [];
+  if (!arr.length) { setTimeout(window.renderFiltered, 500); return; }
 
-  window.renderFiltered = () => {
-    const arr = window.postsArr || postsArr || [];
-    if (!arr.length) { setTimeout(window.renderFiltered, 500); return; }
-    const now = Date.now(), ONE_DAY = 86400000;
-    const filtered = arr.filter(p => {
-      if (p.status==='deleted'||p.status==='inactive') return false;
-      if (!matchCat(p, window.catActive)) return false;
-if (window.timeActive !== 'all') {
-  const diff = now - (p.createdAt||0);
-  if (window.timeActive==='today' && diff >= ONE_DAY) return false;
-  if (window.timeActive==='yesterday' && (diff < ONE_DAY || diff >= ONE_DAY*2)) return false;
-  if (window.timeActive==='weekly' && diff >= ONE_DAY*7) return false;
-  if (window.timeActive==='active') {
-    // Sirf employer aur candidate posts
-    if (p.type !== 'employer_post' && p.type !== 'candidate_post') return false;
-    // Expire nahi honi chahiye
-    if (p.expiresAt) {
-      const expDate = new Date(p.expiresAt).getTime();
-      if (expDate < now) return false;
+  sessionStorage.setItem('active_cat', window.catActive || 'all');
+  sessionStorage.setItem('active_time', window.timeActive || 'all');
+
+  const now = Date.now(), ONE_DAY = 86400000;
+  const catKey = window.catActive || 'all';
+  const timeKey = window.timeActive || 'all';
+
+  // ── Filter کرو (کوئی Firestore read نہیں) ──
+  const filtered = arr.filter(p => {
+    if (p.status === 'deleted' || p.status === 'inactive') return false;
+    if (!matchCat(p, catKey)) return false;
+    if (timeKey !== 'all') {
+      const diff = now - (p.createdAt || 0);
+      if (timeKey === 'today'     && diff >= ONE_DAY)               return false;
+      if (timeKey === 'yesterday' && (diff < ONE_DAY || diff >= ONE_DAY * 2)) return false;
+      if (timeKey === 'weekly'    && diff >= ONE_DAY * 7)           return false;
+      if (timeKey === 'active') {
+        if (p.type !== 'employer_post' && p.type !== 'candidate_post') return false;
+        if (p.expiresAt && new Date(p.expiresAt).getTime() < now)   return false;
+      }
+    }
+    return true;
+  });
+
+  // ── Available Jobs count update ──
+  const countEl = document.getElementById('jobs-avail-count');
+  if (countEl) countEl.innerText = filtered.length;
+
+  const feed  = document.getElementById('feed');
+  const noRes = document.getElementById('no-res');
+  if (!feed) return;
+
+  // ── Feed صاف کرو ──
+  feed.innerHTML = '';
+
+  if (filtered.length === 0) {
+    noRes.innerHTML = `
+      <div style="padding:50px 20px;text-align:center;">
+        <div style="font-size:60px;margin-bottom:16px;">🔍</div>
+        <div style="font-size:18px;font-weight:700;color:#0f172a;margin-bottom:8px;">No Results Found</div>
+        <div style="font-size:13px;color:#64748b;margin-bottom:20px;">
+          We couldn't find any posts matching your selected filters.
+        </div>
+        <div style="font-size:13px;color:#0a66c2;font-weight:600;cursor:pointer;"
+          onclick="location.reload()">🔄 Try Different Filters →</div>
+      </div>`;
+    noRes.classList.remove('hidden');
+    document.getElementById('loading').classList.add('hidden');
+    return;
+  }
+
+  noRes.classList.add('hidden');
+
+  // ── Batch render — 5-5 posts ──
+  const BATCH = 5;
+  let currentIndex = 0;
+
+  // پہلے spinner دکھاؤ
+  document.getElementById('loading').innerHTML = '<div class="spinner"></div>';
+  document.getElementById('loading').classList.remove('hidden');
+
+  function renderBatch() {
+    const end = Math.min(currentIndex + BATCH, filtered.length);
+    for (let i = currentIndex; i < end; i++) {
+      appendPostToDOM(filtered[i]);
+    }
+    currentIndex = end;
+
+    if (currentIndex < filtered.length) {
+      // ابھی اور posts باقی ہیں — spinner چلتا رہے
+      const sen = document.createElement('div');
+      sen.id = 'filter-sentinel';
+      sen.style.height = '10px';
+      feed.appendChild(sen);
+
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          obs.disconnect();
+          sen.remove();
+          renderBatch();
+        }
+      }, { rootMargin: '300px' });
+      obs.observe(sen);
+
+    } else {
+      // سب posts لوڈ — spinner بند، end message
+      document.getElementById('loading').innerHTML = `
+        <div style="text-align:center;padding:20px 20px 10px;">
+          <div style="font-size:13px;font-weight:600;color:#64748b;">
+            ✅ All ${filtered.length} posts loaded
+          </div>
+        </div>`;
+      document.getElementById('loading').classList.remove('hidden');
     }
   }
-}
-      return true;
-    });
-    const feed = document.getElementById('feed'), noRes = document.getElementById('no-res');
-    if (!feed) return;
-    feed.innerHTML = '';
-    if (filtered.length === 0) {
-noRes.innerHTML = '<div style="padding:50px 20px;text-align:center;"><div style="font-size:60px;margin-bottom:16px;">🔍</div><div style="font-size:18px;font-weight:700;color:#0f172a;margin-bottom:8px;">No Results Found</div><div style="font-size:13px;color:#64748b;margin-bottom:20px;">We couldn\'t find any posts matching your selected filters.</div><div style="font-size:13px;color:#0a66c2;font-weight:600;cursor:pointer;" onclick="location.reload()">🔄 Try Different Filters →</div></div>';
-      noRes.classList.remove('hidden');
-    } else { noRes.classList.add('hidden'); filtered.forEach(p => appendPostToDOM(p)); }
-  };
 
-  window.toggleFilter = (id) => {
-    const b = document.getElementById(id);
-    const open = b.classList.contains('active');
-    document.querySelectorAll('.pro-box').forEach(x => x.classList.remove('active'));
-    if (!open) b.classList.add('active');
-  };
-
-  window.filterCat = (val, el, label) => {
-    window.catActive = val;
-    document.querySelectorAll('#catList li').forEach(li => li.classList.remove('selected'));
-    el.classList.add('selected');
-    document.getElementById('catLabel').innerText = label;
-    document.querySelectorAll('.pro-box').forEach(b => b.classList.remove('active'));
-    window.renderFiltered();
-  };
-
-  window.filterTime = (val, el, label) => {
-    window.timeActive = val;
-    document.querySelectorAll('#timeList li').forEach(li => li.classList.remove('selected'));
-    el.classList.add('selected');
-    document.getElementById('timeLabel').innerText = label;
-    document.querySelectorAll('.pro-box').forEach(b => b.classList.remove('active'));
-    window.renderFiltered();
-  };
-
-  window.goNews = (e) => {
-    e.stopPropagation();
-    document.querySelectorAll('.pro-box').forEach(b => b.classList.remove('active'));
-    location.href = 'news.html';
-  };
+  renderBatch();
+};
 
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.dual-box-container')) {
@@ -2325,8 +3846,9 @@ noRes.innerHTML = '<div style="padding:50px 20px;text-align:center;"><div style=
   });
   // ✅ Badge update - دوسرے tabs کے لیے
 window.addEventListener('storage', (e) => {
-    if (e.key === 'global_unread_chats') {
-        let unreadCount = parseInt(localStorage.getItem('global_unread_chats')) || 0;
+    const k = chatBadgeKey();
+    if (k && e.key === k) {
+        let unreadCount = parseInt(localStorage.getItem(k)) || 0;
         window.updateChatBadgeWithSound(unreadCount);
     }
 });
@@ -2334,17 +3856,821 @@ window.addEventListener('storage', (e) => {
 // 🔔 BADGE SYNC - Same Tab Fix
 // ==========================================
 
-// ✅ Polling - har 2 second mein localStorage check karo
+// ✅ Polling - har 2 second mein localStorage check karo (sirf apne UID ke key se)
 setInterval(() => {
-    const stored = parseInt(localStorage.getItem('global_unread_chats')) || 0;
+    const k = chatBadgeKey();
+    if (!k) return;
+    const stored = parseInt(localStorage.getItem(k)) || 0;
     const badge = document.getElementById('chat-badge');
     const currentBadge = badge ? parseInt(badge.innerText) || 0 : 0;
     
     if (stored !== currentBadge) {
         window.updateChatBadgeWithSound(stored);
     }
-}, 2000); // Har 2 second mein check
-</script>
+}, 2000);
+// NEWS TICKER — صرف postsArr سے
+function loadNewsTicker() {
+  const wrap  = document.getElementById('news-ticker-wrap');
+  const track = document.getElementById('news-ticker-track');
+  if (!wrap || !track) return;
 
+  const arr = window.postsArr || [];
+  const newsPosts = arr
+    .filter(p => p.title && p.type === 'general_post' && p.status !== 'deleted' && p.status !== 'inactive')
+    .slice(0, 6);
+
+  if (newsPosts.length < 2) { wrap.style.display = 'none'; return; }
+
+  const items = newsPosts.map(p => {
+    const title = (p.title || '').substring(0, 80);
+    const link  = p.slug
+      ? '/updates/' + p.slug
+      : 'details.html?id=' + p.id;
+    return `<span class="ticker-item" onclick="location.href='${link}'">${title}</span><span class="ticker-sep" style="color:rgba(255,255,255,0.4);padding:0 16px;">•</span>`;
+  }).join('');
+
+  // صرف ایک بار items، CSS animation loop کرے گا
+  track.innerHTML = items;
+  wrap.style.display = 'block';
+
+  // track کی width ناپو پھر animation speed سیٹ کرو
+  requestAnimationFrame(() => {
+    const trackWidth = track.scrollWidth;
+    const speed = Math.max(20, trackWidth / 80); // seconds
+    track.style.animation = 'none';
+    track.style.whiteSpace = 'nowrap';
+    track.style.display = 'inline-flex';
+    track.style.animation = `tickerRun ${speed}s linear infinite`;
+  });
+}
+// Har 2 second mein check
+window.dismissBanner = function() {
+    document.getElementById('incomplete-banner').style.display = 'none';
+    const uid = localStorage.getItem('my_uid');
+    if (uid) localStorage.setItem('banner_dismissed_' + uid, 'true');
+};
+</script>
+<script>
+window.toggleFilter = function(boxId) {
+  const box = document.getElementById(boxId);
+  const isActive = box.classList.contains('active');
+  document.querySelectorAll('.pro-box').forEach(b => b.classList.remove('active'));
+  if (!isActive) box.classList.add('active');
+};
+
+window.filterCat = function(key, el, label) {
+  window.catActive = key;
+  document.getElementById('catLabel').innerText = label;
+  document.querySelectorAll('#catList li').forEach(li => li.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('catBox').classList.remove('active');
+  if (typeof window.renderFiltered === 'function') window.renderFiltered();
+};
+
+window.filterTime = function(key, el, label) {
+  window.timeActive = key;
+  document.getElementById('timeLabel').innerText = label;
+  document.querySelectorAll('#timeList li').forEach(li => li.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('timeBox').classList.remove('active');
+  if (typeof window.renderFiltered === 'function') window.renderFiltered();
+};
+
+window.goNews = function(e) {
+  e.stopPropagation();
+  document.getElementById('timeBox').classList.remove('active');
+  window.location.href = 'news.html';
+};
+// ✅ جب بھی واپس آئیں — skeleton دکھاؤ
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) {
+    const feed = document.getElementById('feed');
+    if (!feed) return;
+
+    // skeleton دکھاؤ
+    feed.innerHTML = [1,2,3,4].map(() => `
+      <div class="skeleton-card">
+        <div class="sk-header">
+          <div class="skeleton-line sk-avatar"></div>
+          <div style="flex:1;">
+            <div class="skeleton-line" style="height:13px;width:55%;margin-bottom:8px;"></div>
+            <div class="skeleton-line" style="height:11px;width:38%;"></div>
+          </div>
+        </div>
+        <div class="skeleton-line" style="height:14px;width:80%;margin-bottom:8px;"></div>
+        <div class="skeleton-line" style="height:14px;width:65%;margin-bottom:8px;"></div>
+        <div class="skeleton-line" style="height:14px;width:72%;margin-bottom:12px;"></div>
+        <div class="skeleton-line sk-img"></div>
+      </div>`).join('');
+
+    // cache سے فوری render
+    setTimeout(() => {
+      const cached = localStorage.getItem('health_jobs_hybrid_cache');
+      if (cached) {
+        try {
+          const arr = JSON.parse(cached);
+          window.postsArr = arr;
+          feed.innerHTML = '';
+          if (typeof buildVerifiedSet === 'function') buildVerifiedSet();
+          arr.forEach(p => { if (typeof appendPostToDOM === 'function') appendPostToDOM(p); });
+          if (typeof generateTopPosters === 'function') generateTopPosters();
+          if (typeof loadNewsTicker === 'function') loadNewsTicker();
+          if (typeof loadTrendingPosts === 'function') loadTrendingPosts();
+        } catch(e) {}
+      }
+    }, 350);
+  }
+});
+</script>
+<script>
+function fixWAButtonSide() {
+    const btn = document.getElementById('wa-channel-btn');
+    if (!btn) return;
+    if (window.innerWidth >= 768) {
+        btn.style.right = 'auto';
+        btn.style.left = '0';
+        btn.style.borderRadius = '0 30px 30px 0';
+        btn.style.boxShadow = '3px 3px 12px rgba(0,0,0,0.25)';
+    } else {
+        btn.style.right = '0';
+        btn.style.left = 'auto';
+        btn.style.borderRadius = '30px 0 0 30px';
+        btn.style.boxShadow = '-3px 3px 12px rgba(0,0,0,0.25)';
+    }
+}
+window.addEventListener('load', fixWAButtonSide);
+window.addEventListener('resize', fixWAButtonSide);
+</script>
+<!--
+  HealthJobPortal.com - AI Chat Widget v6 FINAL
+  اپنی فائل میں پرانے widget کی جگہ یہ paste کریں (</body> سے پہلے)
+-->
+
+<div id="hjp-chat-container">
+  <!-- Tooltip Bubble -->
+  <div id="hjp-tooltip">
+    <span id="hjp-tooltip-text">💬 Hi! I can help you find healthcare jobs.</span>
+    <button id="hjp-tooltip-close" onclick="hjpCloseTooltip(event)" title="Close">✕</button>
+  </div>
+
+  <button id="hjp-chat-btn" onclick="hjpToggleChat()" title="AI Assistant">
+    <svg id="hjp-icon-chat" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" viewBox="0 0 24 24">
+      <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm0 14H6l-2 2V4h16v12z"/>
+    </svg>
+    <svg id="hjp-icon-close" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24" style="display:none">
+      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+    </svg>
+  </button>
+
+<!-- Chat Window -->
+  <div id="hjp-chat-window">
+    <div id="hjp-chat-header">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="https://healthjobportal.com/images/logo.png" alt="HealthJobPortal" id="hjp-logo" />
+        <span style="font-size:13px;font-weight:600;color:#64748b;">AI Assistant</span>
+      </div>
+      <button onclick="hjpToggleChat()" id="hjp-close-btn" title="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#0f172a" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
+    <div id="hjp-messages">
+      <div class="hjp-msg hjp-bot-msg">
+        <div class="hjp-bubble">
+          Hello! I am the HealthJobPortal AI Assistant.<br><br>
+          You can ask me about healthcare jobs, how to apply, salary ranges, or career advice. How can I help you today?
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Reply Chips -->
+    <div id="hjp-quick-replies">
+      <button class="hjp-chip" onclick="hjpSendChip('What healthcare jobs are available?')">🏥 Available Jobs</button>
+      <button class="hjp-chip" onclick="hjpSendChip('How do I apply for a job?')">📝 How to Apply</button>
+      <button class="hjp-chip" onclick="hjpSendChip('What is the salary range for nurses?')">💰 Salary Info</button>
+      <button class="hjp-chip" onclick="hjpSendChip('Give me career advice for healthcare.')">🎯 Career Advice</button>
+      <button class="hjp-chip" onclick="hjpSendChip('What documents do I need to apply?')">📄 Required Docs</button>
+    </div>
+
+    <div id="hjp-input-area">
+      <input
+        type="text"
+        id="hjp-user-input"
+        placeholder="Type your message..."
+        onkeydown="if(event.key==='Enter') hjpSendMessage()"
+        maxlength="500"
+      />
+      <button onclick="hjpSendMessage()" id="hjp-send-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="white" viewBox="0 0 24 24">
+          <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="hjp-chat-footer">Powered by AI Access</div>
+  </div>
+</div>
+
+<style>
+  /* ════════════════════════════════════════
+     MOBILE LAYOUT
+     Bottom nav = 60px (آپ کا .bottom-nav)
+     Chat btn = 52px
+     ════════════════════════════════════════ */
+#hjp-chat-container {
+    position: fixed;
+    z-index: 999999999;
+    display: none;
+    font-family: 'Segoe UI', Arial, sans-serif;
+
+    /* Mobile: right side, bottom nav (60px) + 12px gap اوپر */
+    bottom: 72px;
+    right: 16px;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  /* ════════════════════════════════════════
+     TOOLTIP
+  ════════════════════════════════════════ */
+#hjp-tooltip {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    background: #ffffff;
+    color: #0f172a;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    border: 1px solid #e2e8f0;
+    animation: hjpFadeIn 0.3s ease;
+max-width: 180px;
+    white-space: normal;
+    word-break: break-word;
+  }
+  #hjp-tooltip.hjp-tooltip-show { display: flex; }
+#hjp-tooltip-close {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0 2px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  #hjp-tooltip-close:hover { color: #fff; }
+  @keyframes hjpFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ════════════════════════════════════════
+     TOGGLE BUTTON
+  ════════════════════════════════════════ */
+  #hjp-chat-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #0a66c2;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(10,102,194,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.2s;
+    position: relative;
+    z-index: 9998;
+    flex-shrink: 0;
+  }
+  #hjp-chat-btn:hover { background: #004182; transform: scale(1.05); }
+
+  /* ════════════════════════════════════════
+     MOBILE: CHAT WINDOW
+     - Toggle button کے بالکل اوپر کھلے
+     - Bottom nav کو cover نہ کرے
+     - Toggle button کو بھی cover نہ کرے
+     
+     Container bottom = 72px
+     Button height = 52px
+     Gap = 8px
+     So window bottom = 72px + 52px + 8px = 132px
+  ════════════════════════════════════════ */
+#hjp-chat-window {
+    display: none;
+    flex-direction: column;
+    background: #ffffff;
+    overflow: hidden;
+    border: none;
+    animation: hjpSlideUp 0.22s ease;
+
+    /* Mobile: پوری screen */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    z-index: 99999999;
+  }
+  #hjp-chat-window.hjp-open { display: flex; }
+
+  /* ════════════════════════════════════════
+     PC (768px+): LEFT SIDE, FULL HEIGHT
+  ════════════════════════════════════════ */
+  @media (min-width: 768px) {
+    #hjp-chat-container {
+      /* PC: left side, bottom nav نہیں ہوتا */
+      left: 20px;
+      right: auto;
+      bottom: 20px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    #hjp-tooltip {
+      border-radius: 20px 20px 20px 4px;
+    }
+
+    /* PC: static position، container کے flow میں */
+    #hjp-chat-window {
+      position: static;
+      width: 320px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.16);
+      /* Header(65px) + button(52px) + spacing(50px) */
+      height: calc(100vh - 65px - 52px - 50px);
+      max-height: 680px;
+      min-height: 300px;
+      bottom: auto;
+      top: auto;
+      left: auto;
+      right: auto;
+    }
+  }
+
+  @keyframes hjpSlideUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ════════════════════════════════════════
+     HEADER
+  ════════════════════════════════════════ */
+  #hjp-chat-header {
+    background: #ffffff;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e2e8f0;
+    flex-shrink: 0;
+    min-height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  #hjp-logo { height: 30px; width: auto; object-fit: contain; }
+#hjp-close-btn {
+    background: #f1f5f9;
+    border: none;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 99999999;
+  }
+  #hjp-close-btn:hover { background: #e2e8f0; }
+
+  /* ════════════════════════════════════════
+     MESSAGES
+  ════════════════════════════════════════ */
+  #hjp-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scroll-behavior: smooth;
+  }
+  #hjp-messages::-webkit-scrollbar { width: 3px; }
+  #hjp-messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+  .hjp-msg { display: flex; flex-direction: column; }
+  .hjp-bot-msg { align-items: flex-start; }
+  .hjp-user-msg { align-items: flex-end; }
+
+  .hjp-bubble {
+    max-width: 85%;
+    padding: 9px 13px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .hjp-bot-msg .hjp-bubble {
+    background: #ffffff;
+    color: #1e293b;
+    border-bottom-left-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    border: 1px solid #e2e8f0;
+  }
+  .hjp-user-msg .hjp-bubble {
+    background: #0a66c2;
+    color: #ffffff;
+    border-bottom-right-radius: 3px;
+  }
+
+  /* ════════════════════════════════════════
+     QUICK REPLY CHIPS
+  ════════════════════════════════════════ */
+  #hjp-quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0;
+  }
+  .hjp-chip {
+    background: #fff;
+    border: 1px solid #0a66c2;
+    color: #0a66c2;
+    border-radius: 16px;
+    padding: 5px 11px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    white-space: nowrap;
+  }
+  .hjp-chip:hover { background: #0a66c2; color: #fff; }
+
+  /* ════════════════════════════════════════
+     TYPING INDICATOR
+  ════════════════════════════════════════ */
+  .hjp-typing {
+    display: flex;
+    gap: 4px;
+    padding: 10px 14px;
+    background: #ffffff;
+    border-radius: 12px;
+    border-bottom-left-radius: 3px;
+    border: 1px solid #e2e8f0;
+    width: fit-content;
+  }
+  .hjp-dot {
+    width: 6px; height: 6px;
+    background: #94a3b8;
+    border-radius: 50%;
+    animation: hjpBounce 1.2s infinite;
+  }
+  .hjp-dot:nth-child(2) { animation-delay: 0.2s; }
+  .hjp-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes hjpBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+  }
+
+  /* ════════════════════════════════════════
+     INPUT AREA
+  ════════════════════════════════════════ */
+  #hjp-input-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0;
+  }
+  #hjp-user-input {
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 13px;
+    outline: none;
+    color: #1e293b;
+    background: #f8fafc;
+    transition: border-color 0.2s;
+    min-width: 0;
+  }
+  #hjp-user-input:focus { border-color: #0a66c2; background: #ffffff; }
+  #hjp-send-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #0a66c2;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  #hjp-send-btn:hover { background: #004182; }
+  #hjp-send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* ════════════════════════════════════════
+     FOOTER
+  ════════════════════════════════════════ */
+  #hjp-chat-footer {
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+    padding: 6px;
+    font-size: 11px;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+</style>
+
+<script>
+  const HJP_WORKER_URL = "https://ai.sufiangsufiang50.workers.dev";
+
+  /* ════════════════════════════════════════
+     TOOLTIP
+  ════════════════════════════════════════ */
+  const HJP_TOOLTIP_MSGS = [
+    "💬 Hi! I can help you find healthcare jobs.",
+    "🏥 Looking for a nursing or doctor job?",
+    "📝 Need help with your job application?",
+    "💰 Want to know salary ranges in healthcare?",
+    "🎯 I can guide your healthcare career!"
+  ];
+  let hjpTooltipIndex = 0;
+  let hjpTooltipClosed = false;
+  let hjpChatIsOpen = false;
+
+  function hjpGetNextTooltipMsg() {
+    const msg = HJP_TOOLTIP_MSGS[hjpTooltipIndex % HJP_TOOLTIP_MSGS.length];
+    hjpTooltipIndex++;
+    return msg;
+  }
+
+  function hjpShowTooltip() {
+    if (hjpTooltipClosed || hjpChatIsOpen) return;
+    const tooltip = document.getElementById("hjp-tooltip");
+    const textEl  = document.getElementById("hjp-tooltip-text");
+    if (!tooltip || !textEl) return;
+    textEl.textContent = hjpGetNextTooltipMsg();
+    tooltip.classList.add("hjp-tooltip-show");
+    setTimeout(() => tooltip.classList.remove("hjp-tooltip-show"), 5000);
+  }
+
+  function hjpCloseTooltip(e) {
+    if (e) e.stopPropagation();
+    hjpTooltipClosed = true;
+    document.getElementById("hjp-tooltip").classList.remove("hjp-tooltip-show");
+  }
+
+  function hjpStartTooltipCycle() {
+    hjpShowTooltip();
+    setInterval(() => {
+      hjpTooltipClosed = false;
+      hjpShowTooltip();
+    }, 30000);
+  }
+
+  /* ════════════════════════════════════════
+     SPLASH CHECK + INIT
+  ════════════════════════════════════════ */
+  (function() {
+    function checkSplash() {
+      const splash    = document.getElementById('custom-splash');
+      const container = document.getElementById('hjp-chat-container');
+      if (!container) return;
+      if (!splash || splash.style.display === 'none' || parseFloat(splash.style.opacity) === 0) {
+        container.style.display = 'flex';
+        hjpStartTooltipCycle();
+      } else {
+        setTimeout(checkSplash, 300);
+      }
+    }
+    setTimeout(checkSplash, 3600);
+  })();
+
+  /* ════════════════════════════════════════
+     WHATSAPP BUTTON HIDE/SHOW
+  ════════════════════════════════════════ */
+  function hjpSetWaBtn(visible) {
+    const waBtn = document.getElementById("wa-channel-btn");
+    if (waBtn) waBtn.style.display = visible ? "" : "none";
+  }
+
+  /* ════════════════════════════════════════
+     TOGGLE CHAT
+  ════════════════════════════════════════ */
+  function hjpToggleChat() {
+    const win       = document.getElementById("hjp-chat-window");
+    const iconChat  = document.getElementById("hjp-icon-chat");
+    const iconClose = document.getElementById("hjp-icon-close");
+    const tooltip   = document.getElementById("hjp-tooltip");
+    const isOpen    = win.classList.toggle("hjp-open");
+
+    hjpChatIsOpen = isOpen;
+    iconChat.style.display  = isOpen ? "none"  : "block";
+    iconClose.style.display = isOpen ? "block" : "none";
+
+    if (isOpen) tooltip.classList.remove("hjp-tooltip-show");
+
+    /* WhatsApp: mobile + PC دونوں پر hide */
+    hjpSetWaBtn(!isOpen);
+
+    /* Mobile: body scroll lock */
+    if (window.innerWidth < 768) {
+      document.body.style.overflow = isOpen ? "hidden" : "";
+    }
+
+    if (isOpen) {
+      setTimeout(() => document.getElementById("hjp-user-input").focus(), 200);
+    }
+  }
+
+  /* ════════════════════════════════════════
+     MESSAGES
+  ════════════════════════════════════════ */
+  function hjpFormatMessage(text) {
+    // پہلے HTML سے بچاؤ (XSS سے محفوظ رکھنے کے لیے)
+    let safe = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+    // کوڈ بلاکس (```...```) کو ہٹا کر صرف اندر کا متن رکھو، کوئی <code> نہ بنائیں
+    safe = safe.replace(/```([\s\S]*?)```/g, function(match, inner) {
+      return inner.trim();
+    });
+    safe = safe.replace(/`([^`]+)`/g, "$1");
+
+    // **bold** کو <strong> میں بدلو
+    safe = safe.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+    // لنکس کو clickable بناؤ
+    safe = safe.replace(
+      /(https?:\/\/[^\s<]+)/g,
+      '<a href="$1" target="_blank" rel="noopener" style="color:#0a66c2;font-weight:600;text-decoration:underline;word-break:break-all;">$1</a>'
+    );
+
+    // لائنوں کو پروسیس کرو — بلٹ پوائنٹس اور نمبر والی لسٹ کو <ul>/<ol> میں بدلو
+    const lines = safe.split("\n");
+    let html = "";
+    let inList = false;
+    let listType = null;
+
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      const isBullet = /^[-•]\s+/.test(trimmed);
+      const isNumbered = /^\d+\.\s+/.test(trimmed);
+
+      if (isBullet || isNumbered) {
+        const thisType = isBullet ? "ul" : "ol";
+        if (!inList || listType !== thisType) {
+          if (inList) html += listType === "ul" ? "</ul>" : "</ol>";
+          html += thisType === "ul" ? "<ul style='margin:6px 0;padding-left:20px;'>" : "<ol style='margin:6px 0;padding-left:20px;'>";
+          inList = true;
+          listType = thisType;
+        }
+        const content = trimmed.replace(/^[-•]\s+/, "").replace(/^\d+\.\s+/, "");
+        html += `<li style="margin-bottom:4px;">${content}</li>`;
+      } else {
+        if (inList) {
+          html += listType === "ul" ? "</ul>" : "</ol>";
+          inList = false;
+          listType = null;
+        }
+        if (trimmed === "") {
+          html += "<br>";
+        } else {
+          html += line + "<br>";
+        }
+      }
+    });
+    if (inList) html += listType === "ul" ? "</ul>" : "</ol>";
+
+    return html;
+  }
+
+  function hjpAddMessage(text, isUser) {
+    const messages = document.getElementById("hjp-messages");
+    const div = document.createElement("div");
+    div.className = "hjp-msg " + (isUser ? "hjp-user-msg" : "hjp-bot-msg");
+    const bubble = document.createElement("div");
+    bubble.className = "hjp-bubble";
+    bubble.innerHTML = isUser
+      ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")
+      : hjpFormatMessage(text);
+    div.appendChild(bubble);
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function hjpShowTyping() {
+    const messages = document.getElementById("hjp-messages");
+    const div = document.createElement("div");
+    div.className = "hjp-msg hjp-bot-msg";
+    div.id = "hjp-typing-indicator";
+    div.innerHTML = '<div class="hjp-typing"><div class="hjp-dot"></div><div class="hjp-dot"></div><div class="hjp-dot"></div></div>';
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function hjpHideTyping() {
+    const el = document.getElementById("hjp-typing-indicator");
+    if (el) el.remove();
+  }
+
+  /* ════════════════════════════════════════
+     QUICK REPLY CHIP
+  ════════════════════════════════════════ */
+  function hjpSendChip(text) {
+    document.getElementById("hjp-user-input").value = text;
+    hjpSendMessage();
+    document.getElementById("hjp-quick-replies").style.display = "none";
+  }
+
+  /* ════════════════════════════════════════
+     SEND MESSAGE
+  ════════════════════════════════════════ */
+  // ✅ ہر یوزر کے لیے ایک permanent unique ID
+  function hjpGetSessionId() {
+    let sid = localStorage.getItem('hjp_session_id');
+    if (!sid) {
+      sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 12);
+      localStorage.setItem('hjp_session_id', sid);
+    }
+    return sid;
+  }
+
+  async function hjpSendMessage() {
+    const input   = document.getElementById("hjp-user-input");
+    const sendBtn = document.getElementById("hjp-send-btn");
+    const userText = input.value.trim();
+    if (!userText) return;
+
+    hjpAddMessage(userText, true);
+    input.value = "";
+    input.disabled = true;
+    sendBtn.disabled = true;
+    hjpShowTyping();
+
+    try {
+      const response = await fetch(HJP_WORKER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: userText,
+          sessionId: hjpGetSessionId()
+        }),
+      });
+      const data = await response.json();
+      hjpHideTyping();
+      hjpAddMessage(data.reply || "Sorry, something went wrong. Please try again.", false);
+    } catch (err) {
+      hjpHideTyping();
+      hjpAddMessage("Unable to connect. Please check your internet connection.", false);
+    }
+
+    input.disabled = false;
+    sendBtn.disabled = false;
+    input.focus();
+  }
+</script><div id="incoming-call-popup" style="display:none; position:fixed; top:18px; right:18px; z-index:99999; background:#ffffff; border-radius:16px; box-shadow:0 12px 32px rgba(15,23,42,0.25); padding:16px; width:290px; flex-direction:column; gap:4px; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img id="ic-call-pic" src="" style="width:50px;height:50px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #e2e8f0;">
+        <div style="flex:1; min-width:0;">
+            <div id="ic-call-name" style="font-weight:700; font-size:15px; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+            <div id="ic-call-type" style="font-size:12.5px; color:#64748b; margin-top:2px;"></div>
+        </div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:14px;">
+        <button id="ic-decline-btn" style="flex:1; background:#ef4444; color:#fff; border:none; border-radius:24px; padding:10px 0; font-weight:700; font-size:13.5px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24" style="transform:rotate(135deg);"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            Decline
+        </button>
+        <button id="ic-accept-btn" style="flex:1; background:#22c55e; color:#fff; border:none; border-radius:24px; padding:10px 0; font-weight:700; font-size:13.5px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            Accept
+        </button>
+    </div>
+</div>
 </body>
 </html>
