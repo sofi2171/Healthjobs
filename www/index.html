@@ -1485,8 +1485,8 @@ window.shareImage = async function() {
 
   const pageName = postType === 'general_post' ? 'details.html' : 'posts.html';
   const postUrl = postId
-    ? `${window.location.origin}/${pageName}?id=${postId}`
-    : window.location.href;
+    ? `${window.SITE_URL}/${pageName}?id=${postId}`
+    : window.SITE_URL + location.pathname + location.search;
 
   try {
     const response = await fetch(currentImgUrl);
@@ -1670,6 +1670,27 @@ window.addEventListener("load", async function () {
 window.onerror = function(){ return true; };
 window.onunhandledrejection = function(){ return true; };
   const notifSound = new Audio('audio/notifications.mp3');
+  // ✅ FIX: Global incoming-call ringtone (home page / chats-request page par popup
+  // aane par bhi bajni chahiye — pehle yahan koi ringtone hi nahi thi).
+  const globalCallRingtone = new Audio('audio/incoming.mp3');
+  globalCallRingtone.loop = true;
+  globalCallRingtone.preload = 'auto';
+  let globalCallVibrateInterval = null;
+  function startGlobalCallAlert() {
+      globalCallRingtone.currentTime = 0;
+      globalCallRingtone.play().catch(e => console.log("Ringtone blocked:", e));
+      if ("vibrate" in navigator) {
+          navigator.vibrate([800, 400, 800]);
+          if (globalCallVibrateInterval) clearInterval(globalCallVibrateInterval);
+          globalCallVibrateInterval = setInterval(() => navigator.vibrate([800, 400, 800]), 2200);
+      }
+  }
+  function stopGlobalCallAlert() {
+      globalCallRingtone.pause();
+      globalCallRingtone.currentTime = 0;
+      if (globalCallVibrateInterval) { clearInterval(globalCallVibrateInterval); globalCallVibrateInterval = null; }
+      if ("vibrate" in navigator) navigator.vibrate(0);
+  }
   // ✅ FIX: badge ab per-UID localStorage key mein store hoga, taake doosre account
   // par switch karne se purana badge "leak" na ho
   function chatBadgeKey() {
@@ -1749,6 +1770,10 @@ window.addEventListener('storage', (e) => {
   import { getDatabase, ref as dbRef, onValue, set, onDisconnect, serverTimestamp as rtServerTimestamp, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
   import { getMessaging, getToken, isSupported } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
 import { initializeFirestore, persistentLocalCache, collection, query, where, orderBy, limit, startAfter, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove, addDoc, serverTimestamp, deleteDoc, onSnapshot, increment, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // ✅ Production website ka asal domain — APK/WebView ke andar window.location.origin
+  // hamesha "https://localhost" hota hai, is liye navigation ke liye yeh fixed constant use karo
+  window.SITE_URL = "https://healthjobportal.com";
 
   const mainConfig = {
     apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
@@ -1954,8 +1979,8 @@ setInterval(() => {
     const sharePost = postsArr.find(p => p.id === window.currentShareId);
 const shareType = sharePost?.type || window.currentShareType;
 const link = sharePost?.slug 
-    ? window.location.origin + (shareType === 'general_post' ? '/updates/' : '/jobs/') + sharePost.slug
-    : window.location.origin + '/' + (shareType === 'general_post' ? 'details.html' : 'posts.html') + '?id=' + window.currentShareId;
+    ? window.SITE_URL + (shareType === 'general_post' ? '/updates/' : '/jobs/') + sharePost.slug
+    : window.SITE_URL + '/' + (shareType === 'general_post' ? 'details.html' : 'posts.html') + '?id=' + window.currentShareId;
     const title = sharePost?.title ? '📢 ' + sharePost.title + '\n' : 'Health Jobs Portal\n';
     const tempDiv = document.createElement('div');
 
@@ -2002,14 +2027,14 @@ window.handlePostClick = function(postId, postType) {
 
     if (slug) {
         if (type === 'general_post') {
-            location.href = '/updates/' + slug;
+            location.href = window.SITE_URL + '/updates/' + slug;
         } else {
-            location.href = '/jobs/' + slug;
+            location.href = window.SITE_URL + '/jobs/' + slug;
         }
     } else {
-        location.href = type === 'general_post' 
-            ? 'details.html?id=' + postId 
-            : 'posts.html?id=' + postId;
+        location.href = window.SITE_URL + (type === 'general_post' 
+            ? '/details.html?id=' + postId 
+            : '/posts.html?id=' + postId);
     }
 };
 
@@ -2129,10 +2154,10 @@ const postType = foundPost?.type || r.type;
 const link = isUser
     ? 'wid.html?uid=' + r.id
     : (postSlug
-        ? (postType === 'general_post' ? '/updates/' : '/jobs/') + postSlug
-        : (postType === 'general_post' 
-            ? 'details.html?id=' + r.id 
-            : 'posts.html?id=' + r.id));
+        ? window.SITE_URL + (postType === 'general_post' ? '/updates/' : '/jobs/') + postSlug
+        : window.SITE_URL + (postType === 'general_post' 
+            ? '/details.html?id=' + r.id 
+            : '/posts.html?id=' + r.id));
       let dateStr = '';
       if (!isUser && r.createdAt) {
         const diff = now - r.createdAt;
@@ -3489,24 +3514,37 @@ onAuthStateChanged(auth, async (user) => {
         // ✅ GLOBAL INCOMING CALL POPUP: kahin se bhi call aaye, popup dikhao
         try {
             const popup = document.getElementById('incoming-call-popup');
+            const icCallPic = document.getElementById('ic-call-pic');
+            let lastRingingCallerUid = null; // ✅ FIX: same caller ka data dobara aaye to pic reload na ho
             onValue(dbRef(dbRT, `calls/${user.uid}`), (snap) => {
                 const data = snap.val();
                 if (data && data.status === 'ringing') {
-                    document.getElementById('ic-call-pic').src = data.callerPhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.callerName || 'User')}`;
+                    // ✅ FIX: profile pic sirf tab set karo jab caller badla ho — warna
+                    // Firebase ka har onValue update same image ko dobara download kar deta tha
+                    if (lastRingingCallerUid !== data.callerUid) {
+                        icCallPic.src = data.callerPhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.callerName || 'User')}`;
+                        lastRingingCallerUid = data.callerUid || null;
+                    }
                     document.getElementById('ic-call-name').innerText = data.callerName || 'Unknown';
                     document.getElementById('ic-call-type').innerText = data.type === 'video' ? 'Incoming Video Call' : 'Incoming Voice Call';
                     popup.dataset.chatId = data.chatId || '';
                     popup.dataset.callerUid = data.callerUid || '';
                     popup.dataset.type = data.type || 'audio';
-                    popup.style.display = 'flex';
+                    if (popup.style.display !== 'flex') {
+                        popup.style.display = 'flex';
+                        startGlobalCallAlert(); // ✅ FIX: ringtone + vibration ab popup ke saath shuru hogi
+                    }
                 } else {
                     popup.style.display = 'none';
+                    lastRingingCallerUid = null;
+                    stopGlobalCallAlert(); // ✅ FIX: call cut/end hote hi ringtone/vibration band
                 }
-            });
+            }, (err) => console.error("calls/ listener error (check Firebase rules for 'calls' path):", err));
 
             document.getElementById('ic-decline-btn').onclick = async () => {
                 const chatId = popup.dataset.chatId;
                 popup.style.display = 'none';
+                stopGlobalCallAlert();
                 try { if (chatId) await update(dbRef(dbRT, `chats/${chatId}/webrtc`), { status: 'ended' }); } catch(e) {}
                 try { await remove(dbRef(dbRT, `calls/${user.uid}`)); } catch(e) {}
             };
@@ -3515,6 +3553,7 @@ onAuthStateChanged(auth, async (user) => {
                 const callerUid = popup.dataset.callerUid;
                 const type = popup.dataset.type;
                 popup.style.display = 'none';
+                stopGlobalCallAlert();
                 if (callerUid) window.location.href = `chat.html?uid=${callerUid}&startCall=true&callType=${type}`;
             };
         } catch(e) { console.log("Incoming call popup error:", e); }
@@ -3884,8 +3923,8 @@ function loadNewsTicker() {
   const items = newsPosts.map(p => {
     const title = (p.title || '').substring(0, 80);
     const link  = p.slug
-      ? '/updates/' + p.slug
-      : 'details.html?id=' + p.id;
+      ? window.SITE_URL + '/updates/' + p.slug
+      : window.SITE_URL + '/details.html?id=' + p.id;
     return `<span class="ticker-item" onclick="location.href='${link}'">${title}</span><span class="ticker-sep" style="color:rgba(255,255,255,0.4);padding:0 16px;">•</span>`;
   }).join('');
 
