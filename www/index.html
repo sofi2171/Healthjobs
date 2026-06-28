@@ -1766,7 +1766,7 @@ window.addEventListener('storage', (e) => {
 });
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
   import { getDatabase, ref as dbRef, onValue, set, onDisconnect, serverTimestamp as rtServerTimestamp, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
   import { getMessaging, getToken, isSupported } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
 import { initializeFirestore, persistentLocalCache, collection, query, where, orderBy, limit, startAfter, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove, addDoc, serverTimestamp, deleteDoc, onSnapshot, increment, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -1787,6 +1787,16 @@ import { initializeFirestore, persistentLocalCache, collection, query, where, or
 
   const app = initializeApp(mainConfig);
   const auth = getAuth(app);
+
+  // ✅ CRITICAL FIX: Capacitor WebView mein session reliably persist karne ke liye
+  (async () => {
+    try {
+      await setPersistence(auth, indexedDBLocalPersistence);
+    } catch (e) {
+      try { await setPersistence(auth, browserLocalPersistence); } catch (e2) {}
+    }
+  })();
+
   const dbRT = getDatabase(app);
   let messaging = null;
 
