@@ -61,6 +61,13 @@ public class MainActivity extends BridgeActivity implements ModifiedMainActivity
         }
     }
 
+    // ✅ Yeh interface ka required acknowledgment method hai — sirf yeh confirm karta hai
+    // ke onActivityResult() upar manually override kiya gaya hai. Body khaali hi rehta hai.
+    @Override
+    public void IHaveModifiedTheMainActivityForTheUseWithSocialLoginPlugin() {
+        // Intentionally empty — required by ModifiedMainActivityForSocialLoginPlugin interface
+    }
+
     private void handleCallIntent(Intent intent) {
         if (intent == null) return;
         String callerUid = intent.getStringExtra("callerUid");
