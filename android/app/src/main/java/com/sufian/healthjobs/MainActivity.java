@@ -4,10 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-
+import android.util.Log;
 import com.getcapacitor.BridgeActivity;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginHandle;
+import ee.forgr.capacitor.social.login.GoogleProvider;
+import ee.forgr.capacitor.social.login.ModifiedMainActivityForSocialLoginPlugin;
+import ee.forgr.capacitor.social.login.SocialLoginPlugin;
 
-public class MainActivity extends BridgeActivity {
+// ⚠️ "implements ModifiedMainActivityForSocialLoginPlugin" Google Login ke liye zaroori hai
+public class MainActivity extends BridgeActivity implements ModifiedMainActivityForSocialLoginPlugin {
 
     private String pendingCallerUid  = null;
     private String pendingCallType   = null;
@@ -29,7 +35,6 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onResume() {
         super.onResume();
-
         // ✅ Agar pending call hai aur bridge ab ready hai
         if (pendingCall && pendingCallerUid != null) {
             pendingCall = false;
@@ -37,9 +42,27 @@ public class MainActivity extends BridgeActivity {
         }
     }
 
+    // ✅ Google Sign-In (@capgo/capacitor-social-login) ka result yahan se native side handle hota hai
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode >= GoogleProvider.REQUEST_AUTHORIZE_GOOGLE_MIN
+                && requestCode < GoogleProvider.REQUEST_AUTHORIZE_GOOGLE_MAX) {
+            PluginHandle pluginHandle = getBridge().getPlugin("SocialLogin");
+            if (pluginHandle == null) {
+                Log.i("Google Activity Result", "SocialLogin login handle is null");
+                return;
+            }
+            Plugin plugin = pluginHandle.getInstance();
+            if (plugin instanceof SocialLoginPlugin) {
+                ((SocialLoginPlugin) plugin).handleGoogleLoginIntent(requestCode, data);
+            }
+        }
+    }
+
     private void handleCallIntent(Intent intent) {
         if (intent == null) return;
-
         String callerUid = intent.getStringExtra("callerUid");
         String startCall = intent.getStringExtra("startCall");
         String callType  = intent.getStringExtra("callType");
@@ -73,6 +96,7 @@ public class MainActivity extends BridgeActivity {
                 + "&startCall=true"
                 + "&incoming=true"
                 + "&callType=" + callTypeParam;
+
             getBridge().getWebView().post(() -> {
                 getBridge().getWebView().loadUrl(url);
             });
