@@ -117,7 +117,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithCredential, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithCredential, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
@@ -137,6 +137,16 @@
         const rtdb = getDatabase(app);
         let globalCountriesData = [];
         window.currentAuthMode = 'login';
+
+        // ✅ CRITICAL FIX: Capacitor WebView mein session reliably persist karne ke liye
+        // indexedDBLocalPersistence use karo, agar woh fail ho to browserLocalPersistence pe fallback karo
+        (async () => {
+            try {
+                await setPersistence(auth, indexedDBLocalPersistence);
+            } catch (e) {
+                try { await setPersistence(auth, browserLocalPersistence); } catch (e2) {}
+            }
+        })();
 
         // 🔥 SPEED FIX 1: Safe Initialization (نیا @capgo/capacitor-social-login plugin)
         let socialLoginReady = false;
@@ -248,13 +258,17 @@
                         throw new Error("SocialLogin Plugin APK mein maujood nahi hai! npx cap sync zaroor karein.");
                     }
 
-                    // Agar abhi tak initialize() مکمل نہیں ہوا، تو پہلے wait کرو
-                    if (!socialLoginReady) {
+                    // ✅ initialize() dobara call karna safe hai — agar yeh pehle se
+                    // initialized hai to error ko ignore karo, woh real problem nahi hai
+                    try {
                         await Capacitor.Plugins.SocialLogin.initialize({
                             google: {
                                 webClientId: "21065686301-145no417sg9qudgkt619foccih0hnt11.apps.googleusercontent.com"
                             }
                         });
+                        socialLoginReady = true;
+                    } catch (initErr) {
+                        console.log("SocialLogin already initialized (safe to ignore):", initErr);
                         socialLoginReady = true;
                     }
 
