@@ -168,8 +168,8 @@
   --notif-red: #ef4444;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-body { background-color: var(--bg-body); color: var(--text-main); padding-top: 70px; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; margin: 0; }
-main { flex: 1 0 auto; max-width: 580px; width: 100%; margin: 0 auto; padding: 0 0 80px 0; min-height: calc(100vh - 65px - 200px); }
+body { background-color: var(--bg-body); color: var(--text-main); padding-top: 70px; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; margin: 0; -webkit-overflow-scrolling: touch; overscroll-behavior-y: none; }
+main { flex: 1 0 auto; max-width: 580px; width: 100%; margin: 0 auto; padding: 0 0 80px 0; min-height: calc(100vh - 65px - 200px); -webkit-overflow-scrolling: touch; }
 
 /* =========================================
    2. HEADER
@@ -347,7 +347,7 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
    5. POST CARDS & FEED
 ========================================= */
 .feed-container { padding: 0 12px; }
-.post-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 16px; padding-top: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(15,23,42,0.04); display: flex; flex-direction: column; transition: transform 0.2s; }
+.post-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 16px; padding-top: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(15,23,42,0.05); display: flex; flex-direction: column; contain: content; transform: translateZ(0); backface-visibility: hidden; }
 .post-header { display: flex; padding: 0 16px 12px; align-items: center; cursor: pointer; }
 .post-avatar { width: 44px; height: 44px; border-radius: 50%; margin-right: 12px; border: 1px solid #f1f5f9; object-fit: cover; background: #f1f5f9; opacity: 0; transition: opacity 0.2s ease; }
 .post-avatar.img-loaded { opacity: 1; }
@@ -2264,23 +2264,29 @@ const cachedDataStr = localStorage.getItem(CACHE_KEY);
                     <div class="skeleton-line sk-img"></div>
                   </div>`).join('');
 
-                // ✅ 300ms بعد real posts render کرو
-                setTimeout(() => {
+                // ✅ فوری render کرو (پہلے 300ms کا artificial delay ہٹا دیا — یہی دوہرے جھٹکے کی وجہ تھی)
+                window.__feedCacheRendered = false;
+                requestAnimationFrame(() => {
                     feed.innerHTML = '';
                     buildVerifiedSet();
                     cached.forEach(p => appendPostToDOM(p));
                     generateTopPosters();
                     loadNewsTicker();
                     loadTrendingPosts();
-                }, 300);
+                    window.__feedCacheRendered = true;
+                    startLiveSync();
+                });
+            } else {
+                window.__feedCacheRendered = true;
+                startLiveSync();
             }
 
             document.getElementById('loading').classList.add('hidden');
-            startLiveSync();
         } catch (e) {
             console.error("Cache error:", e);
             postsArr = [];
             window.postsArr = [];
+            window.__feedCacheRendered = true;
             startLiveSync();
         }
 } else {
@@ -2303,6 +2309,7 @@ const cachedDataStr = localStorage.getItem(CACHE_KEY);
             <div class="skeleton-line sk-img"></div>
           </div>`).join('');
         document.getElementById('loading').classList.add('hidden');
+        window.__feedCacheRendered = true;
         startLiveSync();
     }
 };
@@ -2639,7 +2646,7 @@ const locCat = pType === 'general_post'
     card.innerHTML = `
       <div class="post-header" onclick="location.href='wid.html?uid=${p.posterId || p.authorId}'">
 <div class="post-avatar-wrap">
-<img src="${posterPic}" class="post-avatar" width="44" height="44" loading="lazy"
+<img src="${posterPic}" class="post-avatar" width="44" height="44" loading="lazy" decoding="async"
     onload="this.classList.add('img-loaded')"
     onerror="this.src='https://ui-avatars.com/api/?name=U';this.classList.add('img-loaded')">
   ${(window.verifiedUids || new Set()).has(p.posterId || p.authorId) ? `
