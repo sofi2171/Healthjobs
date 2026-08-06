@@ -1594,7 +1594,7 @@ async function syncVerifiedToFirestore(toVerify, toUnverify) {
     // Worker KV cache بھی clear کرو تاکہ فوری اثر ہو
     const allChanged = [...toVerify, ...toUnverify];
     if (allChanged.length) {
-      fetch('/api/clear-verified-cache', {
+      fetch('https://healthjobsapk.sufiangsufiang50.workers.dev/api/clear-verified-cache', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uids: allChanged })
