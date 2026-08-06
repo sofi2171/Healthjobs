@@ -2013,7 +2013,7 @@ const desc = plainDesc ? plainDesc.substring(0, 100) + '...\n\n' : '';
 };
 
 
-window.handlePostClick = function(postId, postType) {
+window.handlePostClick = async function(postId, postType) {
     if (!currentUser) { window.location.href = 'login.html'; return; }
     const post = postsArr.find(p => p.id === postId);
     const slug = post?.slug;
@@ -2035,11 +2035,21 @@ window.handlePostClick = function(postId, postType) {
         }
     } catch(e) {}
 
+    // ✅ APK FIX: Capacitor WebView mein origin alag hota hai (localhost vs healthjobportal.com)
+    // is liye Firebase idToken URL mein pass karo taake worker page auth kar sake
+    let tokenParam = '';
+    try {
+        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+            const idToken = await currentUser.getIdToken(false);
+            if (idToken) tokenParam = '?_apkt=' + encodeURIComponent(idToken);
+        }
+    } catch(e) {}
+
     if (slug) {
         if (type === 'general_post') {
-            location.href = window.SITE_URL + '/updates/' + slug;
+            location.href = window.SITE_URL + '/updates/' + slug + tokenParam;
         } else {
-            location.href = window.SITE_URL + '/jobs/' + slug;
+            location.href = window.SITE_URL + '/jobs/' + slug + tokenParam;
         }
     } else {
         location.href = window.SITE_URL + (type === 'general_post' 
