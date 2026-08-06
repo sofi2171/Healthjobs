@@ -3,10 +3,14 @@
   "appName": "Healthjobs",
   "webDir": "www",
   "server": {
+    "url": "https://healthjobportal.com",
     "androidScheme": "https",
     "allowNavigation": [
       "healthjobportal.com",
-      "healthjobs-portal.web.app"
+      "*.healthjobportal.com",
+      "healthjobs-portal.web.app",
+      "jobs-45cc9.firebaseapp.com",
+      "accounts.google.com"
     ]
   },
   "plugins": {
