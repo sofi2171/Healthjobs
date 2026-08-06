@@ -273,10 +273,29 @@
                     }
 
                     // Ab native Google account picker khulega — APK ke andar hi
-                    const res = await Capacitor.Plugins.SocialLogin.login({
-                        provider: 'google',
-                        options: { scopes: ['email', 'profile'] }
-                    });
+                    // ✅ FIX: filterByAuthorizedAccounts:false — dusri baar (cached account) NoCredentialException
+                    // aur uske baad Chrome fallback rokta hai
+                    let res;
+                    try {
+                        res = await Capacitor.Plugins.SocialLogin.login({
+                            provider: 'google',
+                            options: {
+                                scopes: ['email', 'profile'],
+                                style: 'bottom',
+                                filterByAuthorizedAccounts: false
+                            }
+                        });
+                    } catch (credErr) {
+                        console.log("First attempt failed, retrying with standard style:", credErr);
+                        res = await Capacitor.Plugins.SocialLogin.login({
+                            provider: 'google',
+                            options: {
+                                scopes: ['email', 'profile'],
+                                style: 'standard',
+                                filterByAuthorizedAccounts: false
+                            }
+                        });
+                    }
 
                     const idToken = res?.result?.idToken;
                     if (!idToken) {
