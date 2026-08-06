@@ -5,8 +5,9 @@
   "server": {
     "androidScheme": "https",
     "allowNavigation": [
-      "healthjobportal.com",
-      "healthjobs-portal.web.app"
+  "healthjobportal.com",
+  "healthjobs-portal.web.app",
+  "healthjobsapk.sufiangsufiang50.workers.dev"
     ]
   },
   "plugins": {
