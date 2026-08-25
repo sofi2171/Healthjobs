@@ -179,7 +179,13 @@
                 try {
                     const snap = await getDoc(doc(db, "users", user.uid));
                     if (snap.exists()) { 
-                        window.location.replace("index.html"); 
+                        // FIX: agar user kisi job/note page se yahan bheja gaya tha
+                        // (requireAuth ne redirectAfterLogin set kiya tha), to wapis
+                        // usi page par bhejo — index.html par nahi, warna WA/Call
+                        // button ka action kabhi complete nahi hota aur loop banta hai.
+                        const dest = sessionStorage.getItem('redirectAfterLogin');
+                        sessionStorage.removeItem('redirectAfterLogin');
+                        window.location.replace(dest || "index.html");
                     } else { 
                         hidePageLoader();
                         authView.classList.add('hidden');
@@ -435,7 +441,11 @@
                         body: JSON.stringify({ email: auth.currentUser.email, name: nameInput })
                     }); 
                 } catch(mailErr) {}
-                window.location.replace("index.html");
+                // FIX: same redirectAfterLogin fix for brand-new users who just
+                // finished profile setup — send them back to the page they came from.
+                const dest = sessionStorage.getItem('redirectAfterLogin');
+                sessionStorage.removeItem('redirectAfterLogin');
+                window.location.replace(dest || "index.html");
             } catch(error) { 
                 alert("Error saving profile: " + error.message); 
                 btn.disabled = false; text.style.display = 'block'; loader.style.display = 'none'; 
