@@ -24,7 +24,6 @@
 <meta property="og:url" content="https://healthjobportal.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Health Jobs Portal">
-<meta name="google-adsense-account" content="ca-pub-1291348510465369">
 
 <script type="application/ld+json">
 {
@@ -168,8 +167,8 @@
   --notif-red: #ef4444;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-body { background-color: var(--bg-body); color: var(--text-main); padding-top: 70px; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; margin: 0; -webkit-overflow-scrolling: touch; overscroll-behavior-y: none; }
-main { flex: 1 0 auto; max-width: 580px; width: 100%; margin: 0 auto; padding: 0 0 80px 0; min-height: calc(100vh - 65px - 200px); -webkit-overflow-scrolling: touch; }
+body { background-color: var(--bg-body); color: var(--text-main); padding-top: 70px; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; margin: 0; }
+main { flex: 1 0 auto; max-width: 580px; width: 100%; margin: 0 auto; padding: 0 0 80px 0; min-height: calc(100vh - 65px - 200px); }
 
 /* =========================================
    2. HEADER
@@ -183,92 +182,70 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
 .notif-badge { position: absolute; top: -2px; right: -2px; background: var(--notif-red); color: white; font-size: 10px; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 2px solid var(--bg-white); }
 
 /* =========================================
-   3. FILTER BOXES
+   3. FILTER SYSTEM — PROFESSIONAL REDESIGN
 ========================================= */
-.dual-box-container {
+.filter-section {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 65px;
+  z-index: 300;
+}
+.filter-tabs-row {
   display: flex;
-  gap: 8px;
-  padding: 10px 10px 0;
-  font-family: inherit;
+  padding: 0 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  border-bottom: 1px solid #f1f5f9;
 }
-.pro-box {
-  flex: 1;
-  position: relative;
-  z-index: 200;
-}
-.pro-header {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 9px 12px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #0f172a;
-  cursor: pointer;
-  gap: 6px;
-  transition: border-color 0.15s;
-  user-select: none;
-  font-family: inherit;
-}
-.pro-header:hover { border-color: #0a66c2; }
-.pro-box.active .pro-header { border-color: #0a66c2; color: #0a66c2; }
-.pro-header .f-arrow {
-  font-size: 9px;
-  color: #94a3b8;
-  transition: transform 0.2s;
+.filter-tabs-row::-webkit-scrollbar { display: none; }
+.filter-tab {
   flex-shrink: 0;
-}
-.pro-box.active .pro-header .f-arrow { transform: rotate(180deg); color: #0a66c2; }
-.pro-header .label-text {
-  flex: 1;
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.pro-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: none;
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  z-index: 9999;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.10);
-  overflow: hidden;
-  min-width: 150px;
-}
-.pro-box.active .pro-list { display: block; }
-.pro-list li {
   padding: 10px 14px;
   font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  border-bottom: 1px solid #f1f5f9;
-  color: #334155;
-  transition: background 0.1s;
-  font-family: inherit;
-}
-.pro-list li:last-child { border-bottom: none; }
-.pro-list li:hover { background: #f1f5f9; color: #0f172a; }
-.pro-list li.selected { color: #0a66c2; background: #f0f7ff; font-weight: 600; }
-.pro-list li.selected::after { content: " \2713"; font-size: 11px; }
-.pro-list li.news-li {
-  border-top: 1px solid #e2e8f0;
-  color: #0a66c2;
   font-weight: 600;
-  background: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
-.pro-list li.news-li:hover { background: #e0f2fe; }
+.filter-tab:active { background: #f8fafc; border-radius: 6px 6px 0 0; }
+.filter-tab.active { color: #0a66c2; border-bottom-color: #0a66c2; }
+.filter-chips-row {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.filter-chips-row::-webkit-scrollbar { display: none; }
+.filter-chip {
+  flex-shrink: 0;
+  padding: 5px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1.5px solid transparent;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.filter-chip:active { transform: scale(0.95); }
+.filter-chip.active { color: #0a66c2; background: #eff6ff; border-color: #bfdbfe; }
+/* OLD compat — hidden */
+.dual-box-container { display: none !important; }
 
 /* =========================================
    4. SITE INTRO BANNER
@@ -347,9 +324,9 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
    5. POST CARDS & FEED
 ========================================= */
 .feed-container { padding: 0 12px; }
-.post-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 16px; padding-top: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(15,23,42,0.05); display: flex; flex-direction: column; contain: content; transform: translateZ(0); backface-visibility: hidden; }
-.post-header { display: flex; padding: 0 16px 12px; align-items: center; cursor: pointer; }
-.post-avatar { width: 44px; height: 44px; border-radius: 50%; margin-right: 12px; border: 1px solid #f1f5f9; object-fit: cover; background: #f1f5f9; opacity: 0; transition: opacity 0.2s ease; }
+.post-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 16px; padding-top: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(15,23,42,0.04); display: flex; flex-direction: column; transition: transform 0.2s; contain: layout style; }
+.post-avatar { width: 44px; height: 44px; border-radius: 50%; margin-right: 12px; border: 1px solid #f1f5f9; object-fit: cover; background: #f1f5f9; opacity: 1; transition: opacity 0.2s ease; transform: translateZ(0); }
+.post-avatar.img-loading { opacity: 0; }
 .post-avatar.img-loaded { opacity: 1; }
 .user-name { font-size: 15px; font-weight: 700; color: var(--text-main); }
 .post-loc-info { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-top: 2px; }
@@ -357,17 +334,18 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
 .post-title { font-size: 16px; font-weight: 700; color: var(--primary-blue); margin-bottom: 6px; }
 .post-desc { font-size: 14px; line-height: 1.5; color: #334155; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
 
+.post-header { display: flex; padding: 0 16px 12px; align-items: center; cursor: pointer; }
 /* Image Collage */
 .collage-box { display: grid; gap: 2px; background: #fff; margin-top: 5px; cursor: pointer; border-radius: 0; overflow: hidden; border-top: 1px solid #f8fafc; border-bottom: 1px solid #f8fafc; }
 .grid-1 { grid-template-columns: 1fr; min-height: 280px; }
-.grid-1 img { width: 100%; max-height: 400px; min-height: 280px; object-fit: contain; background: #f8fafc; display: block; opacity: 0; transition: opacity 0.25s ease; }
+.grid-1 img { width: 100%; max-height: 400px; min-height: 280px; object-fit: contain; background: #f8fafc; display: block; opacity: 1; transition: opacity 0.25s ease; transform: translateZ(0); }
 .grid-2 { grid-template-columns: 1fr 1fr; }
-.grid-2 img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f8fafc; opacity: 0; transition: opacity 0.25s ease; }
+.grid-2 img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f8fafc; opacity: 1; transition: opacity 0.25s ease; transform: translateZ(0); }
 .grid-3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-.grid-3 img:first-child { grid-row: span 2; width: 100%; height: 100%; object-fit: cover; background: #f8fafc; opacity: 0; transition: opacity 0.25s ease; }
-.grid-3 img:not(:first-child) { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f8fafc; opacity: 0; transition: opacity 0.25s ease; }
+.grid-3 img:first-child { grid-row: span 2; width: 100%; height: 100%; object-fit: cover; background: #f8fafc; opacity: 1; transition: opacity 0.25s ease; transform: translateZ(0); }
+.grid-3 img:not(:first-child) { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f8fafc; opacity: 1; transition: opacity 0.25s ease; transform: translateZ(0); }
 .collage-box img.img-loaded { opacity: 1 !important; }
-.grid-3 img:not(:first-child) { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+.collage-box img.img-loading { opacity: 0; }
 .more-imgs-overlay { position: relative; }
 .more-imgs-overlay::after { content: "+" attr(data-count); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; pointer-events: none; }
 
@@ -723,6 +701,21 @@ header { background-color: var(--bg-white); padding: 0 16px; display: flex; just
 .submenu-item:hover { color: var(--primary-blue); background: #e2e8f0; }
 
 /* =========================================
+   9b. AD STATUS POPUP
+========================================= */
+.ad-status-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(2px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+.ad-status-overlay.active { display: flex; }
+.ad-status-box { background: var(--bg-white); border-radius: 16px; max-width: 340px; width: 100%; padding: 30px 24px 24px; text-align: center; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.25); animation: adStatusPop 0.25s ease; }
+@keyframes adStatusPop { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.ad-status-close { position: absolute; top: 12px; right: 12px; background: #f1f5f9; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 18px; line-height: 1; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.ad-status-close:active { background: #e2e8f0; }
+.ad-status-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 26px; }
+.ad-status-title { font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0 0 8px; }
+.ad-status-msg { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 22px; }
+.ad-status-btn { background: var(--primary-blue); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; width: 100%; }
+.ad-status-btn:active { background: #004182; }
+
+/* =========================================
    10. TRENDING
 ========================================= */
 .trend-item { display: flex; align-items: center; background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); cursor: pointer; transition: transform 0.2s, background 0.2s; }
@@ -1013,33 +1006,447 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 </head>
 <body>
 
-<!-- SPLASH SCREEN -->
-<div id="custom-splash" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#ffffff;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:99999;transition:opacity 0.5s ease;">
-  <img src="images/logo.png" style="max-width:80%;height:auto;margin-bottom:20px;" alt="Logo">
-  <div class="spinner-splash"></div>
+<!-- LANDING PAGE -->
+<div id="hjp-landing" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#ffffff;z-index:99999;overflow-y:auto;">
+<style>
+  #hjp-landing * { box-sizing:border-box; font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+  #hjp-landing .hjpl-wrap { max-width:1100px; margin:0 auto; padding:0 20px; }
+  #hjp-landing .hjpl-navbar { position:sticky; top:0; left:0; width:100%; background:rgba(255,255,255,.9); backdrop-filter:blur(10px); border-bottom:1px solid #e2e8f0; z-index:20; }
+  #hjp-landing .hjpl-nav-inner { display:flex; align-items:center; justify-content:space-between; padding:12px 0; }
+  #hjp-landing .hjpl-brand { display:flex; align-items:center; gap:8px; text-decoration:none; }
+  #hjp-landing .hjpl-brand img { height:36px; width:auto; }
+  #hjp-landing .hjpl-brand span { font-size:18px; font-weight:800; color:#0a1628; letter-spacing:-.3px; }
+  #hjp-landing .hjpl-brand span b { color:#0a66c2; }
+  #hjp-landing .hjpl-nav-actions { display:flex; align-items:center; gap:10px; }
+  #hjp-landing .hjpl-btn-login { color:#0a1628; font-size:14px; font-weight:600; padding:9px 16px; border-radius:8px; text-decoration:none; }
+  #hjp-landing .hjpl-btn-login:hover { background:rgba(10,102,194,.08); color:#0a66c2; }
+  #hjp-landing .hjpl-btn-cta { display:inline-flex; align-items:center; gap:6px; color:#fff; font-size:14px; font-weight:700; padding:10px 20px; border-radius:8px; background:linear-gradient(135deg,#0a66c2 0%,#004182 100%); text-decoration:none; border:none; cursor:pointer; box-shadow:0 6px 16px -6px rgba(10,102,194,.5); }
+  #hjp-landing .hjpl-hamburger-btn { background:none; border:none; cursor:pointer; width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:8px; }
+  #hjp-landing .hjpl-hamburger-btn:hover { background:#f1f5f9; }
+  #hjp-landing .hjpl-dropdown { position:absolute; top:48px; right:0; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; box-shadow:0 8px 24px rgba(15,23,42,.14); min-width:190px; padding:8px; display:none; flex-direction:column; z-index:50; }
+  #hjp-landing .hjpl-dropdown.active { display:flex; }
+  #hjp-landing .hjpl-dropdown a { color:#0a1628; text-decoration:none; font-size:14px; font-weight:600; padding:10px 12px; border-radius:6px; }
+  #hjp-landing .hjpl-dropdown a:hover { background:#f1f5f9; color:#0a66c2; }
+
+  #hjp-landing .hjpl-hero { position:relative; padding:64px 0 40px; background:linear-gradient(180deg,#f0f7ff 0%,#ffffff 100%); overflow:hidden; text-align:center; }
+  #hjp-landing .hjpl-eyebrow { display:inline-flex; align-items:center; gap:8px; background:rgba(10,102,194,.08); color:#004182; font-size:12.5px; font-weight:600; padding:6px 14px; border-radius:999px; border:1px solid rgba(10,102,194,.18); margin-bottom:18px; }
+  #hjp-landing .hjpl-eyebrow-dot { width:7px; height:7px; background:#22c55e; border-radius:50%; }
+  #hjp-landing .hjpl-hero h1 { font-size:34px; font-weight:800; line-height:1.2; letter-spacing:-.6px; color:#0a1628; margin:0 0 16px; max-width:640px; margin-left:auto; margin-right:auto; }
+  #hjp-landing .hjpl-hero h1 .grad { background:linear-gradient(135deg,#0a66c2 0%,#22c55e 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  #hjp-landing .hjpl-hero p { font-size:15.5px; line-height:1.6; color:#4a5568; max-width:520px; margin:0 auto 28px; }
+  #hjp-landing .hjpl-hero-cta { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:36px; }
+  #hjp-landing .hjpl-btn-primary { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,#0a66c2 0%,#004182 100%); color:#fff; border:none; padding:14px 26px; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; box-shadow:0 10px 22px -10px rgba(10,102,194,.6); }
+  #hjp-landing .hjpl-btn-secondary { display:inline-flex; align-items:center; padding:14px 26px; border-radius:10px; font-size:15px; font-weight:700; color:#0a1628; background:#fff; border:1.5px solid #e2e8f0; text-decoration:none; }
+  #hjp-landing .hjpl-stats { display:flex; justify-content:center; gap:28px; flex-wrap:wrap; padding-top:24px; border-top:1px solid rgba(10,22,40,.08); max-width:520px; margin:0 auto; }
+  #hjp-landing .hjpl-stat-val { font-size:24px; font-weight:800; color:#0a1628; line-height:1; }
+  #hjp-landing .hjpl-stat-lbl { font-size:12px; color:#718096; margin-top:4px; font-weight:500; }
+
+  /* editable hero image */
+  #hjp-landing .hjpl-hero-img-wrap { max-width:560px; margin:36px auto 0; }
+  #hjp-landing .hjpl-hero-img-wrap img { width:100%; height:auto; max-height:320px; object-fit:contain; }
+
+  #hjp-landing .hjpl-trust { padding:32px 0; background:#fafbfc; border-top:1px solid rgba(10,22,40,.05); border-bottom:1px solid rgba(10,22,40,.05); }
+  #hjp-landing .hjpl-trust-label { text-align:center; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:#718096; margin-bottom:18px; }
+  #hjp-landing .hjpl-trust-grid { display:flex; flex-wrap:wrap; justify-content:center; gap:10px 14px; }
+  #hjp-landing .hjpl-badge { display:inline-flex; align-items:center; gap:8px; padding:9px 16px; background:#fff; border:1px solid rgba(10,22,40,.08); border-radius:999px; font-size:13px; font-weight:600; color:#2d3748; }
+
+  #hjp-landing .hjpl-section { padding:64px 0; }
+  #hjp-landing .hjpl-section-head { max-width:640px; margin:0 auto 40px; text-align:center; }
+  #hjp-landing .hjpl-eyebrow-sm { display:inline-block; color:#0a66c2; font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px; }
+  #hjp-landing .hjpl-section-head h2 { font-size:28px; font-weight:800; line-height:1.2; letter-spacing:-.4px; color:#0a1628; margin:0 0 12px; }
+  #hjp-landing .hjpl-section-head p { font-size:15px; line-height:1.6; color:#4a5568; margin:0; }
+
+  #hjp-landing .hjpl-grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  #hjp-landing .hjpl-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  #hjp-landing .hjpl-card { background:#fff; border:1px solid rgba(10,22,40,.08); border-radius:14px; padding:24px 20px; }
+  #hjp-landing .hjpl-card-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:rgba(10,102,194,.08); color:#0a66c2; font-size:20px; margin-bottom:14px; }
+  #hjp-landing .hjpl-card h3 { font-size:16px; font-weight:700; color:#0a1628; margin:0 0 6px; }
+  #hjp-landing .hjpl-card p { font-size:13.5px; line-height:1.55; color:#4a5568; margin:0; }
+
+  /* 2 editable feature images row */
+  #hjp-landing .hjpl-carousel-wrap { width:100%; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; margin-top:44px; }
+  #hjp-landing .hjpl-carousel-wrap::-webkit-scrollbar { display:none; }
+  #hjp-landing .hjpl-carousel-track { display:flex; gap:14px; padding:2px 2px 4px; }
+  #hjp-landing .hjpl-carousel-slide { flex:0 0 82%; max-width:480px; aspect-ratio:16/9; scroll-snap-align:center; background:#f1f5f9; border-radius:14px; overflow:hidden; border:1px solid #e2e8f0; }
+  #hjp-landing .hjpl-carousel-slide img { width:100%; height:100%; object-fit:cover; display:block; }
+  @media (min-width:640px){ #hjp-landing .hjpl-carousel-slide { flex-basis:55%; } }
+
+  #hjp-landing .hjpl-cta-section { padding:60px 0; }
+  #hjp-landing .hjpl-cta-card { position:relative; max-width:900px; margin:0 auto; padding:56px 32px; background:linear-gradient(135deg,#0a1628 0%,#0f2d4d 50%,#004182 100%); border-radius:24px; text-align:center; color:#fff; box-shadow:0 24px 60px -24px rgba(10,102,194,.5); }
+  #hjp-landing .hjpl-cta-card h2 { font-size:30px; font-weight:800; margin:0 0 14px; color:#fff; letter-spacing:-.5px; }
+  #hjp-landing .hjpl-cta-card p { font-size:15px; color:rgba(255,255,255,.85); max-width:480px; margin:0 auto 26px; line-height:1.6; }
+  #hjp-landing .hjpl-cta-buttons { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  #hjp-landing .hjpl-btn-white { display:inline-flex; align-items:center; gap:8px; padding:13px 26px; background:#fff; color:#004182; border-radius:10px; font-size:15px; font-weight:700; text-decoration:none; }
+  #hjp-landing .hjpl-btn-ghost { display:inline-flex; align-items:center; padding:13px 26px; background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.35); border-radius:10px; font-size:15px; font-weight:600; text-decoration:none; }
+
+  #hjp-landing .hjpl-footer { background:#ffffff; color:#334155; padding:56px 0 0; border-top:1px solid #e2e8f0; }
+  #hjp-landing .hjpl-footer-grid { display:grid; grid-template-columns:1.6fr 1fr 1fr 1.3fr; gap:32px; padding-bottom:36px; }
+  #hjp-landing .hjpl-footer-brand { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+  #hjp-landing .hjpl-footer-brand img { height:32px; }
+  #hjp-landing .hjpl-footer-brand span { color:#0a1628; font-size:18px; font-weight:800; }
+  #hjp-landing .hjpl-footer p.tagline { font-size:13.5px; line-height:1.6; color:#64748b; max-width:280px; }
+  #hjp-landing .hjpl-footer h4 { font-size:13px; font-weight:700; color:#0a1628; text-transform:uppercase; letter-spacing:1.2px; margin:0 0 14px; }
+  #hjp-landing .hjpl-footer ul { list-style:none; margin:0; padding:0; }
+  #hjp-landing .hjpl-footer ul li { margin-bottom:9px; }
+  #hjp-landing .hjpl-footer ul li a { color:#64748b; font-size:13.5px; text-decoration:none; }
+  #hjp-landing .hjpl-footer ul li a:hover { color:#0a66c2; }
+  #hjp-landing .hjpl-footer address { font-style:normal; margin:0 0 16px; }
+  #hjp-landing .hjpl-footer address p { font-size:13px; line-height:1.6; color:#64748b; margin:0 0 8px; }
+  #hjp-landing .hjpl-footer address a { color:#64748b; text-decoration:none; }
+  #hjp-landing .hjpl-footer-bottom { padding:20px 0; border-top:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:12.5px; color:#94a3b8; }
+  #hjp-landing .hjpl-consent-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,.45); z-index:100000; display:none; align-items:flex-end; justify-content:center; }
+  #hjp-landing .hjpl-consent-overlay.active { display:flex; }
+  #hjp-landing .hjpl-consent-sheet { width:100%; max-width:560px; background:#ffffff; border-radius:18px 18px 0 0; padding:22px 22px calc(22px + env(safe-area-inset-bottom)); box-shadow:0 -8px 30px rgba(0,0,0,.15); transform:translateY(100%); transition:transform .35s ease; }
+  #hjp-landing .hjpl-consent-overlay.active .hjpl-consent-sheet { transform:translateY(0); }
+  #hjp-landing .hjpl-consent-sheet h3 { font-size:16px; font-weight:800; color:#0a1628; margin-bottom:8px; }
+  #hjp-landing .hjpl-consent-sheet p { font-size:13.5px; line-height:1.6; color:#64748b; margin-bottom:16px; }
+  #hjp-landing .hjpl-consent-sheet p a { color:#0a66c2; font-weight:600; text-decoration:underline; }
+  #hjp-landing .hjpl-consent-sheet button { width:100%; background:#0a66c2; color:#fff; border:none; padding:13px 0; border-radius:24px; font-size:14.5px; font-weight:700; cursor:pointer; }
+
+  @media (max-width:900px){
+    #hjp-landing .hjpl-grid-4 { grid-template-columns:repeat(2,1fr); }
+    #hjp-landing .hjpl-grid-3 { grid-template-columns:1fr; }
+    #hjp-landing .hjpl-footer-grid { grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width:640px){
+    #hjp-landing .hjpl-hero h1 { font-size:26px; }
+    #hjp-landing .hjpl-grid-4 { grid-template-columns:1fr; }
+    #hjp-landing .hjpl-footer-grid { grid-template-columns:1fr; }
+    #hjp-landing .hjpl-section-head h2 { font-size:22px; }
+    #hjp-landing .hjpl-nav-actions .hjpl-btn-login { display:none; }
+  }
+</style>
+
+  <!-- NAVBAR -->
+  <div class="hjpl-navbar">
+    <div class="hjpl-wrap hjpl-nav-inner">
+      <a href="#" class="hjpl-brand" onclick="return false;">
+        <img src="images/logo.png" alt="Health Jobs Portal" onerror="this.style.display='none'">
+      </a>
+      <div class="hjpl-nav-actions" style="position:relative;">
+        <button class="hjpl-hamburger-btn" onclick="hjplToggleMenu(event)" aria-label="Menu">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="#0a1628"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+        </button>
+        <div class="hjpl-dropdown" id="hjpl-dropdown">
+          <a href="login.html">Login / Sign Up</a>
+          <a href="about.html">About Us</a>
+          <a href="privcy.html">Privacy Policy</a>
+          <a href="terms.html">Terms</a>
+          <a href="refund.html">Refund policy</a>
+          <a href="contact.html">Contact us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hjpl-hero">
+    <div class="hjpl-wrap">
+      <span class="hjpl-eyebrow"><span class="hjpl-eyebrow-dot"></span> Pakistan's No 1 Healthcare Jobs Platform</span>
+      <h1>Find your next <span class="grad">healthcare job</span> — or hire verified medical staff, fast.</h1>
+      <p>Nursing, doctor, pharmacist &amp; lab technician jobs across Pakistan. Employers post and hire in minutes — candidates apply free.</p>
+      <div class="hjpl-hero-cta">
+        <button class="hjpl-btn-primary" onclick="hjpCloseLanding()">Get Started →</button>
+        <a href="login.html" class="hjpl-btn-secondary">Login</a>
+      </div>
+      <div class="hjpl-stats">
+        <div><div class="hjpl-stat-val">1,000+</div><div class="hjpl-stat-lbl">Verified Profiles</div></div>
+        <div><div class="hjpl-stat-val">All Pakistan</div><div class="hjpl-stat-lbl">Coverage</div></div>
+        <div><div class="hjpl-stat-val">24/7</div><div class="hjpl-stat-lbl">AI Job Assistant</div></div>
+      </div>
+
+      <!-- ✏️ EDITABLE HERO IMAGE — replace src with your own image -->
+      <div class="hjpl-hero-img-wrap">
+        <img id="hjp-hero-img" src="images/hero-placeholder.png" alt="Health Jobs Portal" onerror="this.style.display='none'">
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <section class="hjpl-trust">
+    <div class="hjpl-wrap">
+      <p class="hjpl-trust-label">Built for Pakistan's healthcare community</p>
+      <div class="hjpl-trust-grid">
+        <span class="hjpl-badge">🩺 Verified Doctors</span>
+        <span class="hjpl-badge">💉 Nursing Staff</span>
+        <span class="hjpl-badge">💊 Pharmacists</span>
+        <span class="hjpl-badge">🧪 Lab Technicians</span>
+        <span class="hjpl-badge">🏥 Trusted by Hospitals &amp; Clinics</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US / FEATURES -->
+  <section class="hjpl-section">
+    <div class="hjpl-wrap">
+      <div class="hjpl-section-head">
+        <span class="hjpl-eyebrow-sm">Why Health Jobs Portal</span>
+        <h2>Everything you need in one place</h2>
+        <p>Whether you're job hunting or hiring, we make it simple, fast and reliable.</p>
+      </div>
+      <div class="hjpl-grid-4">
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">🔍</div>
+          <h3>Verified Job Posts</h3>
+          <p>Browse genuine healthcare job openings from hospitals, clinics and pharmacies across Pakistan.</p>
+        </div>
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">📄</div>
+          <h3>CV Maker</h3>
+          <p>Build a professional medical CV from free templates, or get one made for you.</p>
+        </div>
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">💬</div>
+          <h3>Direct Contact</h3>
+          <p>Reach out to employers or candidates directly — including via WhatsApp.</p>
+        </div>
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">✅</div>
+          <h3>Verified Badge</h3>
+          <p>Stand out with a verified profile so employers and candidates trust you first.</p>
+        </div>
+      </div>
+
+      <!-- Auto-scrolling image carousel — 16:9, 5 editable slides -->
+      <div class="hjpl-carousel-wrap" id="hjpl-carousel-wrap">
+        <div class="hjpl-carousel-track" id="hjpl-carousel-track">
+          <!-- ✏️ EDITABLE IMAGE 1 -->
+          <div class="hjpl-carousel-slide"><img src="images/carousel-1-placeholder.png" alt="Slide 1" onerror="this.style.display='none'"></div>
+          <!-- ✏️ EDITABLE IMAGE 2 -->
+          <div class="hjpl-carousel-slide"><img src="images/carousel-2-placeholder.png" alt="Slide 2" onerror="this.style.display='none'"></div>
+          <!-- ✏️ EDITABLE IMAGE 3 -->
+          <div class="hjpl-carousel-slide"><img src="images/carousel-3-placeholder.png" alt="Slide 3" onerror="this.style.display='none'"></div>
+          <!-- ✏️ EDITABLE IMAGE 4 -->
+          <div class="hjpl-carousel-slide"><img src="images/carousel-4-placeholder.png" alt="Slide 4" onerror="this.style.display='none'"></div>
+          <!-- ✏️ EDITABLE IMAGE 5 -->
+          <div class="hjpl-carousel-slide"><img src="images/carousel-5-placeholder.png" alt="Slide 5" onerror="this.style.display='none'"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="hjpl-section" style="background:linear-gradient(180deg,#f8fafc 0%,#ffffff 100%);">
+    <div class="hjpl-wrap">
+      <div class="hjpl-section-head">
+        <span class="hjpl-eyebrow-sm">Who It's For</span>
+        <h2>Built for every healthcare role</h2>
+        <p>From frontline nurses to hospital HR teams — Health Jobs Portal works for everyone.</p>
+      </div>
+      <div class="hjpl-grid-3">
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">👩‍⚕️</div>
+          <h3>Candidates</h3>
+          <p>Nurses, doctors, pharmacists, lab techs &amp; dispensers — create a profile and apply for free.</p>
+        </div>
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">🏥</div>
+          <h3>Employers</h3>
+          <p>Hospitals &amp; clinics post jobs and hire verified staff quickly, with optional paid promotion.</p>
+        </div>
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">📚</div>
+          <h3>Career Tools</h3>
+          <p>Dosage calculator, interview practice, CV maker &amp; medical ID card — all in one app.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE APP FEATURES -->
+  <section class="hjpl-section">
+    <div class="hjpl-wrap">
+      <div class="hjpl-section-head">
+        <span class="hjpl-eyebrow-sm">Inside The App</span>
+        <h2>One app, everything a healthcare professional needs</h2>
+        <p>Beyond jobs — a complete toolkit for Pakistan's medical community.</p>
+      </div>
+      <div class="hjpl-grid-4">
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">💼</div>
+          <h3>Medical Jobs</h3>
+          <p>Browse and apply to verified nursing, doctor, pharmacist &amp; lab tech openings across Pakistan — updated daily.</p>
+        </div>
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">🧰</div>
+          <h3>Medical Tools</h3>
+          <p>Dosage calculator, interview practice, CV maker &amp; medical ID card — practical tools built for daily clinical work.</p>
+        </div>
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">📰</div>
+          <h3>Medical News</h3>
+          <p>Stay updated with the latest healthcare news, announcements &amp; industry updates from across Pakistan.</p>
+        </div>
+        <div class="hjpl-card">
+          <div class="hjpl-card-icon">📝</div>
+          <h3>Medical Notes</h3>
+          <p>Quick reference notes and important clinical information, organized and easy to access whenever you need them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="hjpl-cta-section">
+    <div class="hjpl-wrap">
+      <div class="hjpl-cta-card">
+        <h2>Ready to get started?</h2>
+        <p>Join Pakistan's healthcare community today — find a job or hire staff in minutes.</p>
+        <div class="hjpl-cta-buttons">
+          <button class="hjpl-btn-white" onclick="hjpCloseLanding()">Get Started Free →</button>
+          <a href="login.html" class="hjpl-btn-ghost">Login</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONSENT POPUP (first-time, logged-out users only) -->
+  <div class="hjpl-consent-overlay" id="hjpl-consent-overlay">
+    <div class="hjpl-consent-sheet" id="hjpl-consent-sheet">
+      <h3>We value your privacy</h3>
+      <p>By continuing to use Health Jobs Portal, you agree to our <a href="privcy.html" target="_blank">Privacy Policy</a> and <a href="terms.html" target="_blank">Terms of Service</a>.</p>
+      <button onclick="hjplAcceptConsent()">Accept &amp; Continue</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="hjpl-footer">
+    <div class="hjpl-wrap">
+      <div class="hjpl-footer-grid">
+        <div>
+          <div class="hjpl-footer-brand">
+            <img src="images/logo.png" alt="Health Jobs Portal" onerror="this.style.display='none'">
+            <span>Health Jobs Portal</span>
+          </div>
+          <p class="tagline">Pakistan's No1 Digital Healthcare Network — connecting medical talent with employers nationwide.</p>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="terms.html">Terms</a></li>
+            <li><a href="privcy.html">Privacy Policy</a></li>
+            <li><a href="refund.html">Refund policy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Get in touch</h4>
+          <address>
+                        <p>Ward no 13 mohalla Awais colony,Shahkot,Nankana sahib Pakistan</p>
+            <p>✉️ <a href="mailto:supporthealthjobs@gmail.com">supporthealthjobs@gmail.com</a></p>
+            <p>📞 <a href="tel:+923141303160">+92 3141303160</a></p>
+          </address>
+        </div>
+      </div>
+      <div class="hjpl-footer-bottom">
+        <p>© 2026 Powered by SufianX</p>
+      </div>
+    </div>
+  </footer>
 </div>
 
 <script>
 (function(){
-  var splash = document.getElementById('custom-splash');
-  var hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
-  
-  if (hasSeenSplash) {
-    if (splash) { splash.style.display = 'none'; splash.remove(); }
-  } else {
-    sessionStorage.setItem('hasSeenSplash', 'true');
+  var landing = document.getElementById('hjp-landing');
+  var hasSeenLanding = sessionStorage.getItem('hasSeenLanding');
+  if (hasSeenLanding && landing) {
+    landing.style.display = 'none';
+    landing.remove();
   }
-  
-  // ✅ Force hide splash after 3 seconds
-  setTimeout(function() {
-    if (splash) {
-      splash.style.opacity = '0';
-      setTimeout(function() {
-        if (splash) { splash.style.display = 'none'; splash.remove(); }
-      }, 400);
-    }
-  }, 3000);
 })();
+
+function hjpCloseLanding(){
+  var landing = document.getElementById('hjp-landing');
+  sessionStorage.setItem('hasSeenLanding', 'true');
+  if (landing) {
+    landing.style.transition = 'opacity 0.4s ease';
+    landing.style.opacity = '0';
+    setTimeout(function(){
+      landing.style.display = 'none';
+      landing.remove();
+    }, 400);
+  }
+}
+
+/* ---- Hamburger dropdown menu ---- */
+function hjplToggleMenu(e){
+  e.stopPropagation();
+  var dd = document.getElementById('hjpl-dropdown');
+  if (dd) dd.classList.toggle('active');
+}
+document.addEventListener('click', function(e){
+  var dd = document.getElementById('hjpl-dropdown');
+  if (dd && dd.classList.contains('active') && !dd.contains(e.target) && !e.target.closest('.hjpl-hamburger-btn')) {
+    dd.classList.remove('active');
+  }
+});
+
+/* ---- Auto-scrolling image carousel (auto + manual swipe) ---- */
+(function(){
+  var wrap  = document.getElementById('hjpl-carousel-wrap');
+  var track = document.getElementById('hjpl-carousel-track');
+  if (!wrap || !track) return;
+
+  var autoTimer;
+  var userInteracting = false;
+
+  function slideStep(){
+    var first = track.children[0];
+    return first ? first.getBoundingClientRect().width + 14 : 300;
+  }
+
+  function nextSlide(){
+    var maxScroll = track.scrollWidth - wrap.clientWidth;
+    if (wrap.scrollLeft >= maxScroll - 10) {
+      wrap.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      wrap.scrollBy({ left: slideStep(), behavior: 'smooth' });
+    }
+  }
+
+  function startAuto(){
+    stopAuto();
+    autoTimer = setInterval(function(){
+      if (!userInteracting) nextSlide();
+    }, 6000); /* 5-7s auto scroll */
+  }
+  function stopAuto(){ if (autoTimer) clearInterval(autoTimer); }
+
+  /* Pause on manual interaction, resume shortly after */
+  ['touchstart','mousedown'].forEach(function(evt){
+    wrap.addEventListener(evt, function(){ userInteracting = true; });
+  });
+  ['touchend','mouseup'].forEach(function(evt){
+    wrap.addEventListener(evt, function(){
+      setTimeout(function(){ userInteracting = false; }, 4000);
+    });
+  });
+
+  startAuto();
+})();
+
+/* ---- Privacy/Terms consent bottom-sheet (first visit, logged-out only) ---- */
+(function(){
+  var isLoggedIn   = !!localStorage.getItem('my_uid');
+  var alreadyAccepted = localStorage.getItem('hjp_consent_accepted');
+  if (!isLoggedIn && !alreadyAccepted) {
+    setTimeout(function(){
+      var ov = document.getElementById('hjpl-consent-overlay');
+      if (ov) ov.classList.add('active');
+    }, 700);
+  }
+})();
+function hjplAcceptConsent(){
+  localStorage.setItem('hjp_consent_accepted', 'true');
+  var ov = document.getElementById('hjpl-consent-overlay');
+  if (ov) ov.classList.remove('active');
+}
 </script>
 <!-- HEADER -->
 <header>
@@ -1098,43 +1505,32 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 
 <main>
 <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Healthcare & Medical Jobs in Pakistan — Health Jobs Portal</h1>
-  <!-- ✅ FILTER BOXES -->
-  <div class="dual-box-container">
-    <div class="pro-box" id="catBox">
-      <div class="pro-header" onclick="toggleFilter('catBox')">
-        <span class="label-text" id="catLabel">Job Categories</span>
-        <span class="f-arrow">&#9660;</span>
-      </div>
-      <ul class="pro-list" id="catList">
-        <li class="selected" onclick="filterCat('all', this, 'Job Categories')">All Categories</li>
-        <li onclick="filterCat('nursing', this, 'Nursing Jobs')">Nursing Jobs</li>
-        <li onclick="filterCat('pharmacist', this, 'Pharmacist')">Pharmacist</li>
-        <li onclick="filterCat('doctor', this, 'Doctors')">Doctors</li>
-        <li onclick="filterCat('lab', this, 'Lab Technician')">Lab Technician</li>
-        <li onclick="filterCat('dispenser', this, 'Dispenser')">Dispenser</li>
-      </ul>
+  <!-- PROFESSIONAL FILTER UI -->
+  <div class="filter-section" id="filter-section">
+    <!-- Row 1: Category tabs -->
+    <div class="filter-tabs-row" id="cat-tabs-row">
+      <button class="filter-tab active" data-cat="all" onclick="filterCatNew('all', this)">All</button>
+      <button class="filter-tab" data-cat="nursing" onclick="filterCatNew('nursing', this)">Nursing</button>
+      <button class="filter-tab" data-cat="doctor" onclick="filterCatNew('doctor', this)">Doctors</button>
+      <button class="filter-tab" data-cat="pharmacist" onclick="filterCatNew('pharmacist', this)">Pharmacist</button>
+      <button class="filter-tab" data-cat="lab" onclick="filterCatNew('lab', this)">Lab Tech</button>
+      <button class="filter-tab" data-cat="dispenser" onclick="filterCatNew('dispenser', this)">Dispenser</button>
     </div>
-    <div class="pro-box" id="timeBox">
-      <div class="pro-header" onclick="toggleFilter('timeBox')">
-        <span class="label-text" id="timeLabel">Timeline & News</span>
-        <span class="f-arrow">&#9660;</span>
-      </div>
-<ul class="pro-list" id="timeList">
-  <li class="selected" onclick="filterTime('all', this, 'Timeline & News')">Anytime</li>
-  <li onclick="filterTime('active', this, '✅ Active Jobs')">Active Jobs</li>
-  <li onclick="filterTime('today', this, 'Today')">Today's Posts</li>
-  <li onclick="filterTime('yesterday', this, 'Yesterday')">Yesterday</li>
-  <li onclick="filterTime('weekly', this, 'Last 7 Days')">Last 7 Days</li>
-  <li class="news-li" onclick="goNews(event)">Medical News</li>
-</ul>
+    <!-- Row 2: Time chips -->
+    <div class="filter-chips-row" id="time-chips-row">
+      <button class="filter-chip active" data-time="all" onclick="filterTimeNew('all', this)">Anytime</button>
+      <button class="filter-chip" data-time="active" onclick="filterTimeNew('active', this)">Active Jobs</button>
+      <button class="filter-chip" data-time="today" onclick="filterTimeNew('today', this)">Today</button>
+      <button class="filter-chip" data-time="yesterday" onclick="filterTimeNew('yesterday', this)">Yesterday</button>
+      <button class="filter-chip" data-time="weekly" onclick="filterTimeNew('weekly', this)">Last 7 Days</button>
+      <button class="filter-chip" data-time="news" onclick="goNews(event)">Medical News</button>
     </div>
   </div>
-
-<!-- WEBSITE INTRO BANNER -->
-<div class="site-intro-banner">
-  Pakistan's #1 Healthcare Jobs Platform
-</div>
-
+  <!-- hidden compat divs for old JS -->
+  <div class="dual-box-container" style="display:none">
+    <div class="pro-box" id="catBox"><div class="pro-header" id="catLabel"></div><ul class="pro-list" id="catList"></ul></div>
+    <div class="pro-box" id="timeBox"><div class="pro-header" id="timeLabel"></div><ul class="pro-list" id="timeList"></ul></div>
+  </div>
 <!-- NEWS TICKER -->
 <div id="news-ticker-wrap" style="background:#0a66c2;padding:0;overflow:hidden;display:none;border-bottom:1px solid #004182;min-height:34px;">
   <div style="display:flex;align-items:center;">
@@ -1162,6 +1558,16 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
     <div id="trending-list" style="display:flex;flex-direction:column;gap:10px;padding:0 15px;"></div>
   </div>
 
+  <!-- ═══ AD SLOT DEMO — testing ke liye lagaya hai, dekhne ke baad hata/adjust kar sakte hain ═══ -->
+  <div style="display:flex;justify-content:center;margin:10px 0;">
+    <ins class="hjp-ad-slot" data-ad-slot="rectangle" style="display:block;width:300px;height:250px;"></ins>
+  </div>
+  <div style="display:flex;justify-content:center;margin:10px 0;">
+    <ins class="hjp-ad-slot" data-ad-slot="mobilebanner" style="display:block;width:320px;height:50px;"></ins>
+  </div>
+  <script async src="https://healthjobportal.com/ad.js"></script>
+  <!-- ═══ END AD SLOT DEMO ═══ -->
+
   <!-- FEED -->
   <div id="feed" class="feed-container"></div>
   <div id="loading" class="loader-box"><div class="spinner"></div></div>
@@ -1172,7 +1578,7 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
   <button class="nav-link active" onclick="window.scrollTo(0,0)"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></button>
-  <button class="nav-link" onclick="guardNav('my-posts.html')"><svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>My Posts</span></button>
+  <button class="nav-link" onclick="guardNav('wid.html')"><svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>My Posts</span></button>
   <button class="nav-link" onclick="openPostMenu()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg><span>Post</span></button>
   <button class="nav-link" onclick="guardNav('chats-request.html')">
     <div class="nav-icon-wrapper">
@@ -1277,19 +1683,6 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
     </div>
 </div>
   <div class="sidebar-menu">
-<button class="side-link" onclick="toggleSubmenu('tools-menu', this)">
-      <div class="side-icon-wrap">
-        <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
-        Tools <span style="background:#ef4444;color:#fff;font-size:8px;font-weight:800;padding:2px 5px;border-radius:4px;margin-left:6px;animation:pulse-new 1.5s infinite;">NEW</span>
-      </div>
-      <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-    </button>
-    <div class="submenu" id="tools-menu">
-<a href="dosge.html" class="submenu-item">Dosage calculator</a>
-<a href="interview.html" class="submenu-item">Interview Practise</a>
-<a href="cv-maker.html" class="submenu-item">Cv maker <span style="background:#ef4444;color:#fff;font-size:7px;font-weight:800;padding:1px 4px;border-radius:3px;margin-left:4px;animation:pulse-new 1.5s infinite;">NEW</span></a>
-<a href="id.html" class="submenu-item">Medical ID Card <span style="background:#ef4444;color:#fff;font-size:7px;font-weight:800;padding:1px 4px;border-radius:3px;margin-left:4px;animation:pulse-new 1.5s infinite;">NEW</span></a>
-    </div>
     <button class="side-link" onclick="toggleSubmenu('posts-menu', this)">
       <div class="side-icon-wrap">
         <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -1302,18 +1695,26 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
       <a href="employer.html" class="submenu-item">Post as Employer</a>
       <a href="candidate.html" class="submenu-item">Post as Candidate</a>
     </div>
-    <a href="my-posts.html" class="side-link">
+    <a href="wid.html" class="side-link">
       <div class="side-icon-wrap">
         <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
         My Posts
       </div>
-      <a>    <hr style="border:0;border-top:1px solid #e2e8f0;margin:10px 20px;">
+    </a>
+    <hr style="border:0;border-top:1px solid #e2e8f0;margin:10px 20px;">
 <a href="notes.html" class="side-link">
   <div class="side-icon-menu_book">
     <svg viewBox="0 0 24 24">
       <path d="M21 4H7c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14V4zm-2 14H7V6h12v12zM3 6H1v14c0 1.1.9 2 2 2h14v-2H3V6z"/>
     </svg>
     <span>Important Notes <span style="background:#ef4444;color:#fff;font-size:7px;font-weight:800;padding:1px 4px;border-radius:3px;margin-left:4px;animation:pulse-new 1.5s infinite;">NEW</span></span>
+  </div>
+</a>
+    <hr style="border:0;border-top:1px solid #e2e8f0;margin:10px 20px;">
+<a href="/advertise" class="side-link">
+  <div class="side-icon-wrap">
+    <svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h1v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h2l5 4V6l-5 4H5a1 1 0 0 0-1 1zm16.5 1c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.74 2.5-2.26 2.5-4.02z"/></svg>
+    <span>Advertise <span style="background:#ef4444;color:#fff;font-size:7px;font-weight:800;padding:1px 4px;border-radius:3px;margin-left:4px;animation:pulse-new 1.5s infinite;">NEW</span></span>
   </div>
 </a>
     <hr style="border:0;border-top:1px solid #e2e8f0;margin:10px 20px;">
@@ -1332,6 +1733,74 @@ footer { flex-shrink: 0; margin-top: 30px; background-color: var(--bg-white); pa
   </div>
 </div>
 </div>
+
+<!-- AD STATUS POPUP -->
+<div class="ad-status-overlay" id="adStatusOverlay">
+  <div class="ad-status-box">
+    <button class="ad-status-close" onclick="closeAdStatusPopup()" aria-label="Close">&times;</button>
+    <div class="ad-status-icon" id="adStatusIcon" style="background:#e6f4ea;">🎉</div>
+    <h3 class="ad-status-title" id="adStatusTitle">Your Ad Submitted!</h3>
+    <p class="ad-status-msg" id="adStatusMsg">Thank you for choosing Health Jobs Portal. Your ad is pending review — we'll notify you as soon as it goes live.</p>
+    <button class="ad-status-btn" onclick="closeAdStatusPopup()">Got It</button>
+  </div>
+</div>
+<script>
+  // ✅ AD STATUS POPUP — shows once per ad-status change (pending_review /
+  // active / rejected). Reads from the same /api/advertise/my-ad endpoint
+  // the "Advertise With Us" Worker already exposes. Closing it (X or "Got
+  // It") won't show it again until the status actually changes.
+  window.closeAdStatusPopup = function(){
+    const ov = document.getElementById('adStatusOverlay');
+    if (ov) ov.classList.remove('active');
+  };
+
+  window.checkAdStatusPopup = async function(user){
+    if (!user) return;
+    try {
+      const idToken = await user.getIdToken();
+      const res = await fetch('/api/advertise/my-ad', { headers: { 'Authorization': 'Bearer ' + idToken } });
+      const data = await res.json();
+      if (!data || !data.ad) return;
+
+      const ad = data.ad;
+      if (ad.status !== 'pending_review' && ad.status !== 'active' && ad.status !== 'rejected') return;
+
+      // Unique per ad + status, so a NEW status (submitted → active →
+      // rejected, etc.) always triggers a fresh popup, but re-opening the
+      // home page with the SAME status won't show it again.
+      const signature = ad.ref + '_' + ad.status;
+      const seenKey = 'hjp_ad_popup_seen_' + user.uid;
+      if (localStorage.getItem(seenKey) === signature) return;
+
+      const icon = document.getElementById('adStatusIcon');
+      const title = document.getElementById('adStatusTitle');
+      const msg = document.getElementById('adStatusMsg');
+      if (!icon || !title || !msg) return;
+
+      if (ad.status === 'pending_review') {
+        icon.textContent = '🎉';
+        icon.style.background = '#e6f4ea';
+        title.textContent = 'Your Ad Submitted!';
+        msg.textContent = "Congratulations, and thank you for choosing Health Jobs Portal. Your ad is pending review — we'll notify you as soon as it goes live.";
+      } else if (ad.status === 'active') {
+        icon.textContent = '✅';
+        icon.style.background = '#dcfce7';
+        title.textContent = 'Your Ad Is Now Live!';
+        msg.textContent = 'Great news — your ad has been approved and is now active on Health Jobs Portal.';
+      } else if (ad.status === 'rejected') {
+        icon.textContent = '⚠️';
+        icon.style.background = '#fee2e2';
+        title.textContent = 'Your Ad Was Rejected';
+        msg.textContent = ad.rejectionReason
+          ? ('Unfortunately your ad request was not approved: ' + ad.rejectionReason)
+          : 'Unfortunately your ad request was not approved. Please contact support for details.';
+      }
+
+      document.getElementById('adStatusOverlay').classList.add('active');
+      localStorage.setItem(seenKey, signature);
+    } catch (e) { console.log('Ad status popup error:', e); }
+  };
+</script>
 <!-- ✅ FILTER JAVASCRIPT — FULLY WORKING -->
 
 <!-- DOWNLOAD POPUP SCRIPT -->
@@ -1485,8 +1954,8 @@ window.shareImage = async function() {
 
   const pageName = postType === 'general_post' ? 'details.html' : 'posts.html';
   const postUrl = postId
-    ? `${window.SITE_URL}/${pageName}?id=${postId}`
-    : window.SITE_URL + location.pathname + location.search;
+    ? `${window.location.origin}/${pageName}?id=${postId}`
+    : window.location.href;
 
   try {
     const response = await fetch(currentImgUrl);
@@ -1594,7 +2063,7 @@ async function syncVerifiedToFirestore(toVerify, toUnverify) {
     // Worker KV cache بھی clear کرو تاکہ فوری اثر ہو
     const allChanged = [...toVerify, ...toUnverify];
     if (allChanged.length) {
-      fetch('https://healthjobsapk.sufiangsufiang50.workers.dev/api/clear-verified-cache', {
+      fetch('/api/clear-verified-cache', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uids: allChanged })
@@ -1766,14 +2235,10 @@ window.addEventListener('storage', (e) => {
 });
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
   import { getDatabase, ref as dbRef, onValue, set, onDisconnect, serverTimestamp as rtServerTimestamp, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
   import { getMessaging, getToken, isSupported } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
 import { initializeFirestore, persistentLocalCache, collection, query, where, orderBy, limit, startAfter, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove, addDoc, serverTimestamp, deleteDoc, onSnapshot, increment, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-  // ✅ Production website ka asal domain — APK/WebView ke andar window.location.origin
-  // hamesha "https://localhost" hota hai, is liye navigation ke liye yeh fixed constant use karo
-  window.SITE_URL = "https://healthjobsapk.sufiangsufiang50.workers.dev";
 
   const mainConfig = {
     apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
@@ -1787,16 +2252,6 @@ import { initializeFirestore, persistentLocalCache, collection, query, where, or
 
   const app = initializeApp(mainConfig);
   const auth = getAuth(app);
-
-  // ✅ CRITICAL FIX: Capacitor WebView mein session reliably persist karne ke liye
-  (async () => {
-    try {
-      await setPersistence(auth, indexedDBLocalPersistence);
-    } catch (e) {
-      try { await setPersistence(auth, browserLocalPersistence); } catch (e2) {}
-    }
-  })();
-
   const dbRT = getDatabase(app);
   let messaging = null;
 
@@ -1876,6 +2331,15 @@ if (
   window.postsArr = [];
   let postsArr = window.postsArr;
   let userCity = "";
+
+  // ✅ ورکر cookie helper — ایک بار لکھو، ہر جگہ کام آئے
+  function setUserCityCookie(city) {
+    if (!city) return;
+    const encoded = encodeURIComponent(city);
+    // SameSite=Lax — same-origin requests پر بھیجی جائے گی
+    // Secure نہیں لگایا تاکہ localhost پر بھی کام کرے
+    document.cookie = `hjp_city=${encoded}; path=/; max-age=${30 * 24 * 3600}; SameSite=Lax`;
+  }
   window.searchIndexData = [];
   const CACHE_KEY = "health_jobs_hybrid_cache";
   let lastVisibleDoc = null;
@@ -1889,6 +2353,13 @@ async function loadTrendingPosts() {
   const trendingList = document.getElementById('trending-list');
   const trendingSection = document.getElementById('trending-section');
   if (!trendingList) return;
+
+  // ✅ SSR نے پہلے سے trending inject کر دی ہے — دوبارہ rebuild مت کرو
+  // صرف section visible کرو اور واپس آ جاؤ (جھٹکا بند)
+  if (trendingList.children.length >= 3) {
+    trendingSection.style.display = 'block';
+    return;
+  }
 
   const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
   const now = Date.now();
@@ -1979,7 +2450,49 @@ setInterval(() => {
 }, 2 * 60 * 60 * 1000);
 
   // UI HELPERS
-  window.openPostMenu = () => { if (currentUser) toggleMenuSheet(true); else window.location.href = 'login.html'; };
+  // ── Post Menu Render Helper ───────────────────────────────────────────
+  window.renderPostMenu = function(role) {
+    const sheetMenu = document.querySelector('#menu-sheet .sheet-menu');
+    if (!sheetMenu) return;
+    if (role === 'employer') {
+      sheetMenu.innerHTML = `
+        <button class="sheet-item" onclick="location.href='employer.html'">
+          <div class="sheet-icon" style="background:#fefce8;color:#eab308;border-color:#fef9c3;">💼</div>
+          <div class="sheet-text-box"><span class="sheet-text-main">Post as Employer</span><span class="sheet-text-sub">Hire staff, doctors, or nurses for your facility.</span></div>
+        </button>
+        <button class="sheet-item" onclick="location.href='simple.html'">
+          <div class="sheet-icon" style="background:#eff6ff;color:#3b82f6;border-color:#dbeafe;">📝</div>
+          <div class="sheet-text-box"><span class="sheet-text-main">Share an Update</span><span class="sheet-text-sub">Write a general post, share thoughts or images.</span></div>
+        </button>`;
+    } else if (role === 'candidate') {
+      sheetMenu.innerHTML = `
+        <button class="sheet-item" onclick="location.href='candidate.html'">
+          <div class="sheet-icon" style="background:#f5f3ff;color:#8b5cf6;border-color:#ede9fe;">👤</div>
+          <div class="sheet-text-box"><span class="sheet-text-main">Post as Candidate</span><span class="sheet-text-sub">Looking for a job? Share your profile and skills.</span></div>
+        </button>`;
+    } else {
+      sheetMenu.innerHTML = `
+        <button class="sheet-item" onclick="location.href='simple.html'">
+          <div class="sheet-icon" style="background:#eff6ff;color:#3b82f6;border-color:#dbeafe;">📝</div>
+          <div class="sheet-text-box"><span class="sheet-text-main">Share an Update</span><span class="sheet-text-sub">Write a general post, share thoughts or images.</span></div>
+        </button>
+        <button class="sheet-item" onclick="location.href='employer.html'">
+          <div class="sheet-icon" style="background:#fefce8;color:#eab308;border-color:#fef9c3;">💼</div>
+          <div class="sheet-text-box"><span class="sheet-text-main">Post as Employer</span><span class="sheet-text-sub">Hire staff, doctors, or nurses for your facility.</span></div>
+        </button>
+        <button class="sheet-item" onclick="location.href='candidate.html'">
+          <div class="sheet-icon" style="background:#f5f3ff;color:#8b5cf6;border-color:#ede9fe;">👤</div>
+          <div class="sheet-text-box"><span class="sheet-text-main">Post as Candidate</span><span class="sheet-text-sub">Looking for a job? Share your profile and skills.</span></div>
+        </button>`;
+    }
+  };
+
+  window.openPostMenu = () => {
+    if (!currentUser) { window.location.href = 'login.html'; return; }
+    toggleMenuSheet(true);
+  };
+
+  document.dispatchEvent(new Event('renderPostMenuReady'));
   window.toggleMenuSheet = (show) => { document.getElementById('menu-overlay').classList.toggle('active', show); document.getElementById('menu-sheet').classList.toggle('active', show); };
   window.toggleShareSheet = (show) => { document.getElementById('share-overlay').classList.toggle('active', show); document.getElementById('share-sheet').classList.toggle('active', show); };
   window.openShare = (id, type) => { window.currentShareId = id; window.currentShareType = type; toggleShareSheet(true); };
@@ -1989,8 +2502,8 @@ setInterval(() => {
     const sharePost = postsArr.find(p => p.id === window.currentShareId);
 const shareType = sharePost?.type || window.currentShareType;
 const link = sharePost?.slug 
-    ? window.SITE_URL + (shareType === 'general_post' ? '/updates/' : '/jobs/') + sharePost.slug
-    : window.SITE_URL + '/' + (shareType === 'general_post' ? 'details.html' : 'posts.html') + '?id=' + window.currentShareId;
+    ? window.location.origin + (shareType === 'general_post' ? '/updates/' : '/jobs/') + sharePost.slug
+    : window.location.origin + '/' + (shareType === 'general_post' ? 'details.html' : 'posts.html') + '?id=' + window.currentShareId;
     const title = sharePost?.title ? '📢 ' + sharePost.title + '\n' : 'Health Jobs Portal\n';
     const tempDiv = document.createElement('div');
 
@@ -2013,7 +2526,7 @@ const desc = plainDesc ? plainDesc.substring(0, 100) + '...\n\n' : '';
 };
 
 
-window.handlePostClick = async function(postId, postType) {
+window.handlePostClick = function(postId, postType) {
     if (!currentUser) { window.location.href = 'login.html'; return; }
     const post = postsArr.find(p => p.id === postId);
     const slug = post?.slug;
@@ -2035,26 +2548,16 @@ window.handlePostClick = async function(postId, postType) {
         }
     } catch(e) {}
 
-    // ✅ APK FIX: Capacitor WebView mein origin alag hota hai (localhost vs healthjobportal.com)
-    // is liye Firebase idToken URL mein pass karo taake worker page auth kar sake
-    let tokenParam = '';
-    try {
-        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
-            const idToken = await currentUser.getIdToken(false);
-            if (idToken) tokenParam = '?_apkt=' + encodeURIComponent(idToken);
-        }
-    } catch(e) {}
-
     if (slug) {
         if (type === 'general_post') {
-            location.href = window.SITE_URL + '/updates/' + slug + tokenParam;
+            location.href = 'news.html?slug=' + slug;
         } else {
-            location.href = window.SITE_URL + '/jobs/' + slug + tokenParam;
+            location.href = 'post.html?slug=' + slug;
         }
     } else {
-        location.href = window.SITE_URL + (type === 'general_post' 
-            ? '/details.html?id=' + postId 
-            : '/posts.html?id=' + postId);
+        location.href = type === 'general_post' 
+            ? 'details.html?id=' + postId 
+            : 'posts.html?id=' + postId;
     }
 };
 
@@ -2174,10 +2677,10 @@ const postType = foundPost?.type || r.type;
 const link = isUser
     ? 'wid.html?uid=' + r.id
     : (postSlug
-        ? window.SITE_URL + (postType === 'general_post' ? '/updates/' : '/jobs/') + postSlug
-        : window.SITE_URL + (postType === 'general_post' 
-            ? '/details.html?id=' + r.id 
-            : '/posts.html?id=' + r.id));
+        ? (postType === 'general_post' ? 'news.html?slug=' : 'post.html?slug=') + postSlug
+        : (postType === 'general_post' 
+            ? 'details.html?id=' + r.id 
+            : 'posts.html?id=' + r.id));
       let dateStr = '';
       if (!isUser && r.createdAt) {
         const diff = now - r.createdAt;
@@ -2242,6 +2745,13 @@ window.loadInitialPosts = function () {
         postsArr = window.postsArr;
         localStorage.setItem(CACHE_KEY, JSON.stringify(postsArr.slice(0, 50)));
         document.getElementById('loading').classList.add('hidden');
+        // ✅ SSR فکس: cached branch کی طرح یہاں بھی یہ سب چلنے چاہئیں
+        // ورنہ SSR والے صفحے پر top-posters / news-ticker / trending سیکشن خالی رہ جاتے
+        buildVerifiedSet();
+        generateTopPosters();
+        loadNewsTicker();
+        loadTrendingPosts();
+        window.syncLikedButtons(); // ✅ FIX: اگر auth پہلے resolve ہو چکا ہو تو یہاں بھی sync کرو
         ssrCards.forEach(card => {
             const pid = card.dataset.id;
             const descEl = document.getElementById('desc-' + pid);
@@ -2268,45 +2778,21 @@ const cachedDataStr = localStorage.getItem(CACHE_KEY);
 
             const feed = document.getElementById('feed');
             if (feed && feed.children.length === 0) {
-                // ✅ پہلے skeleton دکھاؤ
-                feed.innerHTML = [1,2,3,4].map(() => `
-                  <div class="skeleton-card">
-                    <div class="sk-header">
-                      <div class="skeleton-line sk-avatar"></div>
-                      <div style="flex:1;">
-                        <div class="skeleton-line" style="height:13px;width:55%;margin-bottom:8px;"></div>
-                        <div class="skeleton-line" style="height:11px;width:38%;"></div>
-                      </div>
-                    </div>
-                    <div class="skeleton-line" style="height:14px;width:80%;margin-bottom:8px;"></div>
-                    <div class="skeleton-line" style="height:14px;width:65%;margin-bottom:8px;"></div>
-                    <div class="skeleton-line" style="height:14px;width:72%;margin-bottom:12px;"></div>
-                    <div class="skeleton-line sk-img"></div>
-                  </div>`).join('');
-
-                // ✅ فوری render کرو (پہلے 300ms کا artificial delay ہٹا دیا — یہی دوہرے جھٹکے کی وجہ تھی)
-                window.__feedCacheRendered = false;
-                requestAnimationFrame(() => {
-                    feed.innerHTML = '';
-                    buildVerifiedSet();
-                    cached.forEach(p => appendPostToDOM(p));
-                    generateTopPosters();
-                    loadNewsTicker();
-                    loadTrendingPosts();
-                    window.__feedCacheRendered = true;
-                    startLiveSync();
-                });
-            } else {
-                window.__feedCacheRendered = true;
-                startLiveSync();
+            // ✅ FIX: Skeleton کے بجائے براہ راست cached posts رینڈر کرو
+            // skeleton → real posts کا جھٹکا بند
+            buildVerifiedSet();
+            cached.forEach(p => appendPostToDOM(p));
+            generateTopPosters();
+            loadNewsTicker();
+            loadTrendingPosts();
             }
 
             document.getElementById('loading').classList.add('hidden');
+            startLiveSync();
         } catch (e) {
             console.error("Cache error:", e);
             postsArr = [];
             window.postsArr = [];
-            window.__feedCacheRendered = true;
             startLiveSync();
         }
 } else {
@@ -2329,7 +2815,6 @@ const cachedDataStr = localStorage.getItem(CACHE_KEY);
             <div class="skeleton-line sk-img"></div>
           </div>`).join('');
         document.getElementById('loading').classList.add('hidden');
-        window.__feedCacheRendered = true;
         startLiveSync();
     }
 };
@@ -2419,10 +2904,11 @@ if (livePosts.length > 0) {
         const isFiltered = (window.catActive && window.catActive !== 'all') ||
                          (window.timeActive && window.timeActive !== 'all');
 
-      if (existingCards.length === 0 || !localStorage.getItem(CACHE_KEY)) {
+      // ✅ FIX: صرف تب re-render کرو جب feed بالکل خالی ہو
+      // SSR cards یا cached cards موجود ہوں تو feed کبھی صاف نہ کرو
+      if (existingCards.length === 0) {
         feed.innerHTML = '';
         if (isFiltered) {
-          // فلٹر لگا ہے — filtered render کرو
           if (typeof window.renderFiltered === 'function') window.renderFiltered();
         } else {
           livePosts.forEach(p => appendPostToDOM(p));
@@ -2521,10 +3007,10 @@ loadNewsTicker();
       if (snap.empty || snap.docs.length === 0) {
         hasMorePosts = false;
         document.getElementById('loading').innerHTML = `
-          <div style='padding:30px 20px;text-align:center;'>
-            <div style='font-size:28px;margin-bottom:8px;'>🏁</div>
-            <div style='font-size:13px;font-weight:700;color:#64748b;'>You're all caught up!</div>
-            <div style='font-size:12px;color:#94a3b8;margin-top:4px;'>No more posts to load.</div>
+          <div style='padding:24px 20px 12px;text-align:center;border-top:1px solid #f1f5f9;'>
+            <div style='font-size:12.5px;font-weight:600;color:#94a3b8;letter-spacing:0.3px;'>
+              — تمام پوسٹ لوڈ ہو گئیں —
+            </div>
           </div>`;
         return;
       }
@@ -2586,16 +3072,34 @@ loadNewsTicker();
     scrollTimeout = setTimeout(() => {
       const scrolled = window.innerHeight + window.scrollY;
       const total = document.body.offsetHeight;
-      // ✅ 300px pehle trigger karo
       if (scrolled >= total - 150 && hasMorePosts && !isFetchingMore) {
         fetchMorePosts();
       }
       scrollTimeout = null;
-    }, 200);
-  });
+    }, 150);
+  }, { passive: true });
 
   function renderEverything() {
-    buildVerifiedSet(); // ← یہاں add کرو
+    buildVerifiedSet();
+
+    // ✅ اگر ورکر نے پہلے سے اسی city کے لیے sort کیا ہے تو re-sort مت کرو
+    // صرف postsArr کو SSR order سے ہم آہنگ کرو
+    if (window.__SSR_CITY__ && window.__SSR_CITY__ === userCity &&
+        document.getElementById('feed').querySelectorAll('.post-card').length > 0) {
+      // SSR نے پہلے سے سب ٹھیک کیا — صرف UI updates کرو
+      document.getElementById('no-res').classList.toggle('hidden', postsArr.length !== 0);
+      generateTopPosters();
+      const availCount = (window.postsArr || []).filter(p =>
+        (p.type === 'employer_post' || p.type === 'candidate_post') &&
+        p.status !== 'deleted' && p.status !== 'inactive'
+      ).length;
+      const countEl = document.getElementById('jobs-avail-count');
+      if (countEl) countEl.innerText = availCount;
+      window.__SSR_CITY__ = null; // صرف پہلی بار — اگلی بار normal sort
+      return;
+    }
+
+    // ── 1. Sort postsArr in-place ──────────────────────────────────
     if (userCity && postsArr.length > 0) {
       const cityLower = userCity.toLowerCase().trim();
       const userWords = cityLower.split(/[\s,]+/).filter(w => w.length > 2);
@@ -2609,19 +3113,33 @@ loadNewsTicker();
           userWords.forEach(word => { if (postLoc.includes(word)) score += 2; });
           return score;
         };
-        let scoreA = getScore(locA); let scoreB = getScore(locB);
-        if (scoreB !== scoreA) return scoreB - scoreA;
-        return (b.createdAt || 0) - (a.createdAt || 0);
+        const diff = getScore(locB) - getScore(locA);
+        return diff !== 0 ? diff : (b.createdAt || 0) - (a.createdAt || 0);
       });
     } else {
       postsArr.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
     }
-    document.getElementById('feed').innerHTML = "";
+
+    // ── 2. Ensure every post card exists in DOM (add missing ones) ─
+    postsArr.forEach(p => {
+      if (!document.getElementById('card-' + p.id)) appendPostToDOM(p);
+    });
+
+    // ── 3. In-place reorder — NO innerHTML="" → zero jank ──────────
+    // DOM کو صاف کیے بغیر cards کو صحیح ترتیب میں move کریں
+    // Facebook/Twitter کی طرح — پیج بالکل نہیں ہلے گا
+    const feed = document.getElementById('feed');
+    const fragment = document.createDocumentFragment();
+    postsArr.forEach(p => {
+      const card = document.getElementById('card-' + p.id);
+      if (card) fragment.appendChild(card);
+    });
+    feed.appendChild(fragment);
+
+    // ── 4. Remaining UI updates ────────────────────────────────────
     document.getElementById('no-res').classList.toggle('hidden', postsArr.length !== 0);
-    postsArr.forEach(p => appendPostToDOM(p));
     generateTopPosters();
-    // Available jobs count update
-    const availCount = (window.postsArr || []).filter(p => 
+    const availCount = (window.postsArr || []).filter(p =>
       (p.type === 'employer_post' || p.type === 'candidate_post') &&
       p.status !== 'deleted' && p.status !== 'inactive'
     ).length;
@@ -2666,9 +3184,9 @@ const locCat = pType === 'general_post'
     card.innerHTML = `
       <div class="post-header" onclick="location.href='wid.html?uid=${p.posterId || p.authorId}'">
 <div class="post-avatar-wrap">
-<img src="${posterPic}" class="post-avatar" width="44" height="44" loading="lazy" decoding="async"
-    onload="this.classList.add('img-loaded')"
-    onerror="this.src='https://ui-avatars.com/api/?name=U';this.classList.add('img-loaded')">
+<img src="${posterPic}" class="post-avatar img-loading" width="44" height="44" loading="lazy"
+    onload="this.classList.remove('img-loading');this.classList.add('img-loaded')"
+    onerror="this.src='https://ui-avatars.com/api/?name=U';this.classList.remove('img-loading');this.classList.add('img-loaded')">
   ${(window.verifiedUids || new Set()).has(p.posterId || p.authorId) ? `
   <div class="verified-badge" title="Active Contributor">
     <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
@@ -2871,8 +3389,8 @@ style="width:100%;max-height:400px;display:block;object-fit:cover;cursor:pointer
     const overlay = (i === 2 && count > 3) ? `<div class="more-imgs-overlay" data-count="${count - 2}">` : `<div>`;
 html += `${overlay}
       <div style="position:relative;width:100%;height:100%;">
-        <img src="${url}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;"
-          onload="this.classList.add('img-loaded')"
+        <img src="${url}" loading="lazy" decoding="async" class="img-loading" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;"
+          onload="this.classList.remove('img-loading');this.classList.add('img-loaded')"
           onclick="openLightbox('${url}', ${i}, '${allUrls}')">
         <button onclick="event.stopPropagation();openImgMenu('${url}')"
           style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.5);border:none;
@@ -2888,6 +3406,26 @@ html += `${overlay}
   html += `</div>`;
   return html;
 }
+
+// ✅ FIX: SSR کارڈز پر reload کے بعد liked heart واپس sync کرنے کے لیے
+window.syncLikedButtons = function() {
+    if (!currentUser || !window.postsArr) return;
+    window.postsArr.forEach(p => {
+        try {
+            const card = document.getElementById('card-' + p.id);
+            if (!card) return;
+            const likeBtn = card.querySelector('.post-actions .action-btn');
+            if (!likeBtn) return;
+            // ✅ FIX: کچھ پرانی پوسٹس کا likes فیلڈ array نہیں ہوتا — اس پر
+            // .includes() کال ہونے سے ایرر آتا اور پورا forEach وہیں رک جاتا تھا
+            const likesArr = Array.isArray(p.likes) ? p.likes : [];
+            const isLiked = likesArr.includes(currentUser.uid);
+            likeBtn.classList.toggle('liked', isLiked);
+        } catch (e) {
+            console.error('syncLikedButtons error for post', p && p.id, e);
+        }
+    });
+};
 
 window.doLike = async (pid, btn) => {
     if (!currentUser) return window.location.href = 'login.html';
@@ -3508,6 +4046,7 @@ window.editLocalCmt = async (pid, cid) => {
 
 onAuthStateChanged(auth, async (user) => {
     currentUser = user;
+    window.syncLikedButtons(); // ✅ FIX: لاگ ان ہوتے ہی SSR کارڈز پر liked state سنک کرو
     if (user) {
       document.getElementById('sidebar-logged-in').style.display = 'block';
         document.getElementById('sidebar-logged-out').style.display = 'none';
@@ -3605,6 +4144,10 @@ onAuthStateChanged(auth, async (user) => {
 
 localStorage.setItem('my_uid', user.uid);
 
+// ✅ AD STATUS POPUP: check the Advertise Worker for a status change
+// (submitted / active / rejected) and show the popup once if so.
+if (window.checkAdStatusPopup) window.checkAdStatusPopup(user);
+
 // ── Notifications Badge ───────────────────────────────────────────────
 onSnapshot(
     query(collection(db, "notifications"), where("toUid", "==", user.uid), where("read", "==", false)),
@@ -3638,8 +4181,16 @@ window.loadInitialPosts();
         // Fast cache
         localStorage.setItem('fast_sidebar_pic', uData.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(userNameForPic)}`);
         localStorage.setItem('fast_sidebar_name', userNameForPic);
+        if (uData.role) {
+          localStorage.setItem('fast_user_role', uData.role);
+          window.currentUserRole = uData.role;
+          window.renderPostMenu(uData.role);
+        }
         savedCity = uData.city || "";
         userCity = savedCity;
+        window.currentUserRole = uData.role || "";
+        // ✅ ورکر کے لیے city cookie سیٹ کرو — 30 دن تک valid
+        if (userCity) setUserCityCookie(userCity);
         // ===== INCOMPLETE PROFILE BANNER =====
 const bannerDismissed = localStorage.getItem(`banner_dismissed_${user.uid}`);
 if (!bannerDismissed) {
@@ -3682,6 +4233,7 @@ set(userSearchRef, {
             const data = await res.json();
             userCity = [data.address.city || data.address.town, data.address.state, data.address.country].filter(Boolean).join(", ");
             if (userCity) {
+              setUserCityCookie(userCity); // ✅ ورکر کے لیے cookie
               await updateDoc(doc(db, "users", user.uid), { city: userCity });
               const userSearchRef = dbRef(dbRT, `search_index/${user.uid}`);
               set(userSearchRef, { id: user.uid, t: uData.fullName || uData.facilityName || "User", p: uData.profession || uData.role || "Healthcare Professional", loc: userCity, pic: uData.profilePicUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(uData.fullName || 'U')}`, type: 'profile' });
@@ -3693,6 +4245,8 @@ set(userSearchRef, {
     } else {
       document.getElementById('sidebar-logged-in').style.display = 'none';
         document.getElementById('sidebar-logged-out').style.display = 'block';
+      window.currentUserRole = '';
+      localStorage.removeItem('fast_user_role');
       // 🧹 Logout par stale badge clean karo (taake doosra user purana badge na dekhe)
       const oldUid = localStorage.getItem('my_uid');
       if (oldUid) localStorage.removeItem('unread_chats_' + oldUid);
@@ -3729,6 +4283,14 @@ window.addEventListener('DOMContentLoaded', () => {
     const cachedPic  = localStorage.getItem('fast_sidebar_pic');
     const cachedName = localStorage.getItem('fast_sidebar_name');
     const myUid      = localStorage.getItem('my_uid');
+    const cachedRole = localStorage.getItem('fast_user_role');
+
+    // ── Post menu cached role se turant render karo (Firebase ka wait nahi) ──
+    if (myUid && cachedRole) {
+      window.currentUserRole = cachedRole;
+      if (window.renderPostMenu) window.renderPostMenu(cachedRole);
+      else document.addEventListener('renderPostMenuReady', () => window.renderPostMenu(cachedRole), { once: true });
+    }
 
     if (myUid && cachedPic && cachedName) {
         // پہلے سے لاگ ان — فوری show کرو، کوئی جھٹکا نہیں
@@ -3783,6 +4345,20 @@ window.addEventListener('resize', handleDesktopSidebar);
   // پچھلا فلٹر restore کرو
   window.catActive = sessionStorage.getItem('active_cat') || 'all';
   window.timeActive = sessionStorage.getItem('active_time') || 'all';
+
+  // ✅ نئے filter UI پر active state restore کرو
+  requestAnimationFrame(() => {
+    const catEl = document.querySelector(`#cat-tabs-row .filter-tab[data-cat="${window.catActive}"]`);
+    if (catEl) {
+      document.querySelectorAll('#cat-tabs-row .filter-tab').forEach(t => t.classList.remove('active'));
+      catEl.classList.add('active');
+    }
+    const timeEl = document.querySelector(`#time-chips-row .filter-chip[data-time="${window.timeActive}"]`);
+    if (timeEl) {
+      document.querySelectorAll('#time-chips-row .filter-chip').forEach(c => c.classList.remove('active'));
+      timeEl.classList.add('active');
+    }
+  });
 
   const catKeywords = {
     'nursing': ['nurse','nursing','midwife','lhv','icu','ccu'],
@@ -3859,15 +4435,31 @@ window.renderFiltered = () => {
 
   noRes.classList.add('hidden');
 
-  // ── Batch render — 5-5 posts ──
-  const BATCH = 5;
+  // ── Batch render — 8 posts + skeleton + smooth ──
+  const BATCH = 8;
   let currentIndex = 0;
 
-  // پہلے spinner دکھاؤ
-  document.getElementById('loading').innerHTML = '<div class="spinner"></div>';
-  document.getElementById('loading').classList.remove('hidden');
+  const skeletonHTML = [1,2,3].map(() => `
+    <div class="skeleton-card">
+      <div class="sk-header">
+        <div class="skeleton-line sk-avatar"></div>
+        <div style="flex:1;">
+          <div class="skeleton-line" style="height:13px;width:55%;margin-bottom:8px;"></div>
+          <div class="skeleton-line" style="height:11px;width:38%;"></div>
+        </div>
+      </div>
+      <div class="skeleton-line" style="height:14px;width:80%;margin-bottom:8px;"></div>
+      <div class="skeleton-line" style="height:14px;width:65%;margin-bottom:8px;"></div>
+      <div class="skeleton-line sk-img"></div>
+    </div>`).join('');
+
+  document.getElementById('loading').classList.add('hidden');
 
   function renderBatch() {
+    // skeleton sentinel ہٹاؤ
+    const oldSkel = document.getElementById('filter-skeleton');
+    if (oldSkel) oldSkel.remove();
+
     const end = Math.min(currentIndex + BATCH, filtered.length);
     for (let i = currentIndex; i < end; i++) {
       appendPostToDOM(filtered[i]);
@@ -3875,30 +4467,30 @@ window.renderFiltered = () => {
     currentIndex = end;
 
     if (currentIndex < filtered.length) {
-      // ابھی اور posts باقی ہیں — spinner چلتا رہے
-      const sen = document.createElement('div');
-      sen.id = 'filter-sentinel';
-      sen.style.height = '10px';
-      feed.appendChild(sen);
+      // Skeleton placeholder لگاؤ — یوزر کو جھٹکا نہ لگے
+      const skelDiv = document.createElement('div');
+      skelDiv.id = 'filter-skeleton';
+      skelDiv.innerHTML = skeletonHTML;
+      feed.appendChild(skelDiv);
 
       const obs = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           obs.disconnect();
-          sen.remove();
           renderBatch();
         }
-      }, { rootMargin: '300px' });
-      obs.observe(sen);
+      }, { rootMargin: '50px' });
+      obs.observe(skelDiv);
 
     } else {
-      // سب posts لوڈ — spinner بند، end message
-      document.getElementById('loading').innerHTML = `
-        <div style="text-align:center;padding:20px 20px 10px;">
-          <div style="font-size:13px;font-weight:600;color:#64748b;">
-            ✅ All ${filtered.length} posts loaded
+      // سب posts لوڈ — صاف سادہ end message
+      const loadEl = document.getElementById('loading');
+      loadEl.innerHTML = `
+        <div style="padding:24px 20px 12px;text-align:center;border-top:1px solid #f1f5f9;">
+          <div style="font-size:12.5px;font-weight:600;color:#94a3b8;letter-spacing:0.3px;">
+            — تمام ${filtered.length} نتائج لوڈ ہو گئے —
           </div>
         </div>`;
-      document.getElementById('loading').classList.remove('hidden');
+      loadEl.classList.remove('hidden');
     }
   }
 
@@ -3950,8 +4542,8 @@ function loadNewsTicker() {
   const items = newsPosts.map(p => {
     const title = (p.title || '').substring(0, 80);
     const link  = p.slug
-      ? window.SITE_URL + '/updates/' + p.slug
-      : window.SITE_URL + '/details.html?id=' + p.id;
+      ? 'news.html?slug=' + p.slug
+      : 'details.html?id=' + p.id;
     return `<span class="ticker-item" onclick="location.href='${link}'">${title}</span><span class="ticker-sep" style="color:rgba(255,255,255,0.4);padding:0 16px;">•</span>`;
   }).join('');
 
@@ -3984,12 +4576,27 @@ window.toggleFilter = function(boxId) {
   if (!isActive) box.classList.add('active');
 };
 
+// ✅ New professional filter functions
+window.filterCatNew = function(key, el) {
+  window.catActive = key;
+  document.querySelectorAll('#cat-tabs-row .filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  if (typeof window.renderFiltered === 'function') window.renderFiltered();
+};
+
+window.filterTimeNew = function(key, el) {
+  window.timeActive = key;
+  document.querySelectorAll('#time-chips-row .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  if (typeof window.renderFiltered === 'function') window.renderFiltered();
+};
+
 window.filterCat = function(key, el, label) {
   window.catActive = key;
   document.getElementById('catLabel').innerText = label;
   document.querySelectorAll('#catList li').forEach(li => li.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('catBox').classList.remove('active');
+  if (el) el.classList.add('selected');
+  if (document.getElementById('catBox')) document.getElementById('catBox').classList.remove('active');
   if (typeof window.renderFiltered === 'function') window.renderFiltered();
 };
 
@@ -4484,6 +5091,7 @@ max-width: 180px;
   ];
   let hjpTooltipIndex = 0;
   let hjpTooltipClosed = false;
+  try { hjpTooltipClosed = sessionStorage.getItem('hjpChatTooltipClosed') === '1'; } catch(e) {}
   let hjpChatIsOpen = false;
 
   function hjpGetNextTooltipMsg() {
@@ -4505,13 +5113,15 @@ max-width: 180px;
   function hjpCloseTooltip(e) {
     if (e) e.stopPropagation();
     hjpTooltipClosed = true;
+    try { sessionStorage.setItem('hjpChatTooltipClosed', '1'); } catch(e) {}
     document.getElementById("hjp-tooltip").classList.remove("hjp-tooltip-show");
   }
 
   function hjpStartTooltipCycle() {
+    if (hjpTooltipClosed) return;
     hjpShowTooltip();
     setInterval(() => {
-      hjpTooltipClosed = false;
+      if (hjpTooltipClosed) return;
       hjpShowTooltip();
     }, 30000);
   }
