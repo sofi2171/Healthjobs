@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading... | Health Jobs Portal</title>
+<style>
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8fafc;display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  .hjp-loader{text-align:center;color:#64748b;}
+  .hjp-spinner{width:38px;height:38px;border:4px solid #e2e8f0;border-top-color:#0a66c2;border-radius:50%;animation:hjpspin .8s linear infinite;margin:0 auto 14px;}
+  @keyframes hjpspin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div class="hjp-loader"><div class="hjp-spinner"></div>Loading job post...</div>
+<script>
+// ══════════════════════════════════════════════════════════════
+// post.html — Client-side rendered Job Post page
+// Fetches post JSON from the Worker API (/api/post-data?slug=)
+// and renders it using the EXACT same buildPostPage() markup
+// that the server (worker.js) uses for SSR, so the output is
+// pixel-identical whether server-rendered or client-rendered.
+// ══════════════════════════════════════════════════════════════
+
+// ── Global constants used by buildPostPage() (safe/non-secret) ──
+var SITE_URL = "https://healthjobportal.com";
+var SITE_NAME = "Health Jobs Portal";
+var FALLBACK_IMG = `${SITE_URL}/images/logo.png`;
+var MIN_INDEXABLE_CHARS = 1000;
+
+// ⚠️ IMPORTANT: change this if your Worker is on a different domain
+var HJP_WORKER_BASE = "https://apkworker.sufiangsufiang50.workers.dev";
+
+function __name(fn, name) { return fn; }
+
+// ── buildPostPage (copied verbatim from worker.js, patched to be
+//    synchronous and take faqHtml as a param instead of awaiting
+//    generateJobFaqHtml, which needs server-only env.AI binding) ──
+function buildPostPage(post, slug, verified, faqHtmlFromApi) {
+  const e = /* @__PURE__ */ __name((s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"), "e");
+  const eJ = /* @__PURE__ */ __name((s) => String(s ?? "").replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n"), "eJ");
+  const nl = /* @__PURE__ */ __name((s) => e(s).replace(/\n/g, "<br>"), "nl");
+  const fmtK = /* @__PURE__ */ __name((n) => {
+    n = Number(n) || 0;
+    if (n < 1e3) return String(n);
+    const v = n / 1e3;
+    return (Number.isInteger(v) ? v.toFixed(0) : v.toFixed(1)) + "k";
+  }, "fmtK");
+  const title = post.title || "Healthcare Job";
+  const category = post.category || "";
+  const city = post.location || "";
+  const address = post.address || city;
+  const salary = post.salary || "Negotiable";
+  const shift = post.shift || "Flexible";
+  const experience = post.experience || "Any";
+  const desc = post.desc || "";
+  const posterName = post.posterName || SITE_NAME;
+  const posterPic = post.posterPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(posterName)}&background=0a66c2&color=fff`;
+  const posterRole = post.posterRole || "employer";
+  const posterId = post.posterId || "";
+  const whatsapp = post.whatsapp || "";
+  const localNum = post.localNum || "";
+  const extLink = post.externalLink || "";
+  const webChat = post.webChat !== false;
+  const postedDate = post.postedDateISO || post.createdAt || "";
+  const expiresAt = post.expiresAt || null;
+  const media = Array.isArray(post.media) ? post.media : [];
+  const salaryMin = post.salaryMin || null;
+  const salaryMax = post.salaryMax || null;
+  const empType = post.employmentType || "FULL_TIME";
+  const canonicalUrl = `${SITE_URL}/jobs/${slug}`;
+  const postDocId = post._docId || slug;
+  const pageTitle = `${title} - ${category} in ${city} | ${SITE_NAME}`;
+  const tempDesc = desc.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const metaDesc = tempDesc.length > 50 ? tempDesc.substring(0, 157) + (tempDesc.length > 157 ? "..." : "") : `${title} - ${category} job in ${city}. Salary: ${salary}. Experience: ${experience}. Apply now on Health Jobs Portal Pakistan.`;
+  const ogImage = media.find((m) => m.type === "image")?.url || FALLBACK_IMG;
+  const isEmployer = posterRole === "employer";
+  const roleText = isEmployer ? "Hiring" : "Candidate";
+  const badgeClass = isEmployer ? "badge-employer" : "badge-candidate";
+  let formattedDate = "Recently";
+  if (postedDate) {
+    try {
+      formattedDate = new Date(postedDate).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+    } catch (_) {
+    }
+  }
+  let waNumber = "";
+  if (whatsapp.trim()) {
+    waNumber = whatsapp.replace(/[^0-9]/g, "");
+    if (waNumber.startsWith("0")) waNumber = "92" + waNumber.substring(1);
+  }
+  const callNumber = localNum.trim();
+  const waMsg = encodeURIComponent(`Hi, I saw your post "${title}" on Health Jobs Portal and I am interested.`);
+  const applyAssistFee = post.applyAssistFee != null && Number(post.applyAssistFee) > 0 ? Number(post.applyAssistFee) : null;
+  const applyAssistFeeHtml = applyAssistFee ? `<div class="apply-assist-fee">Fee: Rs. ${applyAssistFee.toLocaleString("en-US")}</div>` : `<div class="apply-assist-fee">Service Fee Applies</div>`;
+  let mediaHtml = "";
+  if (media.length > 0) {
+    mediaHtml = '<div class="media-container">' + media.map((m) => {
+      if (m.type === "image") return `<div class="media-item"><img src="${e(m.url)}" alt="${e(title)}" loading="lazy" onclick="openLightbox('${e(m.url)}')" style="cursor:zoom-in;"></div>`;
+      if (m.type === "video") return `<div class="media-item"><video src="${e(m.url)}" controls preload="none" style="width:100%;border-radius:8px;border:1px solid var(--border-color);" poster="${e(ogImage)}"></video></div>`;
+      if (m.type === "pdf") return `<div class="media-item"><a href="${e(m.url)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:12px 16px;background:#f0f7ff;border:1px solid #d0e1fd;border-radius:8px;text-decoration:none;color:#1967d2;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1967d2"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg> \u{1F4C4} ${e(m.name || "View Document")}</a></div>`;
+      return "";
+    }).join("") + "</div>";
+  }
+  const extLinkHtml = extLink.trim() ? `<div class="apply-now-link" onclick="requireAuth(async function(){ await trackClick('${e(slug)}','linkClicks'); window.open('${e(extLink)}','_blank'); })" style="display:inline-flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:5px;padding:10px 16px;background:#f0f7ff;border:1px solid #d0e1fd;border-radius:8px;text-decoration:none;color:#1967d2;font-size:14px;font-weight:600;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1967d2"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>Apply Now</div>` : "";
+  const whatsappBtn = waNumber ? `<div class="circle-btn-wrapper" style="cursor:pointer;" onclick="requireAuth(async function(){ await trackClick('${e(postDocId)}','whatsappClicks'); bumpStatCount('whatsapp-count-display','WhatsApp'); window.open('https://wa.me/${e(waNumber)}?text=${waMsg}','_blank'); })"><div class="circle-btn btn-wa"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg></div><span class="btn-label">WhatsApp</span></div>` : "";
+  const callBtn = callNumber ? `<div class="circle-btn-wrapper" style="cursor:pointer;" onclick="requireAuth(async function(){ await trackClick('${e(postDocId)}','callClicks'); bumpStatCount('call-count-display','Calls'); window.location.href='tel:${e(callNumber)}'; })"><div class="circle-btn btn-call"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div><span class="btn-label">Call</span></div>` : "";
+  const chatBtn = webChat && posterId ? `<div class="circle-btn-wrapper" style="cursor:pointer;" onclick="requireAuth(function(){ trackClick('${e(slug)}','chatClicks'); window.location.href='${SITE_URL}/chat.html?uid=${e(posterId)}'; })"><div class="circle-btn btn-chat"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg></div><span class="btn-label">Web Chat</span></div>` : "";
+  let baseSalaryLd = "";
+  if (salaryMin) {
+    baseSalaryLd = `"baseSalary":{"@type":"MonetaryAmount","currency":"PKR","value":{"@type":"QuantitativeValue","minValue":${salaryMin},${salaryMax ? `"maxValue":${salaryMax},` : ""}"unitText":"MONTH"}},`;
+  }
+  const validThrough = expiresAt ? `"validThrough":"${eJ(expiresAt)}",` : "";
+  const jsonLd = `{"@context":"https://schema.org/","@type":"JobPosting","title":"${eJ(title)}","description":"${eJ(desc)}","datePosted":"${eJ(postedDate || (/* @__PURE__ */ new Date()).toISOString())}",${validThrough}"employmentType":"${eJ(empType)}","hiringOrganization":{"@type":"Organization","name":"${eJ(posterName)}","logo":"${eJ(posterPic)}"},"jobLocation":{"@type":"Place","address":{"@type":"PostalAddress",
+"streetAddress":"${eJ(address)}",
+"addressLocality":"${eJ(city)}",
+"addressRegion":"${eJ(post.addressRegion || city)}",
+${city ? `"postalCode":"00000",` : ""}
+"addressCountry":"PK"}},${baseSalaryLd}"occupationalCategory":"${eJ(category)}","url":"${eJ(canonicalUrl)}"}`;
+  const breadcrumbLd = `{"@context":"https://schema.org/","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"${eJ(SITE_URL + "/")}"},{"@type":"ListItem","position":2,"name":"${eJ(category || "Jobs")}","item":"${eJ(SITE_URL + "/")}"},{"@type":"ListItem","position":3,"name":"${eJ(title)}","item":"${eJ(canonicalUrl)}"}]}`;
+  const faqHtml = faqHtmlFromApi || "";
+  const faqSectionHtml = faqHtml ? `<div class="faq-section" id="faq-section">
+    <div class="faq-heading">
+        <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+        Frequently Asked Questions
+    </div>
+    <div class="faq-list" id="faq-list">${faqHtml}</div>
+</div>` : "";
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>${e(pageTitle)}</title>
+<meta name="description" content="${e(metaDesc)}">
+<meta name="keywords" content="${e(category)}, healthcare jobs Pakistan, ${e(city)} jobs, medical jobs">
+<meta name="robots" content="${tempDesc.length < MIN_INDEXABLE_CHARS ? "noindex, follow" : "index, follow, max-snippet:-1, max-image-preview:large"}">
+<link rel="canonical" href="${e(canonicalUrl)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${e(canonicalUrl)}">
+<meta property="og:title" content="${e(pageTitle)}">
+<meta property="og:description" content="${e(metaDesc)}">
+<meta property="og:image" content="${e(ogImage)}">
+<meta property="og:site_name" content="${e(SITE_NAME)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${e(pageTitle)}">
+<meta name="twitter:description" content="${e(metaDesc)}">
+<meta name="twitter:image" content="${e(ogImage)}">
+<script type="application/ld+json">${jsonLd}<\/script>
+<script type="application/ld+json">${breadcrumbLd}<\/script>
+<script>
+setTimeout(function(){
+let s1=document.createElement('script');s1.src="https://www.googletagmanager.com/gtag/js?id=G-NC0B547PYR";s1.async=true;document.head.appendChild(s1);
+let s2=document.createElement('script');s2.innerHTML="window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-NC0B547PYR');";document.head.appendChild(s2);
+let s3=document.createElement('script');s3.src="https://analytics.ahrefs.com/analytics.js";s3.setAttribute("data-key","lZziwIFYdWn//NVwsT+mUg");s3.async=true;document.head.appendChild(s3);
+},3500);
+<\/script>
+<style>
+.btn-wa{background:#25D366;}.btn-wa:hover{background:#1DA851;transform:translateY(-3px);}
+.btn-call{background:#0078FF;}.btn-call:hover{background:#005bb5;transform:translateY(-3px);}
+:root{--primary-blue:#0a66c2;--hover-blue:#004182;--bg-white:#ffffff;--bg-body:#f3f2ef;--text-main:#000000e6;--text-secondary:#00000099;--border-color:#e0dfdc;--wa-green:#25D366;--call-blue:#0078FF;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+body{background:var(--bg-body);color:var(--text-main);padding-top:70px;padding-bottom:30px;}
+header{background:var(--bg-white);padding:0 15px;display:flex;align-items:center;gap:15px;position:fixed;top:0;left:0;width:100%;height:65px;z-index:1000;border-bottom:1px solid var(--border-color);box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.back-btn{background:none;border:none;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;padding:5px;}
+.back-btn:hover{color:var(--primary-blue);}
+.back-btn svg{width:26px;height:26px;fill:currentColor;}
+.logo-text{font-size:18px;font-weight:700;color:var(--text-main);}
+main{width:100%;padding:0 10px;max-width:700px;margin:0 auto;box-sizing:border-box;}
+.page-breadcrumb{font-size:12.5px;color:var(--text-secondary);margin:12px 2px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.page-breadcrumb a{color:var(--primary-blue);text-decoration:none;font-weight:600;}
+.page-breadcrumb .crumb-sep{margin:0 6px;color:#c7cdd6;}
+.page-disclaimer{font-size:12.5px;color:var(--text-secondary);line-height:1.6;margin:10px 0 2px;padding-top:12px;border-top:1px solid var(--border-color);}
+.details-card{background:var(--bg-white);border-radius:12px;border:1px solid var(--border-color);box-shadow:0 2px 4px rgba(0,0,0,0.02);padding:25px;margin-top:10px;}
+.user-section{display:flex;align-items:center;gap:15px;margin-bottom:25px;padding-bottom:20px;border-bottom:1px solid #f1f1f1;}
+.user-avatar{width:60px;height:60px;border-radius:50%;object-fit:cover;border:1px solid var(--border-color);}
+.user-details{flex:1;}
+.user-name{font-size:18px;font-weight:700;color:var(--text-main);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.role-badge{font-size:10px;padding:4px 8px;border-radius:12px;text-transform:uppercase;font-weight:800;}
+.badge-employer{background:#f0f7ff;color:#1967d2;border:1px solid #d0e1fd;}
+.badge-candidate{background:#faf5ff;color:#681da8;border:1px solid #e9d5ff;}
+.post-time{font-size:13px;color:var(--text-secondary);font-weight:500;}
+.job-title{font-size:24px;font-weight:800;color:var(--primary-blue);line-height:1.3;margin-bottom:20px;}
+.highlights-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;background:#f8fafc;padding:20px;border-radius:8px;border:1px solid #e2e8f0;margin-bottom:25px;}
+.highlight-item{display:flex;flex-direction:column;gap:5px;}
+.hl-label{font-size:12px;text-transform:uppercase;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px;}
+.hl-value{font-size:15px;font-weight:600;color:var(--text-main);}
+.desc-title{font-size:16px;font-weight:700;color:var(--text-main);margin-bottom:10px;}
+.ai-spark-icon{animation:aiSpin 3s linear infinite;transform-origin:center;}
+@keyframes aiSpin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+.job-desc{font-size:15px;line-height:1.7;color:#333;margin-bottom:30px;word-wrap:break-word;overflow-wrap:break-word;}
+.media-container{display:flex;flex-direction:column;gap:15px;margin-bottom:20px;}
+.media-item img{width:100%;border-radius:8px;border:1px solid var(--border-color);object-fit:cover;max-height:400px;}
+.action-bar{position:fixed;bottom:0;left:0;width:100%;background:var(--bg-white);padding:15px 20px;border-top:1px solid var(--border-color);box-shadow:0 -4px 15px rgba(0,0,0,0.08);display:flex;justify-content:center;z-index:1000;}
+.action-bar-inner{max-width:450px;width:100%;display:flex;justify-content:space-around;align-items:center;}
+.circle-btn-wrapper{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;cursor:pointer;}
+.circle-btn{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;box-shadow:0 4px 10px rgba(0,0,0,0.15);transition:0.3s;border:none;cursor:pointer;}
+.circle-btn svg{width:24px;height:24px;fill:currentColor;}
+.btn-label{font-size:12px;font-weight:700;color:var(--text-main);}
+/* ── Job Apply Float Widget (WhatsApp / Call / Share) ── */
+.job-float-widget{position:fixed;left:0;right:0;bottom:0;width:100%;z-index:9997;display:flex;flex-direction:column;align-items:stretch;gap:0;font-family:inherit;}
+.job-float-widget.jfw-hidden{display:none;}
+.jfw-close-row{display:flex;justify-content:flex-end;width:100%;background:#fdfdfd;border-top:1px solid #e5e7eb;padding:3px 10px 0 0;box-sizing:border-box;}
+.jfw-close{background:#fff;color:#ef4444;border:1px solid #fecaca;font-size:11px;font-weight:800;padding:3px 9px;border-radius:14px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.12);}
+.jfw-panel{position:relative;width:100%;box-sizing:border-box;background:#fdfdfd;border-radius:0;box-shadow:0 -6px 16px rgba(0,0,0,0.12);padding:10px 14px calc(10px + env(safe-area-inset-bottom)) 14px;display:flex;justify-content:space-evenly;gap:10px;}
+.jfw-btn{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+.jfw-circle{position:relative;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 10px rgba(0,0,0,0.18);transition:transform 0.2s;}
+.jfw-circle svg{width:26px;height:26px;fill:currentColor;}
+.jfw-btn:active .jfw-circle{transform:scale(0.92);}
+.jfw-label{font-size:11px;font-weight:700;color:var(--text-main);}
+.jfw-count{position:absolute;top:-6px;right:-6px;background:#1e293b;color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 2px 5px rgba(0,0,0,0.25);}
+.jfw-wa{background:#25D366;}
+.jfw-call{background:#0078FF;}
+.jfw-share{background:#f97316;}
+.jfw-shake{animation:jfwShake 1.1s ease-in-out;}
+@keyframes jfwShake{0%,100%{transform:translateY(0);}20%{transform:translateY(-6px);}40%{transform:translateY(0);}60%{transform:translateY(-4px);}80%{transform:translateY(0);}}
+.jfw-tooltip{position:absolute;left:16px;bottom:100%;margin-bottom:12px;background:#ffffff;color:#0f172a;font-size:13.5px;font-weight:700;line-height:1.35;padding:14px 30px 14px 14px;border-radius:16px;border:1px solid #eef0f2;white-space:normal;width:200px;max-width:64vw;box-shadow:0 10px 28px rgba(0,0,0,0.16);opacity:0;pointer-events:none;transition:opacity 0.35s ease,transform 0.35s ease;transform:translateY(6px);display:flex;align-items:flex-start;gap:8px;text-align:left;z-index:2;}
+.jfw-tooltip.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.jfw-tooltip-icon{width:20px;height:20px;flex-shrink:0;color:#2563eb;margin-top:1px;}
+.jfw-tooltip-x{position:absolute;top:9px;right:9px;cursor:pointer;color:#9ca3af;font-weight:800;font-size:14px;line-height:1;}
+
+.btn-wa{background:var(--wa-green);}.btn-wa:hover{background:#1DA851;transform:translateY(-3px);box-shadow:0 6px 12px rgba(37,211,102,0.3);}
+.btn-call{background:var(--call-blue);}.btn-call:hover{background:#005bb5;transform:translateY(-3px);box-shadow:0 6px 12px rgba(0,120,255,0.3);}
+.btn-chat{background:var(--primary-blue);}.btn-chat:hover{background:var(--hover-blue);transform:translateY(-3px);box-shadow:0 6px 12px rgba(10,102,194,0.3);}
+.report-popup{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);width:calc(100% - 30px);max-width:480px;background:white;border-radius:14px;border:1px solid #e2e8f0;box-shadow:0 8px 30px rgba(0,0,0,0.15);z-index:9999;padding:18px;display:none;animation:slideUp 0.3s ease;}
+.report-popup.show{display:block;}
+@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+.report-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.report-top h3{font-size:15px;font-weight:700;color:#0f172a;}
+.report-close{background:#f1f5f9;border:none;border-radius:50%;width:28px;height:28px;font-size:16px;cursor:pointer;color:#64748b;display:flex;align-items:center;justify-content:center;}
+.report-owner-box{display:flex;align-items:center;gap:10px;background:#f8fafc;padding:10px 12px;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:14px;}
+.report-owner-box img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:1px solid #e2e8f0;}
+.report-reasons{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.reason-chip{padding:7px 13px;border-radius:20px;border:1px solid #e2e8f0;font-size:12px;font-weight:600;cursor:pointer;background:#f8fafc;color:#334155;transition:0.2s;}
+.reason-chip.selected{background:#0a66c2;color:white;border-color:#0a66c2;}
+.report-input{width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit;}
+.report-input:focus{border-color:#0a66c2;}
+.report-submit{width:100%;padding:11px;background:#ef4444;color:white;border:none;border-radius:20px;font-size:14px;font-weight:700;cursor:pointer;transition:0.2s;}
+.report-submit:hover{background:#dc2626;}
+.report-success{text-align:center;padding:10px 0;font-size:14px;color:#16a34a;font-weight:600;display:none;}
+
+/* \u2500\u2500 Related Jobs Section (simple, compact cards) \u2500\u2500 */
+.related-section{margin-top:14px;margin-bottom:6px;background:var(--bg-white);border-radius:12px;border:1px solid var(--border-color);padding:20px;box-shadow:0 2px 4px rgba(0,0,0,0.02);}
+.related-heading{font-size:15px;font-weight:800;color:var(--text-main);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.related-heading svg{width:18px;height:18px;fill:var(--primary-blue);}
+.related-grid{display:flex;flex-direction:column;gap:10px;}
+.related-card{display:flex;align-items:center;gap:12px;background:var(--bg-white);border:1px solid var(--border-color);border-radius:12px;padding:14px;cursor:pointer;text-decoration:none;transition:box-shadow 0.2s,border-color 0.2s;width:100%;box-sizing:border-box;}
+.related-card:hover{box-shadow:0 4px 14px rgba(10,102,194,0.12);border-color:#b8d0f0;}
+.related-thumb{width:64px;height:64px;border-radius:10px;object-fit:cover;border:1.5px solid var(--border-color);flex-shrink:0;background:#f0f7ff;}
+.related-info{flex:1;min-width:0;}
+.related-title{font-size:14px;font-weight:700;color:var(--text-main);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:5px;line-height:1.4;}
+.related-meta{font-size:11px;color:var(--text-secondary);display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.related-badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:800;text-transform:uppercase;}
+.related-badge.emp{background:#f0f7ff;color:#1967d2;border:1px solid #d0e1fd;}
+.related-badge.cnd{background:#faf5ff;color:#681da8;border:1px solid #e9d5ff;}
+.related-arrow{color:#b0b8c9;flex-shrink:0;}
+.related-more-links{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border-color);}
+.related-more-links a{font-size:12.5px;font-weight:700;color:var(--primary-blue);text-decoration:none;}
+.related-more-links a:hover{text-decoration:underline;}
+.related-skeleton{background:#f1f5f9;border-radius:12px;height:92px;animation:shimmer 1.2s infinite linear;background:linear-gradient(90deg,#f1f5f9 25%,#e8edf4 50%,#f1f5f9 75%);background-size:200% 100%;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+/* \u2500\u2500 Related Questions (FAQ) Section \u2500\u2500 */
+.faq-section{margin-top:14px;margin-bottom:6px;background:var(--bg-white);border-radius:12px;border:1px solid var(--border-color);padding:20px;box-shadow:0 2px 4px rgba(0,0,0,0.02);}
+
+.ai-chat-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9998;display:none;}
+.ai-chat-overlay.open{display:block;}
+.ai-chat-modal{position:fixed;inset:0;background:#fff;z-index:9999;display:none;flex-direction:column;}
+.ai-chat-modal.open{display:flex;}
+@media (min-width:769px){
+    .ai-chat-overlay{background:rgba(15,23,42,0.12);}
+    .ai-chat-modal{top:auto;left:auto;inset:auto;right:24px;bottom:24px;width:380px;height:min(600px,80vh);border-radius:16px;box-shadow:0 16px 48px rgba(15,23,42,0.18);border:1px solid #e2e8f0;overflow:hidden;}
+}
+.ai-chat-header{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:1px solid var(--border-color);flex-shrink:0;background:#fff;}
+.ai-chat-avatar{height:38px;width:38px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid #e5e9f0;}
+.ai-chat-header-text{flex:1;overflow:hidden;}
+.ai-chat-header .ai-chat-title{font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#0f172a;}
+.ai-chat-status{font-size:12px;color:#8a94a3;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ai-chat-status.typing{color:#16a34a;font-style:italic;}
+.ai-chat-close{background:none;border:none;cursor:pointer;padding:6px;color:#555;flex-shrink:0;}
+.ai-chat-close svg{width:22px;height:22px;}
+.ai-chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafafa;}
+.ai-chat-msg{max-width:86%;padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.6;word-wrap:break-word;}
+.ai-chat-msg.user{align-self:flex-end;background:var(--primary-blue);color:#fff;border-bottom-right-radius:5px;}
+.ai-chat-msg.bot{align-self:flex-start;background:#fff;border:1px solid #e5e9f0;color:#1e293b;border-bottom-left-radius:5px;box-shadow:0 1px 2px rgba(0,0,0,0.04);}
+.ai-chat-msg.bot.loading{color:#94a3b8;}
+.ai-chat-typing-dots{display:inline-flex;align-items:center;gap:3px;padding:3px 0;}
+.ai-chat-typing-dots span{width:6px;height:6px;border-radius:50%;background:#b7c0cc;animation:aiTypingBounce 1.2s infinite ease-in-out;}
+.ai-chat-typing-dots span:nth-child(2){animation-delay:.15s;}
+.ai-chat-typing-dots span:nth-child(3){animation-delay:.3s;}
+@keyframes aiTypingBounce{0%,60%,100%{transform:translateY(0);opacity:.5;}30%{transform:translateY(-4px);opacity:1;}}
+.ai-chat-msg p{margin:0 0 8px;}
+.ai-chat-msg p:last-child{margin-bottom:0;}
+.ai-chat-msg ul,.ai-chat-msg ol{margin:6px 0 10px;padding-left:20px;}
+.ai-chat-msg li{margin-bottom:4px;}
+.ai-chat-msg h1{font-size:17px;font-weight:800;margin:6px 0 8px;}
+.ai-chat-msg h2{font-size:16px;font-weight:800;margin:6px 0 8px;}
+.ai-chat-msg h3,.ai-chat-msg h4{font-size:14.5px;font-weight:700;margin:6px 0 6px;}
+.ai-chat-msg strong{font-weight:700;}
+.ai-chat-msg em{font-style:italic;}
+.ai-chat-msg a{color:#1967d2;text-decoration:underline;word-break:break-all;}
+.ai-chat-link-row{display:inline-flex;align-items:center;gap:6px;max-width:100%;}
+.ai-chat-copy-btn{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;padding:3px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#475569;}
+.ai-chat-copy-btn svg{width:13px;height:13px;}
+.ai-chat-copy-btn.copied{color:#16a34a;border-color:#bbf7d0;background:#f0fdf4;}
+.ai-chat-apply-btn,.ai-chat-map-btn{display:inline-flex;align-items:center;gap:6px;margin-top:6px;margin-right:6px;padding:9px 16px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;}
+.ai-chat-apply-btn{background:#16a34a;color:#fff !important;}
+.ai-chat-map-btn{background:#eef2ff;color:#3730a3 !important;border:1px solid #dfe3fb;}
+.ai-chat-inputbar{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border-color);flex-shrink:0;background:#fff;}
+.ai-chat-inputbar textarea{flex:1;resize:none;border:1px solid var(--border-color);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;max-height:100px;}
+.ai-chat-inputbar button{background:var(--primary-blue);color:#fff;border:none;border-radius:10px;padding:0 18px;font-weight:600;cursor:pointer;font-size:14px;}
+.ai-chat-inputbar button:disabled{opacity:.5;cursor:not-allowed;}
+.faq-heading{font-size:15px;font-weight:800;color:var(--text-main);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.faq-heading svg{width:18px;height:18px;fill:var(--primary-blue);}
+.faq-list{display:flex;flex-direction:column;gap:14px;}
+.faq-static-item{border-bottom:1px solid var(--border-color);padding-bottom:12px;}
+.faq-static-item:last-child{border-bottom:none;padding-bottom:0;}
+.faq-static-q{font-size:13.5px;font-weight:700;color:var(--text-main);margin:0 0 4px;line-height:1.5;}
+.faq-static-q a{color:var(--primary-blue);text-decoration:underline;}
+.faq-static-a{font-size:13px;color:var(--text-secondary);line-height:1.6;margin:0;}
+.expiry-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:10px;}
+.expiry-countdown{background:#fff0f0;color:#dc2626;border:1px solid #fecaca;}
+.expiry-expired{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
+.stats-bar{padding:10px 0;display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--text-secondary);border-top:1px solid #f1f1f1;border-bottom:1px solid #f1f1f1;margin-top:12px;}
+.post-actions{display:flex;padding:4px 0;border-bottom:1px solid #f1f1f1;}
+.action-btn{flex:1;background:none;border:none;padding:10px 0;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--text-secondary);font-size:13px;font-weight:600;transition:0.2s;border-radius:8px;margin:0 2px;font-family:inherit;}
+.action-btn:hover,.action-btn:active{background:#f1f5f9;}
+.action-btn.liked{color:var(--primary-blue);}
+.action-btn svg{width:18px;height:18px;fill:currentColor;}
+.cmt-item{display:flex;gap:8px;margin-bottom:10px;position:relative;}
+.cmt-avatar{width:30px;height:30px;min-width:30px;border-radius:50%;object-fit:cover;border:1px solid #e2e8f0;cursor:pointer;margin-top:2px;}
+.cmt-bubble{flex:1;background:#fff;border:1px solid #e8edf2;border-radius:0 10px 10px 10px;padding:8px 10px;min-width:0;}
+.cmt-user{font-weight:700;font-size:12px;color:#0f172a;display:block;margin-bottom:2px;}
+.cmt-txt{font-size:13px;color:#334155;line-height:1.4;word-break:break-word;}
+.cmt-footer{display:flex;align-items:center;gap:8px;margin-top:5px;}
+.cmt-like-btn,.cmt-dislike-btn{display:flex;align-items:center;gap:3px;background:none;border:none;cursor:pointer;font-size:11px;font-weight:600;color:#94a3b8;padding:2px 5px;border-radius:6px;transition:0.15s;}
+.cmt-like-btn:hover{background:#f1f5f9;color:#0a66c2;}
+.cmt-dislike-btn:hover{background:#f1f5f9;color:#ef4444;}
+.cmt-like-btn.active{color:#0a66c2;}
+.cmt-dislike-btn.active{color:#ef4444;}
+.cmt-like-btn svg,.cmt-dislike-btn svg{width:12px;height:12px;fill:currentColor;}
+.cmt-reply-btn{background:none;border:none;cursor:pointer;font-size:11px;font-weight:600;color:#64748b;padding:2px 5px;border-radius:6px;transition:0.15s;}
+.cmt-reply-btn:hover{background:#f1f5f9;color:#0a66c2;}
+.cmt-3dot{background:none;border:none;cursor:pointer;color:#cbd5e1;padding:2px 4px;border-radius:6px;font-size:14px;line-height:1;margin-left:auto;transition:0.15s;}
+.cmt-3dot:hover{background:#f1f5f9;color:#64748b;}
+.replies-toggle-btn{display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;font-size:11px;font-weight:700;color:#0a66c2;padding:2px 0;margin-left:38px;margin-bottom:4px;}
+.replies-toggle-btn svg{width:12px;height:12px;fill:currentColor;transition:transform 0.2s;}
+.replies-toggle-btn.open svg{transform:rotate(180deg);}
+.replies-list{margin-left:38px;margin-bottom:4px;}
+.reply-item{display:flex;gap:7px;margin-bottom:7px;}
+.reply-avatar{width:24px;height:24px;min-width:24px;border-radius:50%;object-fit:cover;border:1px solid #e2e8f0;cursor:pointer;margin-top:2px;}
+.reply-bubble{flex:1;background:#f0f7ff;border:1px solid #dbeafe;border-radius:0 10px 10px 10px;padding:6px 9px;}
+.reply-input-row{display:flex;gap:6px;margin-left:38px;margin-bottom:6px;align-items:center;}
+.reply-input{flex:1;border:1px solid #e2e8f0;border-radius:16px;outline:none;font-size:12px;padding:6px 12px;background:#fff;color:#0f172a;}
+.reply-send-btn{background:#0a66c2;color:#fff;border:none;padding:6px 12px;border-radius:14px;font-weight:700;font-size:11px;cursor:pointer;}
+.cmt-ctx-menu{position:fixed;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.10);z-index:99999;min-width:140px;overflow:hidden;}
+.cmt-ctx-item{display:flex;align-items:center;padding:11px 16px;font-size:13px;font-weight:600;color:#0f172a;cursor:pointer;border-bottom:1px solid #f1f5f9;transition:background 0.12s;}
+.cmt-ctx-item:last-child{border-bottom:none;}
+.cmt-ctx-item:hover{background:#f8fafc;}
+.cmt-ctx-item.danger{color:#ef4444;}
+.job-details-table{width:100%;border-collapse:collapse;margin-bottom:25px;border:2px solid #334155;}
+.job-details-table td{padding:12px 14px;border:1px solid #94a3b8;font-size:14px;vertical-align:middle;}
+.job-details-table .jdt-label{font-weight:700;color:#334155;background:#f8fafc;width:38%;border-right:2px solid #334155;}
+.job-details-table .jdt-value{color:#0f172a;font-weight:500;}
+.job-details-table tr:first-child td{background:#1e3a5f;color:#fff;font-weight:800;font-size:15px;border-color:#1e3a5f;}
+.job-details-table tr:first-child .jdt-label{background:#1e3a5f;color:#fff;border-right:2px solid #fff;}
+@media(max-width:480px){.job-title{font-size:20px;}.details-card{padding:18px;}.highlights-box{grid-template-columns:1fr 1fr;}}
+.content-col{width:100%;min-width:0;}
+.sidebar-col{width:100%;margin-top:0;box-sizing:border-box;}
+.page-layout{display:block;width:100%;}
+.site-footer{background:#fff;padding:24px 16px 40px;border-top:1px solid #cbd5e1;text-align:center;width:100%;}
+/* max-width:700px applied directly to main */
+@media(min-width:1024px){
+  .page-layout{display:block;width:100%;position:relative;}
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+${post.applyAssistEnabled ? `<div id="apply-assist-modal-overlay" class="aa-modal-overlay">
+  <div class="aa-modal-card">
+    <button class="aa-modal-close" onclick="closeApplyAssistModal()" aria-label="Close">&#10005;</button>
+    <div class="apply-assist-urdu apply-assist-main">اگر آپ خود اپلائی کرنے کی جھنجھٹ سے بچنا چاہتے ہیں تو ابھی ہم سے رابطہ کریں</div>
+    <div class="apply-assist-urdu apply-assist-sub">ہم سے اپلائی کروانے کی ایک الگ فیس ہے۔ مکمل تفصیلات جاننے اور درخواست دینے کے لیے نیچے بٹن پر کلک کریں</div>
+    ${applyAssistFeeHtml}
+    <button class="apply-assist-btn" onclick="requestApplyAssist(); closeApplyAssistModal();">Apply Now</button>
+  </div>
+</div>
+<style>
+.aa-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;}
+.aa-modal-overlay.aa-hidden{display:none;}
+.aa-modal-card{position:relative;background:#ffffff;border-radius:0;padding:30px 22px 22px;max-width:360px;width:100%;max-height:55vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,0.28);text-align:center;border:1px solid #e5e5e5;}
+.aa-modal-close{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;background:#DC2626;color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;padding:0;}
+.aa-modal-close:hover{background:#B91C1C;}
+.apply-assist-urdu{font-family:'Noto Nastaliq Urdu',serif;direction:rtl;color:#1a1a1a;}
+.apply-assist-main{font-size:19px;font-weight:700;line-height:2.2;margin-bottom:8px;}
+.apply-assist-sub{font-size:15px;font-weight:400;line-height:2.1;color:#555;margin-bottom:16px;}
+.apply-assist-fee{display:inline-block;background:#fff7e6;color:#b45309;border:1px solid #fde68a;padding:5px 16px;border-radius:20px;font-size:13.5px;font-weight:700;margin-bottom:16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+.apply-assist-btn{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a66c2;color:#fff;border:none;border-radius:0;padding:10px 30px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.3px;transition:background 0.15s;}
+.apply-assist-btn:hover{background:#004182;}
+.apply-assist-btn:disabled{background:#94a3b8;cursor:default;}
+</style>
+<script>
+function closeApplyAssistModal(){
+    const overlay = document.getElementById('apply-assist-modal-overlay');
+    if(overlay) overlay.classList.add('aa-hidden');
+    try { sessionStorage.setItem('applyAssistModalClosed', '1'); } catch(e){}
+}
+document.addEventListener('DOMContentLoaded', function(){
+    const overlay = document.getElementById('apply-assist-modal-overlay');
+    if(!overlay) return;
+    try {
+        if(sessionStorage.getItem('applyAssistModalClosed') === '1'){
+            overlay.classList.add('aa-hidden');
+        }
+    } catch(e){}
+});
+<\/script>` : ""}
+
+<!-- Pull to Refresh -->
+<div id="ptr-indicator" style="position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;justify-content:center;align-items:center;height:0;overflow:hidden;transition:height 0.2s ease;background:transparent;pointer-events:none;">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding-bottom:8px;">
+    <div id="ptr-spinner" style="width:28px;height:28px;border:3px solid #e2e8f0;border-top:3px solid #0a66c2;border-radius:50%;animation:ptrSpin 0.7s linear infinite;display:none;"></div>
+    <div id="ptr-arrow" style="width:22px;height:22px;transition:transform 0.2s ease;">
+      <svg viewBox="0 0 24 24" fill="#0a66c2"><path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"/></svg>
+    </div>
+    <div id="ptr-text" style="font-size:11px;color:#64748b;font-weight:600;letter-spacing:0.3px;">Pull to refresh</div>
+  </div>
+</div>
+<style>
+@keyframes ptrSpin { 100% { transform: rotate(360deg); } }
+</style>
+<script>
+(function(){
+  var startY=0, pulling=false, triggered=false;
+  var ind=document.getElementById('ptr-indicator');
+  var spinner=document.getElementById('ptr-spinner');
+  var arrow=document.getElementById('ptr-arrow');
+  var txt=document.getElementById('ptr-text');
+  var threshold=65;
+  document.addEventListener('touchstart',function(e){
+    if(window.scrollY===0){ startY=e.touches[0].clientY; pulling=true; triggered=false; }
+  },{passive:true});
+  document.addEventListener('touchmove',function(e){
+    if(!pulling) return;
+    var dy=e.touches[0].clientY - startY;
+    if(dy<0){ pulling=false; return; }
+    var pull=Math.min(dy*0.45, 80);
+    ind.style.height=pull+'px';
+    if(pull>=threshold && !triggered){
+      arrow.style.display='none';
+      spinner.style.display='block';
+      txt.textContent='Refreshing...';
+      triggered=true;
+    } else if(pull<threshold){
+      arrow.style.display='block';
+      spinner.style.display='none';
+      arrow.style.transform='rotate('+(pull/threshold*180)+'deg)';
+      txt.textContent='Pull to refresh';
+    }
+  },{passive:true});
+  document.addEventListener('touchend',function(){
+    if(!pulling) return;
+    pulling=false;
+    if(triggered){
+      setTimeout(function(){ window.location.reload(); },300);
+    } else {
+      ind.style.height='0';
+      arrow.style.transform='rotate(0deg)';
+      spinner.style.display='none';
+      txt.textContent='Pull to refresh';
+    }
+  },{passive:true});
+})();
+</script>
+
+<header>
+<button class="back-btn" onclick="window.location.href='https://healthjobportal.com/'">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </button>
+    <div class="logo-text">Post Details</div>
+</header>
+
+<div class="page-layout">
+<main>
+<div class="page-breadcrumb"><a href="${SITE_URL}/">Home</a><span class="crumb-sep">/</span><span>${e(category || "Jobs")}</span><span class="crumb-sep">/</span><span>${e(title)}</span></div>
+<div class="details-card">
+    <div class="user-section">
+        <img src="${e(posterPic)}" class="user-avatar" alt="${e(posterName)}"
+             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(posterName)}&background=0a66c2&color=fff'">
+        <div class="user-details">
+            <div class="user-name">
+                ${e(posterName)}
+                <span class="role-badge ${badgeClass}">${roleText}</span>
+                <span id="hjp-verify-badge" data-uid="${e(posterId)}" style="display:${verified ? "inline-flex" : "none"};align-items:center;justify-content:center;background:#0a66c2;border-radius:50%;width:18px;height:18px;margin-left:2px;border:2px solid #fff;flex-shrink:0;"><svg viewBox="0 0 24 24" width="10" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+            </div>
+            <div class="post-time">${e(city)} &bull; Posted on ${formattedDate}</div>
+        </div>
+    </div>
+${expiresAt ? `<div id="expiry-badge-wrap"></div>` : ""}
+<div class="job-title">${e(title)}</div>
+<div class="page-disclaimer">Please verify all job details directly with the employer before applying. Health Jobs Portal does not charge any fee for job applications.</div>
+<!-- TrustBox widget - Review Collector -->
+<div class="trustpilot-widget" data-locale="en-US" data-template-id="56278e9abfbbba0bdcd568bc" data-businessunit-id="6a32028be10624a15deb07d6" data-style-height="52px" data-style-width="100%" data-token="4d97b915-5abc-4d24-9888-b4072d453a26">
+  <a href="https://www.trustpilot.com/review/healthjobportal.com" target="_blank" rel="noopener">Trustpilot</a>
+</div>
+<script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async><\/script>
+<!-- End TrustBox widget --> 
+
+<table class="job-details-table">
+        <tbody>
+            <tr>
+                <td class="jdt-label">Job Title</td>
+                <td class="jdt-value">${e(title)}</td>
+            </tr>
+            <tr>
+                <td class="jdt-label">Category</td>
+                <td class="jdt-value">${e(category) || "-"}</td>
+            </tr>
+            <tr>
+                <td class="jdt-label">Location</td>
+                <td class="jdt-value">${e(city) || "-"}</td>
+            </tr>
+            <tr>
+                <td class="jdt-label">Salary</td>
+                <td class="jdt-value">${e(salary)}</td>
+            </tr>
+            <tr>
+                <td class="jdt-label">Job Shift</td>
+                <td class="jdt-value">${e(shift)}</td>
+            </tr>
+            <tr>
+                <td class="jdt-label">Experience</td>
+                <td class="jdt-value">${e(experience)}</td>
+            </tr>
+            <tr>
+                <td class="jdt-label">Employment Type</td>
+                <td class="jdt-value">${e(empType.replace(/_/g, " "))}</td>
+            </tr>
+            ${expiresAt ? `<tr><td class="jdt-label">Deadline</td><td class="jdt-value">${e(expiresAt)}</td></tr>` : ""}
+        </tbody>
+    </table>
+
+${mediaHtml}
+
+<div class="desc-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+  <span>Detail Description:</span>
+  <span onclick="openAiChat()" title="Ask AI about this job" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;background:#2563eb;padding:5px 11px;border-radius:14px;box-shadow:0 2px 6px rgba(37,99,235,0.35);">
+    <svg class="ai-spark-icon" width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 2c.6 3.2 2.2 4.8 5.4 5.4-3.2.6-4.8 2.2-5.4 5.4-.6-3.2-2.2-4.8-5.4-5.4C9.8 6.8 11.4 5.2 12 2Zm7 9c.4 1.8 1.2 2.6 3 3-1.8.4-2.6 1.2-3 3-.4-1.8-1.2-2.6-3-3 1.8-.4 2.6-1.2 3-3Z"/></svg>
+    <span style="font-size:12px;font-weight:700;color:#fff;">AI</span>
+  </span>
+</div>
+<div class="job-desc">${desc}</div>
+
+${post.applyAssistEnabled ? `<div class="apply-assist-card">
+  <div class="apply-assist-urdu apply-assist-main">اگر آپ ہم سے اپلائی کروانا چاہتے ہیں تو ابھی رابطہ کریں</div>
+  <div class="apply-assist-urdu apply-assist-sub">ہم سے اپلائی کروانے کی ایک الگ فیس ہے۔ مکمل تفصیلات جاننے اور درخواست دینے کے لیے نیچے بٹن پر کلک کریں</div>
+  ${applyAssistFeeHtml}
+  <button class="apply-assist-btn" onclick="requestApplyAssist()">Apply Now</button>
+</div>
+<style>
+.apply-assist-card{background:#ffffff;border:1px solid #e5e5e5;border-radius:0;padding:18px 16px;margin:14px 0;text-align:center;}
+.apply-assist-urdu{font-family:'Noto Nastaliq Urdu',serif;direction:rtl;color:#1a1a1a;}
+.apply-assist-main{font-size:19px;font-weight:700;line-height:2.2;margin-bottom:8px;}
+.apply-assist-sub{font-size:15px;font-weight:400;line-height:2.1;color:#555;margin-bottom:14px;}
+.apply-assist-fee{display:inline-block;background:#fff7e6;color:#b45309;border:1px solid #fde68a;padding:5px 16px;border-radius:20px;font-size:13.5px;font-weight:700;margin-bottom:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+.apply-assist-btn{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a66c2;color:#fff;border:none;border-radius:0;padding:10px 30px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.3px;transition:background 0.15s;}
+.apply-assist-btn:hover{background:#004182;}
+.apply-assist-btn:disabled{background:#94a3b8;cursor:default;}
+</style>` : ""}
+
+<a href="https://whatsapp.com/channel/0029VbCe3Mf2kNFroj9qx223" target="_blank" rel="noopener" style="display:block;margin:14px 0;">
+  <img src="https://healthjobportal.com/images/share.png" alt="Share and earn reward, make friends" style="width:100%;height:auto;border-radius:10px;display:block;">
+</a>
+
+${extLinkHtml}
+${isEmployer ? `<div class="fraud-warning-card">
+  <div class="fraud-warning-icon">
+    <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M12 2L1 21h22L12 2z" fill="#DC2626"/><path d="M12 9v5" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="#fff"/></svg>
+  </div>
+  <div class="fraud-warning-text">
+    <div class="fraud-warning-title">Stay Safe From Job Fraud</div>
+    <div class="fraud-warning-body">Please contact this employer carefully and never pay any money to apply for or accept a job. Health Jobs Portal is not responsible for any fraud, scam, or financial loss related to this post.</div>
+  </div>
+</div>
+<style>
+.fraud-warning-card{display:flex;align-items:flex-start;gap:12px;background:#FEF2F2;border:1px solid #FCA5A5;border-left:4px solid #DC2626;border-radius:12px;padding:14px 16px;margin:16px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+.fraud-warning-icon{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:#FEE2E2;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.fraud-warning-text{flex:1;min-width:0;}
+.fraud-warning-title{font-size:13.5px;font-weight:700;color:#991B1B;letter-spacing:0.1px;margin-bottom:4px;}
+.fraud-warning-body{font-size:12.5px;font-weight:500;color:#7F1D1D;line-height:1.6;}
+</style>` : ""}
+<!-- Share Buttons Row -->
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;">
+${whatsapp ? `<div onclick="requireAuth(async function(){ await trackClick('${e(postDocId)}','whatsappClicks'); bumpStatCount('whatsapp-count-display','WhatsApp'); window.open('https://wa.me/${waNumber}?text=${waMsg}','_blank'); })" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#25D366;color:white;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>WhatsApp</div>` : ""}
+${callNumber ? `<div onclick="requireAuth(async function(){ await trackClick('${e(postDocId)}','callClicks'); bumpStatCount('call-count-display','Calls'); window.location.href='tel:${e(callNumber)}'; })"style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#0078FF;color:white;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Call</div>` : ""}
+<div onclick="openReportPopup()" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:#fff0f0;color:#ef4444;border:1px solid #fecaca;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;"><svg width="12" height="12" viewBox="0 0 24 24" fill="#ef4444"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>Report</div>
+</div>
+
+${city ? `
+<!-- Live Map Section -->
+<div style="margin:20px 0;">
+    <div style="font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#0a66c2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        Location
+    </div>
+    <div style="position:relative;width:100%;padding-top:50%;border-radius:12px;overflow:hidden;border:1px solid var(--border-color);cursor:pointer;"
+         onclick="window.open('https://www.google.com/maps/search/${encodeURIComponent(address + ", " + city + ", Pakistan")}','_blank')">
+        <iframe
+            src="https://maps.google.com/maps?q=${encodeURIComponent(address + ", " + city + ", Pakistan")}&output=embed&z=13"
+            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;pointer-events:none;"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div style="position:absolute;bottom:10px;right:10px;background:rgba(10,102,194,0.9);color:white;padding:7px 12px;border-radius:20px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:5px;">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Open in Google Maps
+        </div>
+    </div>
+    <div style="font-size:12px;color:var(--text-secondary);margin-top:7px;font-weight:600;">
+        \u{1F4CD} ${e(address || city)}, Pakistan
+    </div>
+</div>
+` : ""}
+
+<!-- Share Buttons Row -->
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <span id="like-count-display">Loading...</span>
+        <span id="cmt-count-display">0 Comments</span>
+        <span id="share-count-display" data-count="${Number(post.shares) || 0}">${fmtK(Number(post.shares) || 0)} Shares</span>
+        <span id="call-count-display" data-count="${Number(post.callClicks) || 0}">${fmtK(Number(post.callClicks) || 0)} Calls</span>
+        <span id="whatsapp-count-display" data-count="${Number(post.whatsappClicks) || 0}">${fmtK(Number(post.whatsappClicks) || 0)} WhatsApp</span>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="post-actions">
+        <button class="action-btn" id="like-btn" onclick="doLike()">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            Like
+        </button>
+        <button class="action-btn" onclick="toggleComments()">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Comment
+        </button>
+        <button class="action-btn" onclick="sharePost()">
+            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+            Share
+        </button>
+    </div>
+
+    <!-- Comments Section -->
+    <div id="cmt-section" style="display:none;padding:16px;background:#f8fafc;border-top:1px solid #f1f1f1;">
+        <div id="cmt-list" style="max-height:300px;overflow-y:auto;margin-bottom:12px;"></div>
+        <div style="display:flex;gap:8px;">
+            <input type="text" id="cmt-input" placeholder="Add a comment..." style="flex:1;padding:10px 16px;border:1px solid var(--border-color);border-radius:20px;outline:none;font-size:14px;background:#fff;font-family:inherit;">
+            <button onclick="sendComment()" style="background:var(--primary-blue);color:#fff;border:none;padding:0 16px;border-radius:20px;font-weight:600;cursor:pointer;font-size:13px;">Post</button>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="sidebar-col">
+<!-- \u2500\u2500 Frequently Asked Questions Section \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 -->
+${faqSectionHtml}
+
+<!-- \u2500\u2500 Ask AI full-screen chat modal \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 -->
+<div class="ai-chat-overlay" id="ai-chat-overlay" onclick="closeAiChat()"></div>
+<div class="ai-chat-modal" id="ai-chat-modal">
+    <div class="ai-chat-header">
+        <img src="https://i.pravatar.cc/150?img=68" alt="AI" class="ai-chat-avatar" id="ai-chat-avatar" onerror="this.style.display='none'">
+        <div class="ai-chat-header-text">
+            <div class="ai-chat-title" id="ai-chat-title">AI Assistant</div>
+            <div class="ai-chat-status" id="ai-chat-status">Online</div>
+        </div>
+        <button class="ai-chat-close" onclick="closeAiChat()" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+    </div>
+    <div class="ai-chat-messages" id="ai-chat-messages"></div>
+    <div class="ai-chat-inputbar">
+        <textarea id="ai-chat-input" rows="1" placeholder="Ask a question about this job post..." onkeydown="aiChatHandleKey(event)"></textarea>
+        <button id="ai-chat-send" onclick="aiChatSend()">Send</button>
+    </div>
+</div>
+<!-- \u2500\u2500 Related Jobs Section \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 -->
+<div class="related-section">
+    <div class="related-heading">
+        <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.5C18 2.46 15.54 0 12.5 0S7 2.46 7 4.5c0 .62.11 1.06.18 1.5H5C3.9 6 3 6.9 3 8v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM12.5 2C14.43 2 16 3.57 16 5.5c0 .62-.13 1.03-.18 1.5h-6.64c-.05-.47-.18-.88-.18-1.5C9 3.57 10.57 2 12.5 2zM19 20H5V8h14v12z"/></svg>
+        Related Jobs
+    </div>
+    <div class="related-grid" id="related-jobs-grid">
+        <div class="related-skeleton"></div>
+        <div class="related-skeleton"></div>
+        <div class="related-skeleton"></div>
+    </div>
+    <div class="related-more-links">
+        <a href="${SITE_URL}/">Browse All Jobs</a>
+        <a href="${SITE_URL}/notes">Latest Health Updates</a>
+    </div>
+</div>
+<!-- \u2500\u2500 Same-Category / Salary-Tier Job Lists (built client-side from the same cached pool, no extra Firestore reads) \u2500\u2500 -->
+<div class="related-section" id="category-jobs-section" style="display:none;">
+    <div class="related-heading">
+        <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.5C18 2.46 15.54 0 12.5 0S7 2.46 7 4.5c0 .62.11 1.06.18 1.5H5C3.9 6 3 6.9 3 8v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM12.5 2C14.43 2 16 3.57 16 5.5c0 .62-.13 1.03-.18 1.5h-6.64c-.05-.47-.18-.88-.18-1.5C9 3.57 10.57 2 12.5 2zM19 20H5V8h14v12z"/></svg>
+        <span id="category-jobs-heading">More Jobs in this Category</span>
+    </div>
+    <div class="related-grid" id="category-jobs-grid"></div>
+</div>
+<div class="related-section" id="salary-30-50-section" style="display:none;">
+    <div class="related-heading">
+        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+        Jobs Rs. 30,000 - 50,000
+    </div>
+    <div class="related-grid" id="salary-30-50-grid"></div>
+</div>
+<div class="related-section" id="salary-80-section" style="display:none;">
+    <div class="related-heading">
+        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+        Jobs Rs. 80,000+
+    </div>
+    <div class="related-grid" id="salary-80-grid"></div>
+</div>
+</div>
+</main>
+</div>
+<footer class="site-footer">
+    <img src="https://healthjobportal.com/images/logo.png" alt="Health Jobs Portal"
+         style="height:28px;object-fit:contain;margin-bottom:6px;opacity:0.8;"
+         onerror="this.style.display='none'">
+    <p style="font-size:11px;color:#64748b;font-weight:500;margin-bottom:14px;">Pakistan's #1 Digital Healthcare Network</p>
+    <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
+        <a href="https://healthjobportal.com/index.html" style="color:#64748b;text-decoration:none;font-size:12px;font-weight:600;">Home</a>
+        <a href="https://healthjobportal.com/cv-maker.html" style="color:#64748b;text-decoration:none;font-size:12px;font-weight:600;">Cv maker</a>
+        <a href="https://healthjobportal.com/about.html" style="color:#64748b;text-decoration:none;font-size:12px;font-weight:600;">About Us</a>
+        <a href="https://healthjobportal.com/contact.html" style="color:#64748b;text-decoration:none;font-size:12px;font-weight:600;">Contact Us</a>
+        <a href="https://healthjobportal.com/terms.html" style="color:#64748b;text-decoration:none;font-size:12px;font-weight:600;">Terms</a>
+        <a href="https://healthjobportal.com/privcy.html" style="color:#64748b;text-decoration:none;font-size:12px;font-weight:600;">Privacy Policy</a>
+    </div>
+    <p style="font-size:11px;color:#94a3b8;font-weight:500;">&copy; 2026 Powered by SufianX</p>
+</footer>
+
+
+<!-- Lightbox -->
+
+<div id="lightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:99999;align-items:center;justify-content:center;flex-direction:column;" onclick="closeLightbox()">
+    <button style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.15);border:none;color:white;width:38px;height:38px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;">&#x2715;</button>
+    <img id="lightbox-img" src="" style="max-width:100vw;max-height:100vh;object-fit:contain;" onclick="event.stopPropagation()">
+</div>
+<div class="report-popup" id="report-popup">
+    <div class="report-top">
+        <h3>&#9872; Report this Post</h3>
+        <button class="report-close" onclick="closeReport()">&#x2715;</button>
+    </div>
+    <div class="report-owner-box">
+        <img src="${e(posterPic)}"
+             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(posterName)}&background=0a66c2&color=fff'">
+        <div>
+            <div style="font-size:13px;font-weight:700;color:#0f172a;">${e(posterName)}</div>
+            <div style="font-size:11px;color:#64748b;">Post Owner</div>
+        </div>
+    </div>
+    <div class="report-reasons">
+        <div class="reason-chip" onclick="selectReason(this)">Fake Job</div>
+        <div class="reason-chip" onclick="selectReason(this)">Scam / Fraud</div>
+        <div class="reason-chip" onclick="selectReason(this)">Wrong Info</div>
+        <div class="reason-chip" onclick="selectReason(this)">Spam</div>
+        <div class="reason-chip" onclick="selectReason(this)">Abusive Content</div>
+        <div class="reason-chip" onclick="selectReason(this)">Duplicate Post</div>
+        <div class="reason-chip" onclick="selectReason(this)">Other</div>
+    </div>
+    <input class="report-input" id="report-name" placeholder="Your Name *" maxlength="50">
+    <textarea class="report-input" id="report-msg" placeholder="Describe the issue... *" rows="3" style="resize:none;"></textarea>
+    <button class="report-submit" onclick="submitReport()">Send Report</button>
+    <div class="report-success" id="report-success">&#x2705; Report submitted! We'll review it shortly.</div>
+</div>
+<script type="module">
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove, collection, query, where, orderBy, onSnapshot, addDoc, deleteDoc, getDocs, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+    authDomain: "jobs-45cc9.firebaseapp.com",
+    projectId: "jobs-45cc9",
+    storageBucket: "jobs-45cc9.firebasestorage.app",
+    messagingSenderId: "21065686301",
+    appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+};
+const fireApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+const auth = getAuth(fireApp);
+const db = getFirestore(fireApp);
+
+// CRITICAL FIX: Capacitor/APK WebView mein session reliably persist karne ke liye
+// (login.html jaisa hi fix, taake dono pages ek jaisi persistence use karein)
+(async () => {
+    try {
+        await setPersistence(auth, indexedDBLocalPersistence);
+    } catch (e) {
+        try { await setPersistence(auth, browserLocalPersistence); } catch (e2) {}
+    }
+
+    // APK TOKEN FIX: Agar APK ne ?_apkt= URL mein diya hai to us se sign in karo
+    // Yeh tab hota hai jab APK (localhost origin) se healthjobportal.com page khulta hai
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const apkToken = urlParams.get('_apkt');
+        if (apkToken && !auth.currentUser) {
+            const { GoogleAuthProvider, signInWithCredential } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
+            const credential = GoogleAuthProvider.credential(apkToken);
+            try {
+                await signInWithCredential(auth, credential);
+            } catch(credErr) {
+                console.log('APK credential sign-in skipped:', credErr.code);
+            }
+        }
+    } catch(e) {
+        console.log('APK token sign-in skipped:', e.message);
+    }
+    // URL se token hata do — security ke liye
+    try {
+        const clean = new URL(window.location.href);
+        if (clean.searchParams.has('_apkt')) {
+            clean.searchParams.delete('_apkt');
+            window.history.replaceState({}, '', clean.toString());
+        }
+    } catch(e) {}
+})();
+
+const POST_ID = ${JSON.stringify(post._docId || slug)};
+let currentUser = undefined;
+let currentUserProfile = null;
+let likesArr = [];
+
+window.__authUser = undefined;
+onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    window.__authUser = user;
+    if (user) {
+        try {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            if (snap.exists()) {
+                const d = snap.data();
+                const name = d.fullName || d.facilityName || "User";
+                currentUserProfile = { name, pic: d.profilePicUrl || "https://ui-avatars.com/api/?name=" + encodeURIComponent(name) };
+            }
+        } catch(e) {}
+    }
+    loadLikes();
+    loadComments();
+});
+
+async function loadLikes() {
+    try {
+        const snap = await getDoc(doc(db, "posts", POST_ID));
+        if (snap.exists()) {
+            likesArr = snap.data().likes || [];
+            updateLikeUI();
+        }
+    } catch(e) {}
+}
+
+function updateLikeUI() {
+    const btn = document.getElementById('like-btn');
+    const countEl = document.getElementById('like-count-display');
+    const isLiked = !!(currentUser && likesArr.includes(currentUser.uid));
+    if (btn) btn.classList.toggle('liked', isLiked);
+    if (countEl) countEl.innerText = likesArr.length + " Likes";
+}
+
+window.doLike = async function() {
+    if (currentUser === undefined) { setTimeout(() => window.doLike(), 200); return; }
+    if (!currentUser) { sessionStorage.setItem('redirectAfterLogin', window.location.href); window.location.replace("https://healthjobportal.com/login.html"); return; }
+    const isLiked = likesArr.includes(currentUser.uid);
+    likesArr = isLiked ? likesArr.filter(id => id !== currentUser.uid) : [...likesArr, currentUser.uid];
+    updateLikeUI();
+    try {
+        const postRef = doc(db, "posts", POST_ID);
+        await updateDoc(postRef, { likes: isLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid) });
+        if (!isLiked) {
+            try {
+                const postSnap = await getDoc(postRef);
+                const ownerId = postSnap.data()?.posterId;
+                if (ownerId && ownerId !== currentUser.uid) {
+                    await addDoc(collection(db, "notifications"), {
+                        toUid: ownerId, fromUid: currentUser.uid,
+                        fromName: currentUserProfile?.name || "Someone",
+                        fromPic: currentUserProfile?.pic || "",
+                        type: "like", postId: POST_ID,
+                        postSlug: ${JSON.stringify(slug)},
+                        postType: "employer_post",
+                        message: "liked your post", createdAt: Date.now(), read: false
+                    });
+                    fetch("${NOTIFY_API_URL}/api/server", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            toUid: ownerId, fromUid: currentUser.uid,
+                            fromName: currentUserProfile?.name || "Someone",
+                            type: "like", postId: POST_ID,
+                            postSlug: ${JSON.stringify(slug)},
+                            message: "liked your post"
+                        })
+                    }).catch(e => console.error("Notify API error:", e));
+                }
+            } catch(e) {}
+        }
+    } catch(e) {}
+};
+
+// \u2500\u2500 Context Menu \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+window.closeCmtCtxMenu = function() {
+    const m = document.getElementById('cmt-ctx-global');
+    if (m) m.remove();
+};
+document.addEventListener('click', window.closeCmtCtxMenu);
+
+function showCmtCtxMenu(e, cid, isMe) {
+    window.closeCmtCtxMenu();
+    if (!isMe) return;
+    e.preventDefault(); e.stopPropagation();
+    const menu = document.createElement('div');
+    menu.className = 'cmt-ctx-menu';
+    menu.id = 'cmt-ctx-global';
+    menu.innerHTML = \`
+        <div class="cmt-ctx-item" onclick="closeCmtCtxMenu();editCmt('\${cid}')">Edit</div>
+        <div class="cmt-ctx-item danger" onclick="closeCmtCtxMenu();deleteCmt('\${cid}')">Delete</div>\`;
+const btn = e.target.closest('button') || e.target;
+const rect = btn.getBoundingClientRect();
+const menuW = 150, menuH = 80;
+let left = rect.left;
+let top = rect.top - menuH - 8;
+if (left + menuW > window.innerWidth) left = window.innerWidth - menuW - 8;
+if (top < 8) top = rect.bottom + 8;
+menu.style.left = left + 'px';
+menu.style.top  = top + 'px';
+    document.body.appendChild(menu);
+    setTimeout(() => document.addEventListener('click', window.closeCmtCtxMenu, { once: true }), 50);
+}
+
+// \u2500\u2500 Comment Reactions \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+window.toggleCmtReaction = async function(cid, type) {
+    if (!currentUser) { sessionStorage.setItem('redirectAfterLogin', window.location.href); window.location.replace("https://healthjobportal.com/login.html"); return; }
+    const uid = currentUser.uid;
+    const lBtn   = document.getElementById('lbtn-' + cid);
+    const dBtn   = document.getElementById('dbtn-' + cid);
+    const lCount = document.getElementById('lcount-' + cid);
+    const dCount = document.getElementById('dcount-' + cid);
+    const wasLiked    = lBtn?.classList.contains('active');
+    const wasDisliked = dBtn?.classList.contains('active');
+    if (type === 'like') {
+        lBtn?.classList.toggle('active', !wasLiked);
+        dBtn?.classList.remove('active');
+        if (lCount) lCount.innerText = !wasLiked ? (parseInt(lCount.innerText||'0')+1)||1 : Math.max(0,parseInt(lCount.innerText||'1')-1)||'';
+        if (wasDisliked && dCount) dCount.innerText = Math.max(0,parseInt(dCount.innerText||'1')-1)||'';
+    } else {
+        dBtn?.classList.toggle('active', !wasDisliked);
+        lBtn?.classList.remove('active');
+        if (dCount) dCount.innerText = !wasDisliked ? (parseInt(dCount.innerText||'0')+1)||1 : Math.max(0,parseInt(dCount.innerText||'1')-1)||'';
+        if (wasLiked && lCount) lCount.innerText = Math.max(0,parseInt(lCount.innerText||'1')-1)||'';
+    }
+    try {
+        const cmtRef = doc(db, "posts", POST_ID, "comments", cid);
+        const snap = await getDoc(cmtRef);
+        if (!snap.exists()) return;
+        const data = snap.data();
+        let likes    = data.likes    || [];
+        let dislikes = data.dislikes || [];
+        if (type === 'like') {
+            likes    = likes.includes(uid) ? likes.filter(u => u !== uid) : [...likes, uid];
+            dislikes = dislikes.filter(u => u !== uid);
+        } else {
+            dislikes = dislikes.includes(uid) ? dislikes.filter(u => u !== uid) : [...dislikes, uid];
+            likes    = likes.filter(u => u !== uid);
+        }
+        await updateDoc(cmtRef, { likes, dislikes });
+    } catch(e) {}
+};
+
+// \u2500\u2500 Reply Box \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+window.showReplyBox = function(parentCid, toName) {
+    document.querySelectorAll('.reply-input-row').forEach(b => b.remove());
+    const row = document.createElement('div');
+    row.className = 'reply-input-row';
+    row.id = 'reply-row-' + parentCid;
+    row.innerHTML = \`
+        <input class="reply-input" id="reply-in-\${parentCid}" placeholder="Reply to \${escHtml(toName)}..." maxlength="300">
+<button class="reply-send-btn" onclick="sendReply('\${parentCid}')" style="white-space:nowrap;flex-shrink:0;padding:6px 10px;font-size:11px;">Send</button>\`;
+    const cmtItem = document.getElementById('cmt-item-' + parentCid);
+    if (cmtItem) cmtItem.after(row);
+    document.getElementById('reply-in-' + parentCid)?.focus();
+};
+
+window.sendReply = async function(parentCid) {
+    if (!currentUser) { sessionStorage.setItem('redirectAfterLogin', window.location.href); window.location.replace("https://healthjobportal.com/login.html"); return; }
+    const inp = document.getElementById('reply-in-' + parentCid);
+    if (!inp) return;
+    const text = inp.value.trim();
+    if (!text) return;
+    inp.disabled = true;
+    const name = currentUserProfile?.name || "User";
+    const pic  = currentUserProfile?.pic  || "https://ui-avatars.com/api/?name=" + encodeURIComponent(name);
+    try {
+        await addDoc(collection(db, "posts", POST_ID, "comments"), {
+            text, userId: currentUser.uid, userName: name, userPic: pic,
+            parentId: parentCid, createdAt: serverTimestamp()
+        });
+        await updateDoc(doc(db, "posts", POST_ID), { commentsCount: increment(1) });
+        document.getElementById('reply-row-' + parentCid)?.remove();
+    } catch(e) { inp.disabled = false; }
+};
+
+// \u2500\u2500 Toggle Replies \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+window.toggleReplies = function(parentCid) {
+    const list = document.getElementById('replies-list-' + parentCid);
+    const btn  = document.getElementById('replies-toggle-' + parentCid);
+    if (!list || !btn) return;
+    const isOpen = list.style.display !== 'none';
+    list.style.display = isOpen ? 'none' : 'block';
+    btn.classList.toggle('open', !isOpen);
+};
+
+// \u2500\u2500 Build Comment Element \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function buildCmtEl(c, isReply) {
+    const isMe   = !!(currentUser && c.userId === currentUser.uid);
+    const myUid  = currentUser?.uid || '';
+    const pic    = c.userPic || "https://ui-avatars.com/api/?name=" + encodeURIComponent(c.userName||'U');
+    const likes    = Array.isArray(c.likes)    ? c.likes    : [];
+    const dislikes = Array.isArray(c.dislikes) ? c.dislikes : [];
+    const lCount = likes.length;
+    const dCount = dislikes.length;
+    const iL = likes.includes(myUid);
+    const iD = dislikes.includes(myUid);
+
+    const wrap = document.createElement('div');
+    wrap.id = 'cmt-item-' + c.id;
+    wrap.className = isReply ? 'reply-item' : 'cmt-item';
+
+    const avatarClass  = isReply ? 'reply-avatar' : 'cmt-avatar';
+    const bubbleClass  = isReply ? 'reply-bubble'  : 'cmt-bubble';
+
+    wrap.innerHTML = \`
+        <img src="\${pic}" class="\${avatarClass}"
+            onclick="location.href='https://healthjobportal.com/wid.html?uid=\${c.userId}'"
+            onerror="this.src='https://ui-avatars.com/api/?name=U'">
+        <div class="\${bubbleClass}">
+            <span class="cmt-user">\${escHtml(c.userName || 'User')}</span>
+            <div class="cmt-txt" id="txt-\${c.id}">\${escHtml(c.text)}</div>
+            <div class="cmt-footer">
+                <button class="cmt-like-btn \${iL?'active':''}" id="lbtn-\${c.id}"
+                    onclick="window.toggleCmtReaction('\${c.id}','like')">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <span id="lcount-\${c.id}">\${lCount > 0 ? lCount : ''}</span>
+                </button>
+                <button class="cmt-dislike-btn \${iD?'active':''}" id="dbtn-\${c.id}"
+                    onclick="window.toggleCmtReaction('\${c.id}','dislike')">
+                    <svg viewBox="0 0 24 24"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>
+                    <span id="dcount-\${c.id}">\${dCount > 0 ? dCount : ''}</span>
+                </button>
+                \${!isReply ? \`<button class="cmt-reply-btn" onclick="window.showReplyBox('\${c.id}','\${escHtml(c.userName||'User')}')">Reply</button>\` : ''}
+                \${isMe ? \`<button class="cmt-3dot" onclick="event.stopPropagation();showCmtCtxMenu(event,'\${c.id}',true)">\xB7\xB7\xB7</button>\` : ''}
+            </div>
+        </div>\`;
+
+    if (isMe) {
+        let pressTimer;
+        wrap.addEventListener('touchstart', (e) => { pressTimer = setTimeout(() => showCmtCtxMenu(e, c.id, true), 600); }, { passive: true });
+        wrap.addEventListener('touchend',  () => clearTimeout(pressTimer));
+        wrap.addEventListener('touchmove', () => clearTimeout(pressTimer));
+    }
+    return wrap;
+}
+
+// \u2500\u2500 Load Comments \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function loadComments() {
+    const cmtList = document.getElementById('cmt-list');
+    const countEl = document.getElementById('cmt-count-display');
+    if (!cmtList) return;
+    const q = query(collection(db, "posts", POST_ID, "comments"), orderBy("createdAt", "asc"));
+    onSnapshot(q, (snap) => {
+        if (countEl) countEl.innerText = snap.size + " Comments";
+        const allCmts = [];
+        snap.forEach(d => {
+            const c = d.data();
+            allCmts.push({ id: d.id, ...c });
+        });
+        const topLevel   = allCmts.filter(c => !c.parentId);
+        const repliesMap = {};
+        allCmts.filter(c => c.parentId).forEach(r => {
+            if (!repliesMap[r.parentId]) repliesMap[r.parentId] = [];
+            repliesMap[r.parentId].push(r);
+        });
+        cmtList.innerHTML = '';
+        topLevel.forEach(c => {
+            cmtList.appendChild(buildCmtEl(c, false));
+            const myReplies = repliesMap[c.id] || [];
+            if (myReplies.length > 0) {
+                const togBtn = document.createElement('button');
+                togBtn.className = 'replies-toggle-btn';
+                togBtn.id = 'replies-toggle-' + c.id;
+                togBtn.innerHTML = \`<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg> \${myReplies.length} \${myReplies.length===1?'Reply':'Replies'}\`;
+                togBtn.onclick = () => window.toggleReplies(c.id);
+                cmtList.appendChild(togBtn);
+                const replList = document.createElement('div');
+                replList.className = 'replies-list';
+                replList.id = 'replies-list-' + c.id;
+                replList.style.display = 'none';
+                myReplies.forEach(r => replList.appendChild(buildCmtEl(r, true)));
+                cmtList.appendChild(replList);
+            }
+        });
+        if (topLevel.length === 0) cmtList.innerHTML = '<div style="text-align:center;padding:16px;color:#94a3b8;font-size:12px;">No comments yet. Be first!</div>';
+        cmtList.scrollTop = cmtList.scrollHeight;
+    });
+}
+
+window.toggleComments = function() {
+    if (currentUser === undefined) { let w=0; const iv=setInterval(()=>{ w+=100; if(currentUser!==undefined){ clearInterval(iv); if(currentUser) _openComments(); else { sessionStorage.setItem('redirectAfterLogin',window.location.href); window.location.replace("https://healthjobportal.com/login.html"); } } if(w>5000){ clearInterval(iv); window.location.replace("https://healthjobportal.com/login.html"); } },100); return; }
+    if (!currentUser) { sessionStorage.setItem('redirectAfterLogin', window.location.href); window.location.replace("https://healthjobportal.com/login.html"); return; }
+    _openComments();
+};
+function _openComments() {
+    const section = document.getElementById('cmt-section');
+    if (!section) return;
+    const open = section.style.display === 'block';
+    section.style.display = open ? 'none' : 'block';
+    if (!open) { const inp = document.getElementById('cmt-input'); if (inp) inp.focus(); }
+}
+
+window.sendComment = async function() {
+    if (currentUser === undefined) { setTimeout(() => window.sendComment(), 200); return; }
+    if (!currentUser) { sessionStorage.setItem('redirectAfterLogin', window.location.href); window.location.replace("https://healthjobportal.com/login.html"); return; }
+    const inp = document.getElementById('cmt-input');
+    if (!inp || !inp.value.trim()) return;
+    const text = inp.value.trim();
+    inp.value = "";
+    const name = currentUserProfile?.name || "User";
+    const pic = currentUserProfile?.pic || "https://ui-avatars.com/api/?name=" + encodeURIComponent(name);
+    try {
+        await addDoc(collection(db, "posts", POST_ID, "comments"), { text, userId: currentUser.uid, userName: name, userPic: pic, createdAt: serverTimestamp() });
+        await updateDoc(doc(db, "posts", POST_ID), { commentsCount: increment(1) });
+        try {
+            const postSnap = await getDoc(doc(db, "posts", POST_ID));
+            const ownerId = postSnap.data()?.posterId;
+            if (ownerId && ownerId !== currentUser.uid) {
+                await addDoc(collection(db, "notifications"), {
+                    toUid: ownerId, fromUid: currentUser.uid,
+                    fromName: currentUserProfile?.name || "Someone",
+                    fromPic: currentUserProfile?.pic || "",
+                    type: "comment", postId: POST_ID,
+                    postSlug: ${JSON.stringify(slug)},
+                    postType: "employer_post",
+                    message: "commented on your post", createdAt: Date.now(), read: false
+                });
+                fetch("${NOTIFY_API_URL}/api/server", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        toUid: ownerId, fromUid: currentUser.uid,
+                        fromName: currentUserProfile?.name || "Someone",
+                        type: "comment", postId: POST_ID,
+                        postSlug: ${JSON.stringify(slug)},
+                        message: "commented on your post"
+                    })
+                }).catch(e => console.error("Notify API error:", e));
+            }
+        } catch(e) {}
+    } catch(e) { inp.value = text; }
+};
+
+window.deleteCmt = async function(cmtId) {
+    if (!currentUser || !confirm("Delete this comment?")) return;
+    try {
+        await deleteDoc(doc(db, "posts", POST_ID, "comments", cmtId));
+        await updateDoc(doc(db, "posts", POST_ID), { commentsCount: increment(-1) });
+    } catch(e) {}
+};
+
+window.editCmt = async function(cmtId) {
+    const txtEl = document.getElementById('txt-' + cmtId);
+    if (!txtEl) return;
+    const old = txtEl.innerText;
+    const nt = prompt("Edit comment:", old);
+    if (nt && nt !== old) await updateDoc(doc(db, "posts", POST_ID, "comments", cmtId), { text: nt.trim() });
+};
+
+function escHtml(s) {
+    return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const inp = document.getElementById('cmt-input');
+    if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); window.sendComment(); } });
+});
+<\/script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"><\/script>
+<script>
+emailjs.init('Rr88IrZ8s69Qyj8DS');
+
+function requireAuth(action) {
+    if (window.__authUser === undefined) {
+        let waited = 0;
+        const interval = setInterval(() => {
+            waited += 100;
+            if (window.__authUser !== undefined) {
+                clearInterval(interval);
+                if (window.__authUser) {
+                    action();
+                } else {
+                    sessionStorage.setItem('redirectAfterLogin', window.location.href);
+                    window.location.replace("https://healthjobportal.com/login.html");
+                }
+            }
+if (waited > 8000) {
+                clearInterval(interval);
+                sessionStorage.setItem('redirectAfterLogin', window.location.href);
+                window.location.replace("https://healthjobportal.com/login.html");
+            }
+        }, 100);
+    } else if (window.__authUser) {
+        action();
+    } else {
+        sessionStorage.setItem('redirectAfterLogin', window.location.href);
+        window.location.replace("https://healthjobportal.com/login.html");
+    }
+}
+
+async function trackClick(postId, field) {
+    try {
+        await fetch('/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ postId, field, collection: 'posts' })
+        });
+    } catch(e) { console.log('Track error:', e); }
+}
+
+async function loadRelatedUpdates() {
+    const list = document.getElementById('related-updates-list');
+    if (!list) return;
+    const CURRENT_SLUG = ${JSON.stringify(slug)};
+    const daySeed = Math.floor(Date.now() / 86400000);
+    function seededShuffle(arr, seed) {
+        const a = [...arr]; let s = seed;
+        for (let i = a.length-1; i > 0; i--) {
+            s = (s * 1664525 + 1013904223) & 0xffffffff;
+            const j = Math.abs(s) % (i+1);
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+    try {
+        const res = await fetch('/api/related-updates-pool');
+        const pool = await res.json();
+        const filtered = seededShuffle(
+            pool.filter(p => p.slug !== CURRENT_SLUG), daySeed
+        ).slice(0, 5);
+        if (!filtered.length) {
+            list.innerHTML = '<p style="font-size:13px;color:#94a3b8;text-align:center;padding:14px 0;">No related updates found.</p>';
+            return;
+        }
+        list.innerHTML = filtered.map(p => {
+            const pPic = p.posterPic || \`https://ui-avatars.com/api/?name=U&background=16a34a&color=fff\`;
+            const thumb = p.thumb || pPic;
+            return \`<a class="rel-card" href="/updates/\${p.slug}">
+                <img class="rel-thumb" src="\${thumb}" onerror="this.src='\${pPic}'" alt="" loading="lazy">
+                <div class="rel-info">
+                    <div class="rel-title">\${(p.title||p.desc||'').replace(/</g,'&lt;')}</div>
+                    <div class="rel-meta">
+                        <span class="rel-badge">\u{1FA7A} Update</span>
+                        \${p.location ? '<span>\u{1F4CD} '+p.location+'</span>' : ''}
+                    </div>
+                </div>
+                <svg class="rel-arrow" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </a>\`;
+        }).join('');
+    } catch(err) {
+        list.innerHTML = '';
+        console.log('Related updates error:', err);
+    }
+}
+async function trackView(postId) {
+    try {
+        const uid = window.__authUser?.uid || ('guest_' + Math.random().toString(36).substr(2,9));
+        const key = 'viewed_' + postId + '_' + uid;
+        if (localStorage.getItem(key)) return;
+        localStorage.setItem(key, '1');
+        await fetch('/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ postId, field: 'views', collection: 'posts' })
+        });
+    } catch(e) { console.log('View track error:', e); }
+}
+window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => trackView(${JSON.stringify(slug)}), 2000);
+    loadRelatedJobs();
+});
+
+// \u2500\u2500 Related Jobs Loader \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+async function loadRelatedJobs() {
+    const grid = document.getElementById('related-jobs-grid');
+    if (!grid) return;
+    const CURRENT_SLUG = ${JSON.stringify(slug)};
+    const CURRENT_CATEGORY = ${JSON.stringify(category)};
+    const daySeed = Math.floor(Date.now() / 86400000);
+
+    function seededShuffle(arr, seed) {
+        const a = [...arr]; let s = seed;
+        for (let i = a.length-1; i > 0; i--) {
+            s = (s * 1664525 + 1013904223) & 0xffffffff;
+            const j = Math.abs(s) % (i+1);
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function renderCards(list) {
+        return list.map(p => {
+            const isEmp = p.posterRole === "employer";
+            const pPic = p.posterPic || \`https://ui-avatars.com/api/?name=\${encodeURIComponent(p.posterName||'U')}&background=0a66c2&color=fff\`;
+            const thumb = p.thumb || pPic;
+            return \`<a class="related-card" href="/jobs/\${p.id}">
+                <img class="related-thumb" src="\${thumb}" onerror="this.src='\${pPic}'" alt="" loading="lazy">
+                <div class="related-info">
+                    <div class="related-title">\${p.title.replace(/</g,'&lt;')}</div>
+                    <div class="related-meta">
+                        <span class="related-badge \${isEmp?'emp':'cnd'}">\${isEmp?'Hiring':'Candidate'}</span>
+                        \${p.location?'<span>\u{1F4CD} '+p.location+'</span>':""}
+                        \${p.salary?'<span>&middot; '+p.salary+'</span>':""}
+                    </div>
+                </div>
+                <svg class="related-arrow" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </a>\`;
+        }).join("");
+    }
+
+    function fillSection(gridId, sectionId, list, emptyIsHidden) {
+        const g = document.getElementById(gridId);
+        const s = document.getElementById(sectionId);
+        if (!g) return;
+        if (!list.length) {
+            if (emptyIsHidden && s) s.style.display = 'none';
+            else g.innerHTML = '<p style="font-size:13px;color:#94a3b8;text-align:center;padding:14px 0;">No jobs found.</p>';
+            return;
+        }
+        if (s) s.style.display = '';
+        g.innerHTML = renderCards(list);
+    }
+
+    try {
+        // Single cached pool fetch (KV-backed on the worker, refreshed every 3 days) \u2014
+        // every section below is built from this ONE payload, so adding more
+        // sections here never adds extra Firestore reads.
+        const res = await fetch('/api/related-jobs-pool');
+        const pool = await res.json();
+        const others = pool.filter(p => p.id !== CURRENT_SLUG);
+        const shuffled = seededShuffle(others, daySeed);
+
+        fillSection('related-jobs-grid', null, shuffled.slice(0, 5), false);
+
+        if (CURRENT_CATEGORY) {
+            const sameCategory = shuffled.filter(p => p.category && p.category.toLowerCase() === CURRENT_CATEGORY.toLowerCase()).slice(0, 5);
+            const catHeading = document.getElementById('category-jobs-heading');
+            if (catHeading) catHeading.textContent = 'More ' + CURRENT_CATEGORY + ' Jobs';
+            fillSection('category-jobs-grid', 'category-jobs-section', sameCategory, true);
+        }
+
+        const salary3050 = shuffled.filter(p => p.salaryMin != null && p.salaryMin >= 30000 && (p.salaryMax == null || p.salaryMax <= 50000)).slice(0, 5);
+        fillSection('salary-30-50-grid', 'salary-30-50-section', salary3050, true);
+
+        const salary80 = shuffled.filter(p => (p.salaryMax != null && p.salaryMax >= 80000) || (p.salaryMin != null && p.salaryMin >= 80000)).slice(0, 5);
+        fillSection('salary-80-grid', 'salary-80-section', salary80, true);
+    } catch(err) {
+        grid.innerHTML = '';
+        console.log('Related jobs error:', err);
+    }
+}
+
+// \u2500\u2500 Related Questions (FAQ) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+window._aiChatApiUrl = '/api/ai-chat';
+window._faqPostTitle  = ${JSON.stringify(title)};
+
+// Fuller context used ONLY by the "Ask AI about this job" widget, so it can
+// answer from the complete post details rather than a short FAQ snippet.
+window._aiChatFullDesc  = ${JSON.stringify(desc.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().substring(0, 4e3))};
+window._aiChatApplyLink = ${JSON.stringify(extLink || "")};
+window._aiChatJobFacts  = ${JSON.stringify({
+    category,
+    city,
+    salary,
+    shift,
+    experience,
+    employmentType: empType,
+    deadline: expiresAt || ""
+  })};
+
+function aiChatBuildContext() {
+    var f = window._aiChatJobFacts || {};
+    var lines = [
+        'Job title: "' + window._faqPostTitle + '"',
+        f.category ? 'Category: ' + f.category : '',
+        f.city ? 'Location: ' + f.city : '',
+        f.salary ? 'Salary: ' + f.salary : '',
+        f.shift ? 'Shift: ' + f.shift : '',
+        f.experience ? 'Experience required: ' + f.experience : '',
+        f.employmentType ? 'Employment type: ' + f.employmentType : '',
+        f.deadline ? 'Application deadline: ' + f.deadline : '',
+        window._aiChatApplyLink ? 'Application link available: yes' : 'Application link available: no',
+        '',
+        'Full job description:',
+        window._aiChatFullDesc,
+        ''
+    ].filter(function(l){ return l !== ''; });
+    return lines.join(String.fromCharCode(10)) + String.fromCharCode(10);
+}
+async function faqAskChat(prompt, targetUrl) {
+    var controller = new AbortController();
+    var timer = setTimeout(function(){ controller.abort(); }, 25000);
+    try {
+        var res = await fetch(targetUrl || window._aiChatApiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: prompt }),
+            signal: controller.signal
+        });
+        clearTimeout(timer);
+        var data = await res.json().catch(function(){ return null; });
+        if (!res.ok) {
+            throw new Error('Backend error ' + res.status + (data && data.reply ? (': ' + data.reply) : ''));
+        }
+        var reply = (data && (data.reply || data.text || data.content || data.answer || data.result || data.output || data.message)) || '';
+        if (reply && typeof reply === 'object') reply = JSON.stringify(reply);
+        if (!reply || !String(reply).trim()) {
+            throw new Error('Empty reply from backend');
+        }
+        return String(reply);
+    } catch(e1) {
+        clearTimeout(timer);
+        throw e1;
+    }
+}
+
+// \u2500\u2500 Ask AI full-screen chat \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+window._aiChatHistory = [];
+window._aiChatBusy = false;
+
+function openAiChat() {
+    var overlay = document.getElementById('ai-chat-overlay');
+    var modal   = document.getElementById('ai-chat-modal');
+    if (!overlay || !modal) { console.error('Ask AI: overlay/modal element missing from DOM'); return; }
+    overlay.classList.add('open');
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    var msgBox = document.getElementById('ai-chat-messages');
+    if (msgBox && !msgBox.children.length && !window._aiChatHistory.length) {
+        aiChatAppendMessage('bot', 'Assalam-o-Alaikum! Ask me anything about this job post \u2014 eligibility, how to apply, last date, salary, or any other detail mentioned in the post.');
+    }
+    var input = document.getElementById('ai-chat-input');
+    if (input) setTimeout(function(){ input.focus(); }, 150);
+}
+
+function closeAiChat() {
+    var overlay = document.getElementById('ai-chat-overlay');
+    var modal   = document.getElementById('ai-chat-modal');
+    if (overlay) overlay.classList.remove('open');
+    if (modal) modal.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function aiChatHandleKey(ev) {
+    if (ev.key === 'Enter' && !ev.shiftKey) {
+        ev.preventDefault();
+        aiChatSend();
+    }
+}
+
+function aiChatEscapeHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Minimal markdown -> HTML for bot replies: **bold**, #/## headings,
+// "- "/"* " bullet lists, and paragraph breaks. Escapes HTML first so no
+// raw tags from the model ever get injected.
+function aiChatRenderMarkdown(raw) {
+    var text = aiChatEscapeHtml(raw);
+    var lines = text.split(String.fromCharCode(10));
+    var html = '';
+    var listType = null; // 'ul' or 'ol', tracks the currently open list
+    var TAB = String.fromCharCode(9);
+    var WS = '[ ' + TAB + ']';
+
+    function closeList() {
+        if (listType) { html += '</' + listType + '>'; listType = null; }
+    }
+
+    for (var i = 0; i < lines.length; i++) {
+        var trimmed = lines[i].trim();
+        if (!trimmed) { closeList(); continue; }
+
+        var bulletMatch = new RegExp('^[-*]' + WS + '+(.*)').exec(trimmed);
+        var orderedMatch = new RegExp('^[0-9]+[.]' + WS + '+(.*)').exec(trimmed);
+        var headMatch = new RegExp('^(#{1,6})' + WS + '+(.*)').exec(trimmed);
+
+        if (bulletMatch) {
+            if (listType !== 'ul') { closeList(); html += '<ul>'; listType = 'ul'; }
+            html += '<li>' + aiChatInline(bulletMatch[1]) + '</li>';
+            continue;
+        }
+        if (orderedMatch) {
+            if (listType !== 'ol') { closeList(); html += '<ol>'; listType = 'ol'; }
+            html += '<li>' + aiChatInline(orderedMatch[1]) + '</li>';
+            continue;
+        }
+        closeList();
+        if (headMatch) {
+            var level = headMatch[1].length;
+            var tag = level === 1 ? 'h1' : (level === 2 ? 'h2' : 'h3');
+            html += '<' + tag + '>' + aiChatInline(headMatch[2]) + '</' + tag + '>';
+            continue;
+        }
+        html += '<p>' + aiChatInline(trimmed) + '</p>';
+    }
+    closeList();
+    return html;
+}
+
+function aiChatInline(s) {
+    var text = String(s || '');
+    var SP = String.fromCharCode(32);
+    var TAB = String.fromCharCode(9);
+
+    // Markdown-style [label](url) links, and bare http/https URLs \u2014 handled
+    // together so a URL never gets linkified twice.
+    var linkRe = new RegExp('[[](.+?)][(](.+?)[)]' + '|' + '(https?://[^' + SP + TAB + '<]+)', 'g');
+    text = text.replace(linkRe, function (match, label, url, rawUrl) {
+        if (rawUrl) {
+            return '<a href="' + rawUrl + '" target="_blank" rel="noopener">' + rawUrl + '</a>';
+        }
+        return '<a href="' + url + '" target="_blank" rel="noopener">' + label + '</a>';
+    });
+
+    var boldRe = new RegExp('[*][*](.+?)[*][*]', 'g');
+    text = text.replace(boldRe, '<strong>$1</strong>');
+
+    var italicRe = new RegExp('[*](.+?)[*]', 'g');
+    text = text.replace(italicRe, '<em>$1</em>');
+
+    return text;
+}
+
+function aiChatAppendMessage(role, text, isLoading) {
+    var box = document.getElementById('ai-chat-messages');
+    if (!box) return null;
+    var div = document.createElement('div');
+    div.className = 'ai-chat-msg ' + (role === 'user' ? 'user' : 'bot') + (isLoading ? ' loading' : '');
+    if (isLoading) {
+        div.innerHTML = '<span class="ai-chat-typing-dots"><span></span><span></span><span></span></span>';
+    } else if (role === 'user') {
+        div.textContent = text;
+    } else {
+        var applyLink = window._aiChatApplyLink || '';
+        var applyMarker = '[[APPLY_BUTTON]]';
+        var mapMarker = '[[MAP_BUTTON]]';
+        var hasApply = applyLink && text.indexOf(applyMarker) !== -1;
+        var jobCity = (window._aiChatJobFacts && window._aiChatJobFacts.city) || '';
+        var hasMap = jobCity && text.indexOf(mapMarker) !== -1;
+        var cleanText = text.split(applyMarker).join('').split(mapMarker).join('');
+        var mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(jobCity);
+
+        div.innerHTML = aiChatRenderMarkdown(cleanText) +
+            (hasApply ? '<a class="ai-chat-apply-btn" href="' + aiChatEscapeHtml(applyLink) + '" target="_blank" rel="noopener">Apply Now \u2192</a>' : '') +
+            (hasMap ? '<a class="ai-chat-map-btn" href="' + aiChatEscapeHtml(mapUrl) + '" target="_blank" rel="noopener">\u{1F4CD} View on Map</a>' : '');
+
+        aiChatAttachCopyButtons(div);
+    }
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return div;
+}
+
+// Adds a small copy icon next to every link inside a rendered bot message.
+function aiChatAttachCopyButtons(container) {
+    var links = container.querySelectorAll('a');
+    links.forEach(function (link) {
+        if (link.classList.contains('ai-chat-apply-btn') || link.classList.contains('ai-chat-map-btn')) return;
+        var href = link.getAttribute('href') || '';
+        if (!href) return;
+
+        var wrap = document.createElement('span');
+        wrap.className = 'ai-chat-link-row';
+        link.parentNode.insertBefore(wrap, link);
+        wrap.appendChild(link);
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'ai-chat-copy-btn';
+        btn.title = 'Copy link';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+        btn.onclick = function () {
+            navigator.clipboard.writeText(href).then(function () {
+                btn.classList.add('copied');
+                setTimeout(function () { btn.classList.remove('copied'); }, 1500);
+            });
+        };
+        wrap.appendChild(btn);
+    });
+}
+
+// Detects Devanagari (Hindi) script characters by codepoint range,
+// without needing any backslash/unicode-escape in the source.
+function aiChatHasDevanagari(s) {
+    var text = String(s || '');
+    for (var i = 0; i < text.length; i++) {
+        var code = text.charCodeAt(i);
+        if (code >= 2304 && code <= 2431) return true; // U+0900\u2013U+097F Devanagari block
+    }
+    return false;
+}
+
+async function aiChatSend() {
+    if (window._aiChatBusy) return;
+    var input = document.getElementById('ai-chat-input');
+    var question = (input.value || '').trim();
+    if (!question) return;
+    input.value = '';
+    window._aiChatBusy = true;
+    var sendBtn = document.getElementById('ai-chat-send');
+    if (sendBtn) sendBtn.disabled = true;
+
+    aiChatAppendMessage('user', question);
+    window._aiChatHistory.push({ role: 'user', text: question });
+    var loadingEl = aiChatAppendMessage('bot', 'Typing...', true);
+    var statusEl = document.getElementById('ai-chat-status');
+    if (statusEl) { statusEl.textContent = 'typing\u2026'; statusEl.classList.add('typing'); }
+
+    var NL = String.fromCharCode(10);
+    var historyText = window._aiChatHistory.slice(-8).map(function(m){
+        return (m.role === 'user' ? 'Visitor' : 'Assistant') + ': ' + m.text;
+    }).join(NL);
+
+    var prompt = aiChatBuildContext() +
+        'You are answering questions ONLY about the specific job post above. ' +
+        'Do not answer questions unrelated to this job post \u2014 politely say you can only help with questions about this job post. ' +
+        'Base every answer only on the information given above.' + NL +
+        "Language rule: reply in the SAME language and script as the visitor's latest message below. " +
+        'If the visitor wrote in Urdu script, reply ENTIRELY in Urdu script (\u0627\u0631\u062F\u0648). ' +
+        'If the visitor wrote in English, reply ENTIRELY in English. ' +
+        'Never use Hindi/Devanagari script, and never mix two scripts or languages in the same reply.' + NL +
+        'Formatting rule: for short answers just write plain sentences. ' +
+        'But if the answer is long or covers several points (eligibility, how to apply, documents needed, fees, dates, etc), ' +
+        'structure it clearly using markdown: short "## " headings for each section and "- " bullet points or "1. " numbered ' +
+        'steps for lists, the same way ChatGPT formats a detailed answer. Keep each bullet short and scannable.' + NL +
+        'Button rule: if your answer explains how to apply, is about applying, or the visitor asks how to apply, ' +
+        'put the exact text [[APPLY_BUTTON]] on its own at the point where they would click to apply \u2014 do not describe a link, just place that marker. ' +
+        'If your answer mentions or is about the job location/city and the visitor is asking where it is, put the exact text [[MAP_BUTTON]] ' +
+        'on its own right after mentioning the location. Only use these two markers, exactly as written, and only when relevant.' + NL + NL +
+        'Conversation so far:' + NL + historyText + NL + NL +
+        'Reply with only your answer to the latest visitor message.';
+
+    try {
+        var reply = await faqAskChat(prompt, window._aiChatApiUrl);
+
+        // Safety net: if the model still slipped into Devanagari, ask it
+        // once more to rewrite the same answer purely in Urdu script.
+        if (aiChatHasDevanagari(reply)) {
+            var fixPrompt = 'Rewrite the following answer so it says exactly the same thing, ' +
+                'but written ENTIRELY in pure Urdu script (\u0627\u0631\u062F\u0648). ' +
+                'Do not use any Hindi/Devanagari letters anywhere, and do not mix any other script or language into it. ' +
+                'Return only the rewritten answer, nothing else.' + NL + NL +
+                'Answer to rewrite:' + NL + reply;
+            try {
+                var fixedReply = await faqAskChat(fixPrompt, window._aiChatApiUrl);
+                if (fixedReply && !aiChatHasDevanagari(fixedReply)) {
+                    reply = fixedReply;
+                }
+            } catch (fixErr) {
+                // keep the original reply if the correction attempt fails
+            }
+        }
+
+        if (loadingEl) loadingEl.remove();
+        aiChatAppendMessage('bot', reply);
+        window._aiChatHistory.push({ role: 'bot', text: reply });
+    } catch (e) {
+        if (loadingEl) loadingEl.remove();
+        aiChatAppendMessage('bot', 'Sorry, I could not get a response right now. Please try again in a moment.');
+    } finally {
+        window._aiChatBusy = false;
+        if (sendBtn) sendBtn.disabled = false;
+        if (statusEl) { statusEl.textContent = 'Online'; statusEl.classList.remove('typing'); }
+    }
+}
+
+const REPORT_DATA = {
+    ownerName: ${JSON.stringify(posterName)},
+    postTitle: ${JSON.stringify(title)},
+    postId:    ${JSON.stringify(slug)},
+    postUrl:   ${JSON.stringify(canonicalUrl)}
+};
+let selectedReason = '';
+window.openLightbox = function(url){
+    const lb = document.getElementById('lightbox');
+    document.getElementById('lightbox-img').src = url;
+    lb.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+window.closeLightbox = function(){
+    document.getElementById('lightbox').style.display = 'none';
+    document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+(function(){
+    const expiresAt = ${JSON.stringify(expiresAt || "")};
+    if (!expiresAt) return;
+    const wrap = document.getElementById('expiry-badge-wrap');
+    if (!wrap) return;
+    function update() {
+        const now = Date.now();
+        const exp = new Date(expiresAt).getTime();
+        const diff = exp - now;
+        if (diff <= 0) {
+            wrap.innerHTML = '<span class="expiry-badge expiry-expired">Expired</span>';
+            return;
+        }
+        const hours = Math.floor(diff / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        const secs = Math.floor((diff % 60000) / 1000);
+        if (diff <= 86400000) {
+            wrap.innerHTML = \`<span class="expiry-badge expiry-countdown">Expires in: \${String(hours).padStart(2,'0')}:\${String(mins).padStart(2,'0')}:\${String(secs).padStart(2,'0')}</span>\`;
+            setTimeout(update, 1000);
+        }
+    }
+    update();
+})();
+
+/* ── Apply Assist (redirects candidate to the separate Apply Assist Worker) ── */
+const APPLY_ASSIST_WORKER_URL = "https://resolve.sufiangsufiang50.workers.dev";
+function requestApplyAssist(){
+    const btn = document.querySelector('.apply-assist-btn');
+    if(btn){ btn.disabled = true; btn.textContent = 'Loading...'; }
+    let applyUrl = APPLY_ASSIST_WORKER_URL + '/apply?job=' + encodeURIComponent(slug);
+    if (currentUser) {
+        applyUrl += '&uid=' + encodeURIComponent(currentUser.uid);
+        applyUrl += '&uemail=' + encodeURIComponent(currentUser.email || '');
+    }
+    window.location.href = applyUrl;
+}
+
+function formatK(n){
+    n = parseInt(n, 10) || 0;
+    if (n < 1000) return String(n);
+    const v = n / 1000;
+    return (Number.isInteger(v) ? v.toFixed(0) : v.toFixed(1)) + 'k';
+}
+function bumpStatCount(id, label){
+    const el = document.getElementById(id);
+    if(!el) return;
+    const next = (parseInt(el.dataset.count, 10) || 0) + 1;
+    el.dataset.count = next;
+    el.innerText = formatK(next) + ' ' + label;
+}
+function onShareCompleted(){
+    trackClick(POST_ID, 'shares');
+    bumpStatCount('share-count-display', 'Shares');
+    bumpJfwCount('jfw-share-count');
+}
+function sharePost(){
+    if(navigator.share){
+        navigator.share({ title: ${JSON.stringify(title)}, url: ${JSON.stringify(canonicalUrl)} })
+            .then(onShareCompleted)
+            .catch(function(){ /* user cancelled the share sheet, don't count it */ });
+    } else {
+        navigator.clipboard.writeText(${JSON.stringify(canonicalUrl)});
+        alert('Link copied to clipboard!');
+        onShareCompleted();
+    }
+}
+
+/* ── Job Apply Float Widget logic ── */
+function bumpJfwCount(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    const next = (parseInt(el.dataset.count, 10) || 0) + 1;
+    el.dataset.count = next;
+    el.innerText = formatK(next);
+}
+function jfwShare(){
+    sharePost();
+}
+function closeJobFloatWidget(){
+    const w = document.getElementById('job-float-widget');
+    if(!w) return;
+    w.classList.add('jfw-hidden');
+    if(window.__jfwTimer) clearTimeout(window.__jfwTimer);
+    try { sessionStorage.setItem('jfwClosed', '1'); } catch(e){}
+}
+function jfwStopTooltip(event){
+    if(event) event.stopPropagation();
+    const tip = document.getElementById('jfw-tooltip');
+    if(tip) tip.classList.remove('show');
+    if(window.__jfwTimer) clearTimeout(window.__jfwTimer);
+}
+function jfwStartTooltipLoop(){
+    const widget = document.getElementById('job-float-widget');
+    const tip = document.getElementById('jfw-tooltip');
+    if(!widget || !tip) return;
+    try {
+        if(sessionStorage.getItem('jfwClosed') === '1'){ widget.classList.add('jfw-hidden'); return; }
+    } catch(e){}
+    function cycle(){
+        tip.classList.add('show');
+        const waBtn = document.getElementById('jfw-wa-btn');
+        if(waBtn){
+            waBtn.classList.add('jfw-shake');
+            setTimeout(() => waBtn.classList.remove('jfw-shake'), 1100);
+        }
+        const showFor = 2500;
+        window.__jfwTimer = setTimeout(() => {
+            tip.classList.remove('show');
+            const hideFor = 4000 + Math.random() * 1000;
+            window.__jfwTimer = setTimeout(cycle, hideFor);
+        }, showFor);
+    }
+    window.__jfwTimer = setTimeout(cycle, 1500);
+}
+if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', jfwStartTooltipLoop);
+} else {
+    jfwStartTooltipLoop();
+}
+function openReportPopup(){ document.getElementById('report-popup').classList.add('show'); }
+function closeReport(){ document.getElementById('report-popup').classList.remove('show'); }
+function selectReason(el){
+    document.querySelectorAll('.reason-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedReason = el.innerText;
+}
+async function submitReport(){
+    const name = document.getElementById('report-name').value.trim();
+    const msg  = document.getElementById('report-msg').value.trim();
+    if(!selectedReason){ alert('Please select a reason.'); return; }
+    if(!name){ alert('Please enter your name.'); return; }
+    if(!msg){ alert('Please describe the issue.'); return; }
+    const btn = document.querySelector('.report-submit');
+    btn.innerText = 'Sending...'; btn.disabled = true;
+    try {
+        await emailjs.send('service_gnjsdvm', 'template_bus1179', {
+            reporter_name: name,
+            reason:        selectedReason,
+            message:       msg,
+            post_owner:    REPORT_DATA.ownerName,
+            post_title:    REPORT_DATA.postTitle,
+            post_id:       REPORT_DATA.postId,
+            post_url:      REPORT_DATA.postUrl
+        });
+        btn.style.display = 'none';
+        document.getElementById('report-success').style.display = 'block';
+        setTimeout(() => closeReport(), 3000);
+    } catch(err) {
+        alert('Error sending report. Try again.');
+        btn.innerText = 'Send Report';
+        btn.disabled  = false;
+    }
+}
+<\/script>
+<!-- Job Apply Float Widget: WhatsApp / Call / Share -->
+${(waNumber || callNumber) ? `<div id="job-float-widget" class="job-float-widget">
+  ${waNumber ? `<div class="jfw-tooltip" id="jfw-tooltip">
+    <svg class="jfw-tooltip-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+    <span>Don't miss this job</span>
+    <span class="jfw-tooltip-x" onclick="jfwStopTooltip(event)">&#10005;</span>
+  </div>` : ""}
+  <div class="jfw-close-row"><span class="jfw-close" onclick="closeJobFloatWidget()">Close &#10005;</span></div>
+  <div class="jfw-panel">
+    ${waNumber ? `<div class="jfw-btn" id="jfw-wa-btn" onclick="requireAuth(async function(){ await trackClick('${e(postDocId)}','whatsappClicks'); bumpJfwCount('jfw-wa-count'); bumpStatCount('whatsapp-count-display','WhatsApp'); window.open('https://wa.me/${e(waNumber)}?text=${waMsg}','_blank'); })">
+      <div class="jfw-circle jfw-wa"><span class="jfw-count" id="jfw-wa-count" data-count="${Number(post.whatsappClicks) || 0}">${fmtK(Number(post.whatsappClicks) || 0)}</span><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg></div>
+      <span class="jfw-label">WhatsApp</span>
+    </div>` : ""}
+    ${callNumber ? `<div class="jfw-btn" id="jfw-call-btn" onclick="requireAuth(async function(){ await trackClick('${e(postDocId)}','callClicks'); bumpJfwCount('jfw-call-count'); bumpStatCount('call-count-display','Calls'); window.location.href='tel:${e(callNumber)}'; })">
+      <div class="jfw-circle jfw-call"><span class="jfw-count" id="jfw-call-count" data-count="${Number(post.callClicks) || 0}">${fmtK(Number(post.callClicks) || 0)}</span><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
+      <span class="jfw-label">Call</span>
+    </div>` : ""}
+    <div class="jfw-btn" id="jfw-share-btn" onclick="jfwShare()">
+      <div class="jfw-circle jfw-share"><span class="jfw-count" id="jfw-share-count" data-count="${Number(post.shares) || 0}">${fmtK(Number(post.shares) || 0)}</span><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg></div>
+      <span class="jfw-label">Share</span>
+    </div>
+  </div>
+</div>` : ""}
+<!-- WhatsApp Channel Float Button -->
+<div id="wa-channel-btn" onclick="window.open('https://whatsapp.com/channel/0029VbCe3Mf2kNFroj9qx223','_blank')" style="position:fixed;bottom:120px;right:16px;z-index:9998;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;animation:waBounce 2s ease-in-out infinite;">
+  <div style="background:#25D366;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(37,211,102,0.5);">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+  </div>
+  <div style="background:#25D366;color:white;font-size:9px;font-weight:800;padding:3px 8px;border-radius:10px;white-space:nowrap;box-shadow:0 2px 8px rgba(37,211,102,0.4);">Join our<br>WhatsApp Channel</div>
+</div>
+<style>
+@keyframes waBounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+</style>
+<script>
+(function(){
+  var b = document.getElementById('hjp-verify-badge');
+  if (!b) return;
+  var uid = b.getAttribute('data-uid');
+  if (!uid) return;
+  fetch('/api/is-verified?uid=' + encodeURIComponent(uid))
+    .then(function(r){ return r.json(); })
+    .then(function(d){ b.style.display = d.verified ? 'inline-flex' : 'none'; })
+    .catch(function(){});
+})();
+</script>
+<style>
+#promo-popup{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(150%);width:300px;max-width:calc(100% - 24px);background:#fff;border:1px solid #d8d8d8;border-radius:0;box-shadow:0 4px 18px rgba(0,0,0,0.12);z-index:10001;padding:18px 16px 14px;text-align:center;opacity:0;visibility:hidden;pointer-events:none;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s ease,visibility 0s linear 0.4s;}
+#promo-popup.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible;pointer-events:auto;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s ease,visibility 0s linear 0s;}
+#promo-popup-close{position:absolute;top:8px;left:10px;background:none;border:none;font-size:18px;line-height:1;color:#777;cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:0;}
+#promo-popup-close:hover{background:#f3f2ef;color:#000;}
+.promo-label{font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.promo-urdu{font-family:'Noto Nastaliq Urdu',serif;font-size:16px;line-height:2.1;color:#000;direction:rtl;margin-bottom:8px;}
+.promo-price{font-size:18px;font-weight:800;color:#16a34a;letter-spacing:0.5px;margin-bottom:12px;}
+.promo-socials{display:flex;justify-content:center;gap:12px;}
+.promo-socials span{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.15);}
+.promo-socials svg{width:20px;height:20px;}
+.promo-socials img{width:40px;height:40px;border-radius:50%;object-fit:cover;}
+.promo-cta{display:block;margin-top:14px;padding:10px 12px;background:#0a66c2;color:#fff;font-size:13px;font-weight:700;text-decoration:none;border-radius:0;letter-spacing:0.3px;}
+.promo-cta:hover{background:#08508f;}
+.promo-dynamic-title{font-size:14px;font-weight:800;color:#0f172a;margin-bottom:4px;}
+.promo-dynamic-desc{font-size:12px;color:#475569;line-height:1.5;margin-bottom:10px;}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+<div id="promo-popup">
+  <button id="promo-popup-close">✕</button>
+  <div class="promo-label">Sponsored</div>
+  <div id="promo-dynamic-title" class="promo-dynamic-title" style="display:none;"></div>
+  <div id="promo-dynamic-desc" class="promo-dynamic-desc" style="display:none;"></div>
+  <div class="promo-urdu">اگر آپ اپنی میڈیکل فیسیلٹی کی سوشل میڈیا مارکیٹنگ کروانا چاہتے ہیں یا ہماری ویب سائٹ پر اشتہار لگوانا چاہتے ہیں تو نیچے دیے گے بٹن پر کلک کریں</div>
+  <div class="promo-price">❖ Just 300 PKR ❖</div>
+  <div class="promo-socials">
+    <span style="background:#25D366"><svg viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.11c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.13.11-1.82-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.27-.29.58-.36.78-.36.2 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.83 2.01.9 2.16.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.19-.27.37-.22.62-.13.25.09 1.6.75 1.87.89.27.14.45.2.51.32.07.11.07.65-.17 1.33z"/></svg></span>
+    <span style="background:#1877F2"><svg viewBox="0 0 24 24" fill="white"><path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.89h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z"/></svg></span>
+    <span style="background:#000"><svg viewBox="0 0 24 24" fill="white"><path d="M16.6 5.82c-.99-.99-1.53-2.31-1.53-3.68h-3.09v13.19a2.85 2.85 0 1 1-2.02-2.73V9.4a6 6 0 1 0 5.11 5.93V9.53a8.5 8.5 0 0 0 4.53 1.31V7.75c-1.09 0-2.11-.34-2.99-.93z"/></svg></span>
+    <span><img src="https://healthjobportal.com/images/logo.png" alt="Website"></span>
+  </div>
+  <a href="https://healthjobportal.com/advertise" class="promo-cta" id="promo-cta-link">Create Now</a>
+</div>
+<script>
+(function(){
+  var DWELL_MS = 5000;           // user must stay on the page this long before we show anything
+  var FREQ_CAP_MS = 2*60*60*1000; // never show again within ~2 hours of the last time it was shown
+
+  var popup = document.getElementById('promo-popup');
+  var closeBtn = document.getElementById('promo-popup-close');
+  var ctaLink = document.getElementById('promo-cta-link');
+  if(!popup) return;
+
+  // Testing helper: open the page with ?promo_test=1 in the URL to bypass
+  // the frequency cap and force the popup to show again immediately.
+  var testMode = /[?&]promo_test=1/.test(location.search);
+
+  var lastShown = parseInt(localStorage.getItem('promo_last_shown') || '0', 10);
+  if(!testMode && Date.now() - lastShown < FREQ_CAP_MS) return; // shown too recently — stay quiet, don't annoy the user
+
+  var currentAdRef = null;
+  var alreadyShown = false; // prevents double-counting an impression if both the timer AND a click trigger fire
+
+  function trackEvent(type){
+    if(!currentAdRef) return;
+    var payload = JSON.stringify({ ref: currentAdRef, type: type });
+    if(navigator.sendBeacon){
+      navigator.sendBeacon('/api/ads/track', new Blob([payload], {type:'application/json'}));
+    } else {
+      fetch('/api/ads/track', { method:'POST', headers:{'Content-Type':'application/json'}, body: payload, keepalive:true }).catch(function(){});
+    }
+  }
+
+  function showPopup(){
+    if(alreadyShown) return;
+    alreadyShown = true;
+    popup.classList.add('show');
+    localStorage.setItem('promo_last_shown', String(Date.now()));
+    trackEvent('impression');
+  }
+
+  function applyLiveAd(ad){
+    currentAdRef = ad.ref;
+    var titleEl = document.getElementById('promo-dynamic-title');
+    var descEl = document.getElementById('promo-dynamic-desc');
+    var urduEl = popup.querySelector('.promo-urdu');
+    var priceEl = popup.querySelector('.promo-price');
+    if(titleEl){ titleEl.textContent = ad.title || ''; titleEl.style.display = 'block'; }
+    if(descEl){ descEl.textContent = ad.description || ''; descEl.style.display = 'block'; }
+    if(urduEl) urduEl.style.display = 'none';
+    if(priceEl) priceEl.style.display = 'none';
+  }
+
+  // The 5-second reveal timer runs on its own, no matter what — it never
+  // waits on the network. If a live advertiser ad can be fetched in time,
+  // its content replaces the default house ad; if the fetch is slow,
+  // fails, or the route isn't set up yet, the popup still shows on time
+  // with the default house ad already in the markup.
+  setTimeout(showPopup, DWELL_MS);
+
+  fetch('/api/ads/active?slot=post-popup')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data && data.ad) applyLiveAd(data.ad);
+    })
+    .catch(function(){ /* keep default house ad */ });
+
+  // ── Engagement triggers ────────────────────────────────────────────────
+  // Show the popup the moment the user shows real intent — tapping
+  // WhatsApp, Call, Apply Now, a post image, or a related post — instead
+  // of only waiting for the 5-second dwell timer. The user's original
+  // action (opening WhatsApp, dialing, viewing the image, etc.) always
+  // still happens; this only ever adds the popup alongside it, never
+  // replaces or blocks it.
+  var ENGAGEMENT_SELECTORS = '#jfw-wa-btn, #jfw-call-btn, #wa-channel-btn, .apply-assist-btn, .apply-now-link, [onclick*="openLightbox"]';
+  document.addEventListener('click', function(e){
+    if(e.target.closest(ENGAGEMENT_SELECTORS)) showPopup();
+  }, true);
+
+  // Related-post cards navigate the whole page away immediately, so the
+  // popup would never actually be visible unless we hold the navigation
+  // just long enough for it to animate in first. The click still results
+  // in the same navigation — just ~350ms later.
+  document.addEventListener('click', function(e){
+    var card = e.target.closest('.related-card');
+    if(!card || !card.href) return;
+    e.preventDefault();
+    showPopup();
+    var dest = card.href;
+    setTimeout(function(){ window.location.href = dest; }, 350);
+  }, true);
+
+  if(closeBtn){
+    closeBtn.addEventListener('click', function(){
+      popup.classList.remove('show');
+      // last_shown is already stamped from showPopup(), so the frequency
+      // cap above naturally keeps it hidden for a while after closing too.
+    });
+  }
+  if(ctaLink){
+    ctaLink.addEventListener('click', function(){ trackEvent('click'); });
+  }
+})();
+</script>
+</body>
+</html>`;
+}
+__name(buildPostPage, "buildPostPage");
+
+
+(async function(){
+  var params = new URLSearchParams(window.location.search);
+  var slug = (params.get("slug") || "").trim();
+  if (!slug) {
+    document.body.innerHTML = "<div class='hjp-loader'>Invalid link — no post slug provided.</div>";
+    return;
+  }
+  try {
+    var res = await fetch(`${HJP_WORKER_BASE}/api/post-data?slug=${encodeURIComponent(slug)}`);
+    var data = await res.json();
+    if (!data || !data.success || !data.post) {
+      document.body.innerHTML = "<div class='hjp-loader'>This job post may have been removed or the link is incorrect.</div>";
+      return;
+    }
+    var html = buildPostPage(data.post, data.slug || slug, !!data.verified, data.faqHtml || "");
+    document.open();
+    document.write(html);
+    document.close();
+  } catch (err) {
+    document.body.innerHTML = "<div class='hjp-loader'>Unable to load this post. Please check your internet connection.</div>";
+  }
+})();
+</script>
+</body>
+</html>
