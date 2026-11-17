@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Post Medical Profile | Doctors, Nurses & Healthcare Jobs Pakistan</title>
-<meta name="description" content="Post your medical profile on Health Jobs Portal Pakistan. Doctors, nurses, pharmacists and lab technicians can broadcast their availability and get hired by top hospitals instantly.">
-<meta name="keywords" content="post medical profile Pakistan, healthcare job seekers, nursing jobs Pakistan, doctor jobs Pakistan, pharmacist jobs Pakistan, lab technician jobs, candidate profile healthcare, medical cv Pakistan, find healthcare work, hospital jobs Pakistan, post availability healthcare, medical professional Pakistan, nurse vacancy Pakistan, MBBS doctor jobs, dispenser jobs Pakistan">
+    <title>Post Medical Profile | Doctors, Nurses & Healthcare Jobs</title>
+    <meta name="description" content="Post your medical profile on Health Jobs Portal. Doctors, nurses, pharmacists and lab technicians can broadcast their availability and get hired by top hospitals instantly.">
+    <meta name="keywords" content="post medical profile, healthcare job seekers, nursing jobs, doctor jobs, pharmacist jobs, lab technician jobs, candidate profile healthcare, medical cv, find healthcare work, hospital jobs, post availability healthcare, medical professional, nurse vacancy, MBBS doctor jobs, dispenser jobs">
     <meta name="author" content="Health Jobs Portal">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <link rel="canonical" href="https://healthjobportal.com/candidate.html">
+    <link rel="canonical" href="candidate.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
 
     <meta property="og:type" content="profile">
     <meta property="og:url" content="https://healthjobportal.com/candidate.html">
@@ -21,43 +24,76 @@
     <meta name="twitter:description" content="Healthcare Professionals: Post your availability and let top hospitals reach out to you.">
     <meta name="twitter:image" content="https://healthjobportal.com/images/logo.png">
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "Post Medical Profile | Health Jobs Portal Pakistan",
-  "description": "Post your healthcare profile and get hired by top hospitals in Pakistan. For doctors, nurses, pharmacists and all medical professionals.",
-  "url": "https://healthjobportal.com/candidate.html",
-  "publisher": {
-    "@type": "Organization",
-    "name": "Health Jobs Portal",
-    "url": "https://healthjobportal.com",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://healthjobportal.com/images/logo.png"
-    }
-  },
-  "breadcrumb": {
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://healthjobportal.com/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Post Medical Profile",
-        "item": "https://healthjobportal.com/candidate.html"
-      }
-    ]
-  }
-}
-</script>
-    <style>
+    <script>
+        setTimeout(function() {
+            let s1 = document.createElement('script');
+            s1.src = "https://www.googletagmanager.com/gtag/js?id=G-NC0B547PYR";
+            s1.async = true;
+            document.head.appendChild(s1);
+            let s2 = document.createElement('script');
+            s2.innerHTML = "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-NC0B547PYR');";
+            document.head.appendChild(s2);
+            let s3 = document.createElement('script');
+            s3.src = "https://analytics.ahrefs.com/analytics.js";
+            s3.setAttribute("data-key","lZziwIFYdWn//NVwsT+mUg");
+            s3.async = true;
+            document.head.appendChild(s3);
+        }, 3500);
+    </script>
 
+    <!-- 🔒 ROLE GATE (fast) — candidate page sirf candidate accounts ke liye hai.
+         Cached role non-candidate ho to turant index par redirect karo
+         (Firestore ka wait na karo). Firestore ka authoritative check submit
+         par bhi lagta hai (module script), is liye ye bypass-proof hai. -->
+    <script>
+        (function () {
+            try {
+                const cachedRole = String(localStorage.getItem('fast_user_role') || '').toLowerCase().trim();
+                if (cachedRole && cachedRole !== 'candidate') {
+                    sessionStorage.setItem('role_blocked', 'candidate.html');
+                    window.location.replace('index.html');
+                }
+            } catch (_) {}
+        })();
+    </script>
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Post Medical Profile | Health Jobs Portal",
+            "description": "Post your healthcare profile and get hired by top hospitals. For doctors, nurses, pharmacists and all medical professionals.",
+            "url": "https://healthjobportal.com/candidate.html",
+            "publisher": {
+                "@type": "Organization",
+                "name": "Health Jobs Portal",
+                "url": "https://healthjobportal.com",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://healthjobportal.com/images/logo.png"
+                }
+            },
+            "breadcrumb": {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": "https://healthjobportal.com/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Post Medical Profile",
+                        "item": "https://healthjobportal.com/candidate.html"
+                    }
+                ]
+            }
+        }
+    </script>
+
+    <style>
         :root {
             --primary-blue: #0a66c2;
             --hover-blue: #004182;
@@ -66,82 +102,166 @@
             --text-main: #000000e6;
             --text-secondary: #00000099;
             --border-color: #e0dfdc;
+            --success-green: #057642;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         html, body { height: 100%; }
 
-        body { 
-            background-color: var(--bg-body); 
-            color: var(--text-main); 
-            display: flex; flex-direction: column; 
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex; flex-direction: column;
             min-height: 100vh; padding-top: 70px;
         }
 
-        /* --- Header --- */
         header {
-            background-color: var(--bg-white); padding: 0 15px; display: flex; justify-content: space-between;
-            align-items: center; position: fixed; top: 0; width: 100%; height: 65px; z-index: 1000;
-            border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            background-color: var(--bg-white);
+            padding: 0 15px; display: flex; justify-content: space-between;
+            align-items: center; position: fixed; top: 0; width: 100%;
+            height: 65px; z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
-        
+
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .back-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; color: var(--text-secondary); transition: 0.2s; text-decoration: none;}
+        .back-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; color: var(--text-secondary); transition: 0.2s; text-decoration: none; }
         .back-btn:hover { color: var(--primary-blue); }
         .back-btn svg { width: 24px; height: 24px; fill: currentColor; }
-        
         .logo-container { text-decoration: none; display: flex; align-items: center; }
         .logo-img { height: 40px; width: auto; max-width: 150px; object-fit: contain; }
         .logo-text { font-size: 20px; font-weight: 700; color: var(--primary-blue); display: none; }
 
-        /* --- Main Content Area --- */
         main { flex: 1 0 auto; padding: 20px 15px; max-width: 850px; width: 100%; margin: 0 auto; }
 
-        .form-card { 
-            background: var(--bg-white); padding: 30px; border-radius: 12px; 
-            border: 1px solid var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.02); 
+        /* Progress Steps */
+        .progress-steps {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 25px; padding: 0 10px; position: relative;
+        }
+        .progress-steps::before {
+            content: ''; position: absolute; top: 18px; left: 40px; right: 40px;
+            height: 3px; background: var(--border-color); z-index: 0; border-radius: 10px;
+        }
+        .progress-step {
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            position: relative; z-index: 1; cursor: pointer; transition: 0.3s;
+        }
+        .step-circle {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--bg-white); border: 3px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px; color: var(--text-secondary);
+            transition: 0.3s; position: relative;
+        }
+        .step-label {
+            font-size: 11px; font-weight: 600; color: var(--text-secondary);
+            text-align: center; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .progress-step.active .step-circle {
+            background: var(--primary-blue); border-color: var(--primary-blue);
+            color: white; box-shadow: 0 2px 8px rgba(10, 102, 194, 0.3);
+        }
+        .progress-step.active .step-label { color: var(--primary-blue); font-weight: 700; }
+        .progress-step.completed .step-circle {
+            background: var(--success-green); border-color: var(--success-green); color: white;
+        }
+        .progress-step.completed .step-circle::after { content: '✓'; position: absolute; }
+        .progress-step.completed .step-label { color: var(--success-green); }
+
+        .step-content { display: none; animation: fadeSlideIn 0.4s ease; }
+        .step-content.active { display: block; }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
+        .form-card {
+            background: var(--bg-white); padding: 30px; border-radius: 12px;
+            border: 1px solid var(--border-color); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
         .form-header { margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
-        .form-header h1 { font-size: 22px; color: var(--primary-blue); font-weight: 700;}
+        .form-header h1 { font-size: 22px; color: var(--primary-blue); font-weight: 700; }
         .form-header p { font-size: 14px; color: var(--text-secondary); margin-top: 5px; }
 
-        .form-section-title { font-size: 13px; font-weight: 700; color: var(--text-secondary); margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px; }
+        .form-section-title {
+            font-size: 13px; font-weight: 700; color: var(--text-secondary);
+            margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 0.5px;
+            display: flex; align-items: center; gap: 10px;
+        }
         .form-section-title::after { content: ""; flex: 1; height: 1px; background: var(--border-color); }
 
         .form-row { display: flex; gap: 15px; margin-bottom: 16px; }
         .form-group { flex: 1; display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-        
         label { font-size: 13px; font-weight: 600; color: var(--text-main); }
-        
-        input, select, textarea { 
-            width: 100%; padding: 12px; border: 1px solid var(--border-color); 
-            border-radius: 6px; font-size: 14px; outline: none; background: #fafafa; transition: 0.2s; color: var(--text-main);
+
+        input, select, textarea {
+            width: 100%; padding: 12px; border: 1px solid var(--border-color);
+            border-radius: 6px; font-size: 14px; outline: none;
+            background: #fafafa; transition: 0.2s; color: var(--text-main);
         }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary-blue); background: white; box-shadow: 0 0 0 1px var(--primary-blue); }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-blue); background: white;
+            box-shadow: 0 0 0 1px var(--primary-blue);
+        }
         select { cursor: pointer; }
         textarea { resize: vertical; min-height: 120px; }
 
-        /* --- SMART SEARCHABLE DROPDOWN CSS --- */
+        /* Rich Text Toolbar */
+        .editor-toolbar {
+            display: flex; gap: 6px; padding: 8px 10px;
+            background: #f1f5f9; border: 1px solid var(--border-color);
+            border-bottom: none; border-radius: 6px 6px 0 0;
+            flex-wrap: wrap; align-items: center;
+        }
+        .editor-toolbar button {
+            background: white; border: 1px solid #cbd5e1; border-radius: 4px;
+            padding: 5px 10px; cursor: pointer; font-size: 12px; font-weight: 700;
+            color: var(--text-main); transition: 0.2s; display: flex; align-items: center; gap: 4px;
+        }
+        .editor-toolbar button:hover { background: #e2e8f0; border-color: #94a3b8; }
+        .editor-toolbar button.active-tool { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
+
+        .post-editor {
+            width: 100%; border: 1px solid var(--border-color); border-top: none;
+            border-radius: 0 0 6px 6px; font-size: 14px; outline: none;
+            min-height: 120px; color: var(--text-main); line-height: 1.6;
+            background: #fafafa; padding: 12px; transition: 0.2s;
+        }
+        .post-editor:focus {
+            border-color: var(--primary-blue); background: white;
+            box-shadow: 0 0 0 1px var(--primary-blue);
+        }
+        .post-editor:empty:before { content: attr(data-placeholder); color: #94a3b8; pointer-events: none; display: block; }
+        .post-editor h1 { font-size: 18px; font-weight: 700; color: var(--text-main); margin: 10px 0 6px; line-height: 1.3; }
+        .post-editor h2 { font-size: 16px; font-weight: 700; color: var(--text-main); margin: 8px 0 4px; }
+        .post-editor p { margin: 0 0 6px; }
+        .post-editor p:empty { min-height: 1.4em; }
+        .post-editor ul, .post-editor ol { margin: 6px 0; padding-left: 24px; }
+        .post-editor li { margin-bottom: 3px; }
+
+        /* Searchable Dropdown */
         .searchable-select-wrapper { position: relative; width: 100%; }
-        .searchable-input { 
-            width: 100%; padding: 12px 35px 12px 12px; border: 1px solid var(--border-color); 
-            border-radius: 6px; font-size: 14px; outline: none; background: #fafafa url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="%23666"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center; 
+        .searchable-input {
+            width: 100%; padding: 12px 35px 12px 12px; border: 1px solid var(--border-color);
+            border-radius: 6px; font-size: 14px; outline: none;
+            background: #fafafa url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="%23666"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
             transition: 0.2s; color: var(--text-main); cursor: text;
         }
         .searchable-input:focus { border-color: var(--primary-blue); background-color: white; box-shadow: 0 0 0 1px var(--primary-blue); }
-        .dropdown-list { 
-            position: absolute; top: 100%; left: 0; right: 0; max-height: 220px; overflow-y: auto; 
-            background: white; border: 1px solid var(--primary-blue); border-radius: 6px; 
-            z-index: 100; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-top: 4px;
+        .dropdown-list {
+            position: absolute; top: 100%; left: 0; right: 0; max-height: 220px; overflow-y: auto;
+            background: white; border: 1px solid var(--primary-blue); border-radius: 6px;
+            z-index: 100; display: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); margin-top: 4px;
         }
         .dropdown-list.active { display: block; }
-        .dropdown-item { padding: 12px 15px; cursor: pointer; font-size: 14px; color: var(--text-main); border-bottom: 1px solid #f1f1f1; transition: 0.1s;}
+        .dropdown-item { padding: 12px 15px; cursor: pointer; font-size: 14px; color: var(--text-main); border-bottom: 1px solid #f1f1f1; transition: 0.1s; }
         .dropdown-item:last-child { border-bottom: none; }
-        .dropdown-item:hover { background-color: #f0f7ff; color: var(--primary-blue); font-weight: 500;}
-        .dropdown-no-result { padding: 12px 15px; font-size: 14px; color: var(--text-secondary); text-align: center; font-style: italic;}
+        .dropdown-item:hover { background-color: #f0f7ff; color: var(--primary-blue); font-weight: 500; }
+        .dropdown-no-result { padding: 12px 15px; font-size: 14px; color: var(--text-secondary); text-align: center; font-style: italic; }
 
-        /* --- Multi-Media Upload Box --- */
+        /* Upload */
         .upload-wrapper { border: 2px dashed var(--primary-blue); border-radius: 8px; background: #f3f8fe; transition: 0.2s; padding: 20px; text-align: center; }
         .upload-wrapper:hover { background: #eef3f8; }
         .upload-box { cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; }
@@ -149,62 +269,92 @@
         .upload-text { font-size: 14px; font-weight: 600; color: var(--primary-blue); }
         .upload-subtext { font-size: 12px; color: var(--text-secondary); margin-top: 5px; }
 
-        /* Preview Grid for Multiple Files */
         .preview-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; justify-content: center; }
-        .preview-item { position: relative; width: 100px; height: 100px; border-radius: 8px; border: 1px solid var(--border-color); background: white; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .preview-item { position: relative; width: 100px; height: 100px; border-radius: 8px; border: 1px solid var(--border-color); background: white; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
         .preview-item img { width: 100%; height: 100%; object-fit: cover; }
-        .preview-item .file-icon { width: 40px; height: 40px; fill: var(--text-secondary); margin-bottom: 5px;}
-        .preview-item .file-name { font-size: 10px; color: var(--text-main); text-align: center; padding: 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%;}
-        
-        .remove-btn { position: absolute; top: 4px; right: 4px; background: rgba(217, 48, 37, 0.9); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1;}
+        .preview-item .file-icon { width: 40px; height: 40px; fill: var(--text-secondary); margin-bottom: 5px; }
+        .preview-item .file-name { font-size: 10px; color: var(--text-main); text-align: center; padding: 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
+        .remove-btn { position: absolute; top: 4px; right: 4px; background: rgba(217, 48, 37, 0.9); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1; }
         .remove-btn:hover { background: #b31404; }
 
-        .btn-submit { 
-            width: 100%; padding: 14px; background: var(--primary-blue); color: white; 
-            border: none; border-radius: 24px; font-size: 15px; font-weight: 600; cursor: pointer; 
-            margin-top: 25px; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px;
+        /* Navigation Buttons */
+        .step-nav-buttons { display: flex; gap: 12px; margin-top: 25px; }
+        .btn-prev {
+            padding: 12px 24px; background: white; color: var(--primary-blue);
+            border: 2px solid var(--primary-blue); border-radius: 24px;
+            font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; flex: 1;
         }
-        .btn-submit:hover { background: var(--hover-blue); }
+        .btn-prev:hover { background: #f0f7ff; }
+        .btn-next {
+            padding: 12px 24px; background: var(--primary-blue); color: white;
+            border: none; border-radius: 24px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: 0.2s; flex: 2;
+        }
+        .btn-next:hover { background: var(--hover-blue); }
 
-        /* --- Footer --- */
+        .btn-submit {
+            width: auto; padding: 10px 28px; background: #0a66c2; color: white;
+            border: none; border-radius: 4px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: 0.2s; display: inline-flex;
+            justify-content: center; align-items: center; gap: 8px;
+            letter-spacing: 0.3px; box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        .btn-submit:hover { background: #004182; box-shadow: 0 2px 6px rgba(0,0,0,0.18); }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+
+        /* Footer */
         footer { flex-shrink: 0; background-color: var(--bg-white); padding: 30px 20px 80px; border-top: 1px solid var(--border-color); text-align: center; }
         .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
         .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600; }
         .footer-links a:hover { color: var(--primary-blue); }
-        .footer-copy { font-size: 14px; color: var(--text-main); font-weight: 500; list-style: none; }
+        .footer-copy { font-size: 14px; color: var(--text-main); font-weight: 500; }
 
-        /* --- Bottom Nav --- */
+        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-white); display: flex; justify-content: space-around; align-items: center; padding: 8px 0 10px; border-top: 1px solid var(--border-color); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-secondary); flex: 1; transition: 0.1s; cursor: pointer; background: none; border: none;}
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-secondary); flex: 1; transition: 0.1s; cursor: pointer; background: none; border: none; }
         .nav-item.active { color: var(--text-main); }
         .nav-item.active svg { fill: var(--text-main); }
         .nav-item:hover:not(.active) { color: var(--primary-blue); }
         .nav-item svg { width: 24px; height: 24px; fill: currentColor; margin-bottom: 3px; }
         .nav-item span { font-size: 11px; font-weight: 500; }
 
-        /* Upload Progress Loader */
-        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { width: 40px; height: 40px; border: 3px solid #e0dfdc; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        .loader-text { margin-top: 15px; font-weight: 600; font-size: 14px; color: var(--text-secondary); text-align: center;}
+        /* Loader */
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+        .hidden { display: none !important; }
+        .loader-text { margin-top: 15px; font-weight: 600; font-size: 14px; color: var(--text-secondary); text-align: center; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-/* Phone Input with Country Code */
-.phone-input-group { display: flex; align-items: stretch; border: 1px solid var(--border-color); border-radius: 6px; background: #fafafa; }
-.phone-input-group:focus-within { border-color: var(--primary-blue); box-shadow: 0 0 0 1px var(--primary-blue); }
-.phone-input-group input { border: none !important; box-shadow: none !important; background: transparent; border-radius: 0 6px 6px 0; flex: 1; }
-.cc-btn { display: flex; align-items: center; gap: 4px; padding: 0 10px; background: #f0f0f0; border: none; border-right: 1px solid var(--border-color); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-main); border-radius: 6px 0 0 6px; white-space: nowrap; }
-.cc-btn:hover { background: #e4e4e4; }
-.country-code-selector { position: relative; }
-.cc-dropdown { position: absolute; top: 100%; left: 0; z-index: 200; background: white; border: 1px solid var(--primary-blue); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); min-width: 200px; max-height: 240px; overflow-y: auto; display: none; margin-top: 4px; }
-.cc-dropdown.active { display: block; }
-.cc-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; font-size: 13px; border-bottom: 1px solid #f1f1f1; transition: 0.1s; }
-.cc-item:last-child { border-bottom: none; }
-.cc-item:hover { background: #f0f7ff; color: var(--primary-blue); }
-.cc-item .cc-name { flex: 1; }
-.cc-item .cc-num { color: var(--text-secondary); font-size: 12px; }
+
+        /* Phone Input */
+        .phone-input-group { display: flex; align-items: stretch; border: 1px solid var(--border-color); border-radius: 6px; background: #fafafa; }
+        .phone-input-group:focus-within { border-color: var(--primary-blue); box-shadow: 0 0 0 1px var(--primary-blue); }
+        .phone-input-group input { border: none !important; box-shadow: none !important; background: transparent; border-radius: 0 6px 6px 0; flex: 1; }
+        .cc-btn { display: flex; align-items: center; gap: 4px; padding: 0 10px; background: #f0f0f0; border: none; border-right: 1px solid var(--border-color); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-main); border-radius: 6px 0 0 6px; white-space: nowrap; }
+        .cc-btn:hover { background: #e4e4e4; }
+        .country-code-selector { position: relative; }
+        .cc-dropdown { position: absolute; top: 100%; left: 0; z-index: 200; background: white; border: 1px solid var(--primary-blue); border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); min-width: 200px; max-height: 240px; overflow-y: auto; display: none; margin-top: 4px; }
+        .cc-dropdown.active { display: block; }
+        .cc-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; font-size: 13px; border-bottom: 1px solid #f1f1f1; transition: 0.1s; }
+        .cc-item:last-child { border-bottom: none; }
+        .cc-item:hover { background: #f0f7ff; color: var(--primary-blue); }
+        .cc-item .cc-name { flex: 1; }
+        .cc-item .cc-num { color: var(--text-secondary); font-size: 12px; }
+
         .hidden { display: none !important; }
 
-        @media (max-width: 600px) { .form-row { flex-direction: column; gap: 0; } .form-card { padding: 20px; } }
-        @media (min-width: 768px) { body { padding-bottom: 0; padding-top: 75px; } header { height: 70px; padding: 0 50px; } .bottom-nav { display: none; } footer { padding-bottom: 30px; } }
+        @media (max-width: 600px) {
+            .form-row { flex-direction: column; gap: 0; }
+            .form-card { padding: 20px; }
+            .step-label { font-size: 9px; }
+        }
+
+        @media (min-width: 768px) {
+            body { padding-bottom: 0; padding-top: 75px; }
+            header { height: 70px; padding: 0 50px; }
+            .bottom-nav { display: none; }
+            footer { padding-bottom: 30px; }
+        }
+
     </style>
 </head>
 <body>
@@ -215,156 +365,230 @@
                 <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
             </a>
             <a href="index.html" class="logo-container">
-<img src="images/logo.png" alt="Health Jobs" class="logo-img" width="150" height="40" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+                <img src="images/logo.png" alt="Health Jobs" class="logo-img" width="150" height="40" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
                 <span id="logo-fallback" class="logo-text">Health Jobs</span>
             </a>
         </div>
     </header>
-      <main>
-<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Post Medical Profile — Doctors Nurses Pharmacists Jobs Pakistan</h1>
+
+    <main>
+        <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Post Medical Profile — Doctors Nurses Pharmacists Jobs</h1>
+
+        <!-- Progress Steps Bar -->
+        <div class="progress-steps">
+            <div class="progress-step active" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Basic Info</div>
+            </div>
+            <div class="progress-step" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Requirements</div>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Publish</div>
+            </div>
+        </div>
+
         <div class="form-card">
             <div class="form-header">
+                <p style="display:inline-flex;align-items:center;gap:6px;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;border:1px solid #bfdbfe;margin:0 0 10px;letter-spacing:0.3px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+                    FOR DOCTORS &middot; NURSES &middot; PHARMACISTS &amp; ALL HEALTHCARE PROFESSIONALS
+                </p>
                 <h1>Post Availability Profile</h1>
                 <p>Broadcast your skills and let top medical facilities find you.</p>
             </div>
 
-            <div class="form-section-title">Professional Summary</div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Profile Title / Headline *</label>
-                    <input type="text" id="job-title" placeholder="e.g. Experienced ICU Nurse Seeking Night Shifts">
+            <!-- ============ STEP 1: BASIC INFO ============ -->
+            <div class="step-content active" id="step-1">
+                <div class="form-section-title">Professional Summary</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Profile Title / Headline * <small style="font-weight:400;color:var(--text-secondary);">(60 chars max for SEO)</small></label>
+                        <input type="text" id="job-title" maxlength="60" placeholder="e.g. Experienced ICU Nurse Seeking Night Shifts">
+                        <small id="title-remaining" style="color:var(--text-secondary);font-size:11px;margin-top:2px;"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Your Profession / Qualification *</label>
+                        <div class="searchable-select-wrapper" id="category-wrapper">
+                            <input type="text" id="job-category-input" class="searchable-input" placeholder="Type to search (e.g. Pharmacist, Doctor...)" autocomplete="off">
+                            <div class="dropdown-list" id="category-dropdown"></div>
+                        </div>
+                    </div>
                 </div>
-                
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Preferred Work Location / City *</label>
+                        <input type="text" id="job-location" placeholder="e.g. Saddar, Karachi">
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Shift *</label>
+                        <select id="job-shift">
+                            <option value="">-- Select Shift --</option>
+                            <option>Morning Shift</option>
+                            <option>Evening Shift</option>
+                            <option>Night Shift</option>
+                            <option>Flexible / Any Shift</option>
+                            <option>Part-Time / Locum</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Employment Type *</label>
+                        <div class="searchable-select-wrapper" id="employment-type-wrapper">
+                            <input type="text" id="job-employment-type-input" class="searchable-input" placeholder="Type or select (e.g. Full Time, Part Time...)" autocomplete="off">
+                            <div class="dropdown-list" id="employment-type-dropdown"></div>
+                        </div>
+                        <input type="hidden" id="job-employment-type" value="FULL_TIME">
+                    </div>
+                    <div class="form-group">
+                        <label>Your Total Experience *</label>
+                        <select id="job-exp">
+                            <option value="">-- Select Experience --</option>
+                            <option>Fresher / New Graduate</option>
+                            <option>1-2 Years</option>
+                            <option>3-5 Years</option>
+                            <option>5-10 Years</option>
+                            <option>10+ Years</option>
+                            <option value="custom">✍️ Manual Entry (Type your own)</option>
+                        </select>
+                        <input type="text" id="job-exp-custom" placeholder="e.g. 3 Years LHV & Delivery Experience — English/Urdu dono chalega" style="display:none;margin-top:8px;" maxlength="120">
+                    </div>
+                </div>
+
+                <div class="step-nav-buttons">
+                    <button class="btn-next" onclick="goToStep(2)">Continue to Requirements →</button>
+                </div>
+            </div>
+
+            <!-- ============ STEP 2: REQUIREMENTS ============ -->
+            <div class="step-content" id="step-2">
+                <div class="form-section-title">Experience & Expectations</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Expected Salary Package *</label>
+                        <input type="text" id="salary" placeholder="e.g. 60,000 PKR or 60 thousand (Negotiable)">
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label>Your Profession / Qualification *</label>
-                    <div class="searchable-select-wrapper" id="category-wrapper">
-                        <input type="text" id="job-category-input" class="searchable-input" placeholder="Type to search (e.g. Pharmacist, Doctor...)">
-                        <div class="dropdown-list" id="category-dropdown">
+                    <label>Professional Bio / Skills *</label>
+                    <!-- Rich Text Toolbar -->
+<div class="editor-toolbar" id="editor-toolbar">
+    <button type="button" onmousedown="event.preventDefault(); formatDoc('h1')" title="Heading 1 (Big Bold)"><b>H1</b> Heading</button>
+    <button type="button" onmousedown="event.preventDefault(); formatDoc('h2')" title="Heading 2"><b>H2</b> Subheading</button>
+    <button type="button" onmousedown="event.preventDefault(); formatDoc('p')" title="Normal Paragraph">¶ Normal</button>
+    <button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList')" title="Bullet List">• Bullet</button>
+    <button type="button" onmousedown="event.preventDefault(); formatDoc('insertOrderedList')" title="Numbered List">1. Numbered</button>
+    <button type="button" onmousedown="event.preventDefault(); formatDoc('bold')" title="Bold"><b>B</b></button>
+</div>
+                    <div id="job-desc" class="post-editor" contenteditable="true" data-placeholder="Introduce yourself. Highlight your key skills, previous work experience, and what kind of role you are looking for..."></div>
+                </div>
+
+                <div class="form-section-title">Contact Details</div>
+
+                <div class="form-group">
+                    <label>External Link <span style="font-weight:400;color:var(--text-secondary);">(Optional)</span></label>
+                    <input type="url" id="external-link" placeholder="https://linkedin.com/in/yourprofile">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>WhatsApp Number *</label>
+                        <div class="phone-input-group">
+                            <div class="country-code-selector">
+                                <button type="button" class="cc-btn" id="wa-cc-btn" onclick="toggleCCDropdown('wa-cc-dropdown')">
+                                    <span id="wa-flag">🇵🇰</span>
+                                    <span id="wa-code">+92</span>
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                                </button>
+                                <div class="cc-dropdown" id="wa-cc-dropdown"></div>
                             </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Preferred Work Location / City *</label>
-                    <input type="text" id="job-location" placeholder="e.g. Saddar, Karachi">
-                </div>
-                <div class="form-group">
-                    <label>Preferred Shift *</label>
-                    <select id="job-shift">
-                        <option>Morning Shift</option>
-                        <option>Evening Shift</option>
-                        <option>Night Shift</option>
-                        <option>Flexible / Any Shift</option>
-                        <option>Part-Time / Locum</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-section-title">Experience & Expectations</div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Expected Salary Package *</label>
-                    <input type="text" id="salary" placeholder="e.g. 60,000 PKR Expected or Negotiable">
-                </div>
-                <div class="form-group">
-                    <label>Your Total Experience *</label>
-                    <select id="job-exp">
-                        <option>Fresher / New Graduate</option>
-                        <option>1-2 Years</option>
-                        <option>3-5 Years</option>
-                        <option>5-10 Years</option>
-                        <option>10+ Years</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Professional Bio / Skills *</label>
-                <textarea id="job-desc" placeholder="Introduce yourself. Highlight your key skills, previous work experience, and what kind of role you are looking for..."></textarea>
-            </div>
-
-            <div class="form-section-title">Contact Details</div>
-            <div class="form-group">
-    <label>External Link <span style="font-weight:400;color:var(--text-secondary);">(Optional)</span></label>
-    <input type="url" id="external-link" placeholder="https://linkedin.com/in/yourprofile">
-</div>
-<div class="form-row">
-                <div class="form-group">
-                    <label>WhatsApp Number *</label>
-                    <div class="phone-input-group">
-                        <div class="country-code-selector">
-                            <button type="button" class="cc-btn" id="wa-cc-btn" onclick="toggleCCDropdown('wa-cc-dropdown')">
-                                <span id="wa-flag">🇵🇰</span>
-                                <span id="wa-code">+92</span>
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
-                            </button>
-                            <div class="cc-dropdown" id="wa-cc-dropdown"></div>
+                            <input type="tel" id="whatsapp" placeholder="3XX XXXXXXX">
                         </div>
-                        <input type="tel" id="whatsapp" placeholder="3XX XXXXXXX">
+                        <input type="hidden" id="whatsapp-cc" value="+92">
+                        <small style="color:var(--text-secondary);font-size:11px;">At least one phone number is required</small>
                     </div>
-                    <input type="hidden" id="whatsapp-cc" value="+92">
-                </div>
-                <div class="form-group">
-                    <label>Calling Number (Optional)</label>
-                    <div class="phone-input-group">
-                        <div class="country-code-selector">
-                            <button type="button" class="cc-btn" id="ln-cc-btn" onclick="toggleCCDropdown('ln-cc-dropdown')">
-                                <span id="ln-flag">🇵🇰</span>
-                                <span id="ln-code">+92</span>
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
-                            </button>
-                            <div class="cc-dropdown" id="ln-cc-dropdown"></div>
+                    <div class="form-group">
+                        <label>Calling Number (Optional)</label>
+                        <div class="phone-input-group">
+                            <div class="country-code-selector">
+                                <button type="button" class="cc-btn" id="ln-cc-btn" onclick="toggleCCDropdown('ln-cc-dropdown')">
+                                    <span id="ln-flag">🇵🇰</span>
+                                    <span id="ln-code">+92</span>
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                                </button>
+                                <div class="cc-dropdown" id="ln-cc-dropdown"></div>
+                            </div>
+                            <input type="tel" id="local-num" placeholder="3XX XXXXXXX">
                         </div>
-                        <input type="tel" id="local-num" placeholder="3XX XXXXXXX">
+                        <input type="hidden" id="local-num-cc" value="+92">
                     </div>
-                    <input type="hidden" id="local-num-cc" value="+92">
-                </div>
-            </div>
-            <div class="form-section-title">Post Schedule & Expiry</div>
-
-<div class="form-row">
-    <div class="form-group">
-        <label>Post Start Date & Time</label>
-        <input type="datetime-local" id="schedule-start">
-        <small style="color:var(--text-secondary);font-size:11px;margin-top:3px;">خالی چھوڑیں تو ابھی فوری پبلش ہوگا</small>
-    </div>
-    <div class="form-group">
-        <label>Post Expiry Date & Time</label>
-        <input type="datetime-local" id="schedule-expiry">
-        <small style="color:var(--text-secondary);font-size:11px;margin-top:3px;">خالی چھوڑیں تو پوسٹ کبھی expire نہیں ہوگی</small>
-    </div>
-</div>
-
-<div class="form-section-title">Web Chat Setting</div>
-
-<div class="form-group" style="flex-direction:row;align-items:center;justify-content:space-between;background:#f8fafc;padding:14px 16px;border-radius:10px;border:1px solid #e2e8f0;">
-    <div>
-        <div style="font-size:14px;font-weight:600;color:#0f172a;">Enable Web Chat</div>
-        <div style="font-size:12px;color:#64748b;margin-top:3px;">Employers can message you directly on your post</div>
-    </div>
-  <button type="button" id="web-chat-toggle-btn" onclick="toggleWebChat()" style="padding:8px 18px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;background:#0a66c2;color:white;transition:0.2s;">ON</button>
-<input type="hidden" id="web-chat-toggle" value="true">
-</div>
-
-<div class="form-section-title">Attach CV, Certificates or Video - Up to 5 Files</div>
-            
-            <div class="upload-wrapper">
-                <div class="upload-box" id="upload-btn" onclick="document.getElementById('file-input').click()">
-                    <svg class="upload-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
-                    <div class="upload-text">Click to Add CV / Resume</div>
-                    <div class="upload-subtext">Max 10MB per file. (Supported: PDF, JPG, PNG, MP4)</div>
                 </div>
 
-                <input type="file" id="file-input" multiple accept="image/*,video/*,.pdf" class="hidden">
-                
-                <div id="preview-container" class="preview-grid hidden"></div>
+                <div class="step-nav-buttons">
+                    <button class="btn-prev" onclick="goToStep(1)">← Back</button>
+                    <button class="btn-next" onclick="goToStep(3)">Continue to Publish →</button>
+                </div>
             </div>
 
-            <button class="btn-submit" id="submit-btn">Publish My Profile</button>
+            <!-- ============ STEP 3: PUBLISH ============ -->
+            <div class="step-content" id="step-3">
+                <div class="form-section-title">Post Schedule & Expiry</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Post Start Date & Time</label>
+                        <input type="datetime-local" id="schedule-start">
+                        <small style="color:var(--text-secondary);font-size:11px;margin-top:3px;">Leave empty to publish immediately</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Post Expiry Date & Time</label>
+                        <input type="datetime-local" id="schedule-expiry">
+                        <small style="color:var(--text-secondary);font-size:11px;margin-top:3px;">Leave empty for no expiry</small>
+                    </div>
+                </div>
+
+                <div class="form-section-title">Web Chat Setting</div>
+
+                <div class="form-group" style="flex-direction:row;align-items:center;justify-content:space-between;background:#f8fafc;padding:14px 16px;border-radius:10px;border:1px solid #e2e8f0;">
+                    <div>
+                        <div style="font-size:14px;font-weight:600;color:#0f172a;">Enable Web Chat</div>
+                        <div style="font-size:12px;color:#64748b;margin-top:3px;">Employers can message you directly on your post</div>
+                    </div>
+                    <button type="button" id="web-chat-toggle-btn" onclick="toggleWebChat()" style="padding:8px 18px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;background:#0a66c2;color:white;transition:0.2s;">ON</button>
+                    <input type="hidden" id="web-chat-toggle" value="true">
+                </div>
+
+                <div class="form-section-title">Attach CV, Certificates or Video - Up to 5 Files</div>
+
+                <div class="upload-wrapper">
+                    <div class="upload-box" id="upload-btn" onclick="document.getElementById('file-input').click()">
+                        <svg class="upload-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
+                        <div class="upload-text">Click to Add CV / Resume</div>
+                        <div class="upload-subtext">Max 5 (images + PDFs combined), OR 1 video (max 10MB)</div>
+                    </div>
+                    <input type="file" id="file-input" multiple accept="image/*,video/*,.pdf" class="hidden">
+                    <div id="preview-container" class="preview-grid hidden"></div>
+                </div>
+
+                <div class="step-nav-buttons">
+                    <button class="btn-prev" onclick="goToStep(2)">← Back</button>
+                    <button class="btn-submit" id="submit-btn">
+                        <span id="submit-btn-text">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13v-2h11.17l-4.88-4.88 1.42-1.41L20 12l-7.29 7.29-1.42-1.41L16.17 13H5z"/></svg>
+                            Publish Now
+                        </span>
+                    </button>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -375,43 +599,137 @@
             <a href="profile.html">My Profile</a>
             <a href="privcy.html">Privacy Policy</a>
         </div>
-<div class="footer-copy">
-    &copy; 2026 powered by SufianX — All rights reserved
-</div>
+        <div class="footer-copy">
+            &copy; 2026 powered by SufianX — All rights reserved
+        </div>
     </footer>
 
-    <nav class="bottom-nav">
-        <button class="nav-item" onclick="window.location.href='index.html'">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
-            <span>Home</span>
-        </button>
-        <button class="nav-item" onclick="window.location.href='my-posts.html'">
-            <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>
-            <span>My Posts</span>
-        </button>
-       <button class="nav-item active">
-    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
-    <span>Availability</span> </button>
-        <button class="nav-item" onclick="window.location.href='profile.html'">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
-            <span>Profile</span>
-        </button>
-    </nav>
+
 
     <div id="upload-loader" class="loader-overlay hidden">
         <div class="spinner"></div>
         <div class="loader-text" id="loader-msg">Publishing Profile...</div>
     </div>
 
+    <!-- ============================================================
+         NON-MODULE SCRIPTS: UI helpers
+         ============================================================ -->
     <script>
+        // ============ STEP NAVIGATION ============
+        let currentStep = 1;
+
+        function goToStep(step) {
+            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('step-' + step).classList.add('active');
+
+            document.querySelectorAll('.progress-step').forEach(el => {
+                el.classList.remove('active', 'completed');
+                const stepNum = parseInt(el.getAttribute('data-step'));
+                if (stepNum < step) el.classList.add('completed');
+                if (stepNum === step) el.classList.add('active');
+            });
+
+            currentStep = step;
+            document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ============ TITLE CHARACTER COUNTER ============
+        const titleInput = document.getElementById('job-title');
+        const titleRemaining = document.getElementById('title-remaining');
+        titleInput.addEventListener('input', function() {
+            const remaining = 60 - this.value.length;
+            titleRemaining.textContent = `${remaining} characters remaining`;
+            titleRemaining.style.color = remaining <= 10 ? '#e53e3e' : 'var(--text-secondary)';
+        });
+
+        // ============ RICH TEXT EDITOR ============
+
+function formatDoc(command, value = null) {
+    const editor = document.getElementById('job-desc');
+    const selection = window.getSelection();
+
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+
+        if (editor.contains(range.commonAncestorContainer)) {
+
+            if (range.collapsed) {
+                let node = range.startContainer;
+
+                if (node.nodeType === Node.TEXT_NODE) {
+                    node = node.parentElement;
+                }
+
+                const block = node.closest('p, h1, h2, li');
+
+                if (block && editor.contains(block)) {
+                    const newRange = document.createRange();
+                    newRange.selectNodeContents(block);
+                    selection.removeAllRanges();
+                    selection.addRange(newRange);
+                }
+            }
+        }
+    }
+
+    // Agar H1 pe H1 dabaya to normal banao, H2 pe H2 dabaya to normal banao
+    if (selection.rangeCount > 0 && selection.toString().trim()) {
+        const range = selection.getRangeAt(0);
+        const container = range.commonAncestorContainer;
+        const parentBlock = container.nodeType === Node.TEXT_NODE ? container.parentElement : container;
+        const currentBlock = parentBlock.closest('h1, h2');
+
+        if (currentBlock) {
+            if ((command === 'h1' && currentBlock.tagName === 'H1') ||
+                (command === 'h2' && currentBlock.tagName === 'H2')) {
+                // Same heading dobara dabaya - normal paragraph banao
+                document.execCommand('p', false, null);
+                editor.focus();
+                return;
+            }
+        }
+
+        // Agar Bold pe Bold dabaya to bold hatao
+        if (command === 'bold' && document.queryCommandState('bold')) {
+            document.execCommand('bold', false, null);
+            editor.focus();
+            return;
+        }
+    }
+
+    document.execCommand(command, false, value);
+    editor.focus();
+}
+        // ============ MEDICAL CATEGORIES ============
         window.medicalCategories = [
-            "General Physician (MBBS)", "Medical Officer (MO)", "Cardiologist", "Neurologist", "Neurosurgeon", "Orthopedic Surgeon", "Pediatrician", "Pediatric Surgeon", "Gynecologist / Obstetrician", "Dermatologist", "Psychiatrist", "Dentist (BDS)", "Orthodontist", "Ophthalmologist (Eye Specialist)", "ENT Specialist", "Urologist", "Oncologist (Cancer Specialist)", "Pulmonologist (Chest Specialist)", "Endocrinologist", "Gastroenterologist", "Nephrologist", "Rheumatologist", "General Surgeon", "Plastic Surgeon", "Cardiac Surgeon", "Thoracic Surgeon", "Vascular Surgeon", "Radiologist", "Pathologist", "Anesthesiologist", "Hematologist", "Immunologist", "Endodontist", "Periodontist", "Prosthodontist", "Maxillofacial Surgeon", "Oral Surgeon",
-            "Head Nurse / Nursing Superintendent", "Staff Nurse (BSN / Generic)", "ICU / CCU Nurse", "Emergency / Trauma Nurse", "Pediatric Nurse", "Psychiatric Nurse", "Operation Theater (OT) Nurse", "Midwife / LHV", "Private Duty / Home Care Nurse", "Oncology Nurse", "Neonatal Nurse", "Geriatric Nurse", "Public Health Nurse",
-            "Pharmacist (Pharm-D)", "Physiotherapist (DPT)", "Optometrist (BS Vision Sciences)", "Nutritionist / Dietitian", "Speech Therapist", "Occupational Therapist", "Medical Lab Technologist (BS MLT)", "Radiology & Imaging Technologist", "Respiratory Therapist", "Audiologist", "Public Health Professional (MPH)", "Clinical Psychologist", "Chiropractor", "Podiatrist", "Perfusionist", "Prosthetist & Orthotist", "Radiation Therapist", "Sonographer", "Medical Social Worker",
-            "Dispenser", "Pharmacy Technician (B-Category)", "Medical Lab Technician / Assistant", "X-Ray / MRI / CT Scan Technician", "Operation Theater (OT) Technician / Assistant", "Anesthesia Technician", "Dialysis Technician", "ECG Technician", "Dental Assistant / Hygienist", "Ultrasound Technician", "Blood Bank Technician", "Ophthalmic Technician", "CSSD Technician", "Endoscopy Technician", "EMT (Emergency Medical Technician)", "Paramedic", "Phlebotomist", "Surgical Technologist", "Veterinary Technician", "Optician",
-            "Hospital Administrator / Manager", "Medical Superintendent (MS)", "Receptionist / Front Desk Officer", "Medical Biller / Accounts / Cashier", "HR Manager (Healthcare)", "Ward Boy / Aya", "Ambulance Driver", "Security Staff", "Sanitary Worker / Sweeper", "Biomedical Engineer", "Medical Transcriptionist", "Health Information Manager", "Healthcare Quality Manager", "Infection Control Officer", "Medical Scribe", "Patient Care Coordinator", "Lactation Consultant", "Healthcare Assistant"
+            "General Physician (MBBS)", "Medical Officer (MO)", "Cardiologist", "Neurologist", "Neurosurgeon",
+            "Orthopedic Surgeon", "Pediatrician", "Pediatric Surgeon", "Gynecologist / Obstetrician", "Dermatologist",
+            "Psychiatrist", "Dentist (BDS)", "Orthodontist", "Ophthalmologist (Eye Specialist)", "ENT Specialist",
+            "Urologist", "Oncologist (Cancer Specialist)", "Pulmonologist (Chest Specialist)", "Endocrinologist",
+            "Gastroenterologist", "Nephrologist", "Rheumatologist", "General Surgeon", "Plastic Surgeon",
+            "Cardiac Surgeon", "Thoracic Surgeon", "Vascular Surgeon", "Radiologist", "Pathologist", "Anesthesiologist",
+            "Hematologist", "Immunologist", "Endodontist", "Periodontist", "Prosthodontist", "Maxillofacial Surgeon",
+            "Oral Surgeon", "Head Nurse / Nursing Superintendent", "Staff Nurse (BSN / Generic)", "ICU / CCU Nurse",
+            "Emergency / Trauma Nurse", "Pediatric Nurse", "Psychiatric Nurse", "Operation Theater (OT) Nurse",
+            "Midwife / LHV", "Private Duty / Home Care Nurse", "Oncology Nurse", "Neonatal Nurse", "Geriatric Nurse",
+            "Public Health Nurse", "Pharmacist (Pharm-D)", "Physiotherapist (DPT)", "Optometrist (BS Vision Sciences)",
+            "Nutritionist / Dietitian", "Speech Therapist", "Occupational Therapist", "Medical Lab Technologist (BS MLT)",
+            "Radiology & Imaging Technologist", "Respiratory Therapist", "Audiologist", "Public Health Professional (MPH)",
+            "Clinical Psychologist", "Chiropractor", "Podiatrist", "Perfusionist", "Prosthetist & Orthotist",
+            "Radiation Therapist", "Sonographer", "Medical Social Worker", "Dispenser", "Pharmacy Technician (B-Category)",
+            "Medical Lab Technician / Assistant", "X-Ray / MRI / CT Scan Technician", "Operation Theater (OT) Technician / Assistant",
+            "Anesthesia Technician", "Dialysis Technician", "ECG Technician", "Dental Assistant / Hygienist",
+            "Ultrasound Technician", "Blood Bank Technician", "Ophthalmic Technician", "CSSD Technician",
+            "Endoscopy Technician", "EMT (Emergency Medical Technician)", "Paramedic", "Phlebotomist",
+            "Surgical Technologist", "Veterinary Technician", "Optician", "Hospital Administrator / Manager",
+            "Medical Superintendent (MS)", "Receptionist / Front Desk Officer", "Medical Biller / Accounts / Cashier",
+            "HR Manager (Healthcare)", "Ward Boy / Aya", "Ambulance Driver", "Security Staff", "Sanitary Worker / Sweeper",
+            "Biomedical Engineer", "Medical Transcriptionist", "Health Information Manager", "Healthcare Quality Manager",
+            "Infection Control Officer", "Medical Scribe", "Patient Care Coordinator", "Lactation Consultant",
+            "Healthcare Assistant"
         ];
 
+        // ============ SEARCHABLE CATEGORY DROPDOWN ============
         const catInput = document.getElementById('job-category-input');
         const catDropdown = document.getElementById('category-dropdown');
         const catWrapper = document.getElementById('category-wrapper');
@@ -428,217 +746,254 @@
                     const div = document.createElement('div');
                     div.className = 'dropdown-item';
                     div.innerText = item;
-                    div.onclick = () => {
-                        catInput.value = item;
-                        catDropdown.classList.remove('active');
-                    };
+                    div.onclick = () => { catInput.value = item; catDropdown.classList.remove('active'); };
                     catDropdown.appendChild(div);
                 });
             }
         }
 
-        catInput.addEventListener('focus', () => {
-            renderDropdown(catInput.value);
-            catDropdown.classList.add('active');
-        });
+        catInput.addEventListener('focus', () => { renderDropdown(catInput.value); catDropdown.classList.add('active'); });
+        catInput.addEventListener('input', (e) => { renderDropdown(e.target.value); catDropdown.classList.add('active'); });
+        document.addEventListener('click', (e) => { if (!catWrapper.contains(e.target)) catDropdown.classList.remove('active'); });
 
-        catInput.addEventListener('input', (e) => {
-            renderDropdown(e.target.value);
-            catDropdown.classList.add('active');
-        });
+        // ============ EMPLOYMENT TYPE SEARCHABLE DROPDOWN ============
+        const employmentTypes = [
+            "Full Time", "Part Time", "Locum / Contract", "Temporary",
+            "Internship", "Volunteer", "On-Call", "Per Diem", "Freelance"
+        ];
 
-document.addEventListener('click', (e) => {
-            if (!catWrapper.contains(e.target)) {
-                catDropdown.classList.remove('active');
+        const empInput = document.getElementById('job-employment-type-input');
+        const empDropdown = document.getElementById('employment-type-dropdown');
+        const empWrapper = document.getElementById('employment-type-wrapper');
+        const empHidden = document.getElementById('job-employment-type');
+
+        function renderEmpDropdown(filterText = '') {
+            empDropdown.innerHTML = '';
+            const lowerFilter = filterText.toLowerCase();
+            const filtered = employmentTypes.filter(i => i.toLowerCase().includes(lowerFilter));
+
+            if (filterText.trim() && !employmentTypes.some(i => i.toLowerCase() === lowerFilter)) {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.style.color = '#0a66c2';
+                div.style.fontWeight = '600';
+                div.innerText = `➕ Add "${filterText.trim()}"`;
+                div.onclick = () => {
+                    empInput.value = filterText.trim();
+                    empHidden.value = filterText.trim().toUpperCase().replace(/\s+/g, '_');
+                    empDropdown.classList.remove('active');
+                };
+                empDropdown.appendChild(div);
             }
-        });
 
+            if (filtered.length === 0 && !filterText.trim()) {
+                employmentTypes.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.innerText = item;
+                    div.onclick = () => {
+                        empInput.value = item;
+                        empHidden.value = item.toUpperCase().replace(/\s+/g, '_');
+                        empDropdown.classList.remove('active');
+                    };
+                    empDropdown.appendChild(div);
+                });
+            } else {
+                filtered.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.innerText = item;
+                    div.onclick = () => {
+                        empInput.value = item;
+                        empHidden.value = item.toUpperCase().replace(/\s+/g, '_');
+                        empDropdown.classList.remove('active');
+                    };
+                    empDropdown.appendChild(div);
+                });
+            }
+        }
+
+        empInput.addEventListener('focus', () => { renderEmpDropdown(empInput.value); empDropdown.classList.add('active'); });
+        empInput.addEventListener('input', e => { renderEmpDropdown(e.target.value); empDropdown.classList.add('active'); });
+        document.addEventListener('click', e => { if (!empWrapper.contains(e.target)) empDropdown.classList.remove('active'); });
+        empInput.value = "Full Time";
+
+        // ============ WEB CHAT TOGGLE ============
         function toggleWebChat() {
             const btn = document.getElementById('web-chat-toggle-btn');
             const val = document.getElementById('web-chat-toggle');
             if (val.value === 'true') {
-                val.value = 'false';
-                btn.innerText = 'OFF';
-                btn.style.background = '#cbd5e1';
-                btn.style.color = '#64748b';
+                val.value = 'false'; btn.innerText = 'OFF';
+                btn.style.background = '#cbd5e1'; btn.style.color = '#64748b';
             } else {
-                val.value = 'true';
-                btn.innerText = 'ON';
-                btn.style.background = '#0a66c2';
-                btn.style.color = 'white';
+                val.value = 'true'; btn.innerText = 'ON';
+                btn.style.background = '#0a66c2'; btn.style.color = 'white';
             }
         }
-const countryCodes = [
-    { flag: "🇵🇰", name: "Pakistan",      code: "+92"  },
-    { flag: "🇸🇦", name: "Saudi Arabia",  code: "+966" },
-    { flag: "🇦🇪", name: "UAE",           code: "+971" },
-    { flag: "🇶🇦", name: "Qatar",         code: "+974" },
-    { flag: "🇰🇼", name: "Kuwait",        code: "+965" },
-    { flag: "🇧🇭", name: "Bahrain",       code: "+973" },
-    { flag: "🇴🇲", name: "Oman",          code: "+968" },
-    { flag: "🇬🇧", name: "UK",            code: "+44"  },
-    { flag: "🇺🇸", name: "USA",           code: "+1"   },
-    { flag: "🇨🇦", name: "Canada",        code: "+1"   },
-    { flag: "🇦🇺", name: "Australia",     code: "+61"  },
-    { flag: "🇩🇪", name: "Germany",       code: "+49"  },
-    { flag: "🇮🇳", name: "India",         code: "+91"  },
-    { flag: "🇧🇩", name: "Bangladesh",    code: "+880" },
-    { flag: "🇱🇾", name: "Libya",         code: "+218" },
-    { flag: "🇮🇶", name: "Iraq",          code: "+964" },
-    { flag: "🇯🇴", name: "Jordan",        code: "+962" },
-    { flag: "🇲🇾", name: "Malaysia",      code: "+60"  },
-    { flag: "🇵🇭", name: "Philippines",   code: "+63"  },
-    { flag: "🇿🇦", name: "South Africa",  code: "+27"  }
-];
 
-function buildCCDropdown(dropdownId, flagId, codeId, hiddenId) {
-    const dropdown = document.getElementById(dropdownId);
-    dropdown.innerHTML = '';
-    countryCodes.forEach(c => {
-        const div = document.createElement('div');
-        div.className = 'cc-item';
-        div.innerHTML = `<span>${c.flag}</span><span class="cc-name">${c.name}</span><span class="cc-num">${c.code}</span>`;
-        div.onclick = () => {
-            document.getElementById(flagId).textContent = c.flag;
-            document.getElementById(codeId).textContent = c.code;
-            document.getElementById(hiddenId).value = c.code;
-            dropdown.classList.remove('active');
-        };
-        dropdown.appendChild(div);
-    });
-}
+        // ============ COUNTRY CODES ============
+        const countryCodes = [
+            { flag: "🇵🇰", name: "Pakistan", code: "+92" },
+            { flag: "🇸🇦", name: "Saudi Arabia", code: "+966" },
+            { flag: "🇦🇪", name: "UAE", code: "+971" },
+            { flag: "🇶🇦", name: "Qatar", code: "+974" },
+            { flag: "🇰🇼", name: "Kuwait", code: "+965" },
+            { flag: "🇧🇭", name: "Bahrain", code: "+973" },
+            { flag: "🇴🇲", name: "Oman", code: "+968" },
+            { flag: "🇬🇧", name: "UK", code: "+44" },
+            { flag: "🇺🇸", name: "USA", code: "+1" },
+            { flag: "🇨🇦", name: "Canada", code: "+1" },
+            { flag: "🇦🇺", name: "Australia", code: "+61" },
+            { flag: "🇩🇪", name: "Germany", code: "+49" },
+            { flag: "🇮🇳", name: "India", code: "+91" },
+            { flag: "🇧🇩", name: "Bangladesh", code: "+880" },
+            { flag: "🇱🇾", name: "Libya", code: "+218" },
+            { flag: "🇮🇶", name: "Iraq", code: "+964" },
+            { flag: "🇯🇴", name: "Jordan", code: "+962" },
+            { flag: "🇲🇾", name: "Malaysia", code: "+60" },
+            { flag: "🇵🇭", name: "Philippines", code: "+63" },
+            { flag: "🇿🇦", name: "South Africa", code: "+27" }
+        ];
 
-function toggleCCDropdown(dropdownId) {
-    document.querySelectorAll('.cc-dropdown').forEach(d => {
-        if (d.id !== dropdownId) d.classList.remove('active');
-    });
-    document.getElementById(dropdownId).classList.toggle('active');
-}
+        function buildCCDropdown(dropdownId, flagId, codeId, hiddenId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.innerHTML = '';
+            countryCodes.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'cc-item';
+                div.innerHTML = `<span>${c.flag}</span><span class="cc-name">${c.name}</span><span class="cc-num">${c.code}</span>`;
+                div.onclick = () => {
+                    document.getElementById(flagId).textContent = c.flag;
+                    document.getElementById(codeId).textContent = c.code;
+                    document.getElementById(hiddenId).value = c.code;
+                    dropdown.classList.remove('active');
+                };
+                dropdown.appendChild(div);
+            });
+        }
 
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.country-code-selector')) {
-        document.querySelectorAll('.cc-dropdown').forEach(d => d.classList.remove('active'));
-    }
-});
+        function toggleCCDropdown(dropdownId) {
+            document.querySelectorAll('.cc-dropdown').forEach(d => {
+                if (d.id !== dropdownId) d.classList.remove('active');
+            });
+            document.getElementById(dropdownId).classList.toggle('active');
+        }
 
-buildCCDropdown('wa-cc-dropdown', 'wa-flag', 'wa-code', 'whatsapp-cc');
-buildCCDropdown('ln-cc-dropdown', 'ln-flag', 'ln-code', 'local-num-cc');
-        // ✅ Manual typing allow — dropdown se select na karo toh jo likha hai wo hi save hoga
-        catInput.addEventListener('blur', () => {
-            // Input jo bhi value hai wo waise hi rahegi — force select nahi
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.country-code-selector')) {
+                document.querySelectorAll('.cc-dropdown').forEach(d => d.classList.remove('active'));
+            }
         });
-    </script>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        buildCCDropdown('wa-cc-dropdown', 'wa-flag', 'wa-code', 'whatsapp-cc');
+        buildCCDropdown('ln-cc-dropdown', 'ln-flag', 'ln-code', 'local-num-cc');
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
-            authDomain: "jobs-45cc9.firebaseapp.com",
-            databaseURL: "https://jobs-45cc9-default-rtdb.firebaseio.com",
-            projectId: "jobs-45cc9",
-            storageBucket: "jobs-45cc9.firebasestorage.app",
-            messagingSenderId: "21065686301",
-            appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const dbRT = getDatabase(app);
-
-        const CLOUD_NAME = "Dr06qkbaa"; 
-        const UPLOAD_PRESET = "nearjobs_profiles"; 
-
-        let currentUser = null;
-        let userData = null;
+// ============ FILE UPLOAD LOGIC ============
         let selectedFilesArray = [];
 
-        // SILENT BACKGROUND AUTHENTICATION CHECK
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                // Fetch user data silently
-                getDoc(doc(db, "users", user.uid)).then(snap => {
-                    if(snap.exists()) userData = snap.data();
-                });
-            } else {
-                // If not logged in, silently redirect to login page
-                sessionStorage.setItem('next', 'candidate.html');
-                window.location.replace("login.html");
-            }
+        const MAX_TOTAL_IMAGES_PDFS = 5; // Images + PDFs milake max 5
+        const MAX_VIDEOS = 1;            // Video hamesha akela, max 1
+        const MAX_VIDEO_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+
+        function getFileCategory(file) {
+            if (file.type.startsWith('image/')) return 'image';
+            if (file.type.startsWith('video/')) return 'video';
+            if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) return 'pdf';
+            return 'unknown';
+        }
+
+        function countByCategory(category) {
+            return selectedFilesArray.filter(f => getFileCategory(f) === category).length;
+        }
+
+        // ─── Manual Experience Input toggle ───────────────────────────
+        document.getElementById('job-exp').addEventListener('change', function() {
+            const custom = document.getElementById('job-exp-custom');
+            if (custom) custom.style.display = this.value === 'custom' ? 'block' : 'none';
         });
 
-        // File Selection & Limit Logic
         document.getElementById('file-input').addEventListener('change', function(e) {
-            const newFiles = Array.from(e.target.files);
-            
-            if (selectedFilesArray.length + newFiles.length > 5) {
-                alert("You can only upload a maximum of 5 files.");
-                return;
+            const incomingFiles = Array.from(e.target.files);
+            this.value = '';
+
+            if (incomingFiles.length === 0) return;
+
+            for (const file of incomingFiles) {
+                const category = getFileCategory(file);
+
+                if (category === 'unknown') {
+                    alert("Yeh file type support nahi hai. Sirf image, video, ya PDF allowed hai.");
+                    continue;
+                }
+
+                if (category === 'video') {
+                    if (countByCategory('image') > 0 || countByCategory('pdf') > 0) {
+                        alert("Video ke sath image ya PDF nahi laga sakte. Video akela hi post hoga.");
+                        continue;
+                    }
+                    if (countByCategory('video') >= MAX_VIDEOS) {
+                        alert("Ek post mein sirf 1 video attach ki ja sakti hai.");
+                        continue;
+                    }
+                    if (file.size > MAX_VIDEO_SIZE_BYTES) {
+                        alert("Video ka size 10MB se zyada nahi hona chahiye. Chhoti video try karein.");
+                        continue;
+                    }
+                    selectedFilesArray.push(file);
+                    continue;
+                }
+
+                if (category === 'image' || category === 'pdf') {
+                    if (countByCategory('video') > 0) {
+                        alert("Image/PDF ke sath video nahi laga sakte. Pehle video hata dein.");
+                        continue;
+                    }
+                    const totalImagesAndPdfs = countByCategory('image') + countByCategory('pdf');
+                    if (totalImagesAndPdfs >= MAX_TOTAL_IMAGES_PDFS) {
+                        alert("Images aur PDFs milake total 5 se zyada nahi ho sakte.");
+                        continue;
+                    }
+                    selectedFilesArray.push(file);
+                    continue;
+                }
             }
 
-            let hasLargeFile = false;
-            newFiles.forEach(file => {
-                if(file.size > 10 * 1024 * 1024) hasLargeFile = true;
-            });
-
-            if(hasLargeFile) {
-                alert("One or more files exceed the 10MB limit.");
-                return;
-            }
-
-            selectedFilesArray = selectedFilesArray.concat(newFiles);
-            this.value = ''; 
             renderPreviews();
         });
 
         function renderPreviews() {
             const container = document.getElementById('preview-container');
             if (selectedFilesArray.length === 0) {
-                container.classList.add('hidden');
-                container.innerHTML = '';
-                return;
+                container.classList.add('hidden'); container.innerHTML = ''; return;
             }
             container.classList.remove('hidden');
             container.innerHTML = '';
-
             selectedFilesArray.forEach((file, index) => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'preview-item';
-
                 const removeBtn = document.createElement('button');
                 removeBtn.className = 'remove-btn';
                 removeBtn.innerHTML = '×';
-                removeBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    selectedFilesArray.splice(index, 1);
-                    renderPreviews();
-                };
+                removeBtn.onclick = (e) => { e.stopPropagation(); selectedFilesArray.splice(index, 1); renderPreviews(); };
                 itemDiv.appendChild(removeBtn);
-
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     const img = document.createElement('img');
                     reader.onload = (ev) => img.src = ev.target.result;
                     reader.readAsDataURL(file);
                     itemDiv.appendChild(img);
-                } 
-                else if (file.type.startsWith('video/')) {
+                } else if (file.type.startsWith('video/')) {
                     itemDiv.innerHTML += `<svg class="file-icon" viewBox="0 0 24 24"><path d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"></path></svg>`;
                     itemDiv.innerHTML += `<div class="file-name">${file.name}</div>`;
-                } 
-                else if (file.type === 'application/pdf') {
+                } else if (file.type === 'application/pdf') {
                     itemDiv.innerHTML += `<svg class="file-icon" viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"></path></svg>`;
                     itemDiv.innerHTML += `<div class="file-name">${file.name}</div>`;
                 }
                 container.appendChild(itemDiv);
             });
         }
-        // 🔥 AUTO IMAGE COMPRESSOR 🔥
+
+        // ============ IMAGE COMPRESSOR ============
         async function compressImageClientSide(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -656,8 +1011,7 @@ buildCCDropdown('ln-cc-dropdown', 'ln-flag', 'ln-code', 'local-num-cc');
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         canvas.toBlob((blob) => {
                             const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
-                                type: 'image/jpeg',
-                                lastModified: Date.now()
+                                type: 'image/jpeg', lastModified: Date.now()
                             });
                             resolve(newFile);
                         }, 'image/jpeg', 0.7);
@@ -666,272 +1020,384 @@ buildCCDropdown('ln-cc-dropdown', 'ln-flag', 'ln-code', 'local-num-cc');
             });
         }
 
-              async function uploadFileToCloudinary(file, index) {
+// ============ R2 WORKER UPLOAD (Cloudinary ki jagah) ============
+        const UPLOAD_WORKER_URL = "https://healthjobportal.sufiangsufiang50.workers.dev";
+
+        async function uploadFileToCloudinary(file, index, uid) {
             let uploadFile = file;
-            let type = 'other';
-            let endpoint = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`;
 
             if (file.type.startsWith('image/')) {
-                type = 'image';
-                uploadFile = await compressImageClientSide(file); // Compress Image here
-            } else if (file.type.startsWith('video/')) {
-                type = 'video';
-            } else if (file.type === 'application/pdf') {
-                type = 'pdf';
-                // PDF processing (No compression for PDF)
+                uploadFile = await compressImageClientSide(file);
             }
 
             const formData = new FormData();
             formData.append('file', uploadFile);
-            formData.append('upload_preset', UPLOAD_PRESET);
-            const uniqueId = `candidate_${currentUser.uid}_${Date.now()}_${index}`;
-            formData.append('public_id', uniqueId); 
 
-            const res = await fetch(endpoint, { method: 'POST', body: formData });
+            const res = await hjpFetchRetry(UPLOAD_WORKER_URL, { method: 'POST', body: formData });
             const data = await res.json();
-            
-            if (data.secure_url) {
-                return { url: data.secure_url, type: type, name: file.name };
+
+            if (data.success) {
+                return {
+                    url: data.url,
+                    type: file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : 'pdf',
+                    name: file.name
+                };
             } else {
-                throw new Error(data.error?.message || "Upload Failed");
+                throw new Error(data.error || "Upload Failed");
             }
         }
+        let lastJobData = null;
 
+        // ============ MAIN SUBMIT FUNCTION ============
+        document.getElementById('submit-btn').addEventListener('click', async function() {
+            const submitBtn = document.getElementById('submit-btn');
+            const submitBtnText = document.getElementById('submit-btn-text');
 
-        // Form Submit Logic
-        document.getElementById('submit-btn').onclick = async () => {
+            // Validate
             const title = document.getElementById('job-title').value.trim();
             const category = document.getElementById('job-category-input').value.trim();
             const jobLocation = document.getElementById('job-location').value.trim();
             const salary = document.getElementById('salary').value.trim();
-            const desc = document.getElementById('job-desc').value.trim();
+            const desc = document.getElementById('job-desc').innerText.trim();
+            const shift = document.getElementById('job-shift').value;
+            const expSel = document.getElementById('job-exp').value;
+            const expCustom = (document.getElementById('job-exp-custom')?.value || '').trim();
+            const exp = expCustom || expSel;
             const whatsapp = document.getElementById('whatsapp').value.trim();
+            const localNum = document.getElementById('local-num').value.trim();
 
-if(!title || !category || !jobLocation || !salary || !desc) {
+            if (!title || !category || !jobLocation || !shift || !salary || !exp || !desc) {
                 alert("Please fill all required fields (marked with *).");
+                if (!title || !category || !jobLocation || !shift) goToStep(1);
+                else if (!salary || !exp || !desc) goToStep(2);
                 return;
             }
 
-            // Generate SEO-friendly slug for candidate URL
-const candidateSlug = Math.floor(1000 + Math.random() * 9000).toString();
+            if (!whatsapp && !localNum) {
+                alert("Please provide at least one contact number (WhatsApp or Local Calling Number).");
+                goToStep(2);
+                return;
+            }
 
-            // Validating against the global array
+            // Disable button - Double post prevention
+            submitBtn.disabled = true;
+            submitBtnText.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white" style="animation: spin 0.8s linear infinite; margin-right: 8px;">
+                    <path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"/>
+                </svg>
+                Publishing...
+            `;
 
             const loaderMsg = document.getElementById('loader-msg');
             document.getElementById('upload-loader').classList.remove('hidden');
 
-            try {
-                let uploadedMediaData = [];
+            lastJobData = {
+                title, category, city: jobLocation, salary,
+                desc, shift, exp, whatsapp, localNum,
+                postType: 'candidate_post'
+            };
 
-                if (selectedFilesArray.length > 0) {
-                    loaderMsg.innerText = `Uploading ${selectedFilesArray.length} file(s)...`;
-                    const uploadPromises = selectedFilesArray.map((file, index) => uploadFileToCloudinary(file, index));
-                    uploadedMediaData = await Promise.all(uploadPromises);
+            // Import Firebase dynamically
+            const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
+            const { getAuth, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
+            const { getFirestore, doc, setDoc, getDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+            const { getDatabase, ref, set } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js");
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+                authDomain: "jobs-45cc9.firebaseapp.com",
+                databaseURL: "https://jobs-45cc9-default-rtdb.firebaseio.com",
+                projectId: "jobs-45cc9",
+                storageBucket: "jobs-45cc9.firebasestorage.app",
+                messagingSenderId: "21065686301",
+                appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+            };
+
+            const app = initializeApp(firebaseConfig);
+
+        // ===== D1-FIRST SAVE: post pehle worker ke zariye D1 database mein save hoti hai =====
+        // (Firestore mein roz shaam 6 baje worker khud copy karta hai.)
+
+        // ===== Retry helper: "Failed to fetch" jaisi network ghaltiyon par khud dobara koshish =====
+        async function hjpFetchRetry(url, opts, tries) {
+            tries = tries || 4;
+            for (let i = 0; i < tries; i++) {
+                try {
+                    const res = await fetch(url, opts);
+                    if ([500, 502, 503, 504].indexOf(res.status) !== -1 && i < tries - 1) { /* retry */ }
+                    else return res;
+                } catch (e) { /* network error (Failed to fetch) -> retry */ }
+                await new Promise(function (r) { setTimeout(r, 700 * Math.pow(2, i)); });
+            }
+            throw new Error('Network problem. Please check your internet connection and try again.');
+        }
+
+        async function savePostToD1(user, type, data) {
+            const idToken = await user.getIdToken();
+            const res = await hjpFetchRetry('https://healthjobportal.com/api/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+                body: JSON.stringify({ type: type, data: data })
+            });
+            let j = null;
+            try { j = await res.json(); } catch (e) {}
+            if (!res.ok || !j || !j.ok) throw new Error((j && j.error) || ('Could not save post (' + res.status + ')'));
+            return j;
+        }
+
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            const dbRT = getDatabase(app);
+
+            onAuthStateChanged(auth, async (user) => {
+                if (!user) {
+                    sessionStorage.setItem('next', 'candidate.html');
+                    window.location.replace("login.html");
+                    return;
                 }
 
-                loaderMsg.innerText = "Publishing Profile...";
+                const currentUser = user;
+                let userData = null;
+                const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+                if (userSnap.exists()) userData = userSnap.data();
 
-                const posterNameDisplay = (userData && userData.fullName) 
-                    ? userData.fullName : "Healthcare Professional";
+                // 🔒 ROLE GATE — sirf candidate is page par profile post kar sakta hai.
+                // Employer (ya koi non-candidate) yahan se "Post as Candidate" na kar sake.
+                const __role = String((userData && userData.role) || '').toLowerCase().trim();
+                if (__role && __role !== 'candidate') {
+                    document.getElementById('upload-loader').classList.add('hidden');
+                    submitBtn.disabled = false;
+                    submitBtnText.innerHTML = 'Publish Now';
+                    alert("This page is for candidate accounts only.\n\nYou are signed in as an employer. Please use 'Post as Employer' instead.");
+                    window.location.replace('index.html');
+                    return;
+                }
 
-const webChatEnabled = document.getElementById('web-chat-toggle').value === 'true';
+                // Enrich ad data with user identity
+                lastJobData.uid   = currentUser.uid;
+                lastJobData.email = currentUser.email || "";
+                lastJobData.posterName = (userData?.fullName) || "Healthcare Professional";
 
-                const postData = {
-                    type: 'candidate_post',
-                    slug: candidateSlug,
-                    canonicalUrl: `https://healthjobportal.com/jobs/${candidateSlug}`,
-                    webChat: webChatEnabled,
-                    title: title,
-                    category: category,
-                    desc: desc,
-whatsapp: whatsapp ? (document.getElementById('whatsapp-cc').value + whatsapp) : null,
-localNum: document.getElementById('local-num').value.trim() ? (document.getElementById('local-num-cc').value + document.getElementById('local-num').value.trim()) : null,
-                    salary: salary,
-                    shift: document.getElementById('job-shift').value,
-                    experience: document.getElementById('job-exp').value,
-                    posterId: currentUser.uid,
-                    posterName: posterNameDisplay,
-                    posterPic: (userData && userData.profilePicUrl) ? userData.profilePicUrl : null,
-                    posterRole: "candidate", 
-                    location: jobLocation,
-                    externalLink: document.getElementById('external-link').value.trim() || null,
-                    media: uploadedMediaData, 
-                    likes: [],
-                    commentsCount: 0,
-createdAt: serverTimestamp(),
-scheduledAt: document.getElementById('schedule-start').value 
-    ? new Date(document.getElementById('schedule-start').value).toISOString() 
-    : null,
-expiresAt: document.getElementById('schedule-expiry').value 
-    ? new Date(document.getElementById('schedule-expiry').value).toISOString() 
-    : null,
-isScheduled: document.getElementById('schedule-start').value ? true : false,
-isExpired: false
-                };
+                const candidateSlug = Math.floor(1000 + Math.random() * 9000).toString();
 
-                // Changed this line to capture the document ID
-                await setDoc(doc(db, "posts", candidateSlug), postData);
-
-                // --- 🚀 SEARCH INDEX KE LIYE RTDB AUTO-UPDATE 🚀 ---
-                                // =============================================
-
-
-// =============================================
-// STATIC HTML FILE CREATE (CLOUDFLARE KV INDEXING)
-// =============================================
-// Static HTML generation for Cloudflare KV (optional - Worker handles this now)
-const staticImageUrl = uploadedMediaData.length > 0 && uploadedMediaData[0].type === 'image' 
-    ? uploadedMediaData[0].url 
-    : 'https://healthjobportal.com/images/logo.png';
-
-// ── نیا فکسڈ کوڈ (100% ورکنگ فکس - اب 405 ایرر نہیں آئے گا) ────────────────────────
-
-
-
-// =============================================
-
-                // =============================================
-
-                // --- SEARCH INDEX KE LIYE RTDB AUTO-UPDATE ---
                 try {
-                    await set(ref(dbRT, 'search_index/' + candidateSlug), {
-                        id: candidateSlug,
-                        t: title, 
-                        p: posterNameDisplay, 
-                        pic: (userData && userData.profilePicUrl) ? userData.profilePicUrl : "https://ui-avatars.com/api/?name=U", 
-                        loc: jobLocation,
-                        type: "candidate_post"
-                    });
-                } catch(e) { console.error("RTDB Error:", e); }
+                    let uploadedMediaData = [];
 
-                // --- EMAIL NOTIFICATION ---
-                fetch('https://nodemails.vercel.app/api/send-notification', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        type: 'new-post',
-                        postId: candidateSlug,
+                    if (selectedFilesArray.length > 0) {
+                        loaderMsg.innerText = `Uploading ${selectedFilesArray.length} file(s)...`;
+                        // Ek ek karke upload (parallel upload se mobile network par "Failed to fetch" zyada aata tha)
+                        for (let i = 0; i < selectedFilesArray.length; i++) {
+                            loaderMsg.innerText = `Uploading file ${i + 1} of ${selectedFilesArray.length}...`;
+                            uploadedMediaData.push(await uploadFileToCloudinary(selectedFilesArray[i], i, currentUser.uid));
+                        }
+                    }
+
+                    loaderMsg.innerText = "Publishing Profile...";
+
+                    const posterNameDisplay = (userData && userData.fullName) ? userData.fullName : "Healthcare Professional";
+                    const webChatEnabled = document.getElementById('web-chat-toggle').value === 'true';
+                    const empType = document.getElementById('job-employment-type').value;
+
+                    const postData = {
+                        type: 'candidate_post',
+                        slug: candidateSlug,
+                        canonicalUrl: `https://healthjobportal.com/jobs/${candidateSlug}`,
+                        webChat: webChatEnabled,
                         title: title,
                         category: category,
-                        location: jobLocation,
+                        desc: document.getElementById('job-desc').innerHTML.trim(),
+                        whatsapp: whatsapp ? (document.getElementById('whatsapp-cc').value + whatsapp) : null,
+                        localNum: localNum ? (document.getElementById('local-num-cc').value + localNum) : null,
                         salary: salary,
-                        posterName: posterNameDisplay,
+                        shift: shift,
+                        experience: exp,
+                        experienceCustom: expCustom || null,
+                        employmentType: empType,
                         posterId: currentUser.uid,
-                        postType: 'candidate_post',
-                        link: `https://healthjobportal.com/jobs/${candidateSlug}`
-                    })
-                }).catch(err => console.error("Email error:", err));
+                        posterName: posterNameDisplay,
+                        posterPic: (userData && userData.profilePicUrl) ? userData.profilePicUrl : null,
+                        posterRole: "candidate",
+                        location: jobLocation,
+                        externalLink: document.getElementById('external-link').value.trim() || null,
+                        media: uploadedMediaData,
+                        likes: [],
+                        commentsCount: 0,
+                        scheduledAt: document.getElementById('schedule-start').value ?
+                            new Date(document.getElementById('schedule-start').value).toISOString() : null,
+                        expiresAt: document.getElementById('schedule-expiry').value ?
+                            new Date(document.getElementById('schedule-expiry').value).toISOString() : null,
+                        isScheduled: document.getElementById('schedule-start').value ? true : false,
+                        isExpired: false
+                    };
 
-                // --- EXPIRED POSTS HANDLER ---
-                fetch('https://backend-posts-details.vercel.app/api/update-post', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({
-                        postId: candidateSlug,
-                        expiresAt: document.getElementById('schedule-expiry').value || null
-                    })
-                }).catch(err => console.error("Expiry error:", err));
+                    const saved = await savePostToD1(currentUser, 'candidate_post', postData);
+                    const finalSlug = saved.slug;   // server collision hone par naya number de sakta hai
 
-                // --- TELEGRAM AUTO-POST ---
-                try {
-                    await fetch("https://healthjobs-telegram-bot.vercel.app/api/send-alert", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            type: "candidate_post",
-                            title: title,
-                            desc: desc,
-                            qualification: category,
-                            location: jobLocation,
-                            salary: salary,
-                            mediaUrl: uploadedMediaData.length > 0 ? uploadedMediaData[0].url : null,
-                            link: `https://healthjobportal.com/jobs/${candidateSlug}`
-                        })
-                    });
-                } catch(telegramErr) { console.error("Telegram error:", telegramErr); }
+                    // RTDB Search Index
+                    try {
+                        await set(ref(dbRT, 'search_index/' + finalSlug), {
+                            id: finalSlug,
+                            t: title,
+                            p: posterNameDisplay,
+                            pic: (userData && userData.profilePicUrl) ? userData.profilePicUrl : "https://ui-avatars.com/api/?name=U",
+                            loc: jobLocation,
+                            type: "candidate_post"
+                        });
+                    } catch (e) { console.error("RTDB Error:", e); }
 
+                    document.getElementById('upload-loader').classList.add('hidden');
 
-                document.getElementById('upload-loader').classList.add('hidden');
-alert("Profile broadcasted successfully!");
-setTimeout(() => {
-    window.location.replace(`/jobs/${slug}`);
-}, 2500);
+                    // Search-index ko foran batado (fire-and-forget) — yeh
+                    // pehle awaited tha jis se 2s ki der hoti thi; ab parallel
+                    // chalta hai aur post ka safar foran shuru hota hai.
+                    try {
+                        fetch('https://healthjobportal.com/api/notify-index', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ slug: finalSlug, type: 'candidate_post' })
+                        });
+                    } catch(e) {}
 
-            } catch (err) {
-                console.error(err);
-                document.getElementById('upload-loader').classList.add('hidden');
-                alert("Error publishing profile: " + err.message);
-            }
-        };
-    </script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
-        const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
+                    // 📧 NEW PROFILE ALERTS — notification service khud D1 se post
+                    // padhkar matched employers ko email bhejti hai (fire-and-forget).
+                    try {
+                        currentUser.getIdToken().then(function (t) {
+                            return fetch('https://nodemails.vercel.app/api/job-alert', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + t },
+                                body: JSON.stringify({ postId: finalSlug })
+                            });
+                        }).catch(function (e) { console.warn('job-alert skip:', e); });
+                    } catch (e) {}
 
-        const handleCallRedirect = (data) => {
-            if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
-                let callerUid = data.callerUid || data.uid;
-                if(callerUid) {
-                    setTimeout(() => {
-                        window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
-                    }, 500);
+                    window.location.replace('/jobs/' + finalSlug);
+                    return;
+
+                } catch (err) {
+                    console.error(err);
+                    document.getElementById('upload-loader').classList.add('hidden');
+                    alert("Error publishing profile: " + err.message);
+                    submitBtn.disabled = false;
+                    submitBtnText.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M5 13v-2h11.17l-4.88-4.88 1.42-1.41L20 12l-7.29 7.29-1.42-1.41L16.17 13H5z"/></svg>
+                        Publish Now
+                    `;
                 }
-            }
-        };
-
-        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-            handleCallRedirect(notification.notification.data);
-        });
-
-        PushNotifications.addListener('pushNotificationReceived', async (notification) => {
-            const data = notification.data || {};
-            
-            // ❌ AGAR CANCEL KA SIGNAL AAYE TOH NOTIFICATION GAYAB KAR DO
-            if (data.action === "cancel_call") {
-                console.log("Call Cancelled! Removing Notifications...");
-                if (LocalNotifications) {
-                    await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
-                }
-                await PushNotifications.removeAllDeliveredNotifications();
-                
-                // Agar user ghalti se chat.html par hi betha hai, toh UI bhi band kar do
-                if (typeof closeWebRTC === 'function') { closeWebRTC(); }
-                return; // Code yahin rok do
-            }
-
-            // 📞 AGAR CALL AAYE TOH NOTIFICATION DIKHAO
-            if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
-                handleCallRedirect(data);
-                
-                if (LocalNotifications) {
-                    await LocalNotifications.schedule({
-                        notifications: [{
-                            title: notification.title || "Incoming Call",
-                            body: "Calling...",
-                            id: 999, // Yeh ID cancel karne ke kaam aati hai
-                            sound: "ringing.mp3",
-                            extra: data,
-                            android: {
-                                channelId: "high_importance_channel",
-                                importance: 5,
-                                visibility: 1,
-                                fullScreenIntent: true
-                            }
-                        }]
-                    });
-                }
-            }
-        });
-
-        if (LocalNotifications) {
-            LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
-                handleCallRedirect(notification.notification.extra);
             });
+        });
+
+
+        // Editor Enter key behavior
+        const editor = document.getElementById('job-desc');
+        editor.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const selection = window.getSelection();
+                const node = selection.anchorNode;
+
+                // Get the current block element
+                let blockElement = node;
+                if (node && node.nodeType === Node.TEXT_NODE) {
+                    blockElement = node.parentElement;
+                }
+                const currentBlock = blockElement ? blockElement.closest('p, h1, h2, li, div') : null;
+                const parentTag = currentBlock ? currentBlock.tagName : null;
+
+                if (parentTag === 'H1' || parentTag === 'H2') {
+                    // Heading ke baad naya paragraph
+                    const newP = document.createElement('p');
+                    newP.innerHTML = '<br>';
+                    if (currentBlock.nextSibling) {
+                        currentBlock.parentElement.insertBefore(newP, currentBlock.nextSibling);
+                    } else {
+                        currentBlock.parentElement.appendChild(newP);
+                    }
+                    const range = document.createRange();
+                    range.setStart(newP, 0);
+                    range.collapse(true);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                } else if (parentTag === 'LI') {
+                    // List item ke andar Enter
+                    const list = currentBlock.closest('ul, ol');
+                    if (currentBlock.innerText.trim() === '') {
+                        // Khali list item - list se bahar niklen
+                        const newP = document.createElement('p');
+                        newP.innerHTML = '<br>';
+                        if (list && list.nextSibling) {
+                            list.parentElement.insertBefore(newP, list.nextSibling);
+                        } else if (list) {
+                            list.parentElement.appendChild(newP);
+                        }
+                        currentBlock.remove();
+                        const range = document.createRange();
+                        range.setStart(newP, 0);
+                        range.collapse(true);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    } else {
+                        // Naya list item
+                        document.execCommand('insertHTML', false, '<br>');
+                    }
+                } else {
+                    // Normal paragraph - naya paragraph
+                    document.execCommand('insertHTML', false, '<p><br></p>');
+                }
+            }
+        });
+    </script>
+
+    <!-- Push notification handler (Capacitor) -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
+            const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
+
+            const handleCallRedirect = (data) => {
+                if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
+                    let callerUid = data.callerUid || data.uid;
+                    if (callerUid) {
+                        setTimeout(() => {
+                            window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
+                        }, 500);
+                    }
+                }
+            };
+
+            PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+                handleCallRedirect(notification.notification.data);
+            });
+
+            PushNotifications.addListener('pushNotificationReceived', async (notification) => {
+                const data = notification.data || {};
+                if (data.action === "cancel_call") {
+                    if (LocalNotifications) await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
+                    await PushNotifications.removeAllDeliveredNotifications();
+                    if (typeof closeWebRTC === 'function') closeWebRTC();
+                    return;
+                }
+                if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
+                    handleCallRedirect(data);
+                    if (LocalNotifications) {
+                        await LocalNotifications.schedule({ notifications: [{
+                            title: notification.title || "Incoming Call", body: "Calling...",
+                            id: 999, sound: "ringing.mp3", extra: data,
+                            android: { channelId: "high_importance_channel", importance: 5, visibility: 1, fullScreenIntent: true }
+                        }]});
+                    }
+                }
+            });
+
+            if (LocalNotifications) {
+                LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+                    handleCallRedirect(notification.notification.extra);
+                });
+            }
         }
-    }
-});
-</script>
+    });
+    </script>
+
+
 
 </body>
 </html>

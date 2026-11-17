@@ -1,0 +1,2402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Complete Candidate Profile | Health Jobs</title>
+
+    <link rel="preconnect" href="https://www.gstatic.com">
+
+    <style>
+        /* =========================================
+           1. ROOT VARIABLES & RESET
+        ========================================= */
+        :root {
+            --primary: #0d9488;
+            --primary-hover: #0f766e;
+            --primary-soft: #f0fdfa;
+            --bg-color: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --error: #ef4444;
+            --error-bg: #fee2e2;
+            --focus-ring: rgba(13, 148, 136, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            padding: 32px 16px 60px;
+        }
+
+        /* =========================================
+           2. SHELL / HEADER
+        ========================================= */
+        .page-shell { max-width: 760px; margin: 0 auto; }
+
+        .top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px;
+        }
+        .top-bar .brand { display: flex; align-items: center; gap: 10px; }
+        .top-bar .brand img { height: 32px; }
+        .top-bar .brand span { font-weight: 700; font-size: 15px; color: var(--text-main); }
+        .top-bar .exit-link {
+            font-size: 13px; color: var(--text-muted); text-decoration: none; font-weight: 500;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .top-bar .exit-link:hover { color: var(--text-main); }
+
+        .intro { text-align: center; margin-bottom: 28px; }
+        .intro .eyebrow {
+            display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+            color: var(--primary); background: var(--primary-soft); padding: 5px 12px;
+            border-radius: 20px; margin-bottom: 14px; text-transform: uppercase;
+        }
+        .intro h1 { font-size: 25px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+        .intro p { font-size: 14px; color: var(--text-muted); max-width: 480px; margin: 0 auto; line-height: 1.5; }
+
+        /* =========================================
+           3. PROGRESS TRACKER
+        ========================================= */
+        .progress-track { display: flex; align-items: center; margin-bottom: 32px; padding: 0 6px; }
+        .progress-step { display: flex; align-items: center; flex: 1; }
+        .progress-step:last-child { flex: 0; }
+        .progress-dot {
+            width: 26px; height: 26px; border-radius: 50%; background: var(--surface);
+            border: 2px solid var(--border-color); color: var(--text-muted);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; flex-shrink: 0; transition: all 0.3s ease;
+        }
+        .progress-dot svg { width: 13px; height: 13px; }
+        .progress-line { flex: 1; height: 2px; background: var(--border-color); margin: 0 6px; transition: background 0.3s ease; }
+        .progress-step.done .progress-dot, .progress-step.active .progress-dot {
+            border-color: var(--primary); color: var(--primary);
+        }
+        .progress-step.done .progress-dot { background: var(--primary); color: #fff; }
+        .progress-step.done .progress-line { background: var(--primary); }
+
+        /* =========================================
+           4. CARD & SECTIONS
+        ========================================= */
+        .card {
+            background: var(--surface); border: 1px solid var(--border-color); border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);
+            overflow: hidden;
+        }
+
+        .form-section { padding: 28px 28px 4px; border-bottom: 1px solid var(--border-color); }
+        .form-section:last-of-type { border-bottom: none; }
+
+        .section-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+        .section-head .icon-badge {
+            width: 34px; height: 34px; border-radius: 8px; background: var(--primary-soft);
+            display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+        }
+        .section-head h2 { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
+        .section-head p { font-size: 12.5px; color: var(--text-muted); }
+
+        .form-group { margin-bottom: 18px; }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+        @media (max-width: 560px) { .form-row { flex-direction: column; gap: 0; } }
+
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
+        .form-group label .optional-tag { font-weight: 500; color: var(--text-muted); font-size: 11.5px; }
+
+        .input-wrapper input, .input-wrapper select, .input-wrapper textarea {
+            width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px;
+            font-size: 14px; color: var(--text-main); transition: all 0.2s ease; background-color: #f8fafc;
+            outline: none; resize: none;
+        }
+        .input-wrapper input:focus, .input-wrapper select:focus, .input-wrapper textarea:focus {
+            border-color: var(--primary); background-color: var(--surface); box-shadow: 0 0 0 4px var(--focus-ring);
+        }
+        .input-wrapper select { cursor: pointer; appearance: auto; }
+        .input-wrapper.readonly input { background: #f1f5f9; color: var(--text-muted); cursor: not-allowed; }
+
+        .char-count { font-size: 11.5px; color: var(--text-muted); text-align: right; margin-top: 6px; }
+
+        .loc-status-box {
+            font-size: 12px; margin-bottom: 16px; font-weight: 500;
+            padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-color);
+            background: #f1f5f9; color: var(--text-muted);
+        }
+
+        /* =========================================
+           4b. CHIP SELECT (skills / employment type)
+        ========================================= */
+        .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip {
+            font-size: 12.5px; font-weight: 600; padding: 8px 14px; border-radius: 20px;
+            border: 1px solid var(--border-color); background: var(--surface); color: var(--text-muted);
+            cursor: pointer; user-select: none; transition: all 0.15s ease;
+        }
+        .chip:hover { border-color: var(--primary); color: var(--primary); }
+        .chip.selected { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+        /* =========================================
+           5. FOOTER / SUBMIT
+        ========================================= */
+        .form-footer { padding: 22px 28px 28px; }
+        .btn-primary {
+            width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s ease;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+        .btn-primary.btn-locked { background: var(--text-muted); cursor: not-allowed; }
+        .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .form-note { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 14px; }
+        .status-message { margin-top: 14px; font-size: 13px; text-align: center; font-weight: 500; color: var(--error); display: none; }
+        .status-message.show { display: block; }
+
+        /* =========================================
+           5b. WIZARD STEPS
+        ========================================= */
+        .wizard-step { display: none; }
+        .wizard-step.active-step { display: block; }
+
+        .step-actions { padding: 22px 28px; display: flex; gap: 12px; border-bottom: 1px solid var(--border-color); }
+        .step-actions .btn-primary { flex: 1; }
+        .btn-secondary {
+            flex: 1; padding: 14px; background: var(--surface); color: var(--text-main);
+            border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-secondary:hover { background: #f1f5f9; }
+
+        /* =========================================
+           5c. PROFILE PHOTO UPLOAD (avatar)
+        ========================================= */
+        .avatar-upload-row { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+        .avatar-upload-circle {
+            position: relative; width: 84px; height: 84px; border-radius: 50%; flex-shrink: 0;
+            background: var(--primary-soft); border: 2px dashed var(--border-color);
+            cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;
+            transition: border-color 0.2s ease;
+        }
+        .avatar-upload-circle:hover { border-color: var(--primary); }
+        .avatar-upload-circle.has-image { border-style: solid; border-color: var(--border-color); }
+        .avatar-upload-circle.has-error { border-style: solid; border-color: var(--error); }
+        .avatar-upload-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .avatar-placeholder-icon { width: 30px; height: 30px; color: var(--primary); }
+        .avatar-camera-badge {
+            position: absolute; bottom: 0; right: 0; width: 26px; height: 26px; border-radius: 50%;
+            background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--surface);
+        }
+        .avatar-camera-badge svg { width: 12px; height: 12px; }
+        .avatar-upload-circle.has-error .avatar-camera-badge { background: var(--error); }
+        .avatar-spin-overlay {
+            position: absolute; inset: 0; background: rgba(15,23,42,0.45);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .avatar-spin-overlay div {
+            width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,0.4); border-top: 2.5px solid #fff;
+            border-radius: 50%; animation: spin 0.6s linear infinite;
+        }
+        .avatar-upload-title { font-size: 13.5px; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
+        .avatar-upload-sub { font-size: 12px; color: var(--text-muted); }
+        .avatar-upload-sub.is-error { color: var(--error); font-weight: 500; }
+
+        /* Cover photo upload */
+        .cover-upload-box {
+            position: relative; width: 100%; height: 110px; border-radius: 10px;
+            background: var(--primary-soft); border: 2px dashed var(--border-color);
+            cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;
+            transition: border-color 0.2s ease; margin-bottom: 22px;
+        }
+        .cover-upload-box:hover { border-color: var(--primary); }
+        .cover-upload-box.has-image { border-style: solid; border-color: var(--border-color); }
+        .cover-upload-box.has-error { border-style: solid; border-color: var(--error); }
+        .cover-upload-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .cover-placeholder-icon { width: 26px; height: 26px; color: var(--primary); }
+        .cover-upload-hint {
+            position: absolute; bottom: 8px; right: 10px; display: flex; align-items: center; gap: 5px;
+            background: rgba(0,0,0,0.55); color: #fff; font-size: 11px; font-weight: 600;
+            padding: 4px 9px; border-radius: 20px; backdrop-filter: blur(2px);
+        }
+        .cover-upload-hint svg { width: 12px; height: 12px; }
+        .cover-upload-box.has-error .cover-upload-hint { background: var(--error); }
+        .cover-spin-overlay {
+            position: absolute; inset: 0; background: rgba(15,23,42,0.45);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cover-spin-overlay div {
+            width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,0.4); border-top: 2.5px solid #fff;
+            border-radius: 50%; animation: spin 0.6s linear infinite;
+        }
+
+        /* =========================================
+           5d. RESUME / CV FILE UPLOAD
+        ========================================= */
+        .resume-upload-box { margin-bottom: 10px; }
+        .resume-upload-idle {
+            display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+            border: 1.5px dashed var(--border-color); border-radius: 8px; cursor: pointer;
+            background: var(--primary-soft); transition: border-color 0.2s ease;
+        }
+        .resume-upload-idle:hover { border-color: var(--primary); }
+        .resume-upload-idle svg { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; }
+        .resume-upload-idle b { font-size: 13.5px; color: var(--text-main); display: block; }
+        .resume-upload-idle span { font-size: 11.5px; color: var(--text-muted); }
+
+        .resume-upload-file {
+            display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+            border: 1px solid var(--border-color); border-radius: 8px; background: var(--surface);
+        }
+        .resume-upload-file.is-error { border-color: var(--error); background: var(--error-bg); }
+        .resume-upload-file .resume-file-icon { width: 32px; height: 32px; flex-shrink: 0; color: var(--primary); }
+        .resume-upload-file.is-error .resume-file-icon { color: var(--error); }
+        .resume-file-info { flex: 1; min-width: 0; }
+        .resume-file-name { display: block; font-size: 13.5px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .resume-file-status { font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+        .resume-file-status.is-error { color: var(--error); font-weight: 500; }
+        .resume-file-status .mini-spin {
+            width: 11px; height: 11px; border: 2px solid var(--border-color); border-top: 2px solid var(--primary);
+            border-radius: 50%; animation: spin 0.6s linear infinite; flex-shrink: 0;
+        }
+        .resume-remove-btn, .resume-retry-btn {
+            width: 26px; height: 26px; border-radius: 50%; border: none; cursor: pointer; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+        }
+        .resume-remove-btn { background: #f1f5f9; color: var(--text-muted); }
+        .resume-retry-btn { background: var(--error); color: #fff; margin-right: 4px; }
+        .resume-or-divider { font-size: 11.5px; color: var(--text-muted); text-align: center; margin: 10px 0; }
+
+        /* =========================================
+           5d. MODE SELECTOR (CV vs Manual)
+        ========================================= */
+        .mode-selector { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .mode-card {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px; border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--surface); cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+        .mode-card:hover { border-color: var(--primary); }
+        .mode-card.active { border-color: var(--primary); background: var(--primary-soft); }
+        .mode-card-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: var(--bg); display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: var(--text-muted);
+        }
+        .mode-card.active .mode-card-icon { background: var(--primary); color: #fff; }
+        .mode-card-icon svg { width: 20px; height: 20px; }
+        .mode-card-text { flex: 1; }
+        .mode-card-text b { display: block; font-size: 14px; color: var(--text-main); margin-bottom: 2px; }
+        .mode-card-text span { font-size: 12px; color: var(--text-muted); }
+        .mode-card-badge {
+            font-size: 10px; font-weight: 700; letter-spacing: .4px;
+            background: var(--primary); color: #fff;
+            padding: 2px 8px; border-radius: 20px;
+            position: absolute; top: -1px; right: 12px;
+            text-transform: uppercase;
+        }
+        .mode-card-check {
+            width: 20px; height: 20px; border-radius: 50%;
+            border: 2px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; color: transparent; flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .mode-card.active .mode-card-check { background: var(--primary); border-color: var(--primary); color: #fff; }
+        #cv-upload-panel { animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+        /* =========================================
+           5e. AI AUTOFILL BANNER
+        ========================================= */
+        .ai-autofill-banner {
+            display: none; align-items: center; gap: 10px;
+            background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 100%);
+            border: 1px solid #99f6e4; border-radius: 10px;
+            padding: 12px 14px; margin-top: 14px;
+        }
+        .ai-autofill-banner.show { display: flex; }
+        .ai-autofill-banner .ai-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: var(--primary); color: #fff;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            font-size: 16px;
+        }
+        .ai-autofill-banner .ai-text { flex: 1; }
+        .ai-autofill-banner .ai-text b { font-size: 13px; color: var(--text-main); display: block; margin-bottom: 2px; }
+        .ai-autofill-banner .ai-text span { font-size: 12px; color: var(--text-muted); }
+        .ai-autofill-banner .ai-spin {
+            width: 20px; height: 20px; border: 2px solid #99f6e4;
+            border-top: 2px solid var(--primary); border-radius: 50%;
+            animation: spin 0.6s linear infinite; flex-shrink: 0;
+        }
+        .ai-autofill-banner .ai-check {
+            width: 20px; height: 20px; color: var(--primary); flex-shrink: 0; display: none;
+        }
+        .ai-autofill-banner.done .ai-spin { display: none; }
+        .ai-autofill-banner.done .ai-check { display: block; }
+        .ai-autofill-banner.done { border-color: #6ee7b7; background: linear-gradient(135deg, #f0fdfa 0%, #dcfce7 100%); }
+
+        /* =========================================
+           5f. PROFILE VISIBILITY TOGGLES
+        ========================================= */
+        .toggle-list { display: flex; flex-direction: column; }
+        .toggle-row {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 0; border-bottom: 1px solid var(--border-color);
+            cursor: pointer; user-select: none;
+        }
+        .toggle-row:last-child { border-bottom: none; }
+        .toggle-text { flex: 1; min-width: 0; }
+        .toggle-text b { display: block; font-size: 13.5px; font-weight: 600; color: var(--text-main); }
+        .toggle-text span { display: block; font-size: 11.5px; color: var(--text-muted); margin-top: 2px; line-height: 1.45; }
+        .toggle-row input { display: none; }
+        .tgl {
+            position: relative; width: 44px; height: 24px; flex-shrink: 0;
+            background: #cbd5e1; border-radius: 24px; transition: background 0.2s;
+        }
+        .tgl::before {
+            content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
+            background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .toggle-row input:checked + .tgl { background: var(--primary); }
+        .toggle-row input:checked + .tgl::before { transform: translateX(20px); }
+
+        /* =========================================
+           6. LOADER (auth guard)
+        ========================================= */
+        .page-loader {
+            position: fixed; inset: 0; background: var(--bg-color); z-index: 50;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.25s ease;
+        }
+        .page-loader .spinner { display: block; border-color: var(--border-color); border-top-color: var(--primary); width: 32px; height: 32px; margin-bottom: 12px; }
+        .page-loader span { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="page-loader" class="page-loader">
+        <div class="spinner" style="display:block;"></div>
+        <span>Loading your session...</span>
+    </div>
+
+    <!-- ══════════ EMAIL VERIFICATION GATE (6-digit PIN) ══════════ -->
+    <div id="email-verify-gate" class="page-shell hidden" style="max-width:460px;padding-top:44px;">
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px 24px;box-shadow:0 10px 25px -5px rgba(0,0,0,0.05);">
+            <div style="text-align:center;margin-bottom:22px;">
+                <div style="width:52px;height:52px;border-radius:14px;background:#f0fdfa;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                </div>
+                <h1 style="font-size:20px;font-weight:700;color:#0f172a;margin-bottom:6px;">Verify Your Email</h1>
+                <p style="font-size:13.5px;color:#64748b;line-height:1.6;">
+                    We sent a 6-digit code to <strong id="email-verify-label">your email</strong>
+                </p>
+            </div>
+
+            <div id="email-verify-step-sent" class="hidden">
+                <div id="email-verify-pin" style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;">
+                    <input type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                    <input type="text" inputmode="numeric" maxlength="1" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                    <input type="text" inputmode="numeric" maxlength="1" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                    <input type="text" inputmode="numeric" maxlength="1" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                    <input type="text" inputmode="numeric" maxlength="1" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                    <input type="text" inputmode="numeric" maxlength="1" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                </div>
+
+                <button id="email-verify-submit" type="button"
+                    style="width:100%;padding:14px;background:#0d9488;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">
+                    <span id="email-verify-submit-text">Verify Email</span>
+                </button>
+            </div>
+
+            <div id="email-verify-msg" style="font-size:13px;font-weight:600;text-align:center;margin-top:13px;line-height:1.5;"></div>
+
+            <button id="email-verify-send" type="button"
+                style="width:100%;margin-top:12px;padding:12px;background:#f1f5f9;color:#0f172a;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">
+                <span id="email-verify-send-text">Send Code</span>
+            </button>
+
+            <p style="font-size:12px;color:#64748b;text-align:center;margin-top:16px;line-height:1.6;">
+                This keeps your account secure. The code expires in 10 minutes.
+            </p>
+        </div>
+    </div>
+
+    <div id="page-content" class="page-shell hidden">
+        <div class="top-bar">
+            <div class="brand">
+                <img src="images/logo.png" alt="Health Jobs" onerror="handleLogoError(this)">
+                <span>Health Jobs</span>
+            </div>
+            <a href="employee.html" class="exit-link">Not a jobseeker? Switch to Employer</a>
+        </div>
+
+        <div class="intro">
+            <span class="eyebrow">Candidate Registration</span>
+            <h1>Tell us about your career</h1>
+            <p>This information appears on your applications and helps employers shortlist you faster. It takes about 2 minutes.</p>
+        </div>
+
+        <div class="progress-track">
+            <div class="progress-step active" data-step="0"><div class="progress-dot">CV</div><div class="progress-line"></div></div>
+            <div class="progress-step" data-step="1"><div class="progress-dot">1</div><div class="progress-line"></div></div>
+            <div class="progress-step" data-step="2"><div class="progress-dot">2</div><div class="progress-line"></div></div>
+            <div class="progress-step" data-step="3"><div class="progress-dot">3</div></div>
+        </div>
+
+        <form id="candidate-form">
+            <div class="card">
+
+                <!-- ══════════════════════════════════════
+                     STEP 0 — GET STARTED (CV or Manual)
+                ══════════════════════════════════════ -->
+                <div class="wizard-step active-step" data-wizard-step="0">
+
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge">✦</div>
+                        <div>
+                            <h2>How would you like to fill your profile?</h2>
+                            <p>Upload your CV and AI will auto-fill everything, or fill it out manually.</p>
+                        </div>
+                    </div>
+
+                    <!-- MODE SELECTOR -->
+                    <div class="mode-selector">
+                        <div class="mode-card active" id="mode-cv" onclick="selectMode('cv')">
+                            <div class="mode-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3.5V8h4"/><path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/><path d="M10 12h4M10 16h2"/></svg>
+                            </div>
+                            <div class="mode-card-text">
+                                <b>Upload CV</b>
+                                <span>AI reads your CV and fills all fields automatically</span>
+                            </div>
+                            <div class="mode-card-badge">Recommended</div>
+                            <div class="mode-card-check">✓</div>
+                        </div>
+                        <div class="mode-card" id="mode-manual" onclick="selectMode('manual')">
+                            <div class="mode-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            </div>
+                            <div class="mode-card-text">
+                                <b>Fill Manually</b>
+                                <span>Enter your details step by step yourself</span>
+                            </div>
+                            <div class="mode-card-check">✓</div>
+                        </div>
+                    </div>
+
+                    <!-- CV UPLOAD PANEL (shown when mode = cv) -->
+                    <div id="cv-upload-panel">
+                        <div class="resume-upload-box">
+                            <div class="resume-upload-idle" id="resume-upload-idle" onclick="document.getElementById('resume-file-input').click()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+                                <div>
+                                    <b>Click to upload your CV</b>
+                                    <span>PDF or Word &nbsp;·&nbsp; Max 10MB</span>
+                                </div>
+                            </div>
+                            <div class="resume-upload-file hidden" id="resume-upload-file">
+                                <svg class="resume-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3.5V8h4"/><path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/></svg>
+                                <div class="resume-file-info">
+                                    <span class="resume-file-name" id="resume-file-name"></span>
+                                    <span class="resume-file-status" id="resume-file-status"></span>
+                                </div>
+                                <button type="button" class="resume-retry-btn hidden" id="resume-retry-btn" title="Retry upload">↻</button>
+                                <button type="button" class="resume-remove-btn" id="resume-remove-btn" title="Remove">×</button>
+                            </div>
+                        </div>
+                        <input type="file" id="resume-file-input" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="hidden">
+
+                        <!-- AI AUTOFILL BANNER -->
+                        <div class="ai-autofill-banner" id="ai-autofill-banner">
+                            <div class="ai-icon">✦</div>
+                            <div class="ai-text">
+                                <b id="ai-banner-title">Reading your CV...</b>
+                                <span id="ai-banner-sub">AI is extracting your details</span>
+                            </div>
+                            <div class="ai-spin" id="ai-spin"></div>
+                            <svg class="ai-check" id="ai-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+                        </div>
+
+                        <div class="resume-or-divider" id="resume-or-divider">— or paste a CV link —</div>
+                        <div class="input-wrapper" id="resume-link-wrapper">
+                            <input type="url" id="resume-link" placeholder="Google Drive, Dropbox or LinkedIn URL">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="step-actions" data-step-actions="0">
+                    <button type="button" class="btn-primary" id="cv-next-btn" onclick="handleStep0Next()">
+                        Continue
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+
+                </div><!-- /wizard-step 0 -->
+
+                <div class="wizard-step" data-wizard-step="1">
+
+                <!-- SECTION 1: PROFESSIONAL IDENTITY -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c1-3.5 4-5.5 6.5-5.5s5.5 2 6.5 5.5"/></svg></div>
+                        <div>
+                            <h2>Professional Identity</h2>
+                            <p>Basic details that appear on your candidate profile</p>
+                        </div>
+                    </div>
+
+                    <div class="cover-upload-box" id="cover-upload-box" onclick="document.getElementById('cover-photo-input').click()">
+                        <img id="cover-preview-img" src="" alt="" class="hidden">
+                        <svg id="cover-placeholder-icon" class="cover-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 15l-5-5L5 19"/></svg>
+                        <div class="cover-spin-overlay hidden" id="cover-spin-overlay"><div></div></div>
+                        <div class="cover-upload-hint">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3.5h6l1.2 2H20a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1h3.8L9 3.5Zm3 5.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>
+                            <span id="cover-upload-status">Add cover photo</span>
+                        </div>
+                    </div>
+                    <input type="file" id="cover-photo-input" accept="image/*" class="hidden">
+
+                    <div class="avatar-upload-row">
+                        <div class="avatar-upload-circle" id="avatar-upload-circle" onclick="document.getElementById('profile-photo-input').click()">
+                            <img id="avatar-preview-img" src="" alt="" class="hidden">
+                            <svg id="avatar-placeholder-icon" class="avatar-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c1-3.5 4-5.5 6.5-5.5s5.5 2 6.5 5.5"/></svg>
+                            <div class="avatar-spin-overlay hidden" id="avatar-spin-overlay"><div></div></div>
+                            <div class="avatar-camera-badge">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3.5h6l1.2 2H20a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1h3.8L9 3.5Zm3 5.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="avatar-upload-title">Profile Photo <span class="optional-tag">(optional, recommended)</span></div>
+                            <div class="avatar-upload-sub" id="avatar-upload-status">A clear face photo builds trust with employers</div>
+                        </div>
+                    </div>
+                    <input type="file" id="profile-photo-input" accept="image/*" class="hidden">
+
+                    <div class="form-group">
+                        <label for="full-name">Full Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="full-name" required placeholder="E.g. Ayesha Khan">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="username" required maxlength="20" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="E.g. ayesha_khan">
+                        </div>
+                        <div id="username-status" style="font-size:12px;margin-top:6px;color:var(--text-muted);">3–20 characters: small letters, numbers and underscore (_). Must be unique.</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profession">Profession</label>
+                            <div class="input-wrapper">
+                                <select id="profession" required onchange="toggleOtherProfession(this.value)">
+                                    <option value="">Select profession</option>
+                                    <option value="Doctor / Physician">Doctor / Physician</option>
+                                    <option value="Nurse">Nurse</option>
+                                    <option value="Pharmacist">Pharmacist</option>
+                                    <option value="Dentist">Dentist</option>
+                                    <option value="Lab Technician">Lab Technician</option>
+                                    <option value="Radiologist / Imaging Tech">Radiologist / Imaging Tech</option>
+                                    <option value="Physiotherapist">Physiotherapist</option>
+                                    <option value="Paramedic">Paramedic</option>
+                                    <option value="Medical Administrator">Medical Administrator</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="other-profession-wrap" style="display:none;">
+                            <label for="other-profession">Specify Profession</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="other-profession" placeholder="E.g. Nutritionist">
+                            </div>
+                        </div>
+                        <div class="form-group" id="experience-wrap">
+                            <label for="experience-years">Years of Experience</label>
+                            <div class="input-wrapper">
+                                <select id="experience-years" required>
+                                    <option value="">Select range</option>
+                                    <option value="Fresh Graduate">Fresh Graduate</option>
+                                    <option value="0-1 years">0–1 years</option>
+                                    <option value="1-3 years">1–3 years</option>
+                                    <option value="3-5 years">3–5 years</option>
+                                    <option value="5-10 years">5–10 years</option>
+                                    <option value="10+ years">10+ years</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialization">Specialization <span class="optional-tag">(optional)</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="specialization" placeholder="E.g. Cardiology, ICU Care, Pediatric Nursing">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: REGISTRATION -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="1.5"/><path d="M9 3.5h6a1 1 0 0 1 1 1V6H8V4.5a1 1 0 0 1 1-1Z"/><path d="M8.5 13l2 2 4-4"/></svg></div>
+                        <div>
+                            <h2>License & Education</h2>
+                            <p>Helps mark your profile as verified to employers</p>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="license-number">License / Registration No. <span class="optional-tag">(optional)</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="license-number" placeholder="E.g. PMDC-45210">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="license-authority">Issuing Authority <span class="optional-tag">(optional)</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="license-authority" placeholder="E.g. Pakistan Medical Commission">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="highest-qualification">Highest Qualification</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="highest-qualification" required placeholder="E.g. MBBS, BSN, PharmD">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-actions" data-step-actions="1">
+                    <button type="button" class="btn-secondary" id="step1-back-btn" onclick="goToStep(0)">Back</button>
+                    <button type="button" class="btn-primary" onclick="goToStep(2)">
+                        Continue
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+
+                </div><!-- /wizard-step 1 -->
+
+                <div class="wizard-step" data-wizard-step="2">
+
+                <!-- SECTION 3: CONTACT -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6 8.5 6 8.5-6"/></svg></div>
+                        <div>
+                            <h2>Contact Details</h2>
+                            <p>How employers will reach out to you</p>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact-phone">Phone Number</label>
+                            <div class="input-wrapper">
+                                <input type="tel" id="contact-phone" required placeholder="+92 3XX XXXXXXX">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="account-email">Account Email</label>
+                            <div class="input-wrapper readonly">
+                                <input type="text" id="account-email" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile visibility toggles -->
+                    <div class="toggle-list" style="margin-top:4px;">
+                        <label class="toggle-row">
+                            <div class="toggle-text">
+                                <b>Show my phone number</b>
+                                <span>Your number appears on your public profile so employers can call you</span>
+                            </div>
+                            <input type="checkbox" id="pref-show-phone" checked>
+                            <span class="tgl"></span>
+                        </label>
+                        <label class="toggle-row">
+                            <div class="toggle-text">
+                                <b>Allow direct messages</b>
+                                <span>Employers can use the Message button on your profile to chat with you</span>
+                            </div>
+                            <input type="checkbox" id="pref-allow-dm" checked>
+                            <span class="tgl"></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- SECTION 4: LOCATION -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg></div>
+                        <div>
+                            <h2>Current Location</h2>
+                            <p>Where employers will see you're based</p>
+                        </div>
+                    </div>
+
+                    <div id="loc-status" class="loc-status-box">Waiting for location permission...</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="setup-country">Country</label>
+                            <div class="input-wrapper">
+                                <select id="setup-country" required onchange="populateStates(this.value)">
+                                    <option value="">Loading countries...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="setup-state">State / Province</label>
+                            <div class="input-wrapper">
+                                <select id="setup-state" required>
+                                    <option value="">Select state</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="setup-city">City</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="setup-city" required placeholder="E.g. Lahore">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="willing-relocate">Willing to Relocate?</label>
+                        <div class="input-wrapper">
+                            <select id="willing-relocate" required>
+                                <option value="">Select an option</option>
+                                <option value="Yes">Yes, open to relocating</option>
+                                <option value="No">No, local jobs only</option>
+                                <option value="Depends">Depends on the offer</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-actions" data-step-actions="2">
+                    <button type="button" class="btn-secondary" onclick="goToStep(1)">Back</button>
+                    <button type="button" class="btn-primary" onclick="goToStep(3)">
+                        Continue
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+
+                </div><!-- /wizard-step 2 -->
+
+                <div class="wizard-step" data-wizard-step="3">
+
+                <!-- SECTION 5: PREFERENCES -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h6"/></svg></div>
+                        <div>
+                            <h2>Job Preferences</h2>
+                            <p>Helps us match you with the right openings</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Preferred Employment Type</label>
+                        <div class="chip-group" id="employment-type-group">
+                            <div class="chip" data-value="Full-time">Full-time</div>
+                            <div class="chip" data-value="Part-time">Part-time</div>
+                            <div class="chip" data-value="Contract">Contract</div>
+                            <div class="chip" data-value="Locum / On-call">Locum / On-call</div>
+                            <div class="chip" data-value="Night Shift">Night Shift</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="availability">Availability</label>
+                            <div class="input-wrapper">
+                                <select id="availability" required>
+                                    <option value="">Select availability</option>
+                                    <option value="Immediate">Immediate</option>
+                                    <option value="Within 2 weeks">Within 2 weeks</option>
+                                    <option value="Within 1 month">Within 1 month</option>
+                                    <option value="Currently employed">Currently employed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="expected-salary">Expected Salary <span class="optional-tag">(optional)</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="expected-salary" placeholder="E.g. PKR 80,000/month">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 6: ABOUT -->
+                <div class="form-section" style="border-bottom: none;">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/><path d="M14 3.5V8h4"/><path d="M9 13h6M9 16.5h6"/></svg></div>
+                        <div>
+                            <h2>About You</h2>
+                            <p>A short introduction shown on your public profile</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <textarea id="about-me" rows="3" maxlength="300" oninput="updateCharCount()" placeholder="E.g. Registered nurse with 4 years of ICU experience, passionate about critical care and patient safety..."></textarea>
+                        </div>
+                        <div class="char-count"><span id="char-count-val">0</span>/300</div>
+                    </div>
+                </div>
+
+                <div class="form-footer" data-step-actions="3">
+                    <div style="display:flex; gap:12px;">
+                        <button type="button" class="btn-secondary" onclick="goToStep(2)">Back</button>
+                        <button type="submit" class="btn-primary" id="save-btn" style="flex:1;">
+                            <span id="save-text">Continue</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                            <div class="spinner" id="save-loader"></div>
+                        </button>
+                    </div>
+                    <div id="status-msg" class="status-message"></div>
+                    <div class="form-note">Your details are reviewed before your profile becomes visible to employers.</div>
+                </div>
+
+                </div><!-- /wizard-step 3 -->
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+            authDomain: "jobs-45cc9.firebaseapp.com",
+            projectId: "jobs-45cc9",
+            storageBucket: "jobs-45cc9.firebasestorage.app",
+            messagingSenderId: "21065686301",
+            appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+
+        let globalCountriesData = [];
+        let editMode = false;
+        let existingUserData = null;
+        let currentUser = null;
+
+        // ══════════════════════════════════════════════════
+        // 🆔 UNIQUE USERNAME
+        // usernames/{username} collection = uniqueness ka asal lock.
+        // Doc id hi username hai, is liye do users ek hi username
+        // kabhi nahi le sakte (transaction se atomic check + claim).
+        // ══════════════════════════════════════════════════
+        const USERNAME_RE = /^[a-z0-9_]{3,20}$/;
+        const RESERVED_USERNAMES = new Set(['admin','administrator','support','help','root','system','moderator','mod','official','healthjobs','healthjobportal','api','www','login','signup','register','about','wid','notes','jobs','updates','advertise','feedback','null','undefined','me']);
+        const __nameFieldId = 'full-name';
+        let usernameTouched = false;
+        let usernameCheckSeq = 0;
+        let usernameCheckTimer = null;
+
+        function slugifyUsername(s) {
+            let u = String(s || '').toLowerCase()
+                .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+            return u.slice(0, 20);
+        }
+        function usernameFormatError(u) {
+            if (!u) return 'Please choose a username.';
+            if (u.length < 3) return 'Username must be at least 3 characters.';
+            if (u.length > 20) return 'Username can be at most 20 characters.';
+            if (!USERNAME_RE.test(u)) return 'Only small letters, numbers and underscore (_) are allowed.';
+            if (RESERVED_USERNAMES.has(u)) return 'This username is reserved. Please choose another.';
+            return '';
+        }
+        function setUsernameStatus(msg, kind) {
+            const el = document.getElementById('username-status');
+            if (!el) return;
+            el.textContent = msg;
+            el.style.color = kind === 'ok' ? '#16a34a' : (kind === 'bad' ? '#dc2626' : 'var(--text-muted)');
+        }
+        async function usernameIsFree(u) {
+            const snap = await getDoc(doc(db, 'usernames', u));
+            if (!snap.exists()) return true;
+            return !!currentUser && snap.data().uid === currentUser.uid;   // apna hi hai to theek
+        }
+        async function checkUsernameNow() {
+            const input = document.getElementById('username');
+            const u = (input.value || '').trim().toLowerCase();
+            const seq = ++usernameCheckSeq;
+            const fmt = usernameFormatError(u);
+            if (fmt) { setUsernameStatus(u ? fmt : '3–20 characters: small letters, numbers and underscore (_). Must be unique.', u ? 'bad' : ''); return; }
+            setUsernameStatus('Checking…', '');
+            try {
+                const free = await usernameIsFree(u);
+                if (seq !== usernameCheckSeq) return;           // naya check shuru ho chuka
+                setUsernameStatus(free ? '✓ @' + u + ' is available' : '✗ @' + u + ' is already taken', free ? 'ok' : 'bad');
+            } catch (e) {
+                if (seq !== usernameCheckSeq) return;
+                console.error('username check failed:', e);
+                setUsernameStatus('Could not check right now. It will be verified when you save.', '');
+            }
+        }
+        function scheduleUsernameCheck() {
+            clearTimeout(usernameCheckTimer);
+            usernameCheckTimer = setTimeout(checkUsernameNow, 400);
+        }
+        document.getElementById('username').addEventListener('input', function () {
+            usernameTouched = true;
+            const pos = this.selectionStart;
+            this.value = this.value.toLowerCase().replace(/\s+/g, '_');
+            try { this.setSelectionRange(pos, pos); } catch (_) {}
+            scheduleUsernameCheck();
+        });
+        // Jab tak user ne khud username nahi likha, naam se suggestion banati rahe
+        document.getElementById(__nameFieldId).addEventListener('input', function () {
+            if (usernameTouched) return;
+            document.getElementById('username').value = slugifyUsername(this.value);
+            scheduleUsernameCheck();
+        });
+        // Edit mode: maujooda username dikhao; purane user (abhi username nahi) ko naam se suggestion
+        function prefillUsername(d) {
+            const input = document.getElementById('username');
+            if (d && d.username) {
+                input.value = d.username;
+                usernameTouched = true;
+            } else {
+                input.value = slugifyUsername(document.getElementById(__nameFieldId).value);
+            }
+            scheduleUsernameCheck();
+        }
+        /** Transaction: username claim karo (pehle se kisi aur ka ho to error). Purana username chhorna ho to free kar do. */
+        async function claimUsername(uid, wanted, oldUsername) {
+            const fmt = usernameFormatError(wanted);
+            if (fmt) { const e = new Error(fmt); e.isUsername = true; throw e; }
+            const newRef = doc(db, 'usernames', wanted);
+            const oldRef = (oldUsername && oldUsername !== wanted) ? doc(db, 'usernames', oldUsername) : null;
+            try {
+                await runTransaction(db, async (tx) => {
+                    const snap = await tx.get(newRef);
+                    const oldSnap = oldRef ? await tx.get(oldRef) : null;     // saari reads writes se pehle
+                    if (snap.exists() && snap.data().uid !== uid) {
+                        const e = new Error('@' + wanted + ' is already taken. Please choose another username.');
+                        e.isUsername = true; throw e;
+                    }
+                    if (!snap.exists()) tx.set(newRef, { uid: uid, createdAt: serverTimestamp() });
+                    if (oldSnap && oldSnap.exists() && oldSnap.data().uid === uid) tx.delete(oldRef);
+                });
+            } catch (err) {
+                if (err && err.isUsername) throw err;
+                console.error('claimUsername failed:', err);
+                const e = new Error('Could not reserve this username (' + ((err && err.code) || 'error') + '). Please try again.');
+                e.isUsername = true; throw e;
+            }
+            return wanted;
+        }
+
+        // ══════════════════════════════════════════════════
+        // 🔐 EMAIL VERIFICATION (6-digit PIN)
+        // Naya account bana ho aur email verify na hua ho to profile
+        // form se pehle verification karni zaroori hai.
+        // ══════════════════════════
+        const MAIL_API = 'https://nodemails.vercel.app';
+        // Server ke /api/send-otp aur /api/verify-otp par requireSignupSecret
+        // gate lagta hai — yeh wahi value honi chahiye jo server par
+        // SIGNUP_SECRET (ya INTERNAL_SECRET) env var mein set hai.
+        const SIGNUP_SECRET = 'hjp-signup-74be4a33b96d';
+        let verifyResendTimer = null;
+
+        function verifyPins() {
+            return [...document.querySelectorAll('#email-verify-pin input')];
+        }
+        function readVerifyPin() {
+            return verifyPins().map(i => i.value).join('');
+        }
+        function resetVerifyPins() {
+            verifyPins().forEach(i => { i.value = ''; i.classList.remove('filled'); });
+        }
+        function verifyMsg(text, kind) {
+            const el = document.getElementById('email-verify-msg');
+            if (!el) return;
+            el.textContent = text || '';
+            el.style.color = kind === 'err' ? '#dc2626' : (kind === 'ok' ? '#15803d' : '#64748b');
+        }
+
+        // ⭐ Legacy (pehle se complete) profile — role set hai ya profileComplete true
+        function isLegacyCompleteProfile(d) {
+            if (!d) return false;
+            return !!d.role || d.profileComplete === true;
+        }
+
+        function wireVerifyPins() {
+            const inputs = verifyPins();
+            inputs.forEach((inp, i) => {
+                inp.oninput = () => {
+                    inp.value = inp.value.replace(/\D/g, '').slice(0, 1);
+                    inp.classList.toggle('filled', !!inp.value);
+                    if (inp.value && i < inputs.length - 1) inputs[i + 1].focus();
+                    if (readVerifyPin().length === 6) verifyMsg('');
+                };
+                inp.onkeydown = e => {
+                    if (e.key === 'Backspace' && !inp.value && i > 0) {
+                        inputs[i - 1].focus(); inputs[i - 1].value = '';
+                        inputs[i - 1].classList.remove('filled'); e.preventDefault();
+                    }
+                };
+                inp.onpaste = e => {
+                    e.preventDefault();
+                    const digits = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+                    digits.split('').forEach((d, k) => {
+                        if (inputs[k]) { inputs[k].value = d; inputs[k].classList.add('filled'); }
+                    });
+                    (inputs[Math.min(digits.length, 5)] || inputs[5]).focus();
+                };
+            });
+        }
+
+        // Return true agar verification zaroori hai (aur gate dikha diya)
+        function requireEmailVerification(user, profileData) {
+            const already = user.emailVerified === true ||
+                            profileData?.emailVerified === true ||
+                            profileData?.otpVerified === true;
+            if (already) return false;
+
+            // ⭐ PURANE USERS (PIN system se pehle ke): unke paas verification flag
+            // nahi hota lekin profile already complete hai. Aise user ko yeh
+            // signup/profile-setup page dobara nahi dikhana — usay home bhej do.
+            if (isLegacyCompleteProfile(profileData)) {
+                localStorage.setItem("hjp_logged_in", "1");
+                try { localStorage.setItem('my_uid', user.uid); } catch (_) {}
+                window.location.replace('/');
+                return true;
+            }
+
+            const gate = document.getElementById('email-verify-gate');
+            const pageContent = document.getElementById('page-content');
+            const loader = document.getElementById('page-loader');
+            if (!gate) return false; // gate HTML mojood nahi — chup chaap aage barhne do
+
+            loader?.classList.add('hidden');
+            pageContent?.classList.add('hidden');
+            gate.classList.remove('hidden');
+
+            const email = user.email || '';
+            document.getElementById('email-verify-label').textContent =
+                email.replace(/^(.)(.*)(@.*)$/, (m, a, b, c) => a + '*'.repeat(Math.min(b.length, 5)) + c);
+
+            wireVerifyPins();
+            document.getElementById('email-verify-send').onclick = () => sendEmailPin(user);
+            document.getElementById('email-verify-submit').onclick = () => submitEmailPin(user);
+            sendEmailPin(user);
+            return true;
+        }
+
+        async function sendEmailPin(user) {
+            const btn = document.getElementById('email-verify-send');
+            const txt = document.getElementById('email-verify-send-text');
+            btn.disabled = true;
+            if (txt) txt.textContent = 'Sending code...';
+            verifyMsg('Sending a verification code to your email...');
+
+            try {
+                const res = await fetch(`${MAIL_API}/api/send-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-internal-secret': SIGNUP_SECRET
+                    },
+                    body: JSON.stringify({ email: user.email, purpose: 'signup', name: user.displayName || '' })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.success) throw new Error(data.error || `Could not send the code (HTTP ${res.status})`);
+
+                document.getElementById('email-verify-step-sent').classList.remove('hidden');
+                resetVerifyPins();
+                verifyPins()[0]?.focus();
+                verifyMsg('Code sent. Check your email inbox (and spam folder).', 'ok');
+                startPinCooldown();
+            } catch (e) {
+                console.error('sendEmailPin:', e);
+                verifyMsg(e.message || 'Could not send the code. Please try again.', 'err');
+                btn.disabled = false;
+                if (txt) txt.textContent = 'Send Code';
+            }
+        }
+
+        function startPinCooldown() {
+            const btn = document.getElementById('email-verify-send');
+            const txt = document.getElementById('email-verify-send-text');
+            let left = 60;
+            btn.disabled = true;
+            if (verifyResendTimer) clearInterval(verifyResendTimer);
+            verifyResendTimer = setInterval(() => {
+                left--;
+                if (left <= 0) {
+                    clearInterval(verifyResendTimer); verifyResendTimer = null;
+                    btn.disabled = false;
+                    if (txt) txt.textContent = 'Resend Code';
+                } else if (txt) {
+                    txt.textContent = `Resend in ${left}s`;
+                }
+            }, 1000);
+        }
+
+        async function submitEmailPin(user) {
+            const code = readVerifyPin();
+            const btn = document.getElementById('email-verify-submit');
+            const txt = document.getElementById('email-verify-submit-text');
+
+            if (code.length !== 6) { verifyMsg('Please enter the complete 6-digit code.', 'err'); return; }
+
+            btn.disabled = true;
+            if (txt) txt.textContent = 'Verifying...';
+            verifyMsg('');
+
+            try {
+                const res = await fetch(`${MAIL_API}/api/verify-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-internal-secret': SIGNUP_SECRET
+                    },
+                    body: JSON.stringify({ email: user.email, code, purpose: 'signup' })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.success) throw new Error(data.error || `Verification failed (HTTP ${res.status})`);
+
+                try {
+                    await setDoc(doc(db, 'users', user.uid), {
+                        emailVerified: true, emailVerifiedAt: serverTimestamp()
+                    }, { merge: true });
+                } catch (fsErr) {
+                    console.warn('Could not persist emailVerified flag:', fsErr);
+                }
+
+                try { await user.reload(); } catch (_) {}
+
+                // ⭐ Agar is user ka profile pehle hi ban chuka hai to seedha HOME par
+                // bhejo — dobara profile-editing form par nahi.
+                try {
+                    const checkSnap = await getDoc(doc(db, 'users', user.uid));
+                    if (checkSnap.exists() && isLegacyCompleteProfile(checkSnap.data())) {
+                        verifyMsg('Email verified. Taking you to the home page...', 'ok');
+                        localStorage.setItem("hjp_logged_in", "1");
+                        try { localStorage.setItem('my_uid', user.uid); } catch (_) {}
+                        setTimeout(() => window.location.replace('/'), 700);
+                        return;
+                    }
+                } catch (chkErr) {
+                    console.warn('Profile check after verify failed:', chkErr);
+                }
+
+                verifyMsg('Email verified. Loading your profile...', 'ok');
+                setTimeout(() => {
+                    document.getElementById('email-verify-gate').classList.add('hidden');
+                    document.getElementById('page-content').classList.remove('hidden');
+                    currentUser = user;
+                    document.getElementById('account-email').value = user.email || '';
+                    showPage();
+                    fetchCountriesApi();
+                    if (editMode) enterEditMode(); else detectLocation();
+                }, 700);
+
+            } catch (e) {
+                console.error('submitEmailPin:', e);
+                verifyMsg(e.message || 'Verification failed. Please try again.', 'err');
+                resetVerifyPins();
+                verifyPins()[0]?.focus();
+                if (txt) txt.textContent = 'Verify Email';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // --- WIZARD NAVIGATION ---
+        let currentStep = 0;
+        window.goToStep = function(target) {
+            if (target > currentStep) {
+                const stepEl = document.querySelector(`.wizard-step[data-wizard-step="${currentStep}"]`);
+                const requiredFields = stepEl.querySelectorAll('[required]');
+                for (const f of requiredFields) {
+                    if (!f.checkValidity()) {
+                        f.reportValidity();
+                        f.focus();
+                        return;
+                    }
+                }
+            }
+            document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active-step'));
+            document.querySelector(`.wizard-step[data-wizard-step="${target}"]`).classList.add('active-step');
+            currentStep = target;
+
+            document.querySelectorAll('.progress-step').forEach(ps => {
+                const n = parseInt(ps.dataset.step, 10);
+                ps.classList.remove('done', 'active');
+                if (n < target) ps.classList.add('done');
+                else if (n === target) ps.classList.add('active');
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // --- PROFILE PHOTO: SELECT / PREVIEW / UPLOAD (immediately, in the background) ---
+        // Profile photo keeps using the same Cloudinary setup wid.html already uses for
+        // profilePicUrl edits. The Cloudflare Worker (R2) below is used for facility photos
+        // and CV/resume files instead.
+        const CLOUD_NAME = "Dr06qkbaa";
+        const UPLOAD_PRESET = "nearjobs_profiles";
+        const WORKER_UPLOAD_URL       = "https://photosupload.sufiangsufiang50.workers.dev"; // profile photos
+        const CV_UPLOAD_URL           = "https://candidatecv.sufiangsufiang50.workers.dev/upload-cv";
+
+        let profilePhoto = { status: 'idle', url: null }; // idle | uploading | done | error
+        let profilePhotoRequestId = 0;
+
+        document.getElementById('profile-photo-input').addEventListener('change', function() {
+            const file = this.files[0];
+            this.value = '';
+            if (!file || !file.type.startsWith('image/')) return;
+
+            const requestId = ++profilePhotoRequestId;
+
+            const reader = new FileReader();
+            reader.onload = ev => {
+                if (requestId !== profilePhotoRequestId) return;
+                document.getElementById('avatar-preview-img').src = ev.target.result;
+                document.getElementById('avatar-preview-img').classList.remove('hidden');
+                document.getElementById('avatar-placeholder-icon').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+
+            uploadProfilePhoto(file, requestId);
+        });
+
+        function setAvatarState(status, message) {
+            const circle = document.getElementById('avatar-upload-circle');
+            const spin = document.getElementById('avatar-spin-overlay');
+            const status_el = document.getElementById('avatar-upload-status');
+
+            circle.classList.toggle('has-error', status === 'error');
+            circle.classList.toggle('has-image', status === 'done');
+            spin.classList.toggle('hidden', status !== 'uploading');
+            status_el.classList.toggle('is-error', status === 'error');
+            status_el.textContent = message;
+
+            profilePhoto.status = status;
+            updateSubmitLockState();
+        }
+
+        async function uploadProfilePhoto(file, requestId) {
+            setAvatarState('uploading', 'Uploading photo...');
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', UPLOAD_PRESET);
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if (requestId !== profilePhotoRequestId) return; // a newer photo was picked meanwhile
+                if (data.secure_url) {
+                    console.log('[profile-photo] uploaded ->', data.secure_url);
+                    profilePhoto.url = data.secure_url;
+                    setAvatarState('done', 'Photo uploaded ✓');
+                } else {
+                    throw new Error(data.error?.message || 'Upload failed');
+                }
+            } catch (err) {
+                if (requestId !== profilePhotoRequestId) return;
+                console.error('[profile-photo] upload failed:', err);
+                setAvatarState('error', 'Upload failed — tap photo to retry');
+            }
+        }
+
+        // --- COVER PHOTO: SELECT / PREVIEW / UPLOAD (optional, recommended) ---
+        let coverPhoto = { status: 'idle', url: null }; // idle | uploading | done | error
+        let coverPhotoRequestId = 0;
+
+        document.getElementById('cover-photo-input').addEventListener('change', function() {
+            const file = this.files[0];
+            this.value = '';
+            if (!file || !file.type.startsWith('image/')) return;
+
+            const requestId = ++coverPhotoRequestId;
+
+            const reader = new FileReader();
+            reader.onload = ev => {
+                if (requestId !== coverPhotoRequestId) return;
+                document.getElementById('cover-preview-img').src = ev.target.result;
+                document.getElementById('cover-preview-img').classList.remove('hidden');
+                document.getElementById('cover-placeholder-icon').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+
+            uploadCoverPhoto(file, requestId);
+        });
+
+        function setCoverState(status, message) {
+            const box = document.getElementById('cover-upload-box');
+            const spin = document.getElementById('cover-spin-overlay');
+            const status_el = document.getElementById('cover-upload-status');
+
+            box.classList.toggle('has-error', status === 'error');
+            box.classList.toggle('has-image', status === 'done');
+            spin.classList.toggle('hidden', status !== 'uploading');
+            status_el.textContent = message;
+
+            coverPhoto.status = status;
+            updateSubmitLockState();
+        }
+
+        async function uploadCoverPhoto(file, requestId) {
+            setCoverState('uploading', 'Uploading...');
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', UPLOAD_PRESET);
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if (requestId !== coverPhotoRequestId) return;
+                if (data.secure_url) {
+                    console.log('[cover-photo] uploaded ->', data.secure_url);
+                    coverPhoto.url = data.secure_url;
+                    setCoverState('done', 'Cover photo uploaded ✓');
+                } else {
+                    throw new Error(data.error?.message || 'Upload failed');
+                }
+            } catch (err) {
+                if (requestId !== coverPhotoRequestId) return;
+                console.error('[cover-photo] upload failed:', err);
+                setCoverState('error', 'Upload failed — tap to retry');
+            }
+        }
+
+
+        // Keep the final Continue/Submit button locked while the profile photo or resume is still uploading.
+        function updateSubmitLockState() {
+            const btn = document.getElementById('save-btn');
+            const text = document.getElementById('save-text');
+            if (!btn || !text) return;
+
+            const photoUploading = profilePhoto.status === 'uploading';
+            const coverUploading = typeof coverPhoto !== 'undefined' && coverPhoto.status === 'uploading';
+            const resumeUploading = typeof resumeUpload !== 'undefined' && resumeUpload.status === 'uploading';
+
+            if (photoUploading || coverUploading || resumeUploading) {
+                btn.disabled = true;
+                btn.classList.add('btn-locked');
+                text.textContent = photoUploading ? 'Uploading photo...' : coverUploading ? 'Uploading cover...' : 'Uploading CV...';
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('btn-locked');
+                text.textContent = editMode ? 'Save Changes' : 'Continue';
+            }
+        }
+
+        // --- RESUME / CV: SELECT / UPLOAD + AI AUTOFILL ---
+        const RESUME_MAX_BYTES = 10 * 1024 * 1024; // 10MB
+        let resumeUpload = { status: 'idle', url: null, fileName: null }; // idle | uploading | done | error
+        let resumeRequestId = 0;
+
+        document.getElementById('resume-file-input').addEventListener('change', function() {
+            const file = this.files[0];
+            this.value = '';
+            if (!file) return;
+
+            if (file.size > RESUME_MAX_BYTES) {
+                alert('CV file is too large. Please keep it under 10MB.');
+                return;
+            }
+
+            resumeUpload.fileName = file.name;
+            const requestId = ++resumeRequestId;
+
+            // Run both together: upload + AI autofill
+            uploadResumeFile(file, requestId);
+            if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                autofillFromCV(file);
+            }
+        });
+
+        // ── AI AUTOFILL ──────────────────────────────────────────────
+        // ── MODE SELECTOR (CV vs Manual) ─────────────────────────────
+        let currentMode = 'cv'; // 'cv' | 'manual'
+        let aiAutofillStatus = 'idle'; // idle | running | done | error
+
+        window.selectMode = function(mode) {
+            currentMode = mode;
+            document.getElementById('mode-cv').classList.toggle('active', mode === 'cv');
+            document.getElementById('mode-manual').classList.toggle('active', mode === 'manual');
+            const cvPanel = document.getElementById('cv-upload-panel');
+            cvPanel.style.display = mode === 'cv' ? 'block' : 'none';
+            if (mode === 'manual') {
+                aiAutofillStatus = 'done';
+                setNextBtnState();
+            } else {
+                aiAutofillStatus = 'idle';
+                setNextBtnState();
+            }
+        };
+
+        window.handleStep0Next = function() {
+            if (currentMode === 'manual') {
+                aiAutofillStatus = 'done';
+                goToStep(1);
+                return;
+            }
+            if (aiAutofillStatus === 'running') return;
+            goToStep(1);
+        };
+
+        function setNextBtnState() {
+            const btn = document.getElementById('cv-next-btn');
+            if (!btn) return;
+            if (aiAutofillStatus === 'running') {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor  = 'not-allowed';
+            } else {
+                btn.disabled      = false;
+                btn.style.opacity = '';
+                btn.style.cursor  = '';
+            }
+        }
+
+        async function autofillFromCV(file) {
+            const banner = document.getElementById('ai-autofill-banner');
+            const title  = document.getElementById('ai-banner-title');
+            const sub    = document.getElementById('ai-banner-sub');
+
+            banner.style.borderColor = '';
+            banner.style.background  = '';
+            banner.classList.remove('done');
+            banner.classList.add('show');
+            document.getElementById('ai-spin').style.display  = 'block';
+            document.getElementById('ai-check').style.display = 'none';
+
+            aiAutofillStatus = 'running';
+            setNextBtnState();
+
+            try {
+                title.textContent = 'Reading your CV...';
+                sub.textContent   = 'AI is extracting your information';
+
+                const cvText = await extractTextFromPDF(file);
+
+                if (!cvText || cvText.trim().length < 50) {
+                    showAIBannerError('Could not read CV text — please fill fields manually');
+                    aiAutofillStatus = 'error';
+                    setNextBtnState();
+                    return;
+                }
+
+                title.textContent = 'AI is filling your fields...';
+                sub.textContent   = 'Just a moment...';
+
+                const parsed = await parseWithClaude(cvText);
+                console.log('[AI autofill] parsed data:', JSON.stringify(parsed, null, 2));
+                fillFormFields(parsed);
+
+                aiAutofillStatus = 'done';
+                setNextBtnState();
+                banner.classList.add('done');
+                title.textContent = 'Profile filled successfully ✓';
+                sub.textContent   = 'Review your details and continue';
+
+            } catch (err) {
+                console.error('[AI autofill] error:', err);
+                aiAutofillStatus = 'error';
+                setNextBtnState();
+                showAIBannerError('AI error — please fill fields manually');
+            }
+        }
+
+        function showAIBannerError(msg) {
+            const banner = document.getElementById('ai-autofill-banner');
+            document.getElementById('ai-banner-title').textContent = msg;
+            document.getElementById('ai-banner-sub').textContent   = '';
+            document.getElementById('ai-spin').style.display       = 'none';
+            banner.style.borderColor = '#fca5a5';
+            banner.style.background  = 'linear-gradient(135deg,#fff5f5 0%,#fee2e2 100%)';
+        }
+
+        // Extract text with PDF.js
+        async function extractTextFromPDF(file) {
+            // Load the PDF.js CDN if it is not already loaded
+            if (!window.pdfjsLib) {
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+                window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+                    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            }
+
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let fullText = '';
+
+            for (let i = 1; i <= Math.min(pdf.numPages, 5); i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const pageText = content.items.map(item => item.str).join(' ');
+                fullText += pageText + '\n';
+            }
+
+            return fullText.trim();
+        }
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+                const s = document.createElement('script');
+                s.src = src; s.onload = resolve; s.onerror = reject;
+                document.head.appendChild(s);
+            });
+        }
+
+        // Put your real Worker URL here after deploying
+        const CV_PARSER_WORKER_URL = 'https://candidatecv.sufiangsufiang50.workers.dev/parse-cv';
+
+        // Send the CV text to the Cloudflare Worker, which calls the AI model
+        async function parseWithClaude(cvText) {
+            const response = await fetch(CV_PARSER_WORKER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cvText: cvText.substring(0, 5000) })
+            });
+
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({}));
+                throw new Error(err.error || `Worker error ${response.status}`);
+            }
+
+            const result = await response.json();
+            if (!result.success) throw new Error(result.error || 'Parse failed');
+            return result.data;
+        }
+
+        // Fill the form from the parsed data
+        function fillFormFields(d) {
+            if (!d) { console.warn('[fillFormFields] no data'); return; }
+            console.log('[fillFormFields] raw data:', JSON.stringify(d));
+
+            // AI models return different key names — handle them all
+            const get = (...keys) => {
+                for (const k of keys) {
+                    const v = d[k];
+                    if (v && v !== 'null' && v !== 'N/A' && v !== 'n/a' && String(v).trim()) return String(v).trim();
+                }
+                return null;
+            };
+
+            const set = (id, val) => {
+                if (!val) return;
+                const el = document.getElementById(id);
+                if (!el) { console.warn('[fillFormFields] NOT FOUND:', id); return; }
+                el.value = val;
+                el.dispatchEvent(new Event('input',  { bubbles: true }));
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+                console.log('[fillFormFields] ✓', id, '=', val);
+            };
+
+            set('full-name',             get('fullName','full_name','name','candidateName'));
+            set('specialization',        get('specialization','specialty','medicalSpecialization'));
+            set('license-number',        get('licenseNumber','license_number','licenseNo','pmdc','pmdcNumber'));
+            set('license-authority',     get('licenseAuthority','license_authority','issuingAuthority','authority'));
+            set('highest-qualification', get('highestQualification','highest_qualification','qualification','degree','education'));
+            set('contact-phone',         get('contactPhone','contact_phone','phone','phoneNumber','mobile'));
+            set('setup-city',            get('city','location','currentCity'));
+            set('expected-salary',       get('expectedSalary','expected_salary','salary','salaryExpectation'));
+
+            // About — also update the character count
+            if (d.about) {
+                const aboutEl = document.getElementById('about-me');
+                if (aboutEl) {
+                    aboutEl.value = d.about.substring(0, 300);
+                    window.updateCharCount();
+                }
+            }
+
+            // ── Dropdown helper — smart matching ──
+            const setDropdown = (id, value, onSet) => {
+                if (!value) return;
+                const el = document.getElementById(id);
+                if (!el) { console.warn('[fillFormFields] dropdown NOT FOUND:', id); return; }
+
+                // normalize: lowercase, remove special chars for comparison
+                const norm = s => String(s).toLowerCase()
+                    .replace(/[–—]/g, '-')   // em/en dash → hyphen
+                    .replace(/[^a-z0-9\-\/+ ]/g, '')
+                    .trim();
+
+                const needle = norm(value);
+                let matched = false;
+
+                // Pass 1: exact normalized match
+                for (const opt of el.options) {
+                    if (norm(opt.value) === needle) {
+                        el.value = opt.value; matched = true; break;
+                    }
+                }
+
+                // Pass 2: option contains needle or needle contains option
+                if (!matched) {
+                    for (const opt of el.options) {
+                        const o = norm(opt.value);
+                        if (o && (o.includes(needle) || needle.includes(o))) {
+                            el.value = opt.value; matched = true; break;
+                        }
+                    }
+                }
+
+                // Pass 3: first word match (e.g. "doctor" matches "Doctor / Physician")
+                if (!matched) {
+                    const firstWord = needle.split(' ')[0];
+                    for (const opt of el.options) {
+                        if (norm(opt.value).startsWith(firstWord)) {
+                            el.value = opt.value; matched = true; break;
+                        }
+                    }
+                }
+
+                if (matched) {
+                    console.log('[fillFormFields] ✓ dropdown', id, '=', el.value);
+                } else {
+                    console.warn('[fillFormFields] no match for', id, ':', value);
+                }
+
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+                el.dispatchEvent(new Event('input',  { bubbles: true }));
+                if (onSet) onSet(matched);
+            };
+
+            // Profession
+            const profVal = get('profession');
+            if (profVal) {
+                setDropdown('profession', profVal, (matched) => {
+                    if (!matched) {
+                        // Put it into "Other"
+                        const el = document.getElementById('profession');
+                        if (el) { el.value = 'Other'; el.dispatchEvent(new Event('change', { bubbles: true })); }
+                        if (window.toggleOtherProfession) window.toggleOtherProfession('Other');
+                        set('other-profession', get('otherProfession') || profVal);
+                    } else {
+                        if (window.toggleOtherProfession) window.toggleOtherProfession(profVal);
+                        if (profVal === 'Other') set('other-profession', get('otherProfession'));
+                    }
+                });
+            }
+
+            // Experience
+            const expVal = get('experienceYears', 'experience_years', 'experience', 'yearsOfExperience');
+            setDropdown('experience-years', expVal);
+
+            // Country
+            const countryVal = get('country');
+            if (countryVal) {
+                setDropdown('setup-country', countryVal, () => {
+                    const el = document.getElementById('setup-country');
+                    if (el && el.value && window.populateStates) window.populateStates(el.value);
+                });
+            }
+        }
+
+        function setResumeUI(status, statusText) {
+            const idleBox = document.getElementById('resume-upload-idle');
+            const fileBox = document.getElementById('resume-upload-file');
+            const nameEl = document.getElementById('resume-file-name');
+            const statusEl = document.getElementById('resume-file-status');
+            const retryBtn = document.getElementById('resume-retry-btn');
+            const linkWrapper = document.getElementById('resume-link-wrapper');
+            const orDivider = document.getElementById('resume-or-divider');
+            const linkInput = document.getElementById('resume-link');
+
+            resumeUpload.status = status;
+
+            if (status === 'idle') {
+                idleBox.classList.remove('hidden');
+                fileBox.classList.add('hidden');
+                linkWrapper.classList.remove('hidden');
+                orDivider.classList.remove('hidden');
+                linkInput.disabled = false;
+                updateSubmitLockState();
+                return;
+            }
+
+            idleBox.classList.add('hidden');
+            fileBox.classList.remove('hidden');
+            fileBox.classList.toggle('is-error', status === 'error');
+            statusEl.classList.toggle('is-error', status === 'error');
+            retryBtn.classList.toggle('hidden', status !== 'error');
+            nameEl.textContent = resumeUpload.fileName || 'CV file';
+            statusEl.innerHTML = statusText;
+
+            // While a file is attached (uploading/done/error) hide the manual link field
+            // so the two inputs can't conflict — remove the file to go back to a link.
+            linkWrapper.classList.add('hidden');
+            orDivider.classList.add('hidden');
+
+            updateSubmitLockState();
+        }
+
+        async function uploadResumeFile(file, requestId) {
+            setResumeUI('uploading', '<span class="mini-spin"></span> Uploading...');
+            try {
+                // Upload directly to Cloudinary — no Worker needed
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'nearjobs_profiles');
+                formData.append('resource_type', 'auto');
+
+                const res = await fetch(
+                    'https://api.cloudinary.com/v1_1/Dr06qkbaa/auto/upload',
+                    { method: 'POST', body: formData }
+                );
+                const data = await res.json();
+
+                if (requestId !== resumeRequestId) return;
+                if (data.secure_url) {
+                    console.log('[resume] uploaded ->', data.secure_url);
+                    resumeUpload.url = data.secure_url;
+                    document.getElementById('resume-link').value = data.secure_url;
+                    setResumeUI('done', 'Uploaded ✓');
+                } else {
+                    throw new Error(data.error?.message || 'Upload failed');
+                }
+            } catch (err) {
+                if (requestId !== resumeRequestId) return;
+                console.error('[resume] upload failed:', err);
+                setResumeUI('error', 'Upload failed');
+            }
+        }
+
+        document.getElementById('resume-retry-btn').addEventListener('click', () => {
+            document.getElementById('resume-file-input').click();
+        });
+
+        document.getElementById('resume-remove-btn').addEventListener('click', () => {
+            resumeUpload = { status: 'idle', url: null, fileName: null };
+            document.getElementById('resume-link').value = '';
+            setResumeUI('idle', '');
+        });
+        let selectedEmploymentTypes = [];
+
+        function showPage() {
+            document.getElementById('page-loader').classList.add('hidden');
+            document.getElementById('page-content').classList.remove('hidden');
+        }
+
+        window.handleLogoError = function(imgEl) {
+            imgEl.onerror = null;
+            imgEl.src = 'https://via.placeholder.com/32x32?text=HJ';
+        };
+
+        // --- AUTH GUARD ---
+        /**
+         * @param {import("firebase/auth").User | null} user
+         */
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.replace("login.html");
+                return;
+            }
+            try {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    // Profile already completed earlier — this is an edit, not first-time setup.
+                    editMode = true;
+                    existingUserData = snap.data();
+                }
+            } catch (e) {
+                console.error("Firestore check failed:", e);
+            }
+
+            // 🔐 Email verify na hua ho to gate dikhao aur yahin ruk jao
+            if (requireEmailVerification(user, existingUserData)) return;
+
+            currentUser = user;
+            document.getElementById('account-email').value = user.email || "";
+            showPage();
+            fetchCountriesApi();
+
+            if (editMode) {
+                enterEditMode();
+            } else {
+                detectLocation();
+            }
+        });
+
+        window.updateCharCount = function() {
+            const el = document.getElementById('about-me');
+            document.getElementById('char-count-val').innerText = el.value.length;
+        };
+
+        window.toggleOtherProfession = function(value) {
+            const wrap = document.getElementById('other-profession-wrap');
+            const input = document.getElementById('other-profession');
+            if (value === 'Other') {
+                wrap.style.display = 'block';
+                input.required = true;
+            } else {
+                wrap.style.display = 'none';
+                input.required = false;
+                input.value = '';
+            }
+        };
+
+        // --- EMPLOYMENT TYPE CHIPS ---
+        document.getElementById('employment-type-group').addEventListener('click', (evt) => {
+            const chip = evt.target.closest('.chip');
+            if (!chip) return;
+            const value = chip.dataset.value;
+            chip.classList.toggle('selected');
+            if (selectedEmploymentTypes.includes(value)) {
+                selectedEmploymentTypes = selectedEmploymentTypes.filter((v) => v !== value);
+            } else {
+                selectedEmploymentTypes.push(value);
+            }
+        });
+
+        // --- COUNTRY / STATE ---
+        async function fetchCountriesApi() {
+            try {
+                const res = await fetch("https://countriesnow.space/api/v0.1/countries/states");
+                const data = await res.json();
+                globalCountriesData = data.data;
+
+                const countrySelect = document.getElementById('setup-country');
+                countrySelect.innerHTML = '<option value="">Select Country</option>';
+
+                /** @param {{name: string, states?: {name: string}[]}} c */
+                globalCountriesData.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.name; opt.innerText = c.name;
+                    countrySelect.appendChild(opt);
+                });
+                countriesReady = true;
+            } catch (e) {
+                console.error("API Load Error", e);
+                document.getElementById('setup-country').innerHTML = '<option value="">Error loading countries</option>';
+                enableManualCountry();
+            }
+            // Apply any location detected while the list was loading
+            countriesReady = true;
+            applyPendingDetectedLocation();
+
+            // Editing an existing profile — apply the saved country/state now that the list exists.
+            if (editMode && existingUserData) {
+                const savedCountry = existingUserData.country || '';
+                const savedState = existingUserData.state || '';
+                const countrySelect = document.getElementById('setup-country');
+                if (savedCountry) {
+                    for (let i = 0; i < countrySelect.options.length; i++) {
+                        if (countrySelect.options[i].value.toLowerCase() === savedCountry.toLowerCase()) {
+                            countrySelect.selectedIndex = i;
+                            window.populateStates(savedCountry);
+                            break;
+                        }
+                    }
+                }
+                setTimeout(() => {
+                    const stateSelect = document.getElementById('setup-state');
+                    if (savedState) {
+                        for (let i = 0; i < stateSelect.options.length; i++) {
+                            if (stateSelect.options[i].value.toLowerCase() === savedState.toLowerCase()) {
+                                stateSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                }, 50);
+            }
+        }
+
+        /** @param {string} countryName */
+        window.populateStates = function(countryName) {
+            const stateSelect = document.getElementById('setup-state');
+            stateSelect.innerHTML = '<option value="">Select State</option>';
+            const country = globalCountriesData.find(c => c.name.toLowerCase() === countryName.toLowerCase());
+            if (country && country.states) {
+                /** @param {{name: string}} s */
+                country.states.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.name; opt.innerText = s.name;
+                    stateSelect.appendChild(opt);
+                });
+            }
+        };
+
+        // Holds the detected location until the country list has loaded
+        let pendingDetected = null;
+        let countriesReady = false;
+
+        // Country name normalize + fuzzy match (Nominatim vs countriesnow naming farq)
+        function normalizeName(s) {
+            return (s || '').toLowerCase().replace(/[^a-z]/g, '');
+        }
+        function findCountryOption(countrySelect, countryName) {
+            const norm = normalizeName(countryName);
+            if (!norm) return -1;
+            // 1) exact value match
+            for (let i = 0; i < countrySelect.options.length; i++) {
+                if (countrySelect.options[i].value.toLowerCase() === countryName.toLowerCase()) return i;
+            }
+            // 2) normalized (punctuation/space ignore) match
+            for (let i = 0; i < countrySelect.options.length; i++) {
+                if (normalizeName(countrySelect.options[i].value) === norm) return i;
+            }
+            // 3) contains match ("United States" vs "United States of America")
+            for (let i = 0; i < countrySelect.options.length; i++) {
+                const ov = normalizeName(countrySelect.options[i].value);
+                if (ov && (ov.includes(norm) || norm.includes(ov))) return i;
+            }
+            return -1;
+        }
+
+        // Apply the pending detected location once the country list has loaded
+        function applyPendingDetectedLocation() {
+            if (!pendingDetected) return;
+            const { country, state, city, address } = pendingDetected;
+            const countrySelect = document.getElementById('setup-country');
+
+            let matched = false;
+            if (country) {
+                const idx = findCountryOption(countrySelect, country);
+                if (idx >= 0) {
+                    countrySelect.selectedIndex = idx;
+                    window.populateStates(countrySelect.options[idx].value);
+                    matched = true;
+                }
+            }
+
+            if (!matched) {
+                // Not in the list — enable manual country entry so the user can continue
+                enableManualCountry(country);
+            }
+
+            if (state) {
+                setTimeout(() => {
+                    const stateSelect = document.getElementById('setup-state');
+                    let sMatched = false;
+                    for (let i = 0; i < stateSelect.options.length; i++) {
+                        if (stateSelect.options[i].value.toLowerCase().includes(state.toLowerCase()) || state.toLowerCase().includes(stateSelect.options[i].value.toLowerCase())) {
+                            stateSelect.selectedIndex = i;
+                            sMatched = true;
+                            break;
+                        }
+                    }
+                    if (!sMatched) enableManualState(state);
+                }, 250);
+            }
+
+            if (city) document.getElementById('setup-city').value = city;
+            const addrBox = document.getElementById('full-address');
+            if (addrBox && address && !addrBox.value.trim()) addrBox.value = address;
+
+            const locStatus = document.getElementById('loc-status');
+            locStatus.innerHTML = matched
+                ? "<b>Location detected and filled in automatically. Please verify it below.</b>"
+                : "<b>We found your location, but the country is not in the list. Please select or type it below.</b>";
+            locStatus.style.color = matched ? "#059669" : "#d97706";
+            locStatus.style.background = matched ? "#dcfce7" : "#fef3c7";
+            locStatus.style.borderColor = matched ? "#86efac" : "#fcd34d";
+
+            pendingDetected = null;
+        }
+
+        // Dropdown ko editable banane ke liye text input se replace/upar overlay
+        function enableManualCountry(presetValue) {
+            const sel = document.getElementById('setup-country');
+            if (!sel) return;
+            // Agar koi maujooda value hai to usi ko fallback rakho
+            sel.innerHTML = '<option value="">Select Country</option>';
+            if (globalCountriesData && globalCountriesData.length) {
+                globalCountriesData.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.name; opt.innerText = c.name;
+                    sel.appendChild(opt);
+                });
+            }
+            sel.setAttribute('data-manual', 'true');
+            // Ek "Other (type manually)" option add karo jo prompt kare
+            const other = document.createElement('option');
+            other.value = '__other__'; other.innerText = '\u2795 Other \u2014 type manually';
+            sel.appendChild(other);
+            sel.onchange = function() {
+                if (this.value === '__other__') {
+                    const typed = window.prompt('Type your country name:', presetValue || '');
+                    if (typed && typed.trim()) {
+                        const opt = document.createElement('option');
+                        opt.value = typed.trim(); opt.innerText = typed.trim();
+                        this.insertBefore(opt, other);
+                        this.value = opt.value; // selected
+                        window.populateStates(opt.value);
+                    } else {
+                        this.value = '';
+                    }
+                } else {
+                    window.populateStates(this.value);
+                }
+            };
+        }
+
+        function enableManualState(presetValue) {
+            const sel = document.getElementById('setup-state');
+            if (!sel) return;
+            const other = document.createElement('option');
+            other.value = '__other__'; other.innerText = '\u2795 Other \u2014 type manually';
+            sel.appendChild(other);
+            sel.onchange = function() {
+                if (this.value === '__other__') {
+                    const typed = window.prompt('Type your state / province:', presetValue || '');
+                    if (typed && typed.trim()) {
+                        const opt = document.createElement('option');
+                        opt.value = typed.trim(); opt.innerText = typed.trim();
+                        this.insertBefore(opt, other);
+                        this.value = opt.value;
+                    } else {
+                        this.value = '';
+                    }
+                }
+            };
+        }
+
+        function detectLocation() {
+            const locStatus = document.getElementById('loc-status');
+
+            function showStatus(msg, kind) {
+                if (!locStatus) return;
+                const c = {
+                    ok:   ['#059669', '#dcfce7', '#86efac'],
+                    warn: ['#d97706', '#fef3c7', '#fcd34d'],
+                    err:  ['var(--error)', 'var(--error-bg)', '#fca5a5']
+                }[kind] || ['#d97706', '#fef3c7', '#fcd34d'];
+                locStatus.style.display = '';
+                locStatus.innerHTML = '<b>' + msg + '</b>';
+                locStatus.style.color = c[0];
+                locStatus.style.background = c[1];
+                locStatus.style.borderColor = c[2];
+            }
+
+            // Hand the detected place over to the form (waits for the country list if needed).
+            function useDetected(info) {
+                pendingDetected = info;
+                if (countriesReady) applyPendingDetectedLocation();
+                else showStatus('Location found. Loading the country list...', 'warn');
+            }
+
+            // Fallback: approximate location from the IP address (used when GPS is blocked or fails).
+            async function detectByIp() {
+                try {
+                    const res = await fetch('https://ipwho.is/?lang=en');
+                    const d = await res.json();
+                    if (d && d.success !== false && d.country) {
+                        useDetected({ country: d.country, state: d.region || '', city: d.city || '', address: '' });
+                        return;
+                    }
+                } catch (e) { /* fall through */ }
+                showStatus('Could not detect your location automatically. Please select it manually.', 'warn');
+            }
+
+            if (!navigator.geolocation) { detectByIp(); return; }
+            showStatus('Detecting your location...', 'warn');
+
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                try {
+                    const url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&zoom=18&accept-language=en'
+                        + '&lat=' + pos.coords.latitude + '&lon=' + pos.coords.longitude;
+                    const res = await fetch(url);
+                    const d = await res.json();
+                    const a = (d && d.address) || {};
+
+                    const country = a.country || '';
+                    const state = a.state || a.province || a.region || a.state_district || '';
+                    const city = a.city || a.town || a.village || a.municipality
+                        || a.city_district || a.county || a.state_district || '';
+                    // Street-level address (used only to pre-fill the address box when the page has one)
+                    const address = [a.house_number, a.road || a.pedestrian || a.footway,
+                                     a.neighbourhood || a.suburb || a.quarter, city]
+                        .filter(Boolean).join(', ');
+
+                    if (!country) throw new Error('No country in response');
+                    useDetected({ country, state, city, address });
+                } catch (e) {
+                    detectByIp();
+                }
+            }, () => {
+                // Permission denied / unavailable / timed out -> try IP-based detection
+                detectByIp();
+            }, { timeout: 10000, maximumAge: 300000, enableHighAccuracy: false });
+        }
+
+        // --- EDIT MODE: switch the page from "first-time setup" to "edit my profile" ---
+        function enterEditMode() {
+            // Skip the CV-upload step entirely and jump straight to the editable fields.
+            document.querySelector('.progress-track').classList.add('hidden');
+            document.querySelector('.wizard-step[data-wizard-step="0"]').classList.remove('active-step');
+            document.querySelector('.wizard-step[data-wizard-step="1"]').classList.add('active-step');
+            currentStep = 1;
+            const step1BackBtn = document.getElementById('step1-back-btn');
+            if (step1BackBtn) step1BackBtn.classList.add('hidden');
+
+            document.querySelector('.eyebrow').innerText = 'Edit Profile';
+            document.querySelector('.intro h1').innerText = 'Update your career details';
+            document.querySelector('.intro p').innerText = 'Make changes below and save — this updates the profile employers see.';
+            const exitLink = document.querySelector('.exit-link');
+            exitLink.innerText = '← Back to profile';
+            exitLink.href = 'wid.html?uid=' + (currentUser ? currentUser.uid : '');
+            document.getElementById('save-text').innerText = 'Save Changes';
+
+            const locStatus = document.getElementById('loc-status');
+            if (locStatus) {
+                locStatus.innerText = 'Your saved location — update below if it has changed.';
+                locStatus.style.color = '';
+                locStatus.style.background = '';
+                locStatus.style.borderColor = '';
+            }
+
+            prefillCandidateForm(existingUserData);
+        }
+
+        function prefillCandidateForm(d) {
+            if (!d) return;
+
+            document.getElementById('full-name').value = d.fullName || '';
+            prefillUsername(d);
+
+
+            const professionSelect = document.getElementById('profession');
+            const knownProfessions = Array.from(professionSelect.options).map(o => o.value);
+            if (d.profession && knownProfessions.includes(d.profession)) {
+                professionSelect.value = d.profession;
+            } else if (d.profession) {
+                professionSelect.value = 'Other';
+                window.toggleOtherProfession('Other');
+                document.getElementById('other-profession').value = d.profession;
+            }
+
+            document.getElementById('experience-years').value = d.experienceYears || '';
+            document.getElementById('specialization').value = d.specialization || '';
+            document.getElementById('license-number').value = d.licenseNumber || '';
+            document.getElementById('license-authority').value = d.licenseAuthority || '';
+            document.getElementById('highest-qualification').value = d.highestQualification || '';
+            document.getElementById('contact-phone').value = d.contactPhone || '';
+            document.getElementById('resume-link').value = d.resumeLink || '';
+            document.getElementById('setup-city').value = d.city || '';
+            document.getElementById('willing-relocate').value = d.willingToRelocate || '';
+            document.getElementById('availability').value = d.availability || '';
+            document.getElementById('expected-salary').value = d.expectedSalary || '';
+            document.getElementById('about-me').value = d.about || '';
+            window.updateCharCount();
+
+            // Privacy switches (missing = ON)
+            document.getElementById('pref-show-phone').checked = d.showPhone !== false;
+            document.getElementById('pref-allow-dm').checked = !(d.privacySettings && d.privacySettings.allowDM === false);
+
+            if (Array.isArray(d.employmentTypes)) {
+                selectedEmploymentTypes = [...d.employmentTypes];
+                document.querySelectorAll('#employment-type-group .chip').forEach(chip => {
+                    if (selectedEmploymentTypes.includes(chip.dataset.value)) chip.classList.add('selected');
+                });
+            }
+
+            if (d.profilePicUrl) {
+                profilePhoto = { status: 'done', url: d.profilePicUrl };
+                const preview = document.getElementById('avatar-preview-img');
+                preview.src = d.profilePicUrl;
+                preview.classList.remove('hidden');
+                document.getElementById('avatar-placeholder-icon').classList.add('hidden');
+            }
+
+            if (d.coverPicUrl) {
+                coverPhoto = { status: 'done', url: d.coverPicUrl };
+                const coverPreview = document.getElementById('cover-preview-img');
+                coverPreview.src = d.coverPicUrl;
+                coverPreview.classList.remove('hidden');
+                document.getElementById('cover-placeholder-icon').classList.add('hidden');
+                document.getElementById('cover-upload-box').classList.add('has-image');
+                document.getElementById('cover-upload-status').textContent = 'Change cover photo';
+            }
+        }
+
+        // --- SAVE ---
+        /** @param {SubmitEvent} e */
+        window.handleCandidateSave = async function(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const btn = document.getElementById('save-btn');
+            const text = document.getElementById('save-text');
+            const loader = document.getElementById('save-loader');
+            const msgBox = document.getElementById('status-msg');
+            msgBox.classList.remove('show');
+
+            // Safety guard: the Continue button is disabled while the photo/CV is uploading,
+            // but double-check here in case this gets triggered another way.
+            if (profilePhoto.status === 'uploading') {
+                msgBox.innerText = "Please wait for your photo to finish uploading.";
+                msgBox.classList.add('show');
+                return;
+            }
+            if (coverPhoto.status === 'uploading') {
+                msgBox.innerText = "Please wait for your cover photo to finish uploading.";
+                msgBox.classList.add('show');
+                return;
+            }
+            if (resumeUpload.status === 'uploading') {
+                msgBox.innerText = "Please wait for your CV to finish uploading.";
+                msgBox.classList.add('show');
+                return;
+            }
+
+            btn.disabled = true; text.style.display = 'none'; loader.style.display = 'block';
+
+            const fullName = document.getElementById('full-name').value.trim();
+            const professionSelect = document.getElementById('profession').value;
+            const otherProfession = document.getElementById('other-profession').value.trim();
+            const profession = professionSelect === 'Other' && otherProfession ? otherProfession : professionSelect;
+            const experienceYears = document.getElementById('experience-years').value;
+            const specialization = document.getElementById('specialization').value.trim();
+            const licenseNumber = document.getElementById('license-number').value.trim();
+            const licenseAuthority = document.getElementById('license-authority').value.trim();
+            const highestQualification = document.getElementById('highest-qualification').value.trim();
+            const contactPhone = document.getElementById('contact-phone').value.trim();
+            const resumeLink = document.getElementById('resume-link').value.trim();
+            const country = document.getElementById('setup-country').value;
+            const state = document.getElementById('setup-state').value;
+            const city = document.getElementById('setup-city').value.trim();
+            const willingRelocate = document.getElementById('willing-relocate').value;
+            const availability = document.getElementById('availability').value;
+            const expectedSalary = document.getElementById('expected-salary').value.trim();
+            const aboutMe = document.getElementById('about-me').value.trim();
+
+            const userData = {
+                uid: currentUser.uid,
+                email: currentUser.email,
+                role: 'candidate',
+                // Candidates are active immediately — storing this explicitly
+                // keeps the post-alert query consistent across all users.
+                accountStatus: 'approved',
+                profileComplete: true,
+                fullName: fullName,
+                profilePicUrl: profilePhoto.status === 'done' ? profilePhoto.url : null,
+                coverPicUrl: coverPhoto.status === 'done' ? coverPhoto.url : null,
+                profession: profession,
+                experienceYears: experienceYears,
+                specialization: specialization || null,
+                licenseNumber: licenseNumber || null,
+                licenseAuthority: licenseAuthority || null,
+                highestQualification: highestQualification,
+                contactPhone: contactPhone,
+                resumeLink: resumeLink || null,
+                country: country,
+                state: state,
+                city: city,
+                willingToRelocate: willingRelocate,
+                employmentTypes: selectedEmploymentTypes,
+                availability: availability,
+                expectedSalary: expectedSalary || null,
+                about: aboutMe || null,
+                // Profile privacy switches (missing = ON)
+                showPhone: !!document.getElementById('pref-show-phone').checked,
+                privacySettings: { allowDM: !!document.getElementById('pref-allow-dm').checked },
+            };
+
+            if (editMode) {
+                userData.updatedAt = serverTimestamp();
+            } else {
+                userData.createdAt = serverTimestamp();
+            }
+
+            try {
+                // 🆔 Pehle username claim karo (unique lock) — phir profile save
+                const chosenUsername = document.getElementById('username').value.trim().toLowerCase();
+                const claimed = await claimUsername(currentUser.uid, chosenUsername, existingUserData && existingUserData.username);
+                userData.username = claimed;
+                userData.usernameLower = claimed;
+
+                await setDoc(doc(db, "users", currentUser.uid), userData, { merge: editMode });
+
+                await set(ref(rtdb, 'search_index/' + currentUser.uid), {
+                    id: currentUser.uid,
+                    t: fullName,
+                    p: profession,
+                    loc: city || country,
+                    pic: profilePhoto.status === 'done' && profilePhoto.url
+                        ? profilePhoto.url
+                        : `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=random`,
+                    type: 'candidate',
+                    // Candidates ko approval ki zaroorat nahi — always visible
+                    status: 'approved'
+                });
+
+                if (!editMode) {
+                    try {
+                        const idToken = await currentUser.getIdToken();
+                        const mailResponse = await fetch('https://nodemails.vercel.app/api/send-notification', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${idToken}`
+                            },
+                            body: JSON.stringify({
+                                type: 'welcome',
+                                email: currentUser.email,
+                                name: fullName,
+                                role: 'candidate',
+                                profession: profession,
+                                experienceYears: experienceYears,
+                                highestQualification: highestQualification,
+                                city: city,
+                                country: country,
+                                contactPhone: contactPhone
+                            })
+                        });
+                        const mailData = await mailResponse.json();
+                        console.log("Email Status:", mailData);
+                    } catch (mailErr) {
+                        console.error("Mail trigger error:", mailErr);
+                    }
+                }
+
+                localStorage.setItem("hjp_logged_in", "1");
+                try { localStorage.setItem('my_uid', currentUser.uid); } catch (_) {}
+                window.location.replace(editMode ? ("wid.html?uid=" + currentUser.uid) : "/");
+
+            } catch (error) {
+                console.error(error);
+                msgBox.innerText = (error && error.isUsername ? "" : "Error saving profile: ") + error.message;
+                if (error && error.isUsername) {
+                    setUsernameStatus(error.message, 'bad');
+                    const uEl = document.getElementById('username');
+                    if (uEl) { uEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); uEl.focus(); }
+                }
+                msgBox.classList.add('show');
+                btn.disabled = false; text.style.display = 'block'; loader.style.display = 'none';
+            }
+        };
+
+        document.getElementById('candidate-form').addEventListener('submit', window.handleCandidateSave);
+    </script>
+
+</body>
+</html>

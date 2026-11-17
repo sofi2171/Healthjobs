@@ -7,6 +7,7 @@
     <title>Health Jobs | Secure Portal</title>
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="preconnect" href="https://challenges.cloudflare.com">
+    <link rel="preconnect" href="https://full-finla-trunsplit.vercel.app">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     
     <style>
@@ -51,6 +52,36 @@
         .page-loader { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--surface); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; transition: opacity 0.3s ease; }
         .page-loader .spinner { display: block; border-color: var(--border-color); border-top-color: var(--primary); width: 35px; height: 35px; margin-bottom: 12px;}
         .hidden { display: none !important; opacity: 0; pointer-events: none; }
+
+        @media (max-width: 480px) { .form-row { flex-direction: column; gap: 0; } .form-row .form-group { margin-bottom: 18px; } }
+        .input-wrapper select { cursor: pointer; appearance: auto; }
+        .trust-footer { margin-top: 24px; text-align: center; font-size: 12px; color: var(--text-muted); }
+        .trust-footer a { color: var(--text-muted); text-decoration: underline; }
+
+        /* PASSWORD FIELD: eye toggle + requirements */
+        .password-wrapper { position: relative; }
+        .password-wrapper input { padding-right: 46px; }
+        .pass-toggle { position: absolute; top: 50%; right: 6px; transform: translateY(-50%); width: 34px; height: 34px; border: none; background: transparent; cursor: pointer; border-radius: 7px; padding: 0; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: color 0.15s, background 0.15s; }
+        .pass-toggle:hover { color: var(--primary); background: #f1f5f9; }
+        .pass-toggle svg { width: 19px; height: 19px; display: block; }
+        .pass-reqs { margin-top: 12px; padding: 12px 14px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; }
+        .pass-req { display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--text-muted); line-height: 1.5; padding: 3px 0; transition: color 0.18s; }
+        .pass-req-tick { flex-shrink: 0; width: 17px; height: 17px; border: 1.5px solid #cbd5e1; border-radius: 50%; position: relative; transition: all 0.18s; }
+        .pass-req.met { color: var(--success-text); font-weight: 500; }
+        .pass-req.met .pass-req-tick { background: var(--success-text); border-color: var(--success-text); }
+        .pass-req.met .pass-req-tick::after { content: ''; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
+        /* ROLE CHOICE (SIGN UP) BOXES */
+        .role-choice-grid { display: flex; gap: 14px; }
+        .role-choice-box { flex: 1; border: 1.5px solid var(--border-color); border-radius: 0; padding: 26px 14px; text-align: center; cursor: pointer; background: var(--surface); transition: border-color 0.2s ease, background 0.2s ease; }
+        .role-choice-box:hover, .role-choice-box:active { border-color: var(--primary); background: #f0fdfa; }
+        .role-choice-box .role-icon { width: 46px; height: 46px; margin: 0 auto 12px; color: var(--primary); display: flex; align-items: center; justify-content: center; }
+        .role-choice-box .role-icon svg { width: 42px; height: 42px; display: block; }
+        .role-choice-box .role-title { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .role-choice-box .role-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+        @media (max-width: 380px) { .role-choice-grid { flex-direction: column; } }
+        .verify-msg.ok  { color: #15803d; }
+        .verify-msg.err { color: #dc2626; }
     </style>
 </head>
 <body>
@@ -75,8 +106,19 @@
 
             <form id="auth-form" onsubmit="handleAuth(event)">
                 <div class="form-group"><label>Work Email</label><div class="input-wrapper"><input type="email" id="email" required autocomplete="email" placeholder="name@company.com"></div></div>
-                <div class="form-group"><label>Password</label><div class="input-wrapper"><input type="password" id="password" required autocomplete="current-password" placeholder="••••••••"></div></div>
-                <div class="cf-turnstile-wrapper"><div class="cf-turnstile" data-sitekey="0x4AAAAAAC1zxwRphxDm96iX" data-callback="onTurnstileSuccess"></div></div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper password-wrapper">
+                        <input type="password" id="password" required autocomplete="current-password" placeholder="Enter your password">
+                        <button type="button" class="pass-toggle" id="pass-toggle" aria-label="Show password" tabindex="-1"></button>
+                    </div>
+                    <div id="pass-reqs" class="pass-reqs hidden">
+                        <div class="pass-req" data-req="len"><span class="pass-req-tick"></span><span>At least 8 characters</span></div>
+                        <div class="pass-req" data-req="upper"><span class="pass-req-tick"></span><span>One uppercase letter (A-Z)</span></div>
+                        <div class="pass-req" data-req="special"><span class="pass-req-tick"></span><span>One special character (!@#$%...)</span></div>
+                    </div>
+                </div>
+                <div class="cf-turnstile-wrapper"><div class="cf-turnstile" data-sitekey="0x4AAAAAAC1zxwRphxDm96iX" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError"></div></div>
                 <input type="hidden" id="cf-token" name="cf-turnstile-response">
                 <button type="submit" class="btn-primary" id="submit-btn"><span id="submit-text">Sign In</span><div class="spinner" id="submit-loader"></div></button>
                 <div id="status-msg" class="status-message"></div>
@@ -87,23 +129,86 @@
                 <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path></svg>
                 Google
             </button>
+
+            <div class="trust-footer">
+                Protected by standard encryption. <br>
+                By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+            </div>
         </div>
 
         <div id="profile-view" class="hidden">
-            <div class="brand-header" style="margin-bottom: 24px;"><h1>Complete Profile</h1><p>Tell us a bit about yourself to get started</p></div>
-            <form id="profile-form" onsubmit="handleProfileSave(event)">
-                <div class="form-group"><label>I am a:</label><div class="input-wrapper"><select id="role-select" onchange="renderDynamicFields(this.value)"><option value="candidate">Candidate (Doctor, Nurse, Staff)</option><option value="employer">Employer (Hospital, Clinic, Lab)</option></select></div></div>
-                <div id="dynamic-fields"></div>
-                <div style="border-top: 1px solid var(--border-color); margin: 24px 0; padding-top: 24px;">
-                    <div id="loc-status" class="loc-status-box">📍 Click below to setup location...</div>
-                    <div class="form-row">
-                        <div class="form-group" style="flex: 1; margin-bottom:0;"><label>Country</label><div class="input-wrapper"><select id="setup-country" required onchange="populateStates(this.value)"><option value="">Loading...</option></select></div></div>
-                        <div class="form-group" style="flex: 1; margin-bottom:0;"><label>State</label><div class="input-wrapper"><select id="setup-state" required><option value="">Select State</option></select></div></div>
-                    </div>
-                    <div class="form-group" style="margin-top: 18px;"><label>City</label><div class="input-wrapper"><input type="text" id="setup-city" required placeholder="E.g. Lahore"></div></div>
+
+            <!-- EMAIL VERIFICATION PANEL (6-digit PIN) -->
+            <div id="verify-panel" class="hidden">
+                <div class="brand-header" style="margin-bottom:20px;">
+                    <h1 style="font-size:22px;">Verify Your Email</h1>
+                    <p>We sent a 6-digit code to <strong id="verify-email-label">your email</strong></p>
                 </div>
-                <button type="submit" class="btn-primary" id="save-btn"><span id="save-text">Complete Registration</span><div class="spinner" id="save-loader"></div></button>
-            </form>
+
+                <div id="verify-step-sent" class="hidden">
+                    <div id="verify-pin-row" style="display:flex;gap:9px;justify-content:center;margin:6px 0 16px;">
+                        <input type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code"
+                            style="width:46px;height:56px;text-align:center;font-size:22px;font-weight:700;font-family:monospace;border:1.5px solid var(--border-color);border-radius:10px;background:#f8fafc;outline:none;">
+                        <input type="text" inputmode="numeric" maxlength="1"
+                            style="width:46px;height:56px;text-align:center;font-size:22px;font-weight:700;font-family:monospace;border:1.5px solid var(--border-color);border-radius:10px;background:#f8fafc;outline:none;">
+                        <input type="text" inputmode="numeric" maxlength="1"
+                            style="width:46px;height:56px;text-align:center;font-size:22px;font-weight:700;font-family:monospace;border:1.5px solid var(--border-color);border-radius:10px;background:#f8fafc;outline:none;">
+                        <input type="text" inputmode="numeric" maxlength="1"
+                            style="width:46px;height:56px;text-align:center;font-size:22px;font-weight:700;font-family:monospace;border:1.5px solid var(--border-color);border-radius:10px;background:#f8fafc;outline:none;">
+                        <input type="text" inputmode="numeric" maxlength="1"
+                            style="width:46px;height:56px;text-align:center;font-size:22px;font-weight:700;font-family:monospace;border:1.5px solid var(--border-color);border-radius:10px;background:#f8fafc;outline:none;">
+                        <input type="text" inputmode="numeric" maxlength="1"
+                            style="width:46px;height:56px;text-align:center;font-size:22px;font-weight:700;font-family:monospace;border:1.5px solid var(--border-color);border-radius:10px;background:#f8fafc;outline:none;">
+                    </div>
+
+                    <button id="verify-submit-btn" type="button"
+                        style="width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">
+                        <span id="verify-submit-text">Verify Email</span>
+                        <span id="verify-submit-spin" class="spinner" style="display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;display:none;"></span>
+                    </button>
+                </div>
+
+                <div id="verify-msg" class="verify-msg" style="font-size:13px;font-weight:600;text-align:center;margin-top:12px;line-height:1.5;"></div>
+
+                <button id="verify-send-btn" type="button"
+                    style="width:100%;margin-top:12px;padding:12px;background:#f1f5f9;color:var(--text-main);border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">
+                    <span id="verify-send-text">Send Code</span>
+                    <span id="verify-send-spin" style="display:none;width:14px;height:14px;border:2px solid rgba(0,0,0,0.15);border-top-color:#0f172a;border-radius:50%;animation:spin 0.6s linear infinite;display:none;"></span>
+                </button>
+
+                <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:16px;line-height:1.6;">
+                    Wrong email? <a href="#" id="verify-logout-link" style="color:var(--primary);font-weight:600;text-decoration:none;">Use a different account</a>
+                </p>
+            </div>
+
+            <!-- ROLE CHOICE -->
+            <div id="role-choice-panel">
+                <div class="brand-header" style="margin-bottom: 24px;">
+                    <h1>Choose Account Type</h1>
+                    <p>Select how you'd like to use Health Jobs</p>
+                </div>
+
+                <div class="role-choice-grid">
+                    <div class="role-choice-box" onclick="chooseRole('employer')">
+                        <div class="role-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M12 9v6M9 12h6"/><path d="M9 21v-4h6v4"/>
+                            </svg>
+                        </div>
+                        <div class="role-title">Employer</div>
+                        <div class="role-desc">Hospital, Clinic or Lab hiring staff</div>
+                    </div>
+                    <div class="role-choice-box" onclick="chooseRole('candidate')">
+                        <div class="role-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 3v5a4 4 0 0 0 8 0V3"/><path d="M8 3H6v3a6 6 0 0 0 12 0V3h-2"/><path d="M12 12v4a3 3 0 0 0 3 3h2"/><circle cx="19.5" cy="19" r="2"/>
+                            </svg>
+                        </div>
+                        <div class="role-title">Candidate</div>
+                        <div class="role-desc">Doctor, Nurse or Medical Staff</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -111,16 +216,25 @@
         window.onTurnstileSuccess = function(token) {
             document.getElementById('cf-token').value = token;
             const msgBox = document.getElementById('status-msg');
-            if (msgBox.innerText === "Please complete the security check.") msgBox.innerText = "";
+            if (msgBox) { msgBox.innerText = ""; msgBox.style.color = "var(--success-text)"; }
+        };
+        window.onTurnstileExpired = function() {
+            document.getElementById('cf-token').value = '';
+            const msgBox = document.getElementById('status-msg');
+            if (msgBox) { msgBox.innerText = "Security check expired. Please try again."; msgBox.style.color = "var(--error)"; }
+        };
+        window.onTurnstileError = function() {
+            document.getElementById('cf-token').value = '';
+            const msgBox = document.getElementById('status-msg');
+            if (msgBox) { msgBox.innerText = "Security check failed. Please refresh and try again."; msgBox.style.color = "var(--error)"; }
         };
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithCredential, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithCredential, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
+        
         const firebaseConfig = {
             apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
             authDomain: "jobs-45cc9.firebaseapp.com",
@@ -134,8 +248,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
-        const rtdb = getDatabase(app);
-        let globalCountriesData = [];
         window.currentAuthMode = 'login';
 
         // ✅ CRITICAL FIX: Capacitor WebView mein session reliably persist karne ke liye
@@ -166,9 +278,29 @@
         })();
 
         
+        // App mein home page "index.html" hai (website par "/")
+        const HOME_URL = 'index.html';
+        let redirecting = false;
+        function goAfterLogin() {
+            if (redirecting) return;
+            redirecting = true;
+            const dest = sessionStorage.getItem('redirectAfterLogin') || sessionStorage.getItem('next') || HOME_URL;
+            sessionStorage.removeItem('redirectAfterLogin');
+            sessionStorage.removeItem('next');
+            window.location.replace(dest);
+        }
+
+        function fetchWithTimeout(url, opts, ms) {
+            const ctrl = new AbortController();
+            const t = setTimeout(() => ctrl.abort(), ms);
+            return fetch(url, Object.assign({}, opts, { signal: ctrl.signal })).finally(() => clearTimeout(t));
+        }
+
+        const loaderTimeout = setTimeout(() => { hidePageLoader(); }, 5000);
         function hidePageLoader() {
             const loader = document.getElementById('page-loader');
             if(loader) loader.classList.add('hidden');
+            clearTimeout(loaderTimeout);
         }
 
         onAuthStateChanged(auth, async (user) => {
@@ -178,29 +310,342 @@
             if (user) {
                 try {
                     const snap = await getDoc(doc(db, "users", user.uid));
-                    if (snap.exists()) { 
-                        // FIX: agar user kisi job/note page se yahan bheja gaya tha
-                        // (requireAuth ne redirectAfterLogin set kiya tha), to wapis
-                        // usi page par bhejo — index.html par nahi, warna WA/Call
-                        // button ka action kabhi complete nahi hota aur loop banta hai.
-                        const dest = sessionStorage.getItem('redirectAfterLogin');
-                        sessionStorage.removeItem('redirectAfterLogin');
-                        window.location.replace(dest || "index.html");
-                    } else { 
+                    if (snap.exists()) {
+                        const userData = snap.data();
+
+                        // EMAIL VERIFICATION GATE (6-digit PIN)
+                        const emailAlreadyVerified = user.emailVerified === true;
+                        const flagVerified = userData.emailVerified === true || userData.otpVerified === true;
+                        const legacyComplete = !!userData.role || userData.profileComplete === true;
+
+                        if (!emailAlreadyVerified && !flagVerified && !legacyComplete) {
+                            hidePageLoader();
+                            authView.classList.add('hidden');
+                            profileView.classList.remove('hidden');
+                            startEmailVerification(user, userData);
+                            return;
+                        }
+
+                        // DEACTIVATED ACCOUNT CHECK - NO AUTO REACTIVATE
+                        if (userData.isDeactivated === true) {
+                            hidePageLoader();
+                            authView.classList.remove('hidden');
+                            profileView.classList.add('hidden');
+
+                            const msgBox = document.getElementById('status-msg');
+                            if (msgBox) {
+                                msgBox.style.color = "var(--error)";
+                                msgBox.style.backgroundColor = "#fee2e2";
+                                msgBox.style.padding = "20px";
+                                msgBox.style.borderRadius = "12px";
+                                msgBox.style.border = "1px solid #fca5a5";
+                                msgBox.style.marginTop = "16px";
+                                msgBox.style.textAlign = "center";
+                                msgBox.innerHTML = `
+                                    <div style="margin-bottom: 12px;">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="#dc2626"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                    </div>
+                                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 8px; color: #991b1b;">Account Deactivated</div>
+                                    <div style="font-size: 13px; margin-bottom: 20px; color: #7f1d1d;">Your account has been deactivated. Please contact support to reactivate.</div>
+                                    <button id="support-contact-btn" style="background: #0d9488; color: white; border: none; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                                        Contact Support
+                                    </button>`;
+                                setTimeout(() => {
+                                    const supportBtn = document.getElementById('support-contact-btn');
+                                    if (supportBtn) supportBtn.onclick = () => { window.location.href = "support.html?email=" + encodeURIComponent(user.email); };
+                                }, 100);
+                            }
+                            await signOut(auth);
+                            return;
+                        }
+
+                        localStorage.setItem("hjp_logged_in", "1");
+                        localStorage.setItem("my_uid", user.uid);
+                        goAfterLogin();
+                    } else {
                         hidePageLoader();
                         authView.classList.add('hidden');
                         profileView.classList.remove('hidden');
-                        window.renderDynamicFields('candidate');
-                        fetchCountriesApi();
-                        window.detectLocation(); // Request location automatically
                     }
-                } catch(e) { hidePageLoader(); }
+                } catch(e) {
+                    console.error("Firestore Error:", e);
+                    hidePageLoader();
+                    authView.classList.remove('hidden');
+                    profileView.classList.add('hidden');
+                }
             } else {
                 hidePageLoader();
                 authView.classList.remove('hidden');
                 profileView.classList.add('hidden');
             }
         });
+
+        // SIGNUP ROLE CHOICE
+        window.chooseRole = function(role) {
+            if (role === 'employer') window.location.href = "employee.html";
+            else window.location.href = "candidate2.html";
+        };
+
+        // EMAIL VERIFICATION (6-digit PIN)
+        const MAIL_API = 'https://nodemails.vercel.app';
+        const SIGNUP_SECRET = 'hjp-signup-74be4a33b96d';
+        let verifyUser = null;
+        let verifyResendTimer = null;
+
+        function isLegacyCompleteUser(d) {
+            if (!d) return false;
+            return !!d.role || d.profileComplete === true;
+        }
+
+        let verifyRedirecting = false;
+        function goHomeAfterVerify() {
+            if (verifyRedirecting) return;
+            verifyRedirecting = true;
+            localStorage.setItem("hjp_logged_in", "1");
+            window.location.replace(HOME_URL);
+        }
+
+        function verifyMsg(text, kind) {
+            const el = document.getElementById('verify-msg');
+            if (!el) return;
+            el.textContent = text || '';
+            el.className = 'verify-msg ' + (kind || '');
+        }
+
+        function verifyPins() { return [...document.querySelectorAll('#verify-pin-row input')]; }
+        function readVerifyPin() { return verifyPins().map(i => i.value).join(''); }
+        function resetVerifyPins() { verifyPins().forEach(i => { i.value = ''; i.classList.remove('filled'); i.disabled = false; }); }
+        function wireVerifyPins() {
+            const inputs = verifyPins();
+            inputs.forEach((inp, i) => {
+                inp.oninput = () => {
+                    inp.value = inp.value.replace(/\D/g, '').slice(0, 1);
+                    inp.classList.toggle('filled', !!inp.value);
+                    if (inp.value && i < inputs.length - 1) inputs[i + 1].focus();
+                    if (readVerifyPin().length === 6) verifyMsg('');
+                };
+                inp.onkeydown = e => {
+                    if (e.key === 'Backspace' && !inp.value && i > 0) {
+                        inputs[i - 1].focus(); inputs[i - 1].value = '';
+                        inputs[i - 1].classList.remove('filled'); e.preventDefault();
+                    }
+                };
+                inp.onpaste = e => {
+                    e.preventDefault();
+                    const digits = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+                    digits.split('').forEach((d, k) => { if (inputs[k]) { inputs[k].value = d; inputs[k].classList.add('filled'); } });
+                    (inputs[Math.min(digits.length, 5)] || inputs[5]).focus();
+                };
+            });
+        }
+
+        let verifyIsLegacy = false;
+
+        function startEmailVerification(user, profileData) {
+            verifyUser = user;
+            verifyIsLegacy = isLegacyCompleteUser(profileData);
+            const email = user.email || '';
+            const mask = email.replace(/^(.)(.*)(@.*)$/, (m, a, b, c) => a + '*'.repeat(Math.min(b.length, 5)) + c);
+            document.getElementById('verify-email-label').textContent = mask;
+
+            const sendBtn = document.getElementById('verify-send-btn');
+            if (!sendBtn.dataset.wired) {
+                sendBtn.dataset.wired = '1';
+                sendBtn.onclick = sendVerifyCode;
+                document.getElementById('verify-submit-btn').onclick = submitVerifyCode;
+                wireVerifyPins();
+            }
+            verifyMsg('');
+            document.getElementById('verify-panel').classList.remove('hidden');
+            document.getElementById('verify-step-sent').classList.add('hidden');
+            document.getElementById('role-choice-panel')?.classList.add('hidden');
+            try { localStorage.setItem('my_uid', user.uid); } catch (_) {}
+
+            const outLink = document.getElementById('verify-logout-link');
+            if (outLink && !outLink.dataset.wired) {
+                outLink.dataset.wired = '1';
+                outLink.onclick = async e => {
+                    e.preventDefault();
+                    try { await signOut(auth); } catch (_) {}
+                    window.location.href = 'login.html';
+                };
+            }
+            sendVerifyCode();
+        }
+
+        async function sendVerifyCode() {
+            if (!verifyUser) return;
+            const btn = document.getElementById('verify-send-btn');
+            const spin = document.getElementById('verify-send-spin');
+            const txt = document.getElementById('verify-send-text');
+
+            btn.disabled = true;
+            if (spin) spin.style.display = 'inline-block';
+            if (txt) txt.textContent = 'Sending code...';
+            verifyMsg('Sending a verification code to your email...', '');
+
+            try {
+                const res = await fetch(`${MAIL_API}/api/send-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'x-internal-secret': SIGNUP_SECRET },
+                    body: JSON.stringify({ email: verifyUser.email, purpose: 'signup', name: verifyUser.displayName || '' })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.success) throw new Error(data.error || `Could not send the code (HTTP ${res.status})`);
+
+                document.getElementById('verify-step-sent').classList.remove('hidden');
+                resetVerifyPins();
+                verifyPins()[0]?.focus();
+                verifyMsg('Code sent. Check your email inbox (and spam folder).', 'ok');
+                startVerifyCooldown();
+            } catch (e) {
+                console.error('sendVerifyCode:', e);
+                verifyMsg(e.message || 'Could not send the code. Please try again.', 'err');
+            } finally {
+                btn.disabled = false;
+                if (spin) spin.style.display = 'none';
+                if (txt) txt.textContent = 'Send Code';
+            }
+        }
+
+        function startVerifyCooldown() {
+            const btn = document.getElementById('verify-send-btn');
+            const txt = document.getElementById('verify-send-text');
+            let left = 60;
+            btn.disabled = true;
+            if (verifyResendTimer) clearInterval(verifyResendTimer);
+            verifyResendTimer = setInterval(() => {
+                left--;
+                if (left <= 0) {
+                    clearInterval(verifyResendTimer); verifyResendTimer = null;
+                    btn.disabled = false;
+                    if (txt) txt.textContent = 'Resend Code';
+                } else if (txt) {
+                    txt.textContent = `Resend in ${left}s`;
+                }
+            }, 1000);
+        }
+
+        async function submitVerifyCode() {
+            if (!verifyUser) return;
+            const code = readVerifyPin();
+            const btn = document.getElementById('verify-submit-btn');
+            const spin = document.getElementById('verify-submit-spin');
+            const txt = document.getElementById('verify-submit-text');
+
+            if (code.length !== 6) { verifyMsg('Please enter the complete 6-digit code.', 'err'); return; }
+
+            btn.disabled = true;
+            if (spin) spin.style.display = 'inline-block';
+            if (txt) txt.textContent = 'Verifying...';
+            verifyMsg('');
+
+            try {
+                const res = await fetch(`${MAIL_API}/api/verify-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'x-internal-secret': SIGNUP_SECRET },
+                    body: JSON.stringify({ email: verifyUser.email, code, purpose: 'signup' })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.success) throw new Error(data.error || `Verification failed (HTTP ${res.status})`);
+
+                try {
+                    await setDoc(doc(db, 'users', verifyUser.uid), { emailVerified: true, emailVerifiedAt: serverTimestamp() }, { merge: true });
+                } catch (fsErr) { console.warn('Could not persist emailVerified flag:', fsErr); }
+
+                try { await verifyUser.reload(); } catch (_) {}
+
+                verifyMsg('Email verified. Redirecting...', 'ok');
+                document.getElementById('verify-panel').classList.add('hidden');
+
+                try {
+                    const existingSnap = await getDoc(doc(db, 'users', verifyUser.uid));
+                    if (existingSnap.exists() && isLegacyCompleteUser(existingSnap.data())) {
+                        verifyMsg('Email verified. Taking you to the home page...', 'ok');
+                        goHomeAfterVerify();
+                        return;
+                    }
+                } catch (chkErr) { console.warn('Profile check after verify failed:', chkErr); }
+
+                if (verifyIsLegacy) {
+                    verifyMsg('Email verified. Taking you to the home page...', 'ok');
+                    goHomeAfterVerify();
+                    return;
+                }
+
+                setTimeout(() => {
+                    const rc = document.getElementById('role-choice-panel');
+                    if (rc) { rc.classList.remove('hidden'); }
+                    else { window.location.href = HOME_URL; }
+                }, 500);
+            } catch (e) {
+                console.error('submitVerifyCode:', e);
+                verifyMsg(e.message || 'Verification failed. Please try again.', 'err');
+                resetVerifyPins();
+                verifyPins()[0]?.focus();
+            } finally {
+                btn.disabled = false;
+                if (spin) spin.style.display = 'none';
+                if (txt) txt.textContent = 'Verify Email';
+            }
+        }
+
+        // PASSWORD FIELD: eye toggle + signup requirements
+        const EYE_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+        const EYE_SHUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 5.2A10.9 10.9 0 0 1 12 5c6.4 0 10 7 10 7a18 18 0 0 1-3.2 4.2M6.2 6.9A18 18 0 0 0 2 12s3.6 7 10 7a10.9 10.9 0 0 0 4-.75"/><path d="m2 2 20 20"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+
+        function paintEye(visible) {
+            const btn = document.getElementById('pass-toggle');
+            if (!btn) return;
+            btn.innerHTML = visible ? EYE_SHUT : EYE_OPEN;
+            btn.setAttribute('aria-label', visible ? 'Hide password' : 'Show password');
+        }
+
+        (function wirePassToggle() {
+            const btn = document.getElementById('pass-toggle');
+            const input = document.getElementById('password');
+            if (!btn || !input) return;
+            paintEye(false);
+            btn.addEventListener('mousedown', e => e.preventDefault());
+            btn.addEventListener('click', () => {
+                const show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                paintEye(show);
+                input.focus();
+            });
+        })();
+
+        // 8+ characters · 1 uppercase · 1 special character
+        const PASS_RULES = {
+            len:     p => String(p).length >= 8,
+            upper:   p => /[A-Z]/.test(String(p)),
+            special: p => /[^A-Za-z0-9]/.test(String(p))
+        };
+
+        function passProblems(password) {
+            const p = String(password || '');
+            const problems = [];
+            if (!PASS_RULES.len(p)) problems.push('at least 8 characters');
+            if (!PASS_RULES.upper(p)) problems.push('one uppercase letter');
+            if (!PASS_RULES.special(p)) problems.push('one special character');
+            return problems;
+        }
+
+        function updatePassReqs() {
+            const input = document.getElementById('password');
+            if (!input) return;
+            const p = input.value;
+            document.querySelectorAll('#pass-reqs .pass-req').forEach(row => {
+                const fn = PASS_RULES[row.dataset.req];
+                if (fn) row.classList.toggle('met', fn(p));
+            });
+        }
+
+        (function wirePassReqsInput() {
+            const input = document.getElementById('password');
+            if (input) input.addEventListener('input', updatePassReqs);
+        })();
 
         window.switchMode = function(mode) {
             window.currentAuthMode = mode;
@@ -210,8 +655,16 @@
             document.getElementById('view-title').innerText = isLogin ? "Welcome Back" : "Create Account";
             document.getElementById('view-subtitle').innerText = isLogin ? "Securely access your professional dashboard" : "Join the healthcare professional network";
             document.getElementById('submit-text').innerText = isLogin ? "Sign In" : "Register Account";
+
+            document.getElementById('password').autocomplete = isLogin ? 'current-password' : 'new-password';
+            document.getElementById('email').autocomplete = isLogin ? 'email' : 'username';
+
+            const reqs = document.getElementById('pass-reqs');
+            if (reqs) reqs.classList.toggle('hidden', isLogin);
+            if (!isLogin) updatePassReqs();
+
             document.getElementById('status-msg').innerText = "";
-            if (window.turnstile) window.turnstile.reset(); 
+            if (window.turnstile) { window.turnstile.reset(); document.getElementById('cf-token').value = ''; }
         };
 
         function setAuthLoader(isLoading) {
@@ -226,24 +679,67 @@
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('password').value.trim();
-            const cfToken = document.getElementById('cf-token').value; 
+            const cfToken = document.getElementById('cf-token').value;
             const msgBox = document.getElementById('status-msg');
-            
-            if (!cfToken) return msgBox.innerText = "Please complete the security check.";
-            setAuthLoader(true); msgBox.innerText = "Authenticating..."; msgBox.style.color = "var(--success-text)";
+
+            if (!email || !pass) {
+                msgBox.style.color = "var(--error)";
+                msgBox.innerText = "Please enter email and password.";
+                return;
+            }
+
+            // SIGNUP par password requirements lazmi (login par purane password check nahi hote)
+            if (window.currentAuthMode === 'signup') {
+                const problems = passProblems(pass);
+                if (problems.length) {
+                    updatePassReqs();
+                    const reqs = document.getElementById('pass-reqs');
+                    if (reqs) reqs.classList.remove('hidden');
+                    msgBox.style.color = "var(--error)";
+                    msgBox.innerText = "Your password needs " + problems.join(', ') + ".";
+                    document.getElementById('password').focus();
+                    return;
+                }
+            }
+
+            if (!cfToken) {
+                msgBox.style.color = "var(--error)";
+                msgBox.innerText = "Please complete the security check.";
+                return;
+            }
+
+            setAuthLoader(true);
+            msgBox.style.color = "var(--success-text)";
+            msgBox.innerText = "Verifying security...";
 
             try {
-                const verifyRes = await fetch('https://full-finla-trunsplit.vercel.app/api/verify-turnstile', {
+                const verifyRes = await fetchWithTimeout('https://full-finla-trunsplit.vercel.app/api/verify-turnstile', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: cfToken })
-                });
-                const verifyData = await verifyRes.json();
-                if (!verifyData.success) throw new Error("Security verification failed.");
+                }, 15000);
 
-                if(window.currentAuthMode === 'login') await signInWithEmailAndPassword(auth, email, pass);
+                if (!verifyRes.ok) throw new Error("Security service unavailable. Please try again.");
+                const verifyData = await verifyRes.json();
+                if (!verifyData.success) throw new Error("Security verification failed. Please refresh the page.");
+
+                msgBox.innerText = "Authenticating...";
+
+                if (window.currentAuthMode === 'login') await signInWithEmailAndPassword(auth, email, pass);
                 else await createUserWithEmailAndPassword(auth, email, pass);
-            } catch (error) { 
-                msgBox.style.color = "var(--error)"; msgBox.innerText = error.message.replace("Firebase: ", "");
-                if (window.turnstile) window.turnstile.reset(); 
+                // Success - redirect onAuthStateChanged mein hoga
+            } catch (error) {
+                console.error("Auth error:", error);
+                msgBox.style.color = "var(--error)";
+                let errorMsg = error.message.replace("Firebase: ", "");
+
+                if (errorMsg.includes("auth/invalid-credential")) errorMsg = "Invalid email or password. Please try again.";
+                else if (errorMsg.includes("auth/email-already-in-use")) errorMsg = "Email already registered. Please sign in instead.";
+                else if (errorMsg.includes("auth/weak-password")) errorMsg = "Password should be at least 8 characters, with one uppercase letter and one special character.";
+                else if (error.name === 'AbortError' || errorMsg.includes("auth/network-request-failed") || errorMsg === "Failed to fetch") errorMsg = "Network problem. Please check your internet connection and try again.";
+                else if (errorMsg.includes("auth/too-many-requests")) errorMsg = "Too many attempts. Please wait a few minutes and try again.";
+
+                msgBox.innerText = errorMsg;
+                if (window.turnstile) window.turnstile.reset();
+                document.getElementById('cf-token').value = '';
                 setAuthLoader(false);
             }
         };
@@ -319,136 +815,6 @@
                 msgBox.style.color = "var(--error)"; 
                 msgBox.innerText = "Google Login Failed: " + (error.message || "Cancelled"); 
                 setAuthLoader(false);
-            }
-        };
-
-        /* 🔥 NATIVE LOCATION PERMISSION FIX */
-        window.detectLocation = async function() {
-            const locStatus = document.getElementById('loc-status');
-            locStatus.innerHTML = "📍 Requesting location permission...";
-            locStatus.style.color = "var(--text-muted)"; locStatus.style.background = "#f1f5f9";
-            
-            try {
-                let coords;
-                if (window.Capacitor && window.Capacitor.isNativePlatform()) {
-                    // NATIVE PERMISSION POPUP
-                    const perm = await Capacitor.Plugins.Geolocation.requestPermissions();
-                    if (perm.location !== 'granted' && perm.coarseLocation !== 'granted') {
-                        throw new Error("Permission Denied");
-                    }
-                    const pos = await Capacitor.Plugins.Geolocation.getCurrentPosition();
-                    coords = pos.coords;
-                } else {
-                    // BROWSER LOCATION
-                    const pos = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject));
-                    coords = pos.coords;
-                }
-
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`);
-                const d = await res.json();
-                
-                const country = d.address.country; const state = d.address.state; const city = d.address.city || d.address.town || d.address.county || "";
-                const countrySelect = document.getElementById('setup-country');
-                
-                if(country) {
-                    for(let i=0; i<countrySelect.options.length; i++) {
-                        if(countrySelect.options[i].value.toLowerCase() === country.toLowerCase()) {
-                            countrySelect.selectedIndex = i; window.populateStates(country); break;
-                        }
-                    }
-                }
-                setTimeout(() => {
-                    const stateSelect = document.getElementById('setup-state');
-                    if(state) {
-                        for(let i=0; i<stateSelect.options.length; i++) {
-                            if(stateSelect.options[i].value.toLowerCase().includes(state.toLowerCase()) || state.toLowerCase().includes(stateSelect.options[i].value.toLowerCase())) {
-                                stateSelect.selectedIndex = i; break;
-                            }
-                        }
-                    }
-                }, 300);
-
-                document.getElementById('setup-city').value = city;
-                locStatus.innerHTML = "✅ <b>Location auto-filled!</b>";
-                locStatus.style.color = "var(--success-text)"; locStatus.style.background = "var(--success-bg)"; locStatus.style.borderColor = "var(--success-border)";
-            } catch (e) {
-                // AGAR DENY KIYA TO RETRY BUTTON
-                locStatus.innerHTML = "✋ <b>Location denied. <button type='button' class='btn-retry-loc' onclick='detectLocation()'>Retry</button> or enter manually.</b>";
-                locStatus.style.color = "var(--error)"; locStatus.style.background = "#fee2e2"; locStatus.style.borderColor = "#fca5a5";
-            }
-        };
-
-        window.renderDynamicFields = function(role) {
-            const div = document.getElementById('dynamic-fields');
-            if(role === 'candidate') {
-                div.innerHTML = `<div class="form-group"><label>Your Full Name</label><div class="input-wrapper"><input type="text" id="setup-name" required placeholder="E.g. Dr. John Doe"></div></div><div class="form-group"><label>Profession / Qualification</label><div class="input-wrapper"><select id="setup-qual" required><option value="MBBS / Doctor">MBBS / Doctor</option><option value="BSc Nursing / Nurse">BSc Nursing / Nurse</option><option value="Pharmacist">Pharmacist</option><option value="Lab Technician">Lab Technician</option><option value="Dispenser">Dispenser</option><option value="Medical Student">Medical Student</option></select></div></div>`;
-            } else {
-                div.innerHTML = `<div class="form-group"><label>Facility Name</label><div class="input-wrapper"><input type="text" id="setup-name" required placeholder="E.g. City Care Hospital"></div></div><div class="form-group"><label>Facility Type</label><div class="input-wrapper"><select id="setup-qual" required><option value="Hospital">Hospital (Private/Govt)</option><option value="Clinic">Clinic</option><option value="Pharmacy">Pharmacy</option><option value="Diagnostic Lab">Diagnostic Lab</option></select></div></div>`;
-            }
-        };
-
-        async function fetchCountriesApi() {
-            try {
-                const res = await fetch("https://countriesnow.space/api/v0.1/countries/states");
-                const data = await res.json(); globalCountriesData = data.data;
-                const countrySelect = document.getElementById('setup-country');
-                countrySelect.innerHTML = '<option value="">Select Country</option>';
-                globalCountriesData.forEach(c => {
-                    const opt = document.createElement('option'); opt.value = c.name; opt.innerText = c.name; countrySelect.appendChild(opt);
-                });
-            } catch(e) {}
-        }
-
-        window.populateStates = function(countryName) {
-            const stateSelect = document.getElementById('setup-state');
-            stateSelect.innerHTML = '<option value="">Select State</option>'; 
-            const country = globalCountriesData.find(c => c.name.toLowerCase() === countryName.toLowerCase());
-            if(country && country.states) {
-                country.states.forEach(s => {
-                    const opt = document.createElement('option'); opt.value = s.name; opt.innerText = s.name; stateSelect.appendChild(opt);
-                });
-            }
-        };
-
-        window.handleProfileSave = async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('save-btn'); const text = document.getElementById('save-text'); const loader = document.getElementById('save-loader');
-            btn.disabled = true; text.style.display = 'none'; loader.style.display = 'block';
-
-            const role = document.getElementById('role-select').value;
-            const nameInput = document.getElementById('setup-name').value.trim();
-            const countryInput = document.getElementById('setup-country').value;
-            const stateInput = document.getElementById('setup-state').value;
-            const cityInput = document.getElementById('setup-city').value.trim();
-            const profession = document.getElementById('setup-qual').value; 
-            
-            const userData = {
-                uid: auth.currentUser.uid, email: auth.currentUser.email, role: role,
-                [role === 'employer' ? 'facilityName' : 'fullName']: nameInput,
-                qualification: profession, country: countryInput, state: stateInput, city: cityInput,
-                address: `${cityInput}, ${stateInput}, ${countryInput}`, createdAt: serverTimestamp()
-            };
-
-            try {
-                await setDoc(doc(db, "users", auth.currentUser.uid), userData);
-                await set(ref(rtdb, 'search_index/' + auth.currentUser.uid), {
-                    id: auth.currentUser.uid, t: nameInput, p: profession, loc: cityInput || countryInput,
-                    pic: `https://ui-avatars.com/api/?name=${encodeURIComponent(nameInput)}&background=random`, type: 'profile'
-                });
-                try {
-                    await fetch('https://nodemails.vercel.app/api/send-notification', {
-                        method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: auth.currentUser.email, name: nameInput })
-                    }); 
-                } catch(mailErr) {}
-                // FIX: same redirectAfterLogin fix for brand-new users who just
-                // finished profile setup — send them back to the page they came from.
-                const dest = sessionStorage.getItem('redirectAfterLogin');
-                sessionStorage.removeItem('redirectAfterLogin');
-                window.location.replace(dest || "index.html");
-            } catch(error) { 
-                alert("Error saving profile: " + error.message); 
-                btn.disabled = false; text.style.display = 'block'; loader.style.display = 'none'; 
             }
         };
     </script>

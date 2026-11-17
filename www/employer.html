@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>Post a Medical Job | Hire Healthcare Professionals | Health Jobs</title>
-    <meta name="description" content="Hire top doctors, nurses, and medical staff in Pakistan. Post vacancies on Health Jobs Portal and connect with thousands of verified professionals instantly.">
-    <meta name="keywords" content="hire doctors, nursing jobs, healthcare recruitment Pakistan, medical staff vacancy, post doctor job free, hire pharmacist, hospital jobs portal">
+    <title>Post a Medical Job | Hire Healthcare Professionals</title>
+    <meta name="description" content="Hire top doctors, nurses, and medical staff across Pakistan. Post vacancies on Health Jobs Portal and connect with thousands of verified professionals instantly.">
+    <meta name="keywords" content="hire doctors, nursing jobs, healthcare recruitment, medical staff vacancy, post doctor job free, hire pharmacist, hospital jobs portal">
     <meta name="author" content="Health Jobs Portal">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <link rel="canonical" href="https://healthjobportal.com/employer.html">
+    <link rel="canonical" href="employer.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://healthjobportal.com/employer.html">
@@ -21,8 +24,24 @@
     <meta name="twitter:title" content="Post a Healthcare Job | Health Jobs Portal">
     <meta name="twitter:description" content="Connect with verified healthcare professionals in your city. Post a job for free.">
     <meta name="twitter:image" content="https://healthjobportal.com/images/logo.png">
+    <script>
+  setTimeout(function() {
+    let s1 = document.createElement('script');
+    s1.src = "https://www.googletagmanager.com/gtag/js?id=G-NC0B547PYR";
+    s1.async = true;
+    document.head.appendChild(s1);
+    let s2 = document.createElement('script');
+    s2.innerHTML = "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-NC0B547PYR');";
+    document.head.appendChild(s2);
+    let s3 = document.createElement('script');
+    s3.src = "https://analytics.ahrefs.com/analytics.js";
+    s3.setAttribute("data-key","lZziwIFYdWn//NVwsT+mUg");
+    s3.async = true;
+    document.head.appendChild(s3);
+  }, 3500);
+</script>
 
-    <script type="application/ld+json">
+<script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -41,7 +60,7 @@
 
     <style>
         :root {
-            --primary-blue: #0a66c2; 
+            --primary-blue: #0a66c2;
             --hover-blue: #004182;
             --bg-white: #ffffff;
             --bg-body: #f3f2ef;
@@ -53,10 +72,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         html, body { height: 100%; }
 
-        body { 
-            background-color: var(--bg-body); 
-            color: var(--text-main); 
-            display: flex; flex-direction: column; 
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex; flex-direction: column;
             min-height: 100vh; padding-top: 70px;
         }
 
@@ -65,69 +84,122 @@
             align-items: center; position: fixed; top: 0; width: 100%; height: 65px; z-index: 1000;
             border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-        
+
         .header-left { display: flex; align-items: center; gap: 15px; }
         .back-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; color: var(--text-secondary); transition: 0.2s; text-decoration: none;}
         .back-btn:hover { color: var(--primary-blue); }
         .back-btn svg { width: 24px; height: 24px; fill: currentColor; }
-        
+
         .logo-container { text-decoration: none; display: flex; align-items: center; }
         .logo-img { height: 40px; width: auto; max-width: 150px; object-fit: contain; }
         .logo-text { font-size: 20px; font-weight: 700; color: var(--primary-blue); display: none; }
 
         main { flex: 1 0 auto; padding: 20px 15px; max-width: 850px; width: 100%; margin: 0 auto; }
 
-        .form-card { 
-            background: var(--bg-white); padding: 30px; border-radius: 12px; 
-            border: 1px solid var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.02); 
+        /* ── Multi-Step Progress Bar ── */
+        .stepper {
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 22px; gap: 0;
+        }
+        .step-item {
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            flex: 1; position: relative;
+        }
+        .step-item:not(:last-child)::after {
+            content: ""; position: absolute; top: 17px; left: calc(50% + 18px);
+            width: calc(100% - 36px); height: 2px;
+            background: var(--border-color); z-index: 0; transition: background 0.3s;
+        }
+        .step-item.done:not(:last-child)::after { background: var(--primary-blue); }
+        .step-circle {
+            width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border-color);
+            background: var(--bg-white); display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; color: var(--text-secondary);
+            position: relative; z-index: 1; transition: all 0.3s;
+        }
+        .step-item.active .step-circle {
+            background: var(--primary-blue); border-color: var(--primary-blue); color: white;
+        }
+        .step-item.done .step-circle {
+            background: var(--primary-blue); border-color: var(--primary-blue); color: white;
+        }
+        .step-label {
+            font-size: 10px; font-weight: 600; color: var(--text-secondary);
+            text-align: center; white-space: nowrap;
+        }
+        .step-item.active .step-label { color: var(--primary-blue); font-weight: 700; }
+        .step-item.done .step-label { color: var(--primary-blue); }
+
+        .form-card {
+            background: var(--bg-white); padding: 30px; border-radius: 12px;
+            border: 1px solid var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
 
         .form-header { margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
         .form-header h1 { font-size: 22px; color: var(--primary-blue); font-weight: 700;}
         .form-header p { font-size: 14px; color: var(--text-secondary); margin-top: 5px; }
 
-        /* Slug preview banner */
-        .slug-preview-box {
-            display: none; background: #f0f9ff; border: 1px solid #bae6fd;
-            border-radius: 8px; padding: 10px 14px; margin-bottom: 20px;
-            font-size: 12px; color: #0369a1; line-height: 1.6;
-        }
-        .slug-preview-box strong { font-weight: 700; }
-        .slug-preview-box .slug-url { font-family: monospace; word-break: break-all; color: #0a66c2; }
+        /* Step panels */
+        .step-panel { display: none; }
+        .step-panel.active { display: block; }
 
         .form-section-title { font-size: 13px; font-weight: 700; color: var(--text-secondary); margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px; }
         .form-section-title::after { content: ""; flex: 1; height: 1px; background: var(--border-color); }
 
         .form-row { display: flex; gap: 15px; margin-bottom: 16px; }
         .form-group { flex: 1; display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-        
+
         label { font-size: 13px; font-weight: 600; color: var(--text-main); }
-        
-        input, select, textarea { 
-            width: 100%; padding: 12px; border: 1px solid var(--border-color); 
+
+        input, select, textarea {
+            width: 100%; padding: 12px; border: 1px solid var(--border-color);
             border-radius: 6px; font-size: 14px; outline: none; background: #fafafa; transition: 0.2s; color: var(--text-main);
         }
         input:focus, select:focus, textarea:focus { border-color: var(--primary-blue); background: white; box-shadow: 0 0 0 1px var(--primary-blue); }
         select { cursor: pointer; }
         textarea { resize: vertical; min-height: 120px; }
-        .post-editor { width: 100%; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; outline: none; min-height: 120px; color: var(--text-main); line-height: 1.6; background: #fafafa; padding: 12px; transition: 0.2s; }
-.post-editor:focus { border-color: var(--primary-blue); background: white; box-shadow: 0 0 0 1px var(--primary-blue); }
-.post-editor:empty:before { content: attr(data-placeholder); color: #94a3b8; pointer-events: none; display: block; }
-.post-editor h2 { font-size: 16px; font-weight: 700; color: var(--text-main); margin: 8px 0 4px; }
-.post-editor p { margin: 0 0 6px; }
-.post-editor p:empty { min-height: 1.4em; }
+
+        /* ── Rich Text Editor Toolbar ── */
+        .editor-toolbar {
+            display: flex; gap: 6px; padding: 8px 10px;
+            background: #f1f5f9; border: 1px solid var(--border-color);
+            border-bottom: none; border-radius: 6px 6px 0 0;
+            flex-wrap: wrap; align-items: center;
+        }
+        .editor-toolbar button {
+            background: white; border: 1px solid #cbd5e1; border-radius: 4px;
+            padding: 5px 10px; cursor: pointer; font-size: 12px; font-weight: 700;
+            color: var(--text-main); transition: 0.2s; display: flex; align-items: center; gap: 4px;
+        }
+        .editor-toolbar button:hover { background: #e2e8f0; border-color: #94a3b8; }
+        .editor-toolbar button.active-tool { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
+
+        .post-editor {
+            width: 100%; border: 1px solid var(--border-color); border-top: none;
+            border-radius: 0 0 6px 6px; font-size: 14px; outline: none;
+            min-height: 120px; color: var(--text-main); line-height: 1.6;
+            background: #fafafa; padding: 12px; transition: 0.2s;
+        }
+        .post-editor:focus { border-color: var(--primary-blue); background: white; box-shadow: 0 0 0 1px var(--primary-blue); }
+        .post-editor:empty:before { content: attr(data-placeholder); color: #94a3b8; pointer-events: none; display: block; }
+        .post-editor h1 { font-size: 18px; font-weight: 700; color: var(--text-main); margin: 10px 0 6px; line-height: 1.3; }
+        .post-editor h2 { font-size: 16px; font-weight: 700; color: var(--text-main); margin: 8px 0 4px; }
+        .post-editor p { margin: 0 0 6px; }
+        .post-editor p:empty { min-height: 1.4em; }
+        .post-editor ul, .post-editor ol { margin: 6px 0; padding-left: 24px; }
+        .post-editor li { margin-bottom: 3px; }
 
         .searchable-select-wrapper { position: relative; width: 100%; }
-        .searchable-input { 
-            width: 100%; padding: 12px 35px 12px 12px; border: 1px solid var(--border-color); 
+        .searchable-input {
+            width: 100%; padding: 12px 35px 12px 12px; border: 1px solid var(--border-color);
             border-radius: 6px; font-size: 14px; outline: none;
-            background: #fafafa url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="%23666"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center; 
+            background: #fafafa url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="%23666"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
             transition: 0.2s; color: var(--text-main); cursor: text;
         }
         .searchable-input:focus { border-color: var(--primary-blue); background-color: white; box-shadow: 0 0 0 1px var(--primary-blue); }
-        .dropdown-list { 
-            position: absolute; top: 100%; left: 0; right: 0; max-height: 220px; overflow-y: auto; 
-            background: white; border: 1px solid var(--primary-blue); border-radius: 6px; 
+        .dropdown-list {
+            position: absolute; top: 100%; left: 0; right: 0; max-height: 220px; overflow-y: auto;
+            background: white; border: 1px solid var(--primary-blue); border-radius: 6px;
             z-index: 100; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-top: 4px;
         }
         .dropdown-list.active { display: block; }
@@ -151,14 +223,29 @@
         .remove-btn { position: absolute; top: 4px; right: 4px; background: rgba(217, 48, 37, 0.9); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1;}
         .remove-btn:hover { background: #b31404; }
 
-        .btn-submit { 
-            width: 100%; padding: 14px; background: var(--primary-blue); color: white; 
-            border: none; border-radius: 24px; font-size: 15px; font-weight: 600; cursor: pointer; 
+        /* Navigation buttons for steps */
+        .step-nav { display: flex; gap: 12px; margin-top: 25px; }
+        .btn-back {
+            flex: 1; padding: 14px; background: var(--bg-body); color: var(--text-main);
+            border: 1px solid var(--border-color); border-radius: 24px; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn-back:hover { background: #e8e7e4; }
+        .btn-next {
+            flex: 2; padding: 14px; background: var(--primary-blue); color: white;
+            border: none; border-radius: 24px; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn-next:hover { background: var(--hover-blue); }
+        .btn-submit {
+            width: 100%; padding: 14px; background: #16a34a; color: white;
+            border: none; border-radius: 24px; font-size: 15px; font-weight: 600; cursor: pointer;
             margin-top: 25px; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px;
         }
-        .btn-submit:hover { background: var(--hover-blue); }
+        .btn-submit:hover { background: #15803d; }
         .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
+        /* Footer */
         footer { flex-shrink: 0; background-color: var(--bg-white); padding: 30px 20px 80px; border-top: 1px solid var(--border-color); text-align: center; }
         .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
         .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600; }
@@ -174,6 +261,8 @@
         .nav-item span { font-size: 11px; font-weight: 500; }
 
         .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.92); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+        /* ── Promo Ad Card (shows while job is publishing) ── */
         .spinner { width: 40px; height: 40px; border: 3px solid #e0dfdc; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
         .loader-text { margin-top: 15px; font-weight: 600; font-size: 14px; color: var(--text-secondary); text-align: center; max-width: 280px; }
         .loader-subtext { margin-top: 6px; font-size: 12px; color: var(--text-secondary); text-align: center; font-family: monospace; word-break: break-all; max-width: 320px; padding: 0 15px; }
@@ -197,6 +286,7 @@
 
         @media (max-width: 600px) { .form-row { flex-direction: column; gap: 0; } .form-card { padding: 20px; } }
         @media (min-width: 768px) { body { padding-bottom: 0; padding-top: 75px; } header { height: 70px; padding: 0 50px; } .bottom-nav { display: none; } footer { padding-bottom: 30px; } }
+
     </style>
 </head>
 <body>
@@ -217,174 +307,237 @@
     <main>
         <div class="form-card">
             <div class="form-header">
+                <p style="display:inline-flex;align-items:center;gap:6px;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;border:1px solid #bfdbfe;margin:0 0 10px;letter-spacing:0.3px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+                    FOR HOSPITALS &middot; CLINICS &middot; PHARMACIES &amp; HEALTHCARE FACILITIES
+                </p>
                 <h1>Post a Healthcare Job</h1>
-                <p>Provide the details to attract the best medical professionals.</p>
+                <p>Hire doctors, nurses, pharmacists, lab technicians and other medical professionals across Pakistan.</p>
             </div>
 
-
-
-            <div class="form-section-title">Job Information</div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Job Title *</label>
-                    <input type="text" id="job-title" placeholder="e.g. Urgent Need for Senior ICU Nurse">
+            <!-- Progress Stepper -->
+            <div class="stepper" id="stepper">
+                <div class="step-item active" id="step-indicator-1">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">Job Info</span>
                 </div>
-                <div class="form-group">
-                    <label>Required Qualification / Category *</label>
-                    <div class="searchable-select-wrapper" id="category-wrapper">
-                        <input type="text" id="job-category-input" class="searchable-input" placeholder="Type to search (e.g. Dispenser, Dentist...)">
-                        <div class="dropdown-list" id="category-dropdown"></div>
+                <div class="step-item" id="step-indicator-2">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">Requirements</span>
+                </div>
+                <div class="step-item" id="step-indicator-3">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Publish</span>
+                </div>
+            </div>
+
+            <!-- ══ STEP 1: Job Information ══ -->
+            <div class="step-panel active" id="panel-1">
+                <div class="form-section-title">Job Information</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Job Title * <small style="font-weight:400;color:var(--text-secondary);">(60 chars max for SEO)</small></label>
+                        <input type="text" id="job-title" maxlength="60" placeholder="e.g. Urgent Need for Senior ICU Nurse">
+                        <small id="title-remaining" style="color:var(--text-secondary);font-size:11px;margin-top:2px;"></small>
                     </div>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Job Location / City *</label>
-                    <input type="text" id="job-location" placeholder="e.g. Lahore, Karachi, Islamabad">
-                </div>
-                <div class="form-group">
-                    <label>Full Address / Clinic Name</label>
-                    <input type="text" id="job-address" placeholder="e.g. City Hospital, Gulberg, Lahore">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Job Timing / Shift *</label>
-                    <select id="job-shift">
-                        <option>Morning Shift</option>
-                        <option>Evening Shift</option>
-                        <option>Night Shift</option>
-                        <option>Full Day (On-Call)</option>
-                        <option>Flexible / Rotational</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Employment Type *</label>
-                    <select id="job-employment-type">
-                        <option value="FULL_TIME">Full Time</option>
-                        <option value="PART_TIME">Part Time</option>
-                        <option value="CONTRACTOR">Locum / Contract</option>
-                        <option value="TEMPORARY">Temporary</option>
-                        <option value="INTERN">Internship</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-section-title">Requirements & Salary</div>
-            
-            <div class="form-row">
-                <div class="form-group">
-<label>Minimum Salary (PKR)</label>
-<input type="number" id="salary-min" placeholder="e.g. 50000 (Optional)" min="0">
-                </div>
-                <div class="form-group">
-                    <label>Maximum Salary (PKR)</label>
-                    <input type="number" id="salary-max" placeholder="e.g. 80000 (optional)" min="0">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Min. Experience Required *</label>
-                <select id="job-exp">
-                    <option>Fresher / New Graduate</option>
-                    <option>1-2 Years</option>
-                    <option>3-5 Years</option>
-                    <option>5-10 Years</option>
-                    <option>10+ Years</option>
-                </select>
-            </div>
-
-<div class="form-group">
-    <label>Detailed Job Description *</label>
-    <div id="job-desc" class="post-editor" contenteditable="true" data-placeholder="Explain the daily duties, required skills, facility environment, and benefits..."></div>
-</div>
-
-            <div class="form-section-title">Contact Details</div>
-
-            <div class="form-group">
-                <label>External Link <span style="font-weight:400;color:var(--text-secondary);">(Optional — LinkedIn, website, etc.)</span></label>
-                <input type="url" id="external-link" placeholder="https://linkedin.com/in/yourprofile">
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>WhatsApp Number *</label>
-                    <div class="phone-input-group">
-                        <div class="country-code-selector">
-                            <button type="button" class="cc-btn" id="wa-cc-btn" onclick="toggleCCDropdown('wa-cc-dropdown')">
-                                <span id="wa-flag">🇵🇰</span>
-                                <span id="wa-code">+92</span>
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
-                            </button>
-                            <div class="cc-dropdown" id="wa-cc-dropdown"></div>
+                    <div class="form-group">
+                        <label>Required Qualification / Category *</label>
+                        <div class="searchable-select-wrapper" id="category-wrapper">
+                            <input type="text" id="job-category-input" class="searchable-input" placeholder="Type to search (e.g. Dispenser, Dentist...)">
+                            <div class="dropdown-list" id="category-dropdown"></div>
                         </div>
-                        <input type="tel" id="whatsapp" placeholder="3XX XXXXXXX">
                     </div>
-                    <input type="hidden" id="whatsapp-cc" value="+92">
                 </div>
-                <div class="form-group">
-                    <label>Calling Number (Optional)</label>
-                    <div class="phone-input-group">
-                        <div class="country-code-selector">
-                            <button type="button" class="cc-btn" id="ln-cc-btn" onclick="toggleCCDropdown('ln-cc-dropdown')">
-                                <span id="ln-flag">🇵🇰</span>
-                                <span id="ln-code">+92</span>
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
-                            </button>
-                            <div class="cc-dropdown" id="ln-cc-dropdown"></div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Job Location / City *</label>
+                        <input type="text" id="job-location" placeholder="e.g. Lahore, Karachi, Islamabad">
+                    </div>
+                    <div class="form-group">
+                        <label>Full Address / Clinic Name</label>
+                        <input type="text" id="job-address" placeholder="e.g. City Hospital, Gulberg, Lahore">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Job Timing / Shift *</label>
+                        <select id="job-shift">
+                            <option>Morning Shift</option>
+                            <option>Evening Shift</option>
+                            <option>Night Shift</option>
+                            <option>Full Day (On-Call)</option>
+                            <option>Flexible / Rotational</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Employment Type *</label>
+                        <div class="searchable-select-wrapper" id="employment-type-wrapper">
+                            <input type="text" id="job-employment-type-input" class="searchable-input" placeholder="Type or select (e.g. Full Time, Part Time...)" autocomplete="off">
+                            <div class="dropdown-list" id="employment-type-dropdown"></div>
                         </div>
-                        <input type="tel" id="local-num" placeholder="3XX XXXXXXX">
+                        <input type="hidden" id="job-employment-type" value="FULL_TIME">
                     </div>
-                    <input type="hidden" id="local-num-cc" value="+92">
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn-next" onclick="goToStep(2)">
+                        Next: Requirements
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    </button>
                 </div>
             </div>
 
-            <div class="form-section-title">Post Schedule & Expiry</div>
+            <!-- ══ STEP 2: Requirements & Contact ══ -->
+            <div class="step-panel" id="panel-2">
+                <div class="form-section-title">Requirements & Salary</div>
 
-            <div class="form-row">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Minimum Salary (PKR)</label>
+                        <input type="text" id="salary-min" placeholder="e.g. 50000 or 50 thousand (Optional)">
+                    </div>
+                    <div class="form-group">
+                        <label>Maximum Salary (PKR)</label>
+                        <input type="text" id="salary-max" placeholder="e.g. 80000 or 80 thousand (Optional)">
+                    </div>
+                </div>
                 <div class="form-group">
-                    <label>Post Start Date & Time</label>
-                    <input type="datetime-local" id="schedule-start">
-                    <small style="color:var(--text-secondary);font-size:11px;margin-top:3px;">خالی چھوڑیں تو ابھی فوری پبلش ہوگا</small>
+                    <label>Min. Experience Required *</label>
+                    <select id="job-exp">
+                        <option>Fresher / New Graduate</option>
+                        <option>1-2 Years</option>
+                        <option>3-5 Years</option>
+                        <option>5-10 Years</option>
+                        <option>10+ Years</option>
+                        <option value="custom">✍️ Manual Entry (Type your own)</option>
+                    </select>
+                    <input type="text" id="job-exp-custom" placeholder="e.g. 2 Years ICU experience — English/Urdu dono chalega" style="display:none;margin-top:8px;" maxlength="120">
                 </div>
+
                 <div class="form-group">
-                    <label>Post Expiry Date & Time</label>
-                    <input type="datetime-local" id="schedule-expiry">
-                    <small style="color:var(--text-secondary);font-size:11px;margin-top:3px;">خالی چھوڑیں تو پوسٹ کبھی expire نہیں ہوگی</small>
+                    <label>Detailed Job Description *</label>
+                    <!-- ── Rich Text Toolbar ── -->
+                    <div class="editor-toolbar" id="editor-toolbar">
+                        <button type="button" onmousedown="event.preventDefault(); formatDoc('h1')" title="Heading 1 (Big Bold)"><b>H1</b> Heading</button>
+                        <button type="button" onmousedown="event.preventDefault(); formatDoc('h2')" title="Heading 2"><b>H2</b> Subheading</button>
+                        <button type="button" onmousedown="event.preventDefault(); formatDoc('p')" title="Normal Paragraph">¶ Normal</button>
+                        <button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList')" title="Bullet List">• Bullet</button>
+                        <button type="button" onmousedown="event.preventDefault(); formatDoc('insertOrderedList')" title="Numbered List">1. Numbered</button>
+                        <button type="button" onmousedown="event.preventDefault(); formatDoc('bold')" title="Bold"><b>B</b></button>
+                    </div>
+                    <div id="job-desc" class="post-editor" contenteditable="true" data-placeholder="Explain the daily duties, required skills, facility environment, and benefits..."></div>
+                </div>
+
+                <div class="form-section-title">Contact Details</div>
+
+                <div class="form-group">
+                    <label>External Link <span style="font-weight:400;color:var(--text-secondary);">(Optional — LinkedIn, website, etc.)</span></label>
+                    <input type="url" id="external-link" placeholder="https://linkedin.com/in/yourprofile">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>WhatsApp Number *</label>
+                        <div class="phone-input-group">
+                            <div class="country-code-selector">
+                                <button type="button" class="cc-btn" id="wa-cc-btn" onclick="toggleCCDropdown('wa-cc-dropdown')">
+                                    <span id="wa-flag">🇵🇰</span>
+                                    <span id="wa-code">+92</span>
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                                </button>
+                                <div class="cc-dropdown" id="wa-cc-dropdown"></div>
+                            </div>
+                            <input type="tel" id="whatsapp" placeholder="3XX XXXXXXX">
+                        </div>
+                        <input type="hidden" id="whatsapp-cc" value="+92">
+                    </div>
+                    <div class="form-group">
+                        <label>Calling Number (Optional)</label>
+                        <div class="phone-input-group">
+                            <div class="country-code-selector">
+                                <button type="button" class="cc-btn" id="ln-cc-btn" onclick="toggleCCDropdown('ln-cc-dropdown')">
+                                    <span id="ln-flag">🇵🇰</span>
+                                    <span id="ln-code">+92</span>
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                                </button>
+                                <div class="cc-dropdown" id="ln-cc-dropdown"></div>
+                            </div>
+                            <input type="tel" id="local-num" placeholder="3XX XXXXXXX">
+                        </div>
+                        <input type="hidden" id="local-num-cc" value="+92">
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn-back" onclick="goToStep(1)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                        Back
+                    </button>
+                    <button class="btn-next" onclick="goToStep(3)">
+                        Next: Publish
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    </button>
                 </div>
             </div>
 
-            <div class="form-section-title">Web Chat Setting</div>
+            <!-- ══ STEP 3: Publish ══ -->
+            <div class="step-panel" id="panel-3">
+                <div class="form-section-title">Post Schedule & Expiry</div>
 
-            <div class="form-group" style="flex-direction:row;align-items:center;justify-content:space-between;background:#f8fafc;padding:14px 16px;border-radius:10px;border:1px solid #e2e8f0;">
-                <div>
-                    <div style="font-size:14px;font-weight:600;color:#0f172a;">Enable Web Chat</div>
-                    <div style="font-size:12px;color:#64748b;margin-top:3px;">Candidates can message you directly on your post</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Post Start Date & Time</label>
+                        <input type="datetime-local" id="schedule-start">
+                        <small style="color:var(--text-secondary);font-size:11px;margin-top:3px;">خالی چھوڑیں تو ابھی فوری پبلش ہوگا</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Post Expiry Date & Time</label>
+                        <input type="datetime-local" id="schedule-expiry">
+                        <small style="color:var(--text-secondary);font-size:11px;margin-top:3px;">خالی چھوڑیں تو پوسٹ کبھی expire نہیں ہوگی</small>
+                    </div>
                 </div>
-                <button type="button" id="web-chat-toggle-btn" onclick="toggleWebChat()"
-                    style="padding:8px 18px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;background:#0a66c2;color:white;transition:0.2s;">ON</button>
-                <input type="hidden" id="web-chat-toggle" value="true">
-            </div>
 
-            <div class="form-section-title">Attach Media (Images, Videos, PDFs) — Up to 5 Files</div>
-            
-            <div class="upload-wrapper">
-                <div class="upload-box" id="upload-btn" onclick="document.getElementById('file-input').click()">
-                    <svg class="upload-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
-                    <div class="upload-text">Click to Add Files</div>
-                    <div class="upload-subtext">Max 10MB per file. (Supported: JPG, PNG, MP4, PDF)</div>
+                <div class="form-section-title">Web Chat Setting</div>
+
+                <div class="form-group" style="flex-direction:row;align-items:center;justify-content:space-between;background:#f8fafc;padding:14px 16px;border-radius:10px;border:1px solid #e2e8f0;">
+                    <div>
+                        <div style="font-size:14px;font-weight:600;color:#0f172a;">Enable Web Chat</div>
+                        <div style="font-size:12px;color:#64748b;margin-top:3px;">Candidates can message you directly on your post</div>
+                    </div>
+                    <button type="button" id="web-chat-toggle-btn" onclick="toggleWebChat()"
+                        style="padding:8px 18px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;background:#0a66c2;color:white;transition:0.2s;">ON</button>
+                    <input type="hidden" id="web-chat-toggle" value="true">
                 </div>
-                <input type="file" id="file-input" multiple accept="image/*,video/*,.pdf" class="hidden">
-                <div id="preview-container" class="preview-grid hidden"></div>
-            </div>
 
-            <button class="btn-submit" id="submit-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>
-                Publish Healthcare Job
-            </button>
+                <div class="form-section-title">Attach Media (Images, Videos, PDFs) — Up to 5 Files</div>
+
+                <div class="upload-wrapper">
+                    <div class="upload-box" id="upload-btn" onclick="document.getElementById('file-input').click()">
+                        <svg class="upload-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
+                        <div class="upload-text">Click to Add Files</div>
+<div class="upload-subtext">Max 5 (images + PDFs combined), OR 1 video (max 10MB)</div>
+                    </div>
+                    <input type="file" id="file-input" multiple accept="image/*,video/*,.pdf" class="hidden">
+                    <div id="preview-container" class="preview-grid hidden"></div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn-back" onclick="goToStep(2)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                        Back
+                    </button>
+                </div>
+
+                <button class="btn-submit" id="submit-btn">
+                    <span id="submit-btn-text">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-right: 8px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>
+                        Publish Healthcare Job
+                    </span>
+                </button>
+            </div>
         </div>
     </main>
 
@@ -392,32 +545,16 @@
         <div class="footer-links">
             <a href="index.html">Home</a>
             <a href="employer.html">Post a Job</a>
-            <a href="profile.html">My Profile</a>
+            <a href="candidate.html">Find Jobs</a>
+            <a href="notes.html">Medical Notes</a>
+            <a href="about.html">About Us</a>
             <a href="privcy.html">Privacy Policy</a>
+            <a href="terms.html">Terms</a>
         </div>
         <div class="footer-copy">
             &copy; 2026 powered by SufianX — All rights reserved
         </div>
     </footer>
-
-    <nav class="bottom-nav">
-        <button class="nav-item" onclick="window.location.href='index.html'">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
-            <span>Home</span>
-        </button>
-        <button class="nav-item" onclick="window.location.href='my-posts.html'">
-            <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>
-            <span>My Posts</span>
-        </button>
-        <button class="nav-item active" onclick="window.location.href='employer.html'">
-            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
-            <span>Post</span>
-        </button>
-        <button class="nav-item" onclick="window.location.href='profile.html'">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
-            <span>Profile</span>
-        </button>
-    </nav>
 
     <div id="upload-loader" class="loader-overlay hidden">
         <div class="spinner"></div>
@@ -426,9 +563,110 @@
     </div>
 
     <!-- ============================================================
-         NON-MODULE SCRIPTS: UI helpers (dropdowns, toggles, etc.)
+         NON-MODULE SCRIPTS: UI helpers
          ============================================================ -->
     <script>
+        // ─── Step Navigation ─────────────────────────────────────────
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function goToStep(step) {
+            if (currentStep === 1 && step > 1) {
+                const title    = document.getElementById('job-title').value.trim();
+                const category = document.getElementById('job-category-input').value.trim();
+                const city     = document.getElementById('job-location').value.trim();
+                if (!title || !category || !city) {
+                    alert("Please fill required fields: Job Title, Category, and City.");
+                    return;
+                }
+            }
+            if (currentStep === 2 && step > 2) {
+const desc = document.getElementById('job-desc').innerText.trim();
+if (!desc) { alert("Please fill the Job Description."); return; }
+            }
+
+            document.getElementById('panel-' + currentStep).classList.remove('active');
+            document.getElementById('panel-' + step).classList.add('active');
+
+            for (let i = 1; i <= totalSteps; i++) {
+                const ind = document.getElementById('step-indicator-' + i);
+                ind.classList.remove('active', 'done');
+                if (i < step)      ind.classList.add('done');
+                else if (i === step) ind.classList.add('active');
+            }
+
+            currentStep = step;
+            // Naye panel ka ad load karo (agar ab tak nahi hua).
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ─── Job Title Character Counter ────────────────────────────
+        const titleInput = document.getElementById('job-title');
+        const titleRemaining = document.getElementById('title-remaining');
+        titleInput.addEventListener('input', function() {
+            const remaining = 60 - this.value.length;
+            titleRemaining.textContent = `${remaining} characters remaining`;
+            titleRemaining.style.color = remaining <= 10 ? '#e53e3e' : 'var(--text-secondary)';
+        });
+
+        // ─── Rich Text Editor Functions ─────────────────────────────
+
+        // ─── Rich Text Editor Functions ─────────────────────────────
+        function formatDoc(command, value = null) {
+            const editor = document.getElementById('job-desc');
+            const selection = window.getSelection();
+
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+
+                if (editor.contains(range.commonAncestorContainer)) {
+
+                    if (range.collapsed) {
+                        let node = range.startContainer;
+
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            node = node.parentElement;
+                        }
+
+                        const block = node.closest('p, h1, h2, li');
+
+                        if (block && editor.contains(block)) {
+                            const newRange = document.createRange();
+                            newRange.selectNodeContents(block);
+                            selection.removeAllRanges();
+                            selection.addRange(newRange);
+                        }
+                    }
+                }
+            }
+
+            // Agar H1 pe dobara H1 dabaya to Normal karo
+            if (selection.rangeCount > 0 && selection.toString().trim()) {
+                const range = selection.getRangeAt(0);
+                const container = range.commonAncestorContainer;
+                const parentBlock = container.nodeType === Node.TEXT_NODE ? container.parentElement : container;
+                const currentBlock = parentBlock.closest('h1, h2');
+
+                if (currentBlock) {
+                    if ((command === 'h1' && currentBlock.tagName === 'H1') ||
+                        (command === 'h2' && currentBlock.tagName === 'H2')) {
+                        document.execCommand('p', false, null);
+                        editor.focus();
+                        return;
+                    }
+                }
+
+                // Agar Bold pe dobara Bold dabaya to bold hatao
+                if (command === 'bold' && document.queryCommandState('bold')) {
+                    document.execCommand('bold', false, null);
+                    editor.focus();
+                    return;
+                }
+            }
+
+            document.execCommand(command, false, value);
+            editor.focus();
+        }
         // ─── Medical Categories ───────────────────────────────────────
         window.medicalCategories = [
             "General Physician (MBBS)", "Medical Officer (MO)", "Cardiologist", "Neurologist",
@@ -467,22 +705,9 @@
         ];
 
         // ─── SEO Slug Generator ───────────────────────────────────────
-        /**
-         * Generates a clean, lowercase, hyphenated URL slug from the job title and city.
-         * Handles Arabic/Urdu characters and special chars gracefully.
-         * Appends a short timestamp suffix to guarantee uniqueness even for duplicate
-         * title+city combos (e.g. two "Pharmacist Lahore" posts on the same day).
-         *
-         * @param {string} title  - Job title text
-         * @param {string} city   - City / location text
-         * @returns {string}      - e.g. "pharmacist-jobs-lahore-a3f2"
-         */
-function generateSlug() {
-    return Math.floor(1000 + Math.random() * 9000).toString();
-}
-
-        // ─── Live Slug Preview ────────────────────────────────────────
-
+        function generateSlug() {
+            return Math.floor(1000 + Math.random() * 9000).toString();
+        }
 
         // ─── Searchable Category Dropdown ────────────────────────────
         const catInput    = document.getElementById('job-category-input');
@@ -579,6 +804,190 @@ function generateSlug() {
 
         buildCCDropdown('wa-cc-dropdown', 'wa-flag', 'wa-code', 'whatsapp-cc');
         buildCCDropdown('ln-cc-dropdown', 'ln-flag', 'ln-code', 'local-num-cc');
+
+        // ─── Employment Type Searchable Dropdown ───────────────────────
+        const employmentTypes = [
+            "Full Time", "Part Time", "Locum / Contract", "Temporary",
+            "Internship", "Volunteer", "On-Call", "Per Diem", "Freelance"
+        ];
+
+        const empInput    = document.getElementById('job-employment-type-input');
+        const empDropdown = document.getElementById('employment-type-dropdown');
+        const empWrapper  = document.getElementById('employment-type-wrapper');
+        const empHidden   = document.getElementById('job-employment-type');
+
+        function renderEmpDropdown(filterText = '') {
+            empDropdown.innerHTML = '';
+            const lowerFilter = filterText.toLowerCase();
+            const filtered = employmentTypes.filter(i => i.toLowerCase().includes(lowerFilter));
+
+            if (filterText.trim() && !employmentTypes.some(i => i.toLowerCase() === lowerFilter)) {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.style.color = '#0a66c2';
+                div.style.fontWeight = '600';
+                div.innerText = `➕ Add "${filterText.trim()}"`;
+                div.onclick = () => {
+                    empInput.value = filterText.trim();
+                    empHidden.value = filterText.trim().toUpperCase().replace(/\s+/g, '_');
+                    empDropdown.classList.remove('active');
+                };
+                empDropdown.appendChild(div);
+            }
+
+            if (filtered.length === 0 && !filterText.trim()) {
+                employmentTypes.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.innerText = item;
+                    div.onclick = () => {
+                        empInput.value = item;
+                        empHidden.value = item.toUpperCase().replace(/\s+/g, '_');
+                        empDropdown.classList.remove('active');
+                    };
+                    empDropdown.appendChild(div);
+                });
+            } else {
+                filtered.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.innerText = item;
+                    div.onclick = () => {
+                        empInput.value = item;
+                        empHidden.value = item.toUpperCase().replace(/\s+/g, '_');
+                        empDropdown.classList.remove('active');
+                    };
+                    empDropdown.appendChild(div);
+                });
+            }
+        }
+
+        empInput.addEventListener('focus', () => { renderEmpDropdown(empInput.value); empDropdown.classList.add('active'); });
+        empInput.addEventListener('input', e => { renderEmpDropdown(e.target.value); empDropdown.classList.add('active'); });
+        document.addEventListener('click', e => { if (!empWrapper.contains(e.target)) empDropdown.classList.remove('active'); });
+
+        empInput.value = "Full Time";
+    </script>
+
+    <!-- ============================================================
+         🔒 ACCOUNT APPROVAL GATE (blocking) — MODULE SCRIPT SE PEHLE
+         Yeh helpers module script ko chahiye, is liye yahan define
+         ho rahe hain (module script neeche hai).
+         ============================================================ -->
+    <script>
+        // ── Approved statuses — sirf yeh page khol sakte hain ──
+        function isApprovedStatus(status) {
+            const st = String(status || '').toLowerCase().trim();
+            // Field na ho to purane/legacy accounts ko block na karo
+            return !st || st === 'approved' || st === 'active';
+        }
+        window.__isApprovedStatus = isApprovedStatus;
+
+        // Gate ko show karo. reasonData = { status, reason }
+        window.__showAccountGate = function (reasonData) {
+            const gate = document.getElementById('account-gate');
+            if (!gate) return;
+
+            const st      = String(reasonData?.status || '').toLowerCase().trim();
+            const isFinal = (st === 'rejected' || st === 'rejected_final' || st === 'inactive');
+
+            const badge = document.getElementById('account-gate-badge');
+            const title = document.getElementById('account-gate-title');
+            const text  = document.getElementById('account-gate-text');
+            const icon  = document.getElementById('account-gate-icon');
+
+            if (isFinal) {
+                badge.textContent = 'Account Not Approved';
+                badge.style.color = '#dc2626';
+                title.textContent = 'Your account was not approved';
+                text.textContent  = st === 'inactive'
+                    ? 'This account has been deactivated. If you believe this is a mistake, please contact our support team.'
+                    : 'Your facility account was not approved, so job posting is disabled. Please check your email — we sent you an appeal link to request a review.';
+                icon.innerHTML = '<svg width="28" height="28" viewBox="0 0 24 24" fill="#dc2626"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg>';
+                icon.style.background = '#fef2f2';
+            } else {
+                badge.textContent = 'Account Under Review';
+                badge.style.color = '#d97706';
+                title.textContent = 'Your account is under review';
+                text.textContent  = 'Our team is reviewing your facility account. You will be able to publish job posts as soon as it is approved — this usually takes less than 24 hours.';
+            }
+
+            // Rejection reason (agar admin ne diya ho) dikhao
+            const meta = document.getElementById('account-gate-meta');
+            const reason = reasonData?.reason;
+            if (reason && String(reason).trim()) {
+                meta.style.display = 'block';
+                meta.innerHTML = '<b style="color:#374151;">Reason:</b> ' + String(reason).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+
+            // Baqi page hide karo — gate full-screen hai
+            const header = document.querySelector('header');
+            const main   = document.querySelector('main');
+            const footer = document.querySelector('footer');
+            if (header) header.style.display = 'none';
+            if (main)   main.style.display   = 'none';
+            if (footer) footer.style.display = 'none';
+
+            gate.style.display = 'block';
+            window.scrollTo(0, 0);
+        };
+
+        // 🔒 ROLE MISMATCH GATE — candidate (ya kisi bhi non-employer) account ko
+        // "Post as Employer" karne se roko. Employer page sirf employer ke liye hai.
+        window.__showRoleBlocked = function () {
+            const gate = document.getElementById('account-gate');
+            if (!gate) return;
+
+            const badge = document.getElementById('account-gate-badge');
+            const title = document.getElementById('account-gate-title');
+            const text  = document.getElementById('account-gate-text');
+            const icon  = document.getElementById('account-gate-icon');
+            const meta  = document.getElementById('account-gate-meta');
+
+            if (badge) { badge.textContent = 'Wrong Account Type'; badge.style.color = '#d97706'; }
+            if (title) title.textContent = 'This page is for employer accounts';
+            if (text)  text.textContent  = 'You are signed in as a candidate. Employer job posting is only available for employer/facility accounts. Please use "Post as Candidate" or "Share an Update" instead.';
+            if (meta)  meta.style.display = 'none';
+            if (icon) {
+                icon.innerHTML = '<svg width="28" height="28" viewBox="0 0 24 24" fill="#d97706"><path d="M12 2 1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>';
+                icon.style.background = '#fffbeb';
+            }
+
+            const header = document.querySelector('header');
+            const main   = document.querySelector('main');
+            const footer = document.querySelector('footer');
+            if (header) header.style.display = 'none';
+            if (main)   main.style.display   = 'none';
+            if (footer) footer.style.display = 'none';
+
+            gate.style.display = 'block';
+            window.scrollTo(0, 0);
+        };
+
+        // Fast local cache — Firestore ka jawab aane se pehle hi gate laga do
+        // (role candidate cache mein hai to turant block karo)
+        try {
+            const cachedRole   = localStorage.getItem('fast_user_role');
+            if (cachedRole && cachedRole !== 'employer') {
+                window.__showRoleBlocked();
+            }
+        } catch (_) {}
+
+        // Fast local cache — Firestore ka jawab aane se pehle hi gate laga do
+        try {
+            const cachedRole   = localStorage.getItem('fast_user_role');
+            const cachedStatus = localStorage.getItem('fast_account_status');
+            if (cachedRole === 'employer' && cachedStatus && !isApprovedStatus(cachedStatus)) {
+                window.__showAccountGate({ status: cachedStatus });
+            }
+        } catch (_) {}
+
+        // Logout helper (Firebase module ke bina bhi kaam karta hai)
+        window.__gateLogout = function () {
+            try { localStorage.removeItem('fast_user_role'); localStorage.removeItem('fast_account_status'); } catch (_) {}
+            try { sessionStorage.clear(); } catch (_) {}
+            window.location.replace('login.html');
+        };
     </script>
 
     <!-- ============================================================
@@ -589,7 +998,9 @@ function generateSlug() {
         import { getAuth, onAuthStateChanged }      from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
                                                     from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getDatabase, ref, set }            from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, increment, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        // 🔐 Approval gate — "Complete Your Account Setup" popup (legacy + not-approved accounts)
+        import { HJPApprovalGate } from "./approval-gate.js";
 
         const firebaseConfig = {
             apiKey:            "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
@@ -602,40 +1013,173 @@ function generateSlug() {
         };
 
         const app   = initializeApp(firebaseConfig);
+
+        // ===== D1-FIRST SAVE: post pehle worker ke zariye D1 database mein save hoti hai =====
+        // (Firestore mein roz shaam 6 baje worker khud copy karta hai.)
+
+        // ===== Retry helper: "Failed to fetch" jaisi network ghaltiyon par khud dobara koshish =====
+        async function hjpFetchRetry(url, opts, tries) {
+            tries = tries || 4;
+            for (let i = 0; i < tries; i++) {
+                try {
+                    const res = await fetch(url, opts);
+                    if ([500, 502, 503, 504].indexOf(res.status) !== -1 && i < tries - 1) { /* retry */ }
+                    else return res;
+                } catch (e) { /* network error (Failed to fetch) -> retry */ }
+                await new Promise(function (r) { setTimeout(r, 700 * Math.pow(2, i)); });
+            }
+            throw new Error('Network problem. Please check your internet connection and try again.');
+        }
+
+        async function savePostToD1(user, type, data) {
+            const idToken = await user.getIdToken();
+            const res = await hjpFetchRetry('https://healthjobportal.com/api/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+                body: JSON.stringify({ type: type, data: data })
+            });
+            let j = null;
+            try { j = await res.json(); } catch (e) {}
+            if (!res.ok || !j || !j.ok) throw new Error((j && j.error) || ('Could not save post (' + res.status + ')'));
+            return j;
+        }
+
         const auth  = getAuth(app);
         const db    = getFirestore(app);
         const dbRT  = getDatabase(app);
 
-        const CLOUD_NAME    = "Dr06qkbaa";
-        const UPLOAD_PRESET = "nearjobs_profiles";
+        const WORKER_UPLOAD_URL = "https://healthjobportal.sufiangsufiang50.workers.dev";
 
         let currentUser       = null;
         let userData          = null;
         let selectedFilesArray = [];
 
+        // 🔐 Shared approval-gate module init + popup opener
+        try { HJPApprovalGate.init({ db, doc, getDoc, setDoc, serverTimestamp }); } catch (_) {}
+        window.__openApprovalPopup = function () {
+            try {
+                HJPApprovalGate.open({ uid: currentUser && currentUser.uid, userData: userData || {} });
+            } catch (e) { console.log('approval popup error:', e); }
+        };
+
+        // Chhota helper — localStorage read kabhi exception na de
+        function lsGet(key) { try { return localStorage.getItem(key) || ''; } catch (_) { return ''; } }
+
+        const submitBtn     = document.getElementById('submit-btn');
+        const submitBtnText = document.getElementById('submit-btn-text');
+        const loader        = document.getElementById('upload-loader');
+        const loaderMsg     = document.getElementById('loader-msg');
+        const loaderSlug    = document.getElementById('loader-slug');
+
+        let lastJobData = null;
+
         // ─── Silent Auth Check ────────────────────────────────────────
         onAuthStateChanged(auth, async user => {
             if (user) {
                 currentUser = user;
-                getDoc(doc(db, "users", user.uid)).then(snap => {
+                // Await userData so it is ready before submit
+                try {
+                    const snap = await getDoc(doc(db, "users", user.uid));
                     if (snap.exists()) userData = snap.data();
-                });
+                } catch(e) { console.error("userData load error:", e); }
+
+                // 🔒 ROLE GATE — sirf employer is page par post kar sakta hai.
+                // Candidate (ya koi aur role) yahan nahi aa sakta — warna wo
+                // "Post as Employer" karke candidate ke bajaye employer post bana leta.
+                if (userData && userData.role && userData.role !== 'employer') {
+                    window.__showRoleBlocked();
+                    return;
+                }
+
+                // 🔒 ACCOUNT APPROVAL GATE — approved na hone tak page band
+                // Purana/uploaded account (role hi nahi) → "Complete Your Account
+                // Setup" popup jo admin ko verify request bhejta hai.
+                if (userData && !userData.role) {
+                    window.__showAccountGate({ status: 'pending' });
+                    window.__openApprovalPopup();
+                    return;
+                }
+
+                // 🔒 ACCOUNT APPROVAL GATE — approved na hone tak page band
+                // Cycle:
+                //   1) Document na mile                        → gate (fail-closed)
+                //   2) employer + accountStatus approved/active → normal use (koi gate nahi)
+                //   3) employer + pending                       → "Account Under Review"
+                //   4) employer + rejected / rejected_final     → "Account Not Approved" + reason
+                //   5) employer + inactive                      → deactivated screen
+                const isEmployer = (userData?.role === 'employer');
+                // Missing profile doc → gate (fail-closed) — role confirm nahi ho saka.
+                const missingDoc = !userData;
+
+                if (missingDoc || (isEmployer && !window.__isApprovedStatus(userData?.accountStatus))) {
+                    if (missingDoc) {
+                        // Legacy/sirf auth-wale accounts ko hamesha ke liye block na karo:
+                        // cache mein approved status ho to page chhoro warna gate lagao.
+                        let cachedApproved = false;
+                        try {
+                            cachedApproved = window.__isApprovedStatus(localStorage.getItem('fast_account_status'))
+                                          && lsGet('fast_account_status') !== '';
+                        } catch (_) {}
+                        if (cachedApproved) window.__confirmApproved();
+                        else window.__showAccountGate({ status: 'pending' });
+                    } else {
+                        window.__showAccountGate({
+                            status: userData?.accountStatus,
+                            reason: userData?.rejectionReason || userData?.appealRejectionReason || null
+                        });
+                    }
+                    return;
+                }
+
+                // ✅ Approved — gate hata do (fail-safe timeout bhi cancel ho jata hai)
+                window.__confirmApproved();
             } else {
                 sessionStorage.setItem('next', 'employer.html');
                 window.location.replace("login.html");
             }
         });
 
+        // ─── Manual Experience Input toggle ───────────────────────────
+        document.getElementById('job-exp').addEventListener('change', function() {
+            const custom = document.getElementById('job-exp-custom');
+            if (custom) custom.style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+
         // ─── File Selection ───────────────────────────────────────────
         document.getElementById('file-input').addEventListener('change', function(e) {
             const newFiles = Array.from(e.target.files);
-            if (selectedFilesArray.length + newFiles.length > 5) {
-                alert("You can only upload a maximum of 5 files total."); return;
+            const combined = selectedFilesArray.concat(newFiles);
+
+            const images = combined.filter(f => f.type.startsWith('image/'));
+            const videos = combined.filter(f => f.type.startsWith('video/'));
+            const pdfs   = combined.filter(f => f.type === 'application/pdf');
+
+            // Video hamesha akela jata hai - na image, na PDF uske saath
+            if (videos.length > 0 && (images.length > 0 || pdfs.length > 0)) {
+                alert("Video ke sath image ya PDF nahi laga sakte. Video akela hi post hoga.");
+                this.value = '';
+                return;
             }
-            if (newFiles.some(f => f.size > 10 * 1024 * 1024)) {
-                alert("One or more files exceed the 10MB limit."); return;
+            if (videos.length > 1) {
+                alert("Aap sirf 1 video upload kar sakte hain ek post mein.");
+                this.value = '';
+                return;
             }
-            selectedFilesArray = selectedFilesArray.concat(newFiles);
+            const oversizedVideo = videos.find(f => f.size > 10 * 1024 * 1024);
+            if (oversizedVideo) {
+                alert("Video ka size 10MB se zyada nahi hona chahiye.");
+                this.value = '';
+                return;
+            }
+
+            // Images + PDFs ka total milake max 5
+            if (images.length + pdfs.length > 5) {
+                alert("Images aur PDFs milake total 5 se zyada nahi ho sakte.");
+                this.value = '';
+                return;
+            }
+
+            selectedFilesArray = combined;
             this.value = '';
             renderPreviews();
         });
@@ -701,11 +1245,10 @@ function generateSlug() {
             });
         }
 
-        // ─── Cloudinary Upload ────────────────────────────────────────
+// ☁️ R2 WORKER UPLOAD (Cloudinary ki jagah)
         async function uploadToCloudinary(file, slugId, index) {
             let uploadFile = file;
             let type       = 'other';
-            let endpoint   = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`;
 
             if (file.type.startsWith('image/')) {
                 type = 'image';
@@ -718,129 +1261,201 @@ function generateSlug() {
 
             const fd = new FormData();
             fd.append('file', uploadFile);
-            fd.append('upload_preset', UPLOAD_PRESET);
-            fd.append('public_id', `job_${slugId}_${index}`);
 
-            const res  = await fetch(endpoint, { method: 'POST', body: fd });
+            const res  = await hjpFetchRetry(WORKER_UPLOAD_URL, { method: 'POST', body: fd });
             const data = await res.json();
-            if (data.secure_url) return { url: data.secure_url, type, name: file.name };
-            throw new Error(data.error?.message || "Cloudinary upload failed");
+            if (data.success) return { url: data.url, type, name: file.name };
+            throw new Error(data.error || "Upload failed");
         }
 
         // ─── Form Submit ──────────────────────────────────────────────
         document.getElementById('submit-btn').onclick = async () => {
+            // Race condition guard: ensure auth + profile are loaded
+            if (!currentUser) {
+                return alert("Your session is still loading. Please wait a moment and try again.");
+            }
+            if (!userData) {
+                try {
+                    const snap = await getDoc(doc(db, "users", currentUser.uid));
+                    if (snap.exists()) userData = snap.data();
+                } catch(e) { console.error("userData re-fetch error:", e); }
+            }
+
+            // 🔒 ROLE GATE — candidate (ya non-employer) account yahan se post na kar sake.
+            // Agar koi candidate URL seedha khol kar submit kare to bhi posting block.
+            if (userData && userData.role && userData.role !== 'employer') {
+                window.__showRoleBlocked();
+                return;
+            }
+
+            // 🔒 ACCOUNT APPROVAL GATE — server-side enforcement ka mirror.
+            // Chahe UI gate bypass ho jaye, posting yahan se rukti hai.
+            // Fail-closed: agar status confirm hi nahi hua (Firestore fail /
+            // timeout), to bhi post nahi jati.
+            const __statusOk = (userData?.role !== 'employer')
+                ? true
+                : window.__isApprovedStatus(userData?.accountStatus);
+
+            if (!window.__approvalVerified && userData?.role === 'employer' && __statusOk) {
+                // Approved lagta hai magar gate ne abhi confirm nahi kiya
+                window.__confirmApproved();
+            }
+
+            if (userData?.role === 'employer' && !__statusOk) {
+                window.__showAccountGate({
+                    status: userData?.accountStatus,
+                    reason: userData?.rejectionReason || userData?.appealRejectionReason || null
+                });
+                return;
+            }
+            if (!userData) {
+                alert("We could not verify your account status. Please refresh the page and try again.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtnText.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-right: 8px; animation: spin 0.8s linear infinite;">
+                    <path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"/>
+                </svg>
+                Publishing...
+            `;
+
             const title      = document.getElementById('job-title').value.trim();
             const category   = document.getElementById('job-category-input').value.trim();
             const city       = document.getElementById('job-location').value.trim();
             const address    = document.getElementById('job-address').value.trim();
             const salaryMin  = document.getElementById('salary-min').value.trim();
             const salaryMax  = document.getElementById('salary-max').value.trim();
-const desc = document.getElementById('job-desc').innerText.trim();
+            const experienceSel = document.getElementById('job-exp').value;
+            const experienceCustom = (document.getElementById('job-exp-custom')?.value || '').trim();
+            const experience = experienceCustom || experienceSel;
+const desc = document.getElementById('job-desc').innerHTML.trim();
             const whatsapp   = document.getElementById('whatsapp').value.trim();
             const empType    = document.getElementById('job-employment-type').value;
 
-            // ── Validation ───────────────────────────────────────────
-if (!title || !category || !city || !desc) {
-    alert("Please fill all required fields (Title, Category, City, Description)."); return;
-}
-if (salaryMin && (isNaN(Number(salaryMin)) || Number(salaryMin) < 0)) {
-    alert("Please enter a valid minimum salary (numbers only)."); return;
-}
+            if (!title || !category || !city || !desc) {
+                alert("Please fill all required fields (Title, Category, City, Description).");
+                submitBtn.disabled = false;
+                submitBtnText.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-right: 8px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg> Publish Healthcare Job`;
+                return;
+            }
 
-            // ── Generate the SEO Slug (this becomes the Firestore doc ID) ──
-const slug = generateSlug(); // defined in non-module <script>
+            const salaryMinNum = Number(salaryMin.replace(/[^0-9.]/g, ''));
+            if (salaryMin && !isNaN(salaryMinNum) && salaryMinNum < 0) {
+                alert("Please enter a valid minimum salary.");
+                submitBtn.disabled = false;
+                submitBtnText.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-right: 8px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg> Publish Healthcare Job`;
+                return;
+            }
 
-            const loaderMsg  = document.getElementById('loader-msg');
-            const loaderSlug = document.getElementById('loader-slug');
-            const loader     = document.getElementById('upload-loader');
-            const submitBtn  = document.getElementById('submit-btn');
-
+            const slug = generateSlug();
             loader.classList.remove('hidden');
-            submitBtn.disabled = true;
             loaderSlug.textContent = `/jobs/${slug}`;
 
+            lastJobData = {
+                slug, title, category, city, address,
+                salaryMin, salaryMax, desc, whatsapp, empType,
+                uid:   currentUser?.uid || "",
+                email: currentUser?.email || "",
+                posterName: userData?.facilityName || userData?.fullName || ""
+            };
+
             try {
-                // ── Upload media files ───────────────────────────────
                 let uploadedMedia = [];
                 if (selectedFilesArray.length > 0) {
                     loaderMsg.innerText = `Uploading ${selectedFilesArray.length} file(s)...`;
-                    uploadedMedia = await Promise.all(
-                        selectedFilesArray.map((f, i) => uploadToCloudinary(f, slug, i))
-                    );
+                    // Ek ek karke upload (parallel upload se mobile network par "Failed to fetch" zyada aata tha)
+                    for (let i = 0; i < selectedFilesArray.length; i++) {
+                        loaderMsg.innerText = `Uploading file ${i + 1} of ${selectedFilesArray.length}...`;
+                        uploadedMedia.push(await uploadToCloudinary(selectedFilesArray[i], slug, i));
+                    }
                 }
 
-                loaderMsg.innerText = "Saving to Firestore...";
+                loaderMsg.innerText = "Saving...";
 
-                const posterName = userData?.facilityName || userData?.fullName || "Healthcare Facility";
+                const posterName = userData?.facilityName || userData?.fullName || currentUser?.displayName || "Healthcare Facility";
                 const posterPic  = userData?.profilePicUrl || null;
                 const webChat    = document.getElementById('web-chat-toggle').value === 'true';
 
-                // Build the ISO date strings needed by the Worker's JSON-LD
-                const nowISO = new Date().toISOString();
+                const nowISO   = new Date().toISOString();
                 const expiryRaw = document.getElementById('schedule-expiry').value;
                 const expiryISO = expiryRaw ? new Date(expiryRaw).toISOString() : null;
 
-                const salaryText = salaryMin && salaryMax
-    ? `${Number(salaryMin).toLocaleString()} - ${Number(salaryMax).toLocaleString()} PKR`
-    : salaryMin
-    ? `${Number(salaryMin).toLocaleString()} PKR`
-    : "Negotiable";
+                // Salary English/Urdu dono support karta hai. Agar dono fields
+                // numeric hain to "Rs. 50,000 – Rs. 80,000" format banega,
+                // warna jaisa employer ne likha waisa hi jayega (custom text,
+                // e.g. "Rs. 50,000 Negotiable", Urdu text, "50k" etc.).
+                const minNum = parseFloat(salaryMin.replace(/[^0-9.]/g, ''));
+                const maxNum = parseFloat(salaryMax.replace(/[^0-9.]/g, ''));
+                const minIsNum = salaryMin && !isNaN(minNum);
+                const maxIsNum = salaryMax && !isNaN(maxNum);
+                let salaryText;
+                if (minIsNum && maxIsNum) {
+                    salaryText = `Rs. ${minNum.toLocaleString('en-US')} - Rs. ${maxNum.toLocaleString('en-US')}`;
+                } else if (minIsNum) {
+                    salaryText = `Rs. ${minNum.toLocaleString('en-US')}${salaryMax ? ` - ${salaryMax}` : ''}`;
+                } else if (maxIsNum) {
+                    salaryText = `Up to Rs. ${maxNum.toLocaleString('en-US')}`;
+                } else if (salaryMin || salaryMax) {
+                    salaryText = salaryMin && salaryMax ? `${salaryMin} - ${salaryMax}` : (salaryMin || salaryMax);
+                } else {
+                    salaryText = "Negotiable";
+                }
 
-                // ── Firestore document — using setDoc() with the slug as ID ──
                 const postData = {
-                    // Identity
                     slug,
                     type:           'employer_post',
-                    // Content
                     title,
                     category,
                     desc,
                     location:       city,
                     address:        address || city,
+                    addressRegion:  city,
+                    postalCode:     "",
                     salary:         salaryText,
-                    salaryMin:      Number(salaryMin),
-                    salaryMax:      salaryMax ? Number(salaryMax) : null,
+                    salaryCustom:  (salaryMin || salaryMax) && isNaN(Number(salaryMin.replace(/[^0-9.]/g, ''))) ? salaryText : null,
+                    salaryMin:      salaryMin && !isNaN(Number(salaryMin.replace(/[^0-9.]/g, ''))) ? Number(salaryMin.replace(/[^0-9.]/g, '')) : null,
+                    salaryMax:      salaryMax && !isNaN(Number(salaryMax.replace(/[^0-9.]/g, ''))) ? Number(salaryMax.replace(/[^0-9.]/g, '')) : null,
                     employmentType: empType,
                     shift:          document.getElementById('job-shift').value,
-                    experience:     document.getElementById('job-exp').value,
-                    // Poster
+                    experience:    experience,
+                    experienceCustom: experienceCustom || null,
                     posterId:   currentUser.uid,
                     posterName,
                     posterPic,
                     posterRole: "employer",
-                    // Contact
                     whatsapp:    whatsapp ? (document.getElementById('whatsapp-cc').value + whatsapp) : null,
                     localNum:    document.getElementById('local-num').value.trim()
                                     ? (document.getElementById('local-num-cc').value + document.getElementById('local-num').value.trim())
                                     : null,
                     externalLink: document.getElementById('external-link').value.trim() || null,
-                    // Media
                     media:       uploadedMedia,
-                    // Engagement
                     likes:         [],
                     commentsCount: 0,
                     webChat,
-                    // Timestamps & scheduling
-                    createdAt:   serverTimestamp(),
-                    postedDateISO: nowISO,           // plain ISO string for JSON-LD in Worker
+                    postedDateISO: nowISO,
                     scheduledAt: document.getElementById('schedule-start').value
                                     ? new Date(document.getElementById('schedule-start').value).toISOString()
                                     : null,
                     expiresAt:   expiryISO,
                     isScheduled: !!document.getElementById('schedule-start').value,
                     isExpired:   false,
-                    // SEO URL
                     canonicalUrl: `https://healthjobportal.com/jobs/${slug}`
                 };
 
-                // ★ KEY CHANGE: setDoc with the slug as the explicit Firestore document ID ★
-                await setDoc(doc(db, "posts", slug), postData);
+const saved = await savePostToD1(currentUser, 'employer_post', postData);
+                const finalSlug = saved.slug;   // server collision hone par naya number de sakta hai
 
-                // ── RTDB Search Index ────────────────────────────────
+                // ✅ Jobs count +1
+                try {
+                    await update(ref(dbRT, '/'), { jobs_count: increment(1) });
+                } catch(e) {}
+
                 loaderMsg.innerText = "Indexing post...";
                 try {
-                    await set(ref(dbRT, `search_index/${slug}`), {
-                        id:   slug,
+                    await set(ref(dbRT, `search_index/${finalSlug}`), {
+                        id:   finalSlug,
                         t:    title,
                         p:    posterName,
                         pic:  posterPic || "https://ui-avatars.com/api/?name=U",
@@ -849,83 +1464,99 @@ const slug = generateSlug(); // defined in non-module <script>
                     });
                 } catch (e) { console.error("RTDB index error:", e); }
 
-                // ── Email notification (fire-and-forget) ─────────────
-                fetch('https://nodemails.vercel.app/api/send-notification', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        type: 'new-post', postId: slug, title, category,
-                        location: city, salary: salaryText,
-                        posterName, posterId: currentUser.uid,
-                        postType: 'employer_post',
-                        link: `https://healthjobportal.com/jobs/${slug}`
-                    })
-                }).catch(err => console.error("Email error:", err));
+                // Google index
+                try {
+                    await fetch('https://healthjobportal.com/api/notify-index', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ slug: finalSlug, type: 'employer_post' })
+                    });
+                } catch(e) {}
 
-                // ── Expiry handler (fire-and-forget) ─────────────────
-                fetch('https://backend-posts-details.vercel.app/api/update-post', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ postId: slug, expiresAt: expiryISO })
-                }).catch(err => console.error("Expiry error:", err));
+                // 📧 NEW JOB EMAIL ALERTS — notification service (nodemails).
+                // Post D1 mein save ho chuki hai; service khud D1 se category/location
+                // padhkar matched candidates ko email bhejti hai (browser ko data
+                // dene ki zaroorat nahi). Await NAHI — user ka safar nahi rukta.
+                try {
+                    currentUser.getIdToken().then(function (t) {
+                        return fetch('https://nodemails.vercel.app/api/job-alert', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + t },
+                            body: JSON.stringify({ postId: finalSlug })
+                        });
+                    }).catch(function (e) { console.warn('job-alert skip:', e); });
+                } catch (e) {}
 
-                // ── Telegram (fire-and-forget) ────────────────────────
-                fetch("https://healthjobs-telegram-bot.vercel.app/api/send-alert", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        type: "employer_post", title, desc, qualification: category,
-                        location: city, salary: salaryText,
-                        mediaUrl: uploadedMedia.length > 0 ? uploadedMedia[0].url : null,
-                        link: `https://healthjobportal.com/jobs/${slug}`
-                    })
-                }).catch(err => console.error("Telegram error:", err));
-
-                loaderMsg.innerText = "✅ Job Published! Redirecting...";
-
-                // ★ KEY CHANGE: Redirect to the new SEO-friendly /jobs/slug URL ★
-              setTimeout(() => {
-    window.location.replace('index.html');
-}, 1500);
+                setTimeout(() => { window.location.replace(`/jobs/${finalSlug}`); }, 1500);
 
             } catch (err) {
                 console.error(err);
                 loader.classList.add('hidden');
                 submitBtn.disabled = false;
+                submitBtnText.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-right: 8px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>
+                    Publish Healthcare Job
+                `;
                 alert("Error publishing job: " + err.message);
             }
         };
+
         const editor = document.getElementById('job-desc');
 
-editor.addEventListener('paste', function(e) {
-    e.preventDefault();
-    const text = (e.clipboardData || window.clipboardData).getData('text/plain');
-    const lines = text.split('\n');
-    let html = '';
-    lines.forEach(line => {
-        const trimmed = line.trim();
-        if (!trimmed) return;
-        const isHeading = (
-            trimmed.length < 80 &&
-            !trimmed.endsWith('.') &&
-            !trimmed.endsWith(',') &&
-            trimmed.split(' ').length <= 10
-        );
-        if (isHeading) {
-            html += `<h2>${trimmed}</h2>`;
-        } else {
-            html += `<p>${trimmed}</p>`;
-        }
-    });
-    document.execCommand('insertHTML', false, html || `<p>${text}</p>`);
-});
+        editor.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+            const lines = text.split('\n');
+            let html = '';
+            lines.forEach(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return;
+                const isHeading = (
+                    trimmed.length < 80 &&
+                    !trimmed.endsWith('.') &&
+                    !trimmed.endsWith(',') &&
+                    trimmed.split(' ').length <= 10
+                );
+                if (isHeading) {
+                    html += `<h2>${trimmed}</h2>`;
+                } else {
+                    html += `<p>${trimmed}</p>`;
+                }
+            });
+            document.execCommand('insertHTML', false, html || `<p>${text}</p>`);
+        });
 
-editor.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        document.execCommand('insertHTML', false, '<p><br></p>');
-    }
-});
+        editor.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const selection = window.getSelection();
+                const node = selection.anchorNode;
+                
+                let blockElement = node;
+                if (node && node.nodeType === Node.TEXT_NODE) {
+                    blockElement = node.parentElement;
+                }
+                const currentBlock = blockElement ? blockElement.closest('p, h1, h2, li, div') : null;
+                const parentTag = currentBlock ? currentBlock.tagName : null;
+                
+                if (parentTag === 'H1' || parentTag === 'H2') {
+                    const newP = document.createElement('p');
+                    newP.innerHTML = '<br>';
+                    if (currentBlock.nextSibling) {
+                        currentBlock.parentElement.insertBefore(newP, currentBlock.nextSibling);
+                    } else {
+                        currentBlock.parentElement.appendChild(newP);
+                    }
+                    const range = document.createRange();
+                    range.setStart(newP, 0);
+                    range.collapse(true);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                } else {
+                    document.execCommand('insertHTML', false, '<p><br></p>');
+                }
+            }
+        });
     </script>
 
     <!-- Push notification handler (Capacitor) -->
@@ -977,6 +1608,167 @@ editor.addEventListener('keydown', function(e) {
         }
     });
     </script>
+
+<!-- ══════════════════════════════════════════
+     🔒 ACCOUNT APPROVAL GATE
+     Admin approval se pehle yeh page use nahi ho sakta.
+     accountStatus = pending / rejected / rejected_final / inactive
+     → user ko yahan rok kar "Account Under Review" screen dikhai jati hai.
+     ══════════════════════════════════════ -->
+<div id="account-gate" style="display:none;position:fixed;inset:0;z-index:99999;background:#f3f2ef;overflow-y:auto;">
+    <div style="min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px 18px;">
+        <div id="account-gate-card" style="background:#fff;border:1px solid #e0dfdc;border-radius:16px;max-width:420px;width:100%;padding:34px 26px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 14px 34px -18px rgba(10,102,194,0.22);">
+            <div id="account-gate-icon" style="width:56px;height:56px;border-radius:50%;background:#fffbeb;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#d97706"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
+            <div id="account-gate-badge" style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#d97706;margin-bottom:8px;">Account Under Review</div>
+            <h1 id="account-gate-title" style="font-size:19px;font-weight:800;color:#111827;margin-bottom:10px;letter-spacing:-0.01em;">Your account is under review</h1>
+            <p id="account-gate-text" style="font-size:13.5px;line-height:1.65;color:#4b5563;margin-bottom:22px;">
+                Our team is reviewing your facility account. Job posting will be unlocked as soon as your account is approved.
+            </p>
+            <div id="account-gate-meta" style="display:none;font-size:12px;color:#6b7280;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;margin-bottom:20px;text-align:left;line-height:1.6;word-break:break-word;"></div>
+            <button onclick="window.location.href='index.html'"
+                style="width:100%;padding:13px;background:#0a66c2;color:#fff;border:none;border-radius:24px;font-size:14px;font-weight:700;cursor:pointer;">
+                Back to Home
+            </button>
+            <button id="account-gate-logout" onclick="window.__gateLogout()"
+                style="width:100%;margin-top:10px;padding:12px;background:#fff;color:#64748b;border:1px solid #e0dfdc;border-radius:24px;font-size:13px;font-weight:600;cursor:pointer;">
+                Log out
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   🔒 ACCOUNT APPROVAL GATE — galat account ko foran rok do
+   ──────────────────────────────────────────────────────────────────
+   Yeh BLOCKING <script> hai (Firebase module se PEHLE chalta hai),
+   is liye page ka baqi content aur network calls bohat kam rehti hain.
+   Asli enforcement server-side hai (adminapprovals/approvals.js) —
+   yeh sirf UI gate hai taake user ko saaf message mil jaye.
+   ══════════════════════════════════════════════════════════════════ */
+(function () {
+    // ── Approved statuses — sirf yeh page khol sakte hain ──
+    function isApprovedStatus(status) {
+        const st = String(status || '').toLowerCase().trim();
+        // Field na ho to purane/legacy accounts ko block na karo
+        return !st || st === 'approved' || st === 'active';
+    }
+    window.__isApprovedStatus = isApprovedStatus;
+
+    // Gate ko show karo. reasonData = { status, reason }
+    window.__showAccountGate = function (reasonData) {
+        const gate = document.getElementById('account-gate');
+        if (!gate) return;
+
+        const st      = String(reasonData?.status || '').toLowerCase().trim();
+        const isFinal = (st === 'rejected' || st === 'rejected_final' || st === 'inactive');
+
+        const badge = document.getElementById('account-gate-badge');
+        const title = document.getElementById('account-gate-title');
+        const text  = document.getElementById('account-gate-text');
+        const icon  = document.getElementById('account-gate-icon');
+
+        if (isFinal) {
+            badge.textContent = 'Account Not Approved';
+            badge.style.color = '#dc2626';
+            title.textContent = 'Your account was not approved';
+            text.textContent  = st === 'inactive'
+                ? 'This account has been deactivated. If you believe this is a mistake, please contact our support team.'
+                : 'Your facility account was not approved, so job posting is disabled. Please check your email — we sent you an appeal link to request a review.';
+            icon.innerHTML = '<svg width="28" height="28" viewBox="0 0 24 24" fill="#dc2626"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg>';
+            icon.style.background = '#fef2f2';
+        } else {
+            badge.textContent = 'Account Under Review';
+            badge.style.color = '#d97706';
+            title.textContent = 'Your account is under review';
+            text.textContent  = 'Our team is reviewing your facility account. You will be able to publish job posts as soon as it is approved — this usually takes less than 24 hours.';
+        }
+
+        // Rejection reason (agar admin ne diya ho) dikhao
+        const meta = document.getElementById('account-gate-meta');
+        const reason = reasonData?.reason;
+        if (reason && String(reason).trim()) {
+            meta.style.display = 'block';
+            meta.innerHTML = '<b style="color:#374151;">Reason:</b> ' + String(reason).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Baqi page hide karo — gate full-screen hai
+        const header = document.querySelector('header');
+        const main   = document.querySelector('main');
+        const footer = document.querySelector('footer');
+        if (header) header.style.display = 'none';
+        if (main)   main.style.display   = 'none';
+        if (footer) footer.style.display = 'none';
+
+        // Back button se wapas andar na aane do — gate khula hai to page chhoro
+        if (!window.__gateHistoryLock) {
+            window.__gateHistoryLock = true;
+            try { history.pushState({ __gate: 1 }, '', location.href); } catch (_) {}
+            window.addEventListener('popstate', () => {
+                if (window.__accountGateOpen) {
+                    try { history.pushState({ __gate: 1 }, '', location.href); } catch (_) {}
+                    window.scrollTo(0, 0);
+                }
+            });
+        }
+        window.__accountGateOpen = true;
+
+        gate.style.display = 'block';
+        window.scrollTo(0, 0);
+    };
+
+    // Fast local cache — Firestore ka jawab aane se pehle hi gate laga do
+    try {
+        const cachedRole   = localStorage.getItem('fast_user_role');
+        const cachedStatus = localStorage.getItem('fast_account_status');
+        if (cachedRole === 'employer' && cachedStatus && !isApprovedStatus(cachedStatus)) {
+            window.__showAccountGate({ status: cachedStatus });
+        }
+    } catch (_) {}
+
+    // ── FAIL-SAFE (fail-closed) ─────────────────────────────────────────
+    // Agar Firestore ka jawab 6 second mein na aaye (slow network / offline /
+    // koi aur wajah), to page ko khula na chhoro — gate laga do. Approved
+    // user ke liye yeh sirf thodi der ka "Checking…" hai, kyunke jawab aane
+    // par __confirmApproved() gate hata deta hai.
+    window.__approvalVerified = false;
+    window.__gateTimeout = setTimeout(() => {
+        if (window.__approvalVerified) return;
+        window.__showAccountGate({ status: 'pending', checking: true });
+        const b = document.getElementById('account-gate-badge');
+        const t = document.getElementById('account-gate-title');
+        const x = document.getElementById('account-gate-text');
+        if (b) b.textContent = 'Checking Account Status';
+        if (t) t.textContent = 'Verifying your account…';
+        if (x) x.textContent  = 'We could not confirm your approval status yet. Please refresh the page or check your internet connection.';
+    }, 6000);
+
+    // Firestore se status confirm ho gaya → gate hata do (approved user)
+    window.__confirmApproved = function () {
+        window.__approvalVerified = true;
+        window.__accountGateOpen  = false;
+        if (window.__gateTimeout) { clearTimeout(window.__gateTimeout); window.__gateTimeout = null; }
+        const gate = document.getElementById('account-gate');
+        if (gate) gate.style.display = 'none';
+        const header = document.querySelector('header');
+        const main   = document.querySelector('main');
+        const footer = document.querySelector('footer');
+        if (header) header.style.display = '';
+        if (main)   main.style.display   = '';
+        if (footer) footer.style.display = '';
+    };
+
+    // Logout helper (Firebase module ke bina bhi kaam karta hai)
+    window.__gateLogout = function () {
+        try { localStorage.removeItem('fast_user_role'); localStorage.removeItem('fast_account_status'); } catch (_) {}
+        try { sessionStorage.clear(); } catch (_) {}
+        window.location.replace('login.html');
+    };
+})();
+</script>
+
 
 </body>
 </html>

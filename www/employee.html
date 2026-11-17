@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Complete Employer Profile | Health Jobs</title>
+
+    <link rel="preconnect" href="https://www.gstatic.com">
+
+    <style>
+        /* =========================================
+           1. ROOT VARIABLES & RESET
+        ========================================= */
+        :root {
+            --primary: #0d9488;
+            --primary-hover: #0f766e;
+            --primary-soft: #f0fdfa;
+            --bg-color: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --error: #ef4444;
+            --error-bg: #fee2e2;
+            --focus-ring: rgba(13, 148, 136, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            padding: 32px 16px 60px;
+        }
+
+        /* =========================================
+           2. SHELL / HEADER
+        ========================================= */
+        .page-shell { max-width: 760px; margin: 0 auto; }
+
+        .top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px;
+        }
+        .top-bar .brand { display: flex; align-items: center; gap: 10px; }
+        .top-bar .brand img { height: 32px; }
+        .top-bar .brand span { font-weight: 700; font-size: 15px; color: var(--text-main); }
+        .top-bar .exit-link {
+            font-size: 13px; color: var(--text-muted); text-decoration: none; font-weight: 500;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .top-bar .exit-link:hover { color: var(--text-main); }
+
+        .intro { text-align: center; margin-bottom: 28px; }
+        .intro .eyebrow {
+            display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+            color: var(--primary); background: var(--primary-soft); padding: 5px 12px;
+            border-radius: 20px; margin-bottom: 14px; text-transform: uppercase;
+        }
+        .intro h1 { font-size: 25px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+        .intro p { font-size: 14px; color: var(--text-muted); max-width: 480px; margin: 0 auto; line-height: 1.5; }
+
+        /* =========================================
+           3. PROGRESS TRACKER
+        ========================================= */
+        .progress-track { display: flex; align-items: center; margin-bottom: 32px; padding: 0 6px; }
+        .progress-step { display: flex; align-items: center; flex: 1; }
+        .progress-step:last-child { flex: 0; }
+        .progress-dot {
+            width: 26px; height: 26px; border-radius: 50%; background: var(--surface);
+            border: 2px solid var(--border-color); color: var(--text-muted);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; flex-shrink: 0; transition: all 0.3s ease;
+        }
+        .progress-dot svg { width: 13px; height: 13px; }
+        .progress-line { flex: 1; height: 2px; background: var(--border-color); margin: 0 6px; transition: background 0.3s ease; }
+        .progress-step.done .progress-dot, .progress-step.active .progress-dot {
+            border-color: var(--primary); color: var(--primary);
+        }
+        .progress-step.done .progress-dot { background: var(--primary); color: #fff; }
+        .progress-step.done .progress-line { background: var(--primary); }
+
+        /* =========================================
+           4. CARD & SECTIONS
+        ========================================= */
+        .card {
+            background: var(--surface); border: 1px solid var(--border-color); border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);
+            overflow: hidden;
+        }
+
+        .form-section { padding: 28px 28px 4px; border-bottom: 1px solid var(--border-color); }
+        .form-section:last-of-type { border-bottom: none; }
+
+        .section-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+        .section-head .icon-badge {
+            width: 34px; height: 34px; border-radius: 8px; background: var(--primary-soft);
+            display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+        }
+        .section-head h2 { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
+        .section-head p { font-size: 12.5px; color: var(--text-muted); }
+
+        .form-group { margin-bottom: 18px; }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+        @media (max-width: 560px) { .form-row { flex-direction: column; gap: 0; } }
+
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
+        .form-group label .optional-tag { font-weight: 500; color: var(--text-muted); font-size: 11.5px; }
+
+        .input-wrapper input, .input-wrapper select, .input-wrapper textarea {
+            width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px;
+            font-size: 14px; color: var(--text-main); transition: all 0.2s ease; background-color: #f8fafc;
+            outline: none; resize: none;
+        }
+        .input-wrapper input:focus, .input-wrapper select:focus, .input-wrapper textarea:focus {
+            border-color: var(--primary); background-color: var(--surface); box-shadow: 0 0 0 4px var(--focus-ring);
+        }
+        .input-wrapper select { cursor: pointer; appearance: auto; }
+        .input-wrapper.readonly input { background: #f1f5f9; color: var(--text-muted); cursor: not-allowed; }
+
+        .char-count { font-size: 11.5px; color: var(--text-muted); text-align: right; margin-top: 6px; }
+
+        .loc-status-box {
+            font-size: 12px; margin-bottom: 16px; font-weight: 500;
+            padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-color);
+            background: #f1f5f9; color: var(--text-muted);
+        }
+
+        /* =========================================
+           5. FOOTER / SUBMIT
+        ========================================= */
+        .form-footer { padding: 22px 28px 28px; }
+        .btn-primary {
+            width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s ease;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+        .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .form-note { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 14px; }
+        .status-message { margin-top: 14px; font-size: 13px; text-align: center; font-weight: 500; color: var(--error); display: none; }
+        .status-message.show { display: block; }
+
+        /* =========================================
+           6. WIZARD STEPS & PHOTO UPLOAD
+        ========================================= */
+        .wizard-step { display: none; }
+        .wizard-step.active-step { display: block; }
+
+        .step-actions { padding: 22px 28px; display: flex; gap: 12px; border-bottom: 1px solid var(--border-color); }
+        .step-actions .btn-primary { flex: 1; }
+        .btn-secondary {
+            flex: 1; padding: 14px; background: var(--surface); color: var(--text-main);
+            border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-secondary:hover { background: #f1f5f9; }
+
+        .upload-dropzone {
+            border: 2px dashed var(--border-color); border-radius: 10px; padding: 22px;
+            text-align: center; cursor: pointer; transition: all 0.2s ease; background: var(--primary-soft);
+        }
+        .upload-dropzone:hover { border-color: var(--primary); }
+        .upload-dropzone svg { width: 26px; height: 26px; color: var(--primary); margin-bottom: 8px; }
+        .upload-dropzone .up-text { font-size: 13.5px; font-weight: 600; color: var(--text-main); }
+        .upload-dropzone .up-subtext { font-size: 11.5px; color: var(--text-muted); margin-top: 4px; }
+
+        .photo-preview-row {
+            display: flex; gap: 10px; margin-top: 14px; overflow-x: auto; padding-bottom: 6px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .photo-preview-item {
+            position: relative; flex: 0 0 auto; width: 84px; height: 84px; border-radius: 8px; overflow: hidden;
+            border: 1px solid var(--border-color); background: #f1f5f9;
+        }
+        .photo-preview-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .photo-preview-item.uploading img { opacity: 0.45; }
+        .photo-preview-item.upload-error img { opacity: 0.35; filter: grayscale(0.3); }
+        .photo-preview-item .spin-mini {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+        }
+        .photo-preview-item .spin-mini div {
+            width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.5); border-top: 2px solid #fff;
+            border-radius: 50%; animation: spin 0.6s linear infinite;
+        }
+        .photo-preview-item .retry-photo {
+            position: absolute; inset: 0; margin: auto; width: 30px; height: 30px; border-radius: 50%;
+            background: rgba(239,68,68,0.9); color: #fff; border: none; font-size: 16px; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
+        }
+        .photo-preview-item .remove-photo {
+            position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; border-radius: 50%;
+            background: rgba(15,23,42,0.65); color: #fff; border: none; font-size: 13px; line-height: 1;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
+        }
+        .btn-primary.btn-locked { background: var(--text-muted); cursor: not-allowed; }
+
+        /* =========================================
+           6b. PROFILE / CONTACT PERSON PHOTO UPLOAD
+        ========================================= */
+        .avatar-upload-row { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+        .avatar-upload-circle {
+            position: relative; width: 84px; height: 84px; border-radius: 50%; flex-shrink: 0;
+            background: var(--primary-soft); border: 2px dashed var(--border-color);
+            cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;
+            transition: border-color 0.2s ease;
+        }
+        .avatar-upload-circle:hover { border-color: var(--primary); }
+        .avatar-upload-circle.has-image { border-style: solid; border-color: var(--border-color); }
+        .avatar-upload-circle.has-error { border-style: solid; border-color: var(--error); }
+        .avatar-upload-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .avatar-placeholder-icon { width: 30px; height: 30px; color: var(--primary); }
+        .avatar-camera-badge {
+            position: absolute; bottom: 0; right: 0; width: 26px; height: 26px; border-radius: 50%;
+            background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--surface);
+        }
+        .avatar-camera-badge svg { width: 12px; height: 12px; }
+        .avatar-upload-circle.has-error .avatar-camera-badge { background: var(--error); }
+        .avatar-spin-overlay {
+            position: absolute; inset: 0; background: rgba(15,23,42,0.45);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .avatar-spin-overlay div {
+            width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,0.4); border-top: 2.5px solid #fff;
+            border-radius: 50%; animation: spin 0.6s linear infinite;
+        }
+        .avatar-upload-title { font-size: 13.5px; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
+        .avatar-upload-sub { font-size: 12px; color: var(--text-muted); }
+        .avatar-upload-sub.is-error { color: var(--error); font-weight: 500; }
+
+        /* Cover photo upload */
+        .cover-upload-box {
+            position: relative; width: 100%; height: 110px; border-radius: 10px;
+            background: var(--primary-soft); border: 2px dashed var(--border-color);
+            cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;
+            transition: border-color 0.2s ease; margin-bottom: 22px;
+        }
+        .cover-upload-box:hover { border-color: var(--primary); }
+        .cover-upload-box.has-image { border-style: solid; border-color: var(--border-color); }
+        .cover-upload-box.has-error { border-style: solid; border-color: var(--error); }
+        .cover-upload-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .cover-placeholder-icon { width: 26px; height: 26px; color: var(--primary); }
+        .cover-upload-hint {
+            position: absolute; bottom: 8px; right: 10px; display: flex; align-items: center; gap: 5px;
+            background: rgba(0,0,0,0.55); color: #fff; font-size: 11px; font-weight: 600;
+            padding: 4px 9px; border-radius: 20px; backdrop-filter: blur(2px);
+        }
+        .cover-upload-hint svg { width: 12px; height: 12px; }
+        .cover-upload-box.has-error .cover-upload-hint { background: var(--error); }
+        .cover-spin-overlay {
+            position: absolute; inset: 0; background: rgba(15,23,42,0.45);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cover-spin-overlay div {
+            width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,0.4); border-top: 2.5px solid #fff;
+            border-radius: 50%; animation: spin 0.6s linear infinite;
+        }
+
+        /* =========================================
+           6c. PROFILE VISIBILITY TOGGLES
+        ========================================= */
+        .toggle-list { display: flex; flex-direction: column; }
+        .toggle-row {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 0; border-bottom: 1px solid var(--border-color);
+            cursor: pointer; user-select: none;
+        }
+        .toggle-row:last-child { border-bottom: none; }
+        .toggle-text { flex: 1; min-width: 0; }
+        .toggle-text b { display: block; font-size: 13.5px; font-weight: 600; color: var(--text-main); }
+        .toggle-text span { display: block; font-size: 11.5px; color: var(--text-muted); margin-top: 2px; line-height: 1.45; }
+        .toggle-row input { display: none; }
+        .tgl {
+            position: relative; width: 44px; height: 24px; flex-shrink: 0;
+            background: #cbd5e1; border-radius: 24px; transition: background 0.2s;
+        }
+        .tgl::before {
+            content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
+            background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .toggle-row input:checked + .tgl { background: var(--primary); }
+        .toggle-row input:checked + .tgl::before { transform: translateX(20px); }
+
+        /* =========================================
+           7. LOADER (auth guard)
+        ========================================= */
+        .page-loader {
+            position: fixed; inset: 0; background: var(--bg-color); z-index: 50;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.25s ease;
+        }
+        .page-loader .spinner { display: block; border-color: var(--border-color); border-top-color: var(--primary); width: 32px; height: 32px; margin-bottom: 12px; }
+        .page-loader span { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="page-loader" class="page-loader">
+        <div class="spinner" style="display:block;"></div>
+        <span>Loading your session...</span>
+    </div>
+
+    <!-- ══════════ EMAIL VERIFICATION GATE (6-digit PIN) ══════════ -->
+    <div id="email-verify-gate" class="page-shell hidden" style="max-width:460px;padding-top:44px;">
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px 24px;box-shadow:0 10px 25px -5px rgba(0,0,0,0.05);">
+            <div style="text-align:center;margin-bottom:22px;">
+                <div style="width:52px;height:52px;border-radius:14px;background:#f0fdfa;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                </div>
+                <h1 style="font-size:20px;font-weight:700;color:#0f172a;margin-bottom:6px;">Verify Your Email</h1>
+                <p style="font-size:13.5px;color:#64748b;line-height:1.6;">
+                    We sent a 6-digit code to <strong id="email-verify-label">your email</strong>
+                </p>
+            </div>
+
+            <div id="email-verify-step-sent" class="hidden">
+                <div id="email-verify-pin" style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;">
+                    <input type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                    <input type="text" inputmode="numeric" maxlength="1" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                    <input type="text" inputmode="numeric" maxlength="1" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                    <input type="text" inputmode="numeric" maxlength="1" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                    <input type="text" inputmode="numeric" maxlength="1" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                    <input type="text" inputmode="numeric" maxlength="1" style="width:44px;height:54px;text-align:center;font-size:21px;font-weight:700;font-family:monospace;border:1.5px solid #e2e8f0;border-radius:10px;background:#f8fafc;outline:none;color:#0f172a;">
+                </div>
+
+                <button id="email-verify-submit" type="button"
+                    style="width:100%;padding:14px;background:#0d9488;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">
+                    <span id="email-verify-submit-text">Verify Email</span>
+                </button>
+            </div>
+
+            <div id="email-verify-msg" style="font-size:13px;font-weight:600;text-align:center;margin-top:13px;line-height:1.5;"></div>
+
+            <button id="email-verify-send" type="button"
+                style="width:100%;margin-top:12px;padding:12px;background:#f1f5f9;color:#0f172a;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">
+                <span id="email-verify-send-text">Send Code</span>
+            </button>
+
+            <p style="font-size:12px;color:#64748b;text-align:center;margin-top:16px;line-height:1.6;">
+                This keeps your facility account secure. The code expires in 10 minutes.
+            </p>
+        </div>
+    </div>
+
+    <div id="page-content" class="page-shell hidden">
+        <div class="top-bar">
+            <div class="brand">
+                <img src="images/logo.png" alt="Health Jobs" onerror="handleLogoError(this)">
+                <span>Health Jobs</span>
+            </div>
+            <a href="candidate2.html" class="exit-link">Not an employer? Switch to Candidate</a>
+        </div>
+
+        <div class="intro">
+            <span class="eyebrow">Employer Registration</span>
+            <h1>Tell us about your facility</h1>
+            <p>This information appears on your job posts and helps candidates trust your listings. It takes about 2 minutes.</p>
+        </div>
+
+        <div class="progress-track">
+            <div class="progress-step done" data-step="0"><div class="progress-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div><div class="progress-line"></div></div>
+            <div class="progress-step active" data-step="1"><div class="progress-dot">1</div><div class="progress-line"></div></div>
+            <div class="progress-step" data-step="2"><div class="progress-dot">2</div><div class="progress-line"></div></div>
+            <div class="progress-step" data-step="3"><div class="progress-dot">3</div></div>
+        </div>
+
+        <form id="employer-form">
+            <div class="card">
+
+                <div class="wizard-step active-step" data-wizard-step="1">
+
+                <!-- SECTION 1: FACILITY IDENTITY -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="10" height="18" rx="1"/><rect x="14" y="9" width="6" height="12" rx="1"/><path d="M7 7h1M11 7h1M7 11h1M11 11h1M7 15h1M11 15h1"/></svg></div>
+                        <div>
+                            <h2>Facility Identity</h2>
+                            <p>Basic details about your hospital, clinic or lab</p>
+                        </div>
+                    </div>
+
+                    <div class="cover-upload-box" id="cover-upload-box" onclick="document.getElementById('cover-photo-input').click()">
+                        <img id="cover-preview-img" src="" alt="" class="hidden">
+                        <svg id="cover-placeholder-icon" class="cover-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 15l-5-5L5 19"/></svg>
+                        <div class="cover-spin-overlay hidden" id="cover-spin-overlay"><div></div></div>
+                        <div class="cover-upload-hint">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3.5h6l1.2 2H20a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1h3.8L9 3.5Zm3 5.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>
+                            <span id="cover-upload-status">Add cover photo</span>
+                        </div>
+                    </div>
+                    <input type="file" id="cover-photo-input" accept="image/*" class="hidden">
+
+                    <div class="avatar-upload-row">
+                        <div class="avatar-upload-circle" id="avatar-upload-circle" onclick="document.getElementById('profile-photo-input').click()">
+                            <img id="avatar-preview-img" src="" alt="" class="hidden">
+                            <svg id="avatar-placeholder-icon" class="avatar-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="10" height="18" rx="1"/><rect x="14" y="9" width="6" height="12" rx="1"/><path d="M7 7h1M11 7h1M7 11h1M11 11h1M7 15h1M11 15h1"/></svg>
+                            <div class="avatar-spin-overlay hidden" id="avatar-spin-overlay"><div></div></div>
+                            <div class="avatar-camera-badge">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3.5h6l1.2 2H20a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1h3.8L9 3.5Zm3 5.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="avatar-upload-title">Facility / Profile Photo <span class="optional-tag">(optional)</span></div>
+                            <div class="avatar-upload-sub" id="avatar-upload-status">A logo or front photo builds trust with candidates</div>
+                        </div>
+                    </div>
+                    <input type="file" id="profile-photo-input" accept="image/*" class="hidden">
+
+                    <div class="form-group">
+                        <label for="facility-name">Facility Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="facility-name" required placeholder="E.g. City Care Hospital">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="username" required maxlength="20" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="E.g. ayesha_khan">
+                        </div>
+                        <div id="username-status" style="font-size:12px;margin-top:6px;color:var(--text-muted);">3–20 characters: small letters, numbers and underscore (_). Must be unique.</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="facility-type">Facility Type</label>
+                            <div class="input-wrapper">
+                                <select id="facility-type" required>
+                                    <option value="">Select type</option>
+                                    <option value="Hospital">Hospital</option>
+                                    <option value="Clinic">Clinic</option>
+                                    <option value="Pharmacy">Pharmacy</option>
+                                    <option value="Diagnostic Lab">Diagnostic Lab</option>
+                                    <option value="Nursing Home / Home Care">Nursing Home / Home Care</option>
+                                    <option value="Blood Bank">Blood Bank</option>
+                                    <option value="Dental Clinic">Dental Clinic</option>
+                                    <option value="Physiotherapy Center">Physiotherapy Center</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ownership-type">Ownership <span class="optional-tag">(optional)</span></label>
+                            <div class="input-wrapper">
+                                <select id="ownership-type">
+                                    <option value="">Select ownership</option>
+                                    <option value="Private">Private</option>
+                                    <option value="Government">Government</option>
+                                    <option value="Semi-Government">Semi-Government</option>
+                                    <option value="Trust / NGO">Trust / NGO</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="established-year">Year Established <span class="optional-tag">(optional)</span></label>
+                        <div class="input-wrapper">
+                            <input type="number" id="established-year" min="1900" max="2026" placeholder="E.g. 2010">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: REGISTRATION -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="1.5"/><path d="M9 3.5h6a1 1 0 0 1 1 1V6H8V4.5a1 1 0 0 1 1-1Z"/><path d="M8.5 13l2 2 4-4"/></svg></div>
+                        <div>
+                            <h2>Registration & Verification</h2>
+                            <p>Helps mark your facility as verified to candidates</p>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-number">Registration / License No. <span class="optional-tag">(optional)</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="reg-number" placeholder="E.g. PHC-2024-00123">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-authority">Issuing Authority <span class="optional-tag">(optional)</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="reg-authority" placeholder="E.g. Punjab Healthcare Commission">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2b: PROFILE VISIBILITY -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                        <div>
+                            <h2>Profile Visibility</h2>
+                            <p>Choose what visitors can see on your public profile — you can change these anytime from Settings</p>
+                        </div>
+                    </div>
+
+                    <div class="toggle-list">
+                        <label class="toggle-row">
+                            <div class="toggle-text">
+                                <b>Show my phone number</b>
+                                <span>Your contact number appears on your public profile</span>
+                            </div>
+                            <input type="checkbox" id="pref-show-phone" checked>
+                            <span class="tgl"></span>
+                        </label>
+                        <label class="toggle-row">
+                            <div class="toggle-text">
+                                <b>Allow direct messages</b>
+                                <span>Candidates can use the Message button on your profile to chat with you</span>
+                            </div>
+                            <input type="checkbox" id="pref-allow-dm" checked>
+                            <span class="tgl"></span>
+                        </label>
+                        <label class="toggle-row">
+                            <div class="toggle-text">
+                                <b>Show facility images</b>
+                                <span>Your uploaded branch / facility photos are visible to everyone</span>
+                            </div>
+                            <input type="checkbox" id="pref-show-images" checked>
+                            <span class="tgl"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="step-actions" data-step-actions="1">
+                    <button type="button" class="btn-primary" onclick="goToStep(2)">
+                        Continue
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+
+                </div><!-- /wizard-step 1 -->
+
+                <div class="wizard-step" data-wizard-step="2">
+
+                <!-- SECTION 3: CONTACT PERSON -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c1-3.5 4-5.5 6.5-5.5s5.5 2 6.5 5.5"/></svg></div>
+                        <div>
+                            <h2>Contact Person</h2>
+                            <p>Who candidates and our team can reach for hiring queries</p>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact-name">Full Name</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="contact-name" required placeholder="E.g. Ayesha Khan">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-designation">Designation</label>
+                            <div class="input-wrapper">
+                                <select id="contact-designation" required>
+                                    <option value="">Select designation</option>
+                                    <option value="Owner">Owner</option>
+                                    <option value="Director / CEO">Director / CEO</option>
+                                    <option value="HR Manager">HR Manager</option>
+                                    <option value="Admin Officer">Admin Officer</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact-phone">Contact Number</label>
+                            <div class="input-wrapper">
+                                <input type="tel" id="contact-phone" required placeholder="+92 3XX XXXXXXX">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="account-email">Account Email</label>
+                            <div class="input-wrapper readonly">
+                                <input type="text" id="account-email" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: LOCATION -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg></div>
+                        <div>
+                            <h2>Facility Location</h2>
+                            <p>Where candidates will find and visit you</p>
+                        </div>
+                    </div>
+
+                    <div id="loc-status" class="loc-status-box">Waiting for location permission...</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="setup-country">Country</label>
+                            <div class="input-wrapper">
+                                <select id="setup-country" required onchange="onCountryChange(this)">
+                                    <option value="">Loading countries...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="setup-state">State / Province</label>
+                            <div class="input-wrapper">
+                                <select id="setup-state" required onchange="onStateChange(this)">
+                                    <option value="">Select state</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="setup-city">City</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="setup-city" required placeholder="E.g. Lahore">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="full-address">Full Address</label>
+                        <div class="input-wrapper">
+                            <textarea id="full-address" rows="2" required placeholder="Street, area, landmark"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-actions" data-step-actions="2">
+                    <button type="button" class="btn-secondary" onclick="goToStep(1)">Back</button>
+                    <button type="button" class="btn-primary" onclick="goToStep(3)">
+                        Continue
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+
+                </div><!-- /wizard-step 2 -->
+
+                <div class="wizard-step" data-wizard-step="3">
+
+                <!-- SECTION 5: ABOUT -->
+                <div class="form-section">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/><path d="M14 3.5V8h4"/><path d="M9 13h6M9 16.5h6"/></svg></div>
+                        <div>
+                            <h2>About Your Facility</h2>
+                            <p>A short introduction shown on your public profile</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <textarea id="about-facility" rows="3" maxlength="300" oninput="updateCharCount()" placeholder="E.g. City Care Hospital is a 50-bed multi-specialty facility serving Lahore since 2010..."></textarea>
+                        </div>
+                        <div class="char-count"><span id="char-count-val">0</span>/300</div>
+                    </div>
+                </div>
+
+                <!-- SECTION 6: FACILITY PHOTOS -->
+                <div class="form-section" style="border-bottom: none;">
+                    <div class="section-head">
+                        <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5L9 17"/></svg></div>
+                        <div>
+                            <h2>Facility Photos <span class="optional-tag">(optional, recommended)</span></h2>
+                            <p>Photos of your building/reception build trust with candidates — up to 5 images</p>
+                        </div>
+                    </div>
+
+                    <div class="upload-dropzone" id="photo-dropzone" onclick="document.getElementById('facility-photos-input').click()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5L9 17"/></svg>
+                        <div class="up-text">Click to add photos</div>
+                        <div class="up-subtext">Up to 5 images · JPG/PNG · auto-compressed</div>
+                    </div>
+                    <input type="file" id="facility-photos-input" accept="image/*" multiple class="hidden">
+
+                    <div class="photo-preview-row" id="photo-preview-row"></div>
+                </div>
+
+                <div class="form-footer" data-step-actions="3">
+                    <div style="display:flex; gap:12px;">
+                        <button type="button" class="btn-secondary" onclick="goToStep(2)">Back</button>
+                        <button type="submit" class="btn-primary" id="save-btn" style="flex:1;">
+                            <span id="save-text">Continue</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                            <div class="spinner" id="save-loader"></div>
+                        </button>
+                    </div>
+                    <div id="status-msg" class="status-message"></div>
+                    <div class="form-note">Your details are reviewed before job posts go live.</div>
+                </div>
+
+                </div><!-- /wizard-step 3 -->
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref, set, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+            authDomain: "jobs-45cc9.firebaseapp.com",
+            projectId: "jobs-45cc9",
+            storageBucket: "jobs-45cc9.firebasestorage.app",
+            messagingSenderId: "21065686301",
+            appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+
+        let globalCountriesData = [];
+        let editMode = false;
+        let existingUserData = null;
+        let currentUser = null;
+
+        // ══════════════════════════════════════════════════
+        // 🆔 UNIQUE USERNAME
+        // usernames/{username} collection = uniqueness ka asal lock.
+        // Doc id hi username hai, is liye do users ek hi username
+        // kabhi nahi le sakte (transaction se atomic check + claim).
+        // ══════════════════════════════════════════════════
+        const USERNAME_RE = /^[a-z0-9_]{3,20}$/;
+        const RESERVED_USERNAMES = new Set(['admin','administrator','support','help','root','system','moderator','mod','official','healthjobs','healthjobportal','api','www','login','signup','register','about','wid','notes','jobs','updates','advertise','feedback','null','undefined','me']);
+        const __nameFieldId = 'facility-name';
+        let usernameTouched = false;
+        let usernameCheckSeq = 0;
+        let usernameCheckTimer = null;
+
+        function slugifyUsername(s) {
+            let u = String(s || '').toLowerCase()
+                .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+            return u.slice(0, 20);
+        }
+        function usernameFormatError(u) {
+            if (!u) return 'Please choose a username.';
+            if (u.length < 3) return 'Username must be at least 3 characters.';
+            if (u.length > 20) return 'Username can be at most 20 characters.';
+            if (!USERNAME_RE.test(u)) return 'Only small letters, numbers and underscore (_) are allowed.';
+            if (RESERVED_USERNAMES.has(u)) return 'This username is reserved. Please choose another.';
+            return '';
+        }
+        function setUsernameStatus(msg, kind) {
+            const el = document.getElementById('username-status');
+            if (!el) return;
+            el.textContent = msg;
+            el.style.color = kind === 'ok' ? '#16a34a' : (kind === 'bad' ? '#dc2626' : 'var(--text-muted)');
+        }
+        async function usernameIsFree(u) {
+            const snap = await getDoc(doc(db, 'usernames', u));
+            if (!snap.exists()) return true;
+            return !!currentUser && snap.data().uid === currentUser.uid;   // apna hi hai to theek
+        }
+        async function checkUsernameNow() {
+            const input = document.getElementById('username');
+            const u = (input.value || '').trim().toLowerCase();
+            const seq = ++usernameCheckSeq;
+            const fmt = usernameFormatError(u);
+            if (fmt) { setUsernameStatus(u ? fmt : '3–20 characters: small letters, numbers and underscore (_). Must be unique.', u ? 'bad' : ''); return; }
+            setUsernameStatus('Checking…', '');
+            try {
+                const free = await usernameIsFree(u);
+                if (seq !== usernameCheckSeq) return;           // naya check shuru ho chuka
+                setUsernameStatus(free ? '✓ @' + u + ' is available' : '✗ @' + u + ' is already taken', free ? 'ok' : 'bad');
+            } catch (e) {
+                if (seq !== usernameCheckSeq) return;
+                console.error('username check failed:', e);
+                setUsernameStatus('Could not check right now. It will be verified when you save.', '');
+            }
+        }
+        function scheduleUsernameCheck() {
+            clearTimeout(usernameCheckTimer);
+            usernameCheckTimer = setTimeout(checkUsernameNow, 400);
+        }
+        document.getElementById('username').addEventListener('input', function () {
+            usernameTouched = true;
+            const pos = this.selectionStart;
+            this.value = this.value.toLowerCase().replace(/\s+/g, '_');
+            try { this.setSelectionRange(pos, pos); } catch (_) {}
+            scheduleUsernameCheck();
+        });
+        // Jab tak user ne khud username nahi likha, naam se suggestion banati rahe
+        document.getElementById(__nameFieldId).addEventListener('input', function () {
+            if (usernameTouched) return;
+            document.getElementById('username').value = slugifyUsername(this.value);
+            scheduleUsernameCheck();
+        });
+        // Edit mode: maujooda username dikhao; purane user (abhi username nahi) ko naam se suggestion
+        function prefillUsername(d) {
+            const input = document.getElementById('username');
+            if (d && d.username) {
+                input.value = d.username;
+                usernameTouched = true;
+            } else {
+                input.value = slugifyUsername(document.getElementById(__nameFieldId).value);
+            }
+            scheduleUsernameCheck();
+        }
+        /** Transaction: username claim karo (pehle se kisi aur ka ho to error). Purana username chhorna ho to free kar do. */
+        async function claimUsername(uid, wanted, oldUsername) {
+            const fmt = usernameFormatError(wanted);
+            if (fmt) { const e = new Error(fmt); e.isUsername = true; throw e; }
+            const newRef = doc(db, 'usernames', wanted);
+            const oldRef = (oldUsername && oldUsername !== wanted) ? doc(db, 'usernames', oldUsername) : null;
+            try {
+                await runTransaction(db, async (tx) => {
+                    const snap = await tx.get(newRef);
+                    const oldSnap = oldRef ? await tx.get(oldRef) : null;     // saari reads writes se pehle
+                    if (snap.exists() && snap.data().uid !== uid) {
+                        const e = new Error('@' + wanted + ' is already taken. Please choose another username.');
+                        e.isUsername = true; throw e;
+                    }
+                    if (!snap.exists()) tx.set(newRef, { uid: uid, createdAt: serverTimestamp() });
+                    if (oldSnap && oldSnap.exists() && oldSnap.data().uid === uid) tx.delete(oldRef);
+                });
+            } catch (err) {
+                if (err && err.isUsername) throw err;
+                console.error('claimUsername failed:', err);
+                const e = new Error('Could not reserve this username (' + ((err && err.code) || 'error') + '). Please try again.');
+                e.isUsername = true; throw e;
+            }
+            return wanted;
+        }
+
+        // ══════════════════════════
+        // 🔐 EMAIL VERIFICATION (6-digit PIN)
+        // Naya account bana ho aur email verify na hua ho to profile
+        // form se pehle verification karni zaroori hai.
+        // ═════════════════════════════════════
+        const MAIL_API = 'https://nodemails.vercel.app';
+        // Server ke /api/send-otp aur /api/verify-otp par requireSignupSecret
+        // gate lagta hai — yeh wahi value honi chahiye jo server par
+        // SIGNUP_SECRET (ya INTERNAL_SECRET) env var mein set hai.
+        const SIGNUP_SECRET = 'hjp-signup-74be4a33b96d';
+        let verifyResendTimer = null;
+
+        function verifyPins() {
+            return [...document.querySelectorAll('#email-verify-pin input')];
+        }
+        function readVerifyPin() {
+            return verifyPins().map(i => i.value).join('');
+        }
+        function resetVerifyPins() {
+            verifyPins().forEach(i => { i.value = ''; i.classList.remove('filled'); });
+        }
+        function verifyMsg(text, kind) {
+            const el = document.getElementById('email-verify-msg');
+            if (!el) return;
+            el.textContent = text || '';
+            el.style.color = kind === 'err' ? '#dc2626' : (kind === 'ok' ? '#15803d' : '#64748b');
+        }
+
+        // ⭐ Legacy (pehle se complete) profile — role set hai ya profileComplete true
+        function isLegacyCompleteProfile(d) {
+            if (!d) return false;
+            return !!d.role || d.profileComplete === true;
+        }
+
+        function wireVerifyPins() {
+            const inputs = verifyPins();
+            inputs.forEach((inp, i) => {
+                inp.oninput = () => {
+                    inp.value = inp.value.replace(/\D/g, '').slice(0, 1);
+                    inp.classList.toggle('filled', !!inp.value);
+                    if (inp.value && i < inputs.length - 1) inputs[i + 1].focus();
+                    if (readVerifyPin().length === 6) verifyMsg('');
+                };
+                inp.onkeydown = e => {
+                    if (e.key === 'Backspace' && !inp.value && i > 0) {
+                        inputs[i - 1].focus(); inputs[i - 1].value = '';
+                        inputs[i - 1].classList.remove('filled'); e.preventDefault();
+                    }
+                };
+                inp.onpaste = e => {
+                    e.preventDefault();
+                    const digits = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+                    digits.split('').forEach((d, k) => {
+                        if (inputs[k]) { inputs[k].value = d; inputs[k].classList.add('filled'); }
+                    });
+                    (inputs[Math.min(digits.length, 5)] || inputs[5]).focus();
+                };
+            });
+        }
+
+        // Return true agar verification zaroori hai (aur gate dikha diya)
+        function requireEmailVerification(user, profileData) {
+            const already = user.emailVerified === true ||
+                            profileData?.emailVerified === true ||
+                            profileData?.otpVerified === true;
+            if (already) return false;
+
+            // ⭐ PURANE USERS (PIN system se pehle ke): unke paas verification flag
+            // nahi hota lekin profile already complete hai. Aise user ko yeh
+            // signup/profile-setup page dobara nahi dikhana — usay home bhej do.
+            if (isLegacyCompleteProfile(profileData)) {
+                localStorage.setItem("hjp_logged_in", "1");
+                try { localStorage.setItem('my_uid', user.uid); } catch (_) {}
+                window.location.replace('/');
+                return true;
+            }
+
+            const gate = document.getElementById('email-verify-gate');
+            const pageContent = document.getElementById('page-content');
+            const loader = document.getElementById('page-loader');
+            if (!gate) return false;
+
+            loader?.classList.add('hidden');
+            pageContent?.classList.add('hidden');
+            gate.classList.remove('hidden');
+
+            const email = user.email || '';
+            document.getElementById('email-verify-label').textContent =
+                email.replace(/^(.)(.*)(@.*)$/, (m, a, b, c) => a + '*'.repeat(Math.min(b.length, 5)) + c);
+
+            wireVerifyPins();
+            document.getElementById('email-verify-send').onclick = () => sendEmailPin(user);
+            document.getElementById('email-verify-submit').onclick = () => submitEmailPin(user);
+            sendEmailPin(user);
+            return true;
+        }
+
+        async function sendEmailPin(user) {
+            const btn = document.getElementById('email-verify-send');
+            const txt = document.getElementById('email-verify-send-text');
+            btn.disabled = true;
+            if (txt) txt.textContent = 'Sending code...';
+            verifyMsg('Sending a verification code to your email...');
+
+            try {
+                const res = await fetch(`${MAIL_API}/api/send-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-internal-secret': SIGNUP_SECRET
+                    },
+                    body: JSON.stringify({ email: user.email, purpose: 'signup', name: user.displayName || '' })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.success) throw new Error(data.error || `Could not send the code (HTTP ${res.status})`);
+
+                document.getElementById('email-verify-step-sent').classList.remove('hidden');
+                resetVerifyPins();
+                verifyPins()[0]?.focus();
+                verifyMsg('Code sent. Check your email inbox (and spam folder).', 'ok');
+                startPinCooldown();
+            } catch (e) {
+                console.error('sendEmailPin:', e);
+                verifyMsg(e.message || 'Could not send the code. Please try again.', 'err');
+                btn.disabled = false;
+                if (txt) txt.textContent = 'Send Code';
+            }
+        }
+
+        function startPinCooldown() {
+            const btn = document.getElementById('email-verify-send');
+            const txt = document.getElementById('email-verify-send-text');
+            let left = 60;
+            btn.disabled = true;
+            if (verifyResendTimer) clearInterval(verifyResendTimer);
+            verifyResendTimer = setInterval(() => {
+                left--;
+                if (left <= 0) {
+                    clearInterval(verifyResendTimer); verifyResendTimer = null;
+                    btn.disabled = false;
+                    if (txt) txt.textContent = 'Resend Code';
+                } else if (txt) {
+                    txt.textContent = `Resend in ${left}s`;
+                }
+            }, 1000);
+        }
+
+        async function submitEmailPin(user) {
+            const code = readVerifyPin();
+            const btn = document.getElementById('email-verify-submit');
+            const txt = document.getElementById('email-verify-submit-text');
+
+            if (code.length !== 6) { verifyMsg('Please enter the complete 6-digit code.', 'err'); return; }
+
+            btn.disabled = true;
+            if (txt) txt.textContent = 'Verifying...';
+            verifyMsg('');
+
+            try {
+                const res = await fetch(`${MAIL_API}/api/verify-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-internal-secret': SIGNUP_SECRET
+                    },
+                    body: JSON.stringify({ email: user.email, code, purpose: 'signup' })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || !data.success) throw new Error(data.error || `Verification failed (HTTP ${res.status})`);
+
+                try {
+                    await setDoc(doc(db, 'users', user.uid), {
+                        emailVerified: true, emailVerifiedAt: serverTimestamp()
+                    }, { merge: true });
+                } catch (fsErr) {
+                    console.warn('Could not persist emailVerified flag:', fsErr);
+                }
+
+                try { await user.reload(); } catch (_) {}
+
+                // ⭐ Agar is user ka profile pehle hi ban chuka hai to seedha HOME par
+                // bhejo — dobara profile-editing form par nahi.
+                try {
+                    const checkSnap = await getDoc(doc(db, 'users', user.uid));
+                    if (checkSnap.exists() && isLegacyCompleteProfile(checkSnap.data())) {
+                        verifyMsg('Email verified. Taking you to the home page...', 'ok');
+                        localStorage.setItem("hjp_logged_in", "1");
+                        try { localStorage.setItem('my_uid', user.uid); } catch (_) {}
+                        setTimeout(() => window.location.replace('/'), 700);
+                        return;
+                    }
+                } catch (chkErr) {
+                    console.warn('Profile check after verify failed:', chkErr);
+                }
+
+                verifyMsg('Email verified. Loading your profile...', 'ok');
+                setTimeout(() => {
+                    document.getElementById('email-verify-gate').classList.add('hidden');
+                    document.getElementById('page-content').classList.remove('hidden');
+                    currentUser = user;
+                    document.getElementById('account-email').value = user.email || '';
+                    showPage();
+                    fetchCountriesApi();
+                    if (editMode) enterEditMode(); else detectLocation();
+                }, 700);
+
+            } catch (e) {
+                console.error('submitEmailPin:', e);
+                verifyMsg(e.message || 'Verification failed. Please try again.', 'err');
+                resetVerifyPins();
+                verifyPins()[0]?.focus();
+                if (txt) txt.textContent = 'Verify Email';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // --- WIZARD NAVIGATION ---
+        const WORKER_UPLOAD_URL = "https://photosupload.sufiangsufiang50.workers.dev";
+        const CLOUD_NAME = "Dr06qkbaa";
+        const UPLOAD_PRESET = "nearjobs_profiles";
+        const MAX_FACILITY_PHOTOS = 5;
+        let currentStep = 1;
+
+        // --- PROFILE PHOTO ---
+        let profilePhoto = { status: 'idle', url: null };
+        let profilePhotoRequestId = 0;
+
+        document.getElementById('profile-photo-input').addEventListener('change', function() {
+            const file = this.files[0];
+            this.value = '';
+            if (!file || !file.type.startsWith('image/')) return;
+            const requestId = ++profilePhotoRequestId;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                if (requestId !== profilePhotoRequestId) return;
+                document.getElementById('avatar-preview-img').src = ev.target.result;
+                document.getElementById('avatar-preview-img').classList.remove('hidden');
+                document.getElementById('avatar-placeholder-icon').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+            uploadProfilePhoto(file, requestId);
+        });
+
+        function setAvatarState(status, message) {
+            const circle = document.getElementById('avatar-upload-circle');
+            const spin = document.getElementById('avatar-spin-overlay');
+            const statusEl = document.getElementById('avatar-upload-status');
+            circle.classList.toggle('has-error', status === 'error');
+            circle.classList.toggle('has-image', status === 'done');
+            spin.classList.toggle('hidden', status !== 'uploading');
+            statusEl.classList.toggle('is-error', status === 'error');
+            statusEl.textContent = message;
+            profilePhoto.status = status;
+            updateSubmitLockState();
+        }
+
+        async function uploadProfilePhoto(file, requestId) {
+            setAvatarState('uploading', 'Uploading photo...');
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', UPLOAD_PRESET);
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+                const data = await res.json();
+                if (requestId !== profilePhotoRequestId) return;
+                if (data.secure_url) {
+                    profilePhoto.url = data.secure_url;
+                    setAvatarState('done', 'Photo uploaded ✓');
+                } else {
+                    throw new Error(data.error?.message || 'Upload failed');
+                }
+            } catch (err) {
+                if (requestId !== profilePhotoRequestId) return;
+                setAvatarState('error', 'Upload failed — tap to retry');
+            }
+        }
+
+        // --- COVER PHOTO: SELECT / PREVIEW / UPLOAD (optional, recommended) ---
+        let coverPhoto = { status: 'idle', url: null };
+        let coverPhotoRequestId = 0;
+
+        document.getElementById('cover-photo-input').addEventListener('change', function() {
+            const file = this.files[0];
+            this.value = '';
+            if (!file || !file.type.startsWith('image/')) return;
+            const requestId = ++coverPhotoRequestId;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                if (requestId !== coverPhotoRequestId) return;
+                document.getElementById('cover-preview-img').src = ev.target.result;
+                document.getElementById('cover-preview-img').classList.remove('hidden');
+                document.getElementById('cover-placeholder-icon').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+            uploadCoverPhoto(file, requestId);
+        });
+
+        function setCoverState(status, message) {
+            const box = document.getElementById('cover-upload-box');
+            const spin = document.getElementById('cover-spin-overlay');
+            const statusEl = document.getElementById('cover-upload-status');
+            box.classList.toggle('has-error', status === 'error');
+            box.classList.toggle('has-image', status === 'done');
+            spin.classList.toggle('hidden', status !== 'uploading');
+            statusEl.textContent = message;
+            coverPhoto.status = status;
+            updateSubmitLockState();
+        }
+
+        async function uploadCoverPhoto(file, requestId) {
+            setCoverState('uploading', 'Uploading...');
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', UPLOAD_PRESET);
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+                const data = await res.json();
+                if (requestId !== coverPhotoRequestId) return;
+                if (data.secure_url) {
+                    coverPhoto.url = data.secure_url;
+                    setCoverState('done', 'Cover photo uploaded ✓');
+                } else {
+                    throw new Error(data.error?.message || 'Upload failed');
+                }
+            } catch (err) {
+                if (requestId !== coverPhotoRequestId) return;
+                setCoverState('error', 'Upload failed — tap to retry');
+            }
+        }
+
+        // Each photo is tracked as: { id, file, status: 'uploading'|'done'|'error', url, error }
+        let photoItems = [];
+        let photoIdCounter = 0;
+
+        window.goToStep = function(target) {
+            if (target > currentStep) {
+                const stepEl = document.querySelector(`.wizard-step[data-wizard-step="${currentStep}"]`);
+                const requiredFields = stepEl.querySelectorAll('[required]');
+                for (const f of requiredFields) {
+                    if (!f.checkValidity()) {
+                        f.reportValidity();
+                        f.focus();
+                        return;
+                    }
+                }
+            }
+            document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active-step'));
+            document.querySelector(`.wizard-step[data-wizard-step="${target}"]`).classList.add('active-step');
+            currentStep = target;
+
+            document.querySelectorAll('.progress-step').forEach(ps => {
+                const n = parseInt(ps.dataset.step, 10);
+                ps.classList.remove('done', 'active');
+                if (n < target) ps.classList.add('done');
+                else if (n === target) ps.classList.add('active');
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // --- FACILITY PHOTOS: SELECT / PREVIEW / UPLOAD (immediately, in the background) ---
+        document.getElementById('facility-photos-input').addEventListener('change', function(e) {
+            const newFiles = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+            this.value = '';
+
+            if (photoItems.length + newFiles.length > MAX_FACILITY_PHOTOS) {
+                alert(`You can upload up to ${MAX_FACILITY_PHOTOS} photos.`);
+                return;
+            }
+
+            newFiles.forEach(file => {
+                const item = { id: ++photoIdCounter, file, status: 'uploading', url: null, error: null, previewSrc: null };
+                photoItems.push(item);
+
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    item.previewSrc = ev.target.result;
+                    renderPhotoPreviews();
+                };
+                reader.readAsDataURL(file);
+
+                startPhotoUpload(item);
+            });
+
+            renderPhotoPreviews();
+            updateSubmitLockState();
+        });
+
+        function startPhotoUpload(item) {
+            item.status = 'uploading';
+            item.error = null;
+            updateSubmitLockState();
+            renderPhotoPreviews();
+
+            uploadFacilityPhoto(item.file)
+                .then(url => {
+                    // Ignore result if the user already removed this photo while it was uploading.
+                    if (!photoItems.includes(item)) return;
+                    item.status = 'done';
+                    item.url = url;
+                })
+                .catch(err => {
+                    if (!photoItems.includes(item)) return;
+                    console.error('[facility-photo] upload failed:', err);
+                    item.status = 'error';
+                    item.error = err.message || 'Upload failed';
+                })
+                .finally(() => {
+                    renderPhotoPreviews();
+                    updateSubmitLockState();
+                });
+        }
+
+        function renderPhotoPreviews() {
+            const row = document.getElementById('photo-preview-row');
+            row.innerHTML = '';
+            photoItems.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'photo-preview-item' + (item.status === 'uploading' ? ' uploading' : '') + (item.status === 'error' ? ' upload-error' : '');
+
+                const img = document.createElement('img');
+                if (item.previewSrc) img.src = item.previewSrc;
+                el.appendChild(img);
+
+                if (item.status === 'uploading') {
+                    const spin = document.createElement('div');
+                    spin.className = 'spin-mini';
+                    spin.innerHTML = '<div></div>';
+                    el.appendChild(spin);
+                } else if (item.status === 'error') {
+                    const retry = document.createElement('button');
+                    retry.type = 'button';
+                    retry.className = 'retry-photo';
+                    retry.title = item.error ? `Retry upload — ${item.error}` : 'Retry upload';
+                    retry.innerHTML = '↻';
+                    retry.onclick = () => startPhotoUpload(item);
+                    el.appendChild(retry);
+                }
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'remove-photo';
+                removeBtn.innerHTML = '×';
+                removeBtn.onclick = () => {
+                    photoItems = photoItems.filter(p => p.id !== item.id);
+                    renderPhotoPreviews();
+                    updateSubmitLockState();
+                };
+                el.appendChild(removeBtn);
+
+                row.appendChild(el);
+            });
+        }
+
+        // Keep the final Continue/Submit button locked while any photo is still uploading,
+        // so the profile can't be saved with photos that haven't finished yet.
+        function updateSubmitLockState() {
+            const stillUploading = photoItems.some(p => p.status === 'uploading');
+            const profileUploading = profilePhoto.status === 'uploading';
+            const coverUploading = typeof coverPhoto !== 'undefined' && coverPhoto.status === 'uploading';
+            const btn = document.getElementById('save-btn');
+            const text = document.getElementById('save-text');
+            if (!btn || !text) return;
+
+            if (profileUploading) {
+                btn.disabled = true;
+                btn.classList.add('btn-locked');
+                text.textContent = 'Uploading profile photo...';
+            } else if (coverUploading) {
+                btn.disabled = true;
+                btn.classList.add('btn-locked');
+                text.textContent = 'Uploading cover photo...';
+            } else if (stillUploading) {
+                btn.disabled = true;
+                btn.classList.add('btn-locked');
+                text.textContent = 'Uploading photos...';
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('btn-locked');
+                text.textContent = editMode ? 'Save Changes' : 'Continue';
+            }
+        }
+
+        // --- IMAGE COMPRESSOR (same pattern used across the app) ---
+        async function compressImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onerror = () => reject(new Error('Could not read file: ' + file.name));
+                reader.onload = ev => {
+                    const img = new Image();
+                    img.onerror = () => reject(new Error('Could not decode image: ' + file.name));
+                    img.src = ev.target.result;
+                    img.onload = () => {
+                        const MAX_W = 800;
+                        const scale = img.width > MAX_W ? MAX_W / img.width : 1;
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width * scale;
+                        canvas.height = img.height * scale;
+                        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                        canvas.toBlob(blob => {
+                            if (!blob) { reject(new Error('Compression failed for: ' + file.name)); return; }
+                            resolve(new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
+                                type: 'image/jpeg', lastModified: Date.now()
+                            }));
+                        }, 'image/jpeg', 0.75);
+                    };
+                };
+            });
+        }
+
+        const R2_PUBLIC_BASE = "https://pub-aaf92c5b66354c9d9ae548e4855bf8e2.r2.dev";
+
+        function toFullR2Url(u) {
+            if (!u) return u;
+            if (/^https?:\/\//i.test(u)) return u; // already a full URL
+            return R2_PUBLIC_BASE.replace(/\/$/, '') + '/' + String(u).replace(/^\//, '');
+        }
+
+        async function uploadFacilityPhoto(file) {
+            const compressed = await compressImage(file);
+            const fd = new FormData();
+            fd.append('file', compressed);
+
+            let res;
+            try {
+                res = await fetch(WORKER_UPLOAD_URL, { method: 'POST', body: fd });
+            } catch (networkErr) {
+                // Fetch itself threw — usually CORS being rejected, DNS, or the
+                // worker being unreachable. This never happens for a plain
+                // failed-HTTP-status response, only for a request that couldn't
+                // complete at all.
+                console.error('[facility-photo] network/CORS error reaching worker:', networkErr);
+                throw new Error('Could not reach the photo upload server (network/CORS error). Check the worker is deployed and allows this origin.');
+            }
+
+            let data = null;
+            const rawText = await res.text();
+            try {
+                data = JSON.parse(rawText);
+            } catch (parseErr) {
+                console.error('[facility-photo] worker did not return valid JSON. Status:', res.status, res.statusText, '| Body:', rawText.slice(0, 300));
+                throw new Error(`Upload server returned an unexpected response (HTTP ${res.status}). See console for details.`);
+            }
+
+            if (!res.ok) {
+                console.error('[facility-photo] worker returned error status', res.status, data);
+                throw new Error(data?.error || `Upload failed (HTTP ${res.status})`);
+            }
+
+            if (data.success && data.url) {
+                const fullUrl = toFullR2Url(data.url);
+                console.log('[facility-photo] uploaded ->', data.url, '| resolved to ->', fullUrl);
+                return fullUrl;
+            }
+
+            console.error('[facility-photo] unexpected response shape from worker (expected {success:true, url:"..."}):', data);
+            throw new Error(data.error || "Upload server responded but didn't return a photo URL.");
+        }
+
+        function showPage() {
+            document.getElementById('page-loader').classList.add('hidden');
+            document.getElementById('page-content').classList.remove('hidden');
+        }
+
+        window.handleLogoError = function(imgEl) {
+            imgEl.onerror = null;
+            imgEl.src = 'https://via.placeholder.com/32x32?text=HJ';
+        };
+
+        // --- AUTH GUARD ---
+        /**
+         * @param {import("firebase/auth").User | null} user
+         */
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.replace("login.html");
+                return;
+            }
+            try {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    // Profile already completed earlier — this is an edit, not first-time setup.
+                    editMode = true;
+                    existingUserData = snap.data();
+                }
+            } catch (e) {
+                console.error("Firestore check failed:", e);
+            }
+
+            // 🔐 Email verify na hua ho to gate dikhao aur yahin ruk jao
+            if (requireEmailVerification(user, existingUserData)) return;
+
+            currentUser = user;
+            document.getElementById('account-email').value = user.email || "";
+            showPage();
+            fetchCountriesApi();
+            // 🔒 Under-review employer ko page par batao (editing allowed, posting nahi)
+            if (isEmployerBlocked(existingUserData)) showEmployerReviewBanner(existingUserData);
+
+            if (editMode) {
+                enterEditMode();
+            } else {
+                detectLocation();
+            }
+        });
+
+        /* =====================================================
+           🔒 EMPLOYER APPROVAL STATE
+           Employee.html sirf profile edit karta hai — posting
+           simple.html se hoti hai. Yahan sirf banner dikhate hain
+           taake employer ko pata rahe ke review ho raha hai.
+           ===================================================== */
+        function isEmployerBlocked(d) {
+            if (!d) return false;
+            if (d.role !== 'employer') return false;
+            const st = String(d.accountStatus || '').toLowerCase().trim();
+            if (!st || st === 'approved' || st === 'active') return false;
+            return true;
+        }
+
+        function showEmployerReviewBanner(d) {
+            if (document.getElementById('employer-review-banner')) return;
+            const st = String(d.accountStatus || '').toLowerCase().trim();
+            const isRejected = (st === 'rejected' || st === 'rejected_final');
+
+            const palette = isRejected
+                ? { bg:'#fef2f2', line:'#fecaca', accent:'#dc2626', title:'#7f1d1d', body:'#991b1b' }
+                : { bg:'#fffbeb', line:'#fde68a', accent:'#d97706', title:'#78350f', body:'#92400e' };
+            const title = isRejected ? 'Account Not Approved' : 'Account Under Review';
+            const text  = isRejected
+                ? 'Your facility account was not approved, so job posting is disabled. Check your email for the appeal link.'
+                : 'Your facility account is being reviewed by our team. You can update your profile now, but job posting will be enabled only after approval.';
+
+            const banner = document.createElement('div');
+            banner.id = 'employer-review-banner';
+            banner.style.cssText =
+                `background:${palette.bg};border:1px solid ${palette.line};border-left:4px solid ${palette.accent};`
+                + 'border-radius:10px;padding:15px 18px;margin:16px 0 4px;';
+            banner.innerHTML =
+                `<div style="font-size:13.5px;font-weight:800;color:${palette.title};margin-bottom:5px;">${title}</div>`
+                + `<div style="font-size:12.5px;line-height:1.65;color:${palette.body};">${text}</div>`;
+
+            const intro = document.querySelector('.intro');
+            if (intro && intro.parentNode) intro.parentNode.insertBefore(banner, intro.nextSibling);
+            else (document.querySelector('#page-content') || document.body).prepend(banner);
+        }
+
+        window.updateCharCount = function() {
+            const el = document.getElementById('about-facility');
+            document.getElementById('char-count-val').innerText = el.value.length;
+        };
+
+        // --- COUNTRY / STATE ---
+        async function fetchCountriesApi() {
+            try {
+                const res = await fetch("https://countriesnow.space/api/v0.1/countries/states");
+                const data = await res.json();
+                globalCountriesData = data.data;
+
+                const countrySelect = document.getElementById('setup-country');
+                countrySelect.innerHTML = '<option value="">Select Country</option>';
+
+                /** @param {{name: string, states?: {name: string}[]}} c */
+                globalCountriesData.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.name; opt.innerText = c.name;
+                    countrySelect.appendChild(opt);
+                });
+                appendOtherOption(countrySelect);   // country bhi manually likh sakein
+                countriesReady = true;
+            } catch (e) {
+                console.error("API Load Error", e);
+                document.getElementById('setup-country').innerHTML = '<option value="">Error loading countries</option>';
+                enableManualCountry();
+            }
+            // Apply any location detected while the list was loading
+            countriesReady = true;
+            applyPendingDetectedLocation();
+
+            // Editing an existing profile — apply the saved country/state now that the list exists.
+            // A country/state the user typed manually earlier is not in the list, so it is
+            // re-added as an option instead of being silently dropped.
+            if (editMode && existingUserData) {
+                const savedCountry = (existingUserData.country || '').trim();
+                const savedState = (existingUserData.state || '').trim();
+                const countrySelect = document.getElementById('setup-country');
+                if (savedCountry) {
+                    addCustomOption(countrySelect, savedCountry);
+                    window.populateStates(savedCountry);
+                }
+                if (savedState) {
+                    addCustomOption(document.getElementById('setup-state'), savedState);
+                }
+            }
+        }
+
+        /** @param {string} countryName */
+        window.populateStates = function(countryName) {
+            const stateSelect = document.getElementById('setup-state');
+            stateSelect.innerHTML = '<option value="">Select State</option>';
+            const country = globalCountriesData.find(c => c.name.toLowerCase() === countryName.toLowerCase());
+            if (country && country.states) {
+                /** @param {{name: string}} s */
+                country.states.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.name; opt.innerText = s.name;
+                    stateSelect.appendChild(opt);
+                });
+            }
+            // Province / state bhi hamesha manually add ho sakta hai
+            // (list mein na ho, ya country khud type ki gayi ho).
+            appendOtherOption(stateSelect);
+        };
+
+        // --- "Other — type manually" support (country + state/province) ---
+        const OTHER_VALUE = '__other__';
+
+        function appendOtherOption(sel) {
+            const old = sel.querySelector('option[value="' + OTHER_VALUE + '"]');
+            if (old) old.remove();
+            const other = document.createElement('option');
+            other.value = OTHER_VALUE;
+            other.innerText = '\u2795 Other \u2014 type manually';
+            sel.appendChild(other);
+            return other;
+        }
+
+        // Select mein value add karke select kar do (agar pehle se hai to wahi select hogi).
+        function addCustomOption(sel, text) {
+            for (let i = 0; i < sel.options.length; i++) {
+                if (sel.options[i].value.toLowerCase() === text.toLowerCase()) {
+                    sel.selectedIndex = i;
+                    return sel.options[i];
+                }
+            }
+            const opt = document.createElement('option');
+            opt.value = text; opt.innerText = text;
+            const other = sel.querySelector('option[value="' + OTHER_VALUE + '"]');
+            if (other) sel.insertBefore(opt, other); else sel.appendChild(opt);
+            sel.value = text;
+            return opt;
+        }
+
+        window.onCountryChange = function(sel, preset) {
+            if (sel.value === OTHER_VALUE) {
+                const typed = window.prompt('Type your country name:', preset || '');
+                if (typed && typed.trim()) {
+                    addCustomOption(sel, typed.trim());
+                    window.populateStates(sel.value);
+                } else {
+                    sel.value = '';
+                    window.populateStates('');
+                }
+            } else {
+                window.populateStates(sel.value);
+            }
+        };
+
+        window.onStateChange = function(sel, preset) {
+            if (sel.value === OTHER_VALUE) {
+                const typed = window.prompt('Type your state / province:', preset || '');
+                if (typed && typed.trim()) {
+                    addCustomOption(sel, typed.trim());
+                } else {
+                    sel.value = '';
+                }
+            }
+        };
+
+        // Holds the detected location until the country list has loaded
+        let pendingDetected = null;
+        let countriesReady = false;
+
+        // Country name normalize + fuzzy match (Nominatim vs countriesnow naming farq)
+        function normalizeName(s) {
+            return (s || '').toLowerCase().replace(/[^a-z]/g, '');
+        }
+        function findCountryOption(countrySelect, countryName) {
+            const norm = normalizeName(countryName);
+            if (!norm) return -1;
+            // 1) exact value match
+            for (let i = 0; i < countrySelect.options.length; i++) {
+                if (countrySelect.options[i].value.toLowerCase() === countryName.toLowerCase()) return i;
+            }
+            // 2) normalized (punctuation/space ignore) match
+            for (let i = 0; i < countrySelect.options.length; i++) {
+                if (normalizeName(countrySelect.options[i].value) === norm) return i;
+            }
+            // 3) contains match ("United States" vs "United States of America")
+            for (let i = 0; i < countrySelect.options.length; i++) {
+                const ov = normalizeName(countrySelect.options[i].value);
+                if (ov && (ov.includes(norm) || norm.includes(ov))) return i;
+            }
+            return -1;
+        }
+
+        // Apply the pending detected location once the country list has loaded
+        function applyPendingDetectedLocation() {
+            if (!pendingDetected) return;
+            const { country, state, city, address } = pendingDetected;
+            const countrySelect = document.getElementById('setup-country');
+
+            let matched = false;
+            if (country) {
+                const idx = findCountryOption(countrySelect, country);
+                if (idx >= 0) {
+                    countrySelect.selectedIndex = idx;
+                    window.populateStates(countrySelect.options[idx].value);
+                    matched = true;
+                }
+            }
+
+            if (!matched) {
+                // Not in the list — enable manual country entry so the user can continue
+                enableManualCountry(country);
+            }
+
+            if (state) {
+                setTimeout(() => {
+                    const stateSelect = document.getElementById('setup-state');
+                    let sMatched = false;
+                    for (let i = 0; i < stateSelect.options.length; i++) {
+                        const ov = stateSelect.options[i].value.toLowerCase();
+                        if (!ov || ov === OTHER_VALUE) continue;   // placeholder / "Other" ko match na karo
+                        if (ov.includes(state.toLowerCase()) || state.toLowerCase().includes(ov)) {
+                            stateSelect.selectedIndex = i;
+                            sMatched = true;
+                            break;
+                        }
+                    }
+                    if (!sMatched) enableManualState(state);
+                }, 250);
+            }
+
+            if (city) document.getElementById('setup-city').value = city;
+            const addrBox = document.getElementById('full-address');
+            if (addrBox && address && !addrBox.value.trim()) addrBox.value = address;
+
+            const locStatus = document.getElementById('loc-status');
+            locStatus.innerHTML = matched
+                ? "<b>Location detected and filled in automatically. Please verify it below.</b>"
+                : "<b>We found your location, but the country is not in the list. Please select or type it below.</b>";
+            locStatus.style.color = matched ? "#059669" : "#d97706";
+            locStatus.style.background = matched ? "#dcfce7" : "#fef3c7";
+            locStatus.style.borderColor = matched ? "#86efac" : "#fcd34d";
+
+            pendingDetected = null;
+        }
+
+        // Dropdown ko editable banane ke liye text input se replace/upar overlay
+        function enableManualCountry(presetValue) {
+            const sel = document.getElementById('setup-country');
+            if (!sel) return;
+            // Agar koi maujooda value hai to usi ko fallback rakho
+            sel.innerHTML = '<option value="">Select Country</option>';
+            if (globalCountriesData && globalCountriesData.length) {
+                globalCountriesData.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.name; opt.innerText = c.name;
+                    sel.appendChild(opt);
+                });
+            }
+            sel.setAttribute('data-manual', 'true');
+            appendOtherOption(sel);
+            sel.onchange = function() { window.onCountryChange(this, presetValue); };
+        }
+
+        function enableManualState(presetValue) {
+            const sel = document.getElementById('setup-state');
+            if (!sel) return;
+            appendOtherOption(sel);
+            sel.onchange = function() { window.onStateChange(this, presetValue); };
+        }
+
+        function detectLocation() {
+            const locStatus = document.getElementById('loc-status');
+
+            function showStatus(msg, kind) {
+                if (!locStatus) return;
+                const c = {
+                    ok:   ['#059669', '#dcfce7', '#86efac'],
+                    warn: ['#d97706', '#fef3c7', '#fcd34d'],
+                    err:  ['var(--error)', 'var(--error-bg)', '#fca5a5']
+                }[kind] || ['#d97706', '#fef3c7', '#fcd34d'];
+                locStatus.style.display = '';
+                locStatus.innerHTML = '<b>' + msg + '</b>';
+                locStatus.style.color = c[0];
+                locStatus.style.background = c[1];
+                locStatus.style.borderColor = c[2];
+            }
+
+            // Hand the detected place over to the form (waits for the country list if needed).
+            function useDetected(info) {
+                pendingDetected = info;
+                if (countriesReady) applyPendingDetectedLocation();
+                else showStatus('Location found. Loading the country list...', 'warn');
+            }
+
+            // Fallback: approximate location from the IP address (used when GPS is blocked or fails).
+            async function detectByIp() {
+                try {
+                    const res = await fetch('https://ipwho.is/?lang=en');
+                    const d = await res.json();
+                    if (d && d.success !== false && d.country) {
+                        useDetected({ country: d.country, state: d.region || '', city: d.city || '', address: '' });
+                        return;
+                    }
+                } catch (e) { /* fall through */ }
+                showStatus('Could not detect your location automatically. Please select it manually.', 'warn');
+            }
+
+            if (!navigator.geolocation) { detectByIp(); return; }
+            showStatus('Detecting your location...', 'warn');
+
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                try {
+                    const url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&zoom=18&accept-language=en'
+                        + '&lat=' + pos.coords.latitude + '&lon=' + pos.coords.longitude;
+                    const res = await fetch(url);
+                    const d = await res.json();
+                    const a = (d && d.address) || {};
+
+                    const country = a.country || '';
+                    const state = a.state || a.province || a.region || a.state_district || '';
+                    const city = a.city || a.town || a.village || a.municipality
+                        || a.city_district || a.county || a.state_district || '';
+                    // Street-level address (used only to pre-fill the address box when the page has one)
+                    const address = [a.house_number, a.road || a.pedestrian || a.footway,
+                                     a.neighbourhood || a.suburb || a.quarter, city]
+                        .filter(Boolean).join(', ');
+
+                    if (!country) throw new Error('No country in response');
+                    useDetected({ country, state, city, address });
+                } catch (e) {
+                    detectByIp();
+                }
+            }, () => {
+                // Permission denied / unavailable / timed out -> try IP-based detection
+                detectByIp();
+            }, { timeout: 10000, maximumAge: 300000, enableHighAccuracy: false });
+        }
+
+        // --- EDIT MODE: switch the page from "first-time setup" to "edit my profile" ---
+        function enterEditMode() {
+            document.querySelector('.eyebrow').innerText = 'Edit Profile';
+            document.querySelector('.intro h1').innerText = 'Update your facility details';
+            document.querySelector('.intro p').innerText = 'Make changes below and save — this updates the profile candidates see.';
+            const exitLink = document.querySelector('.exit-link');
+            exitLink.innerText = '← Back to profile';
+            exitLink.href = 'wid.html?uid=' + (currentUser ? currentUser.uid : '');
+            document.getElementById('save-text').innerText = 'Save Changes';
+
+            const locStatus = document.getElementById('loc-status');
+            if (locStatus) {
+                locStatus.innerText = 'Your saved location — update below if it has changed.';
+                locStatus.style.color = '';
+                locStatus.style.background = '';
+                locStatus.style.borderColor = '';
+            }
+
+            prefillEmployerForm(existingUserData);
+        }
+
+        function prefillEmployerForm(d) {
+            if (!d) return;
+
+            document.getElementById('facility-name').value = d.facilityName || '';
+            prefillUsername(d);
+
+            document.getElementById('facility-type').value = d.qualification || '';
+            document.getElementById('ownership-type').value = d.ownershipType || '';
+            document.getElementById('established-year').value = d.establishedYear || '';
+            document.getElementById('reg-number').value = d.registrationNumber || '';
+            document.getElementById('reg-authority').value = d.registrationAuthority || '';
+            document.getElementById('contact-name').value = d.contactPerson || '';
+            document.getElementById('contact-designation').value = d.contactDesignation || '';
+            document.getElementById('contact-phone').value = d.contactPhone || '';
+            document.getElementById('setup-city').value = d.city || '';
+            document.getElementById('full-address').value = d.address || '';
+            document.getElementById('about-facility').value = d.about || '';
+            window.updateCharCount();
+
+            // Privacy switches (missing = ON)
+            document.getElementById('pref-show-phone').checked = d.showPhone !== false;
+            document.getElementById('pref-show-images').checked = d.showFacilityImages !== false;
+            document.getElementById('pref-allow-dm').checked = !(d.privacySettings && d.privacySettings.allowDM === false);
+
+            if (d.profilePicUrl) {
+                profilePhoto = { status: 'done', url: d.profilePicUrl };
+                const preview = document.getElementById('avatar-preview-img');
+                preview.src = d.profilePicUrl;
+                preview.classList.remove('hidden');
+                document.getElementById('avatar-placeholder-icon').classList.add('hidden');
+            }
+
+            if (d.coverPicUrl) {
+                coverPhoto = { status: 'done', url: d.coverPicUrl };
+                const coverPreview = document.getElementById('cover-preview-img');
+                coverPreview.src = d.coverPicUrl;
+                coverPreview.classList.remove('hidden');
+                document.getElementById('cover-placeholder-icon').classList.add('hidden');
+                document.getElementById('cover-upload-box').classList.add('has-image');
+                document.getElementById('cover-upload-status').textContent = 'Change cover photo';
+            }
+
+            if (Array.isArray(d.facilityImages) && d.facilityImages.length) {
+                d.facilityImages.forEach(url => {
+                    photoItems.push({ id: ++photoIdCounter, file: null, status: 'done', url: url, error: null, previewSrc: url });
+                });
+                renderPhotoPreviews();
+                updateSubmitLockState();
+            }
+        }
+
+        // --- SAVE ---
+        /** @param {SubmitEvent} e */
+        window.handleEmployerSave = async function(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const btn = document.getElementById('save-btn');
+            const text = document.getElementById('save-text');
+            const loader = document.getElementById('save-loader');
+            const msgBox = document.getElementById('status-msg');
+            msgBox.classList.remove('show');
+
+            // Safety guard: the Continue button is disabled while photos are uploading,
+            // but double-check here in case this gets triggered another way.
+            if (profilePhoto.status === 'uploading') {
+                msgBox.innerText = "Please wait for your profile photo to finish uploading.";
+                msgBox.classList.add('show');
+                return;
+            }
+            if (coverPhoto.status === 'uploading') {
+                msgBox.innerText = "Please wait for your cover photo to finish uploading.";
+                msgBox.classList.add('show');
+                return;
+            }
+            if (photoItems.some(p => p.status === 'uploading')) {
+                msgBox.innerText = "Please wait for your photos to finish uploading.";
+                msgBox.classList.add('show');
+                return;
+            }
+
+            btn.disabled = true; text.style.display = 'none'; loader.style.display = 'block';
+
+            const facilityName = document.getElementById('facility-name').value.trim();
+            const facilityType = document.getElementById('facility-type').value;
+            const ownershipType = document.getElementById('ownership-type').value;
+            const establishedYear = document.getElementById('established-year').value;
+            const regNumber = document.getElementById('reg-number').value.trim();
+            const regAuthority = document.getElementById('reg-authority').value.trim();
+            const contactName = document.getElementById('contact-name').value.trim();
+            const contactDesignation = document.getElementById('contact-designation').value;
+            const contactPhone = document.getElementById('contact-phone').value.trim();
+            const country = document.getElementById('setup-country').value;
+            const state = document.getElementById('setup-state').value;
+            const city = document.getElementById('setup-city').value.trim();
+            const fullAddress = document.getElementById('full-address').value.trim();
+            const about = document.getElementById('about-facility').value.trim();
+
+            // Photos already uploaded in the background as soon as they were selected —
+            // just collect the URLs of the ones that succeeded.
+            const failedCount = photoItems.filter(p => p.status === 'error').length;
+            const facilityImages = photoItems.filter(p => p.status === 'done').map(p => p.url);
+            console.log('[facility-photo] final facilityImages array being saved ->', facilityImages);
+            if (failedCount > 0) {
+                console.warn(`[facility-photo] ${failedCount} photo(s) failed to upload and were skipped.`);
+                msgBox.innerText = failedCount === 1
+                    ? "1 facility photo failed to upload and was skipped. You can add it again from Edit Profile."
+                    : `${failedCount} facility photos failed to upload and were skipped. You can add them again from Edit Profile.`;
+                msgBox.classList.add('show');
+            }
+
+            const userData = {
+                uid: currentUser.uid,
+                email: currentUser.email,
+                role: 'employer',
+                profileComplete: true,
+                // New employer accounts stay hidden until an admin approves.
+                accountStatus: 'pending',
+                facilityName: facilityName,
+                profilePicUrl: profilePhoto.status === 'done' ? profilePhoto.url : null,
+                coverPicUrl: coverPhoto.status === 'done' ? coverPhoto.url : null,
+                qualification: facilityType,
+                ownershipType: ownershipType || null,
+                establishedYear: establishedYear || null,
+                registrationNumber: regNumber || null,
+                registrationAuthority: regAuthority || null,
+                contactPerson: contactName,
+                contactDesignation: contactDesignation,
+                contactPhone: contactPhone,
+                country: country,
+                state: state,
+                city: city,
+                address: fullAddress,
+                about: about || null,
+                facilityImages: facilityImages.length > 0 ? facilityImages : null,
+                // Profile privacy switches (missing = ON)
+                showPhone: !!document.getElementById('pref-show-phone').checked,
+                showFacilityImages: !!document.getElementById('pref-show-images').checked,
+                privacySettings: { allowDM: !!document.getElementById('pref-allow-dm').checked },
+            };
+
+            if (editMode) {
+                userData.updatedAt = serverTimestamp();
+            } else {
+                userData.createdAt = serverTimestamp();
+                userData.accountStatus = 'pending'; // needs admin approval before going live
+            }
+
+            console.log('[employer-save] writing userData to Firestore ->', userData);
+
+            try {
+                // 🆔 Pehle username claim karo (unique lock) — phir profile save
+                const chosenUsername = document.getElementById('username').value.trim().toLowerCase();
+                const claimed = await claimUsername(currentUser.uid, chosenUsername, existingUserData && existingUserData.username);
+                userData.username = claimed;
+                userData.usernameLower = claimed;
+
+                await setDoc(doc(db, "users", currentUser.uid), userData, { merge: editMode });
+
+                /* ═════════════════════════════════════════════
+                   🔒 PENDING EMPLOYER = NOT IN SEARCH
+                   Until an admin approves, this employer's profile
+                   is not added to the search index, so it will not
+                   show up in search or top posters.
+                   When approved, adminapproval.js adds it to the
+                   index automatically.
+                   ═════════════════════════════════════════════ */
+                const __acctStatus = String(userData.accountStatus || 'pending').toLowerCase();
+                const __isApproved = (__acctStatus === 'approved' || __acctStatus === 'active');
+
+                if (__isApproved) {
+                    await set(ref(rtdb, 'search_index/' + currentUser.uid), {
+                        id: currentUser.uid,
+                        t: facilityName,
+                        p: facilityType,
+                        loc: city || country,
+                        pic: profilePhoto.status === 'done' && profilePhoto.url
+                            ? profilePhoto.url
+                            : `https://ui-avatars.com/api/?name=${encodeURIComponent(facilityName)}&background=random`,
+                            type: 'profile',
+                            // 🔒 status admin approval se control hota hai
+                            status: __acctStatus
+                        });
+                } else {
+                    // Agar pehle se index mein tha (e.g. dobara submit), hata do
+                    try { await remove(ref(rtdb, 'search_index/' + currentUser.uid)); } catch (_) {}
+                    console.log('[search] employer not indexed — account status:', __acctStatus);
+                }
+
+                if (!editMode) {
+                    try {
+                        const idToken = await currentUser.getIdToken();
+                        const mailResponse = await fetch('https://nodemails.vercel.app/api/send-notification', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${idToken}`
+                            },
+                            body: JSON.stringify({
+                                type: 'welcome',
+                                email: currentUser.email,
+                                name: facilityName,
+                                role: 'employer',
+                                facilityType: facilityType,
+                                ownershipType: ownershipType,
+                                city: city,
+                                country: country,
+                                contactPerson: contactName,
+                                contactPhone: contactPhone
+                            })
+                        });
+                        const mailData = await mailResponse.json();
+                        console.log("Email Status:", mailData);
+                    } catch (mailErr) {
+                        console.error("Mail trigger error:", mailErr);
+                    }
+                }
+
+                localStorage.setItem("hjp_logged_in", "1");
+                try { localStorage.setItem('my_uid', currentUser.uid); } catch (_) {}
+                window.location.replace(editMode ? ("wid.html?uid=" + currentUser.uid) : "/");
+
+            } catch (error) {
+                console.error(error);
+                msgBox.innerText = (error && error.isUsername ? "" : "Error saving profile: ") + error.message;
+                if (error && error.isUsername) {
+                    setUsernameStatus(error.message, 'bad');
+                    const uEl = document.getElementById('username');
+                    if (uEl) { uEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); uEl.focus(); }
+                }
+                msgBox.classList.add('show');
+                btn.disabled = false; text.style.display = 'block'; loader.style.display = 'none';
+            }
+        };
+
+        document.getElementById('employer-form').addEventListener('submit', window.handleEmployerSave);
+    </script>
+
+</body>
+</html>

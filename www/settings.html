@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Settings | Health Jobs</title>
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-hover: #0f766e;
+            --primary-soft: #f0fdfa;
+            --bg-body: #f3f2ef;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --error: #dc2626;
+            --success: #15803d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-main);
+            padding-top: 60px;
+            min-height: 100vh;
+        }
+
+        /* â”€â”€ HEADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        header {
+            background: var(--surface);
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted);
+            margin-right: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        main {
+            max-width: 580px;
+            margin: 0 auto;
+            background: var(--surface);
+            min-height: calc(100vh - 60px);
+        }
+
+        /* â”€â”€ SECTION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .sec-head {
+            font-size: 11.5px;
+            font-weight: 800;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 20px 18px 8px;
+            background: #f8fafc;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 15px 18px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .row-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            background: var(--primary-soft);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row-icon svg {
+            width: 19px;
+            height: 19px;
+        }
+
+        .row-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .row-title {
+            font-size: 14.5px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .row-sub {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        .row.disabled {
+            opacity: 0.55;
+        }
+
+        .row.clickable {
+            cursor: pointer;
+        }
+
+        .row.clickable:hover {
+            background: #f8fafc;
+        }
+
+        /* â”€â”€ TOGGLE SWITCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .switch {
+            position: relative;
+            width: 46px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: #cbd5e1;
+            border-radius: 26px;
+            transition: 0.25s;
+        }
+
+        .slider::before {
+            content: '';
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: 0.25s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .switch input:checked+.slider {
+            background: var(--primary);
+        }
+
+        .switch input:checked+.slider::before {
+            transform: translateX(20px);
+        }
+
+        .switch input:disabled+.slider {
+            cursor: not-allowed;
+        }
+
+        /* â”€â”€ SOON BADGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .soon {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #b45309;
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            padding: 3px 9px;
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        /* â”€â”€ BUTTONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            transition: background 0.2s, opacity 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+        }
+
+        .btn-ghost {
+            background: #f1f5f9;
+            color: var(--text-main);
+        }
+
+        .btn-ghost:hover:not(:disabled) {
+            background: #e2e8f0;
+        }
+
+        /* Deactivate account — warning (amber) action button */
+        .btn-danger {
+            background: #b45309;
+            color: #fff;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #92400e;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .pad {
+            padding: 18px;
+        }
+
+        .spinner {
+            width: 17px;
+            height: 17px;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* â”€â”€ MESSAGES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .msg {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 11px 14px;
+            border-radius: 8px;
+            margin-top: 12px;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .msg.show {
+            display: block;
+        }
+
+        .msg.error {
+            color: #7f1d1d;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .msg.success {
+            color: #14532d;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .msg.info {
+            color: #1e3a8a;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* â”€â”€ PIN INPUT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .pin-row {
+            display: flex;
+            gap: 9px;
+            justify-content: center;
+            margin: 6px 0 4px;
+        }
+
+        .pin-row input {
+            width: 46px;
+            height: 56px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            font-family: monospace;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            background: #f8fafc;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .pin-row input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
+        }
+
+        .pin-row input.filled {
+            border-color: var(--primary);
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 14px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #f8fafc;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .field input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
+        }
+
+        .field .hint {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .meter {
+            height: 5px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .meter>div {
+            height: 100%;
+            width: 0;
+            transition: width 0.25s, background 0.25s;
+        }
+
+        /* â”€â”€ MODAL / SHEET â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .sheet-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            z-index: 2000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .sheet-backdrop.open {
+            display: flex;
+        }
+
+        .sheet {
+            width: 100%;
+            max-width: 580px;
+            background: var(--surface);
+            border-radius: 20px 20px 0 0;
+            padding: 22px 18px 26px;
+            max-height: 92vh;
+            overflow-y: auto;
+            animation: slideUp 0.25s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(22px);
+                opacity: 0.5;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .sheet-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .sheet-head h3 {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .sheet-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+        }
+
+        .sheet-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* â”€â”€ LOADER / GATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .gate {
+            text-align: center;
+            padding: 70px 24px;
+            color: var(--text-muted);
+        }
+
+        .gate .big-spin {
+            width: 34px;
+            height: 34px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 14px;
+        }
+
+        .gate p {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <button class="back-btn" onclick="history.length > 1 ? history.back() : location.href='index.html'">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+            </svg>
+        </button>
+        <div class="page-title">Settings</div>
+    </header>
+
+    <main id="app">
+        <div class="gate" id="gate">
+            <div class="big-spin"></div>
+            <p>Loading your settings...</p>
+        </div>
+    </main>
+
+    <!-- â•â•â•â•â•â•â•â•â•â• PASSWORD CHANGE SHEET â•â•â•â•â•â•â•â•â•â• -->
+    <div class="sheet-backdrop" id="pwd-sheet">
+        <div class="sheet">
+
+            <!-- STEP 1: email par code bhejo -->
+            <div id="pwd-step-1">
+                <div class="sheet-head">
+                    <h3>Change Password</h3>
+                    <button class="sheet-close" onclick="closePwdSheet()">&times;</button>
+                </div>
+                <p class="sheet-sub">
+                    For your security we will send a 6-digit verification code to
+                    <strong id="pwd-email-label">your email</strong>.
+                    Enter that code to confirm the change.
+                </p>
+                <button class="btn btn-primary" id="btn-send-code" onclick="requestPwdCode()">
+                    <span id="send-code-text">Send Verification Code</span>
+                    <div class="spinner" id="send-code-spin"></div>
+                </button>
+                <div class="msg" id="pwd-msg-1"></div>
+            </div>
+
+            <!-- STEP 2: code + naya password -->
+            <div id="pwd-step-2" class="hidden">
+                <div class="sheet-head">
+                    <h3>Enter Verification Code</h3>
+                    <button class="sheet-close" onclick="closePwdSheet()">&times;</button>
+                </div>
+                <p class="sheet-sub">
+                    We emailed a 6-digit code to <strong id="pwd-email-label-2">your email</strong>.
+                    It expires in 10 minutes.
+                </p>
+
+                <div class="pin-row" id="pin-row">
+                    <input type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code">
+                    <input type="text" inputmode="numeric" maxlength="1">
+                    <input type="text" inputmode="numeric" maxlength="1">
+                    <input type="text" inputmode="numeric" maxlength="1">
+                    <input type="text" inputmode="numeric" maxlength="1">
+                    <input type="text" inputmode="numeric" maxlength="1">
+                </div>
+                <div class="msg" id="pwd-msg-2"></div>
+
+                <div class="field" style="margin-top:20px;">
+                    <label for="new-pass">New Password</label>
+                    <input type="password" id="new-pass" placeholder="At least 8 characters"
+                        autocomplete="new-password">
+                    <div class="meter">
+                        <div id="pass-meter"></div>
+                    </div>
+                    <div class="hint" id="pass-hint">Use 8+ characters with letters and numbers.</div>
+                </div>
+
+                <div class="field">
+                    <label for="confirm-pass">Confirm New Password</label>
+                    <input type="password" id="confirm-pass" placeholder="Re-enter new password"
+                        autocomplete="new-password">
+                </div>
+
+                <button class="btn btn-primary" id="btn-confirm-pwd" onclick="confirmPwdChange()">
+                    <span id="confirm-pwd-text">Change Password</span>
+                    <div class="spinner" id="confirm-pwd-spin"></div>
+                </button>
+                <button class="btn btn-ghost" style="margin-top:10px;" id="btn-resend" onclick="requestPwdCode(true)">
+                    <span id="resend-text">Resend Code</span>
+                </button>
+            </div>
+
+            <!-- STEP 3: ho gaya -->
+            <div id="pwd-step-3" class="hidden" style="text-align:center;padding:14px 0 6px;">
+                <div style="font-size:44px;margin-bottom:12px;">✅</div>
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">Password Changed</h3>
+                <p class="sheet-sub" style="margin-bottom:22px;">
+                    Your password has been updated. Use your new password the next time you sign in.
+                </p>
+                <button class="btn btn-primary" onclick="closePwdSheet()">Done</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         🚫 DEACTIVATE ACCOUNT SHEET (6-digit PIN)
+
+         Password-change jaisa hi safe flow:
+           1) Email par 6-digit code bhejo
+           2) Code daal kar confirm karo
+           3) Account deactivate ho jata hai
+
+         PIN kyun? Taake koi doosra (khula phone mil jaye to)
+         aapka account deactivate na kar sake. Same lock rules
+         (5 ghalat tries = 2 ghante lock) jaisa nodemails.js mein hai.
+         ══════════════════════════════════════════════ -->
+    <div class="sheet-backdrop" id="deact-sheet">
+        <div class="sheet">
+
+            <!-- STEP 1: warning + code bhejo -->
+            <div id="deact-step-1">
+                <div class="sheet-head">
+                    <h3>Deactivate Account</h3>
+                    <button class="sheet-close" onclick="closeDeactivateSheet()">&times;</button>
+                </div>
+
+                <div style="background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:8px;padding:14px 16px;margin-bottom:18px;">
+                    <p style="font-size:13.5px;font-weight:700;color:#78350f;margin-bottom:6px;">What happens when you deactivate</p>
+                    <ul style="margin:0;padding-left:18px;font-size:12.5px;color:#92400e;line-height:1.75;">
+                        <li>Your profile and posts stop appearing in search.</li>
+                        <li>You can no longer like, comment or share any post.</li>
+                        <li>You will stop receiving job alerts and notifications.</li>
+                        <li>Activation is only possible through our support team.</li>
+                    </ul>
+                </div>
+
+                <p class="sheet-sub">
+                    To confirm, we will send a 6-digit verification code to
+                    <strong id="deact-email-label">your email</strong>.
+                </p>
+
+                <button class="btn btn-danger" id="btn-deact-send" onclick="requestDeactCode()">
+                    <span id="deact-send-text">Send Verification Code</span>
+                    <div class="spinner" id="deact-send-spin"></div>
+                </button>
+                <div class="msg" id="deact-msg-1"></div>
+            </div>
+
+            <!-- STEP 2: PIN daalo -->
+            <div id="deact-step-2" class="hidden">
+                <div class="sheet-head">
+                    <h3>Enter Verification Code</h3>
+                    <button class="sheet-close" onclick="closeDeactivateSheet()">&times;</button>
+                </div>
+                <p class="sheet-sub">
+                    We emailed a 6-digit code to <strong id="deact-email-label-2">your email</strong>.
+                    It expires in 2 minutes.
+                </p>
+
+                <div class="pin-row" id="deact-pin-row">
+                    <input type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code">
+                    <input type="text" inputmode="numeric" maxlength="1">
+                    <input type="text" inputmode="numeric" maxlength="1">
+                    <input type="text" inputmode="numeric" maxlength="1">
+                    <input type="text" inputmode="numeric" maxlength="1">
+                    <input type="text" inputmode="numeric" maxlength="1">
+                </div>
+                <div class="msg" id="deact-msg-2"></div>
+
+                <button class="btn btn-danger" id="btn-deact-confirm" onclick="confirmDeactivate()">
+                    <span id="deact-confirm-text">Deactivate My Account</span>
+                    <div class="spinner" id="deact-confirm-spin"></div>
+                </button>
+                <button class="btn btn-ghost" style="margin-top:10px;" id="btn-deact-resend" onclick="requestDeactCode(true)">
+                    <span id="deact-resend-text">Resend Code</span>
+                </button>
+            </div>
+
+            <!-- STEP 3: ho gaya -->
+            <div id="deact-step-3" class="hidden" style="text-align:center;padding:14px 0 6px;">
+                <div style="font-size:44px;margin-bottom:12px;">🔒</div>
+                <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">Account Deactivated</h3>
+                <p class="sheet-sub" style="margin-bottom:18px;">
+                    Your account has been deactivated and you have been signed out.
+                    To activate it again, please contact our support team.
+                </p>
+                <a href="support.html?issue=Account%20Reactivation" class="btn btn-primary" style="text-decoration:none;">Request Activation</a>
+                <a href="support.html" class="btn btn-ghost" style="text-decoration:none;margin-top:10px;">Contact Support</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, deleteField, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+            authDomain: "jobs-45cc9.firebaseapp.com",
+            projectId: "jobs-45cc9",
+            storageBucket: "jobs-45cc9.firebasestorage.app",
+            messagingSenderId: "21065686301",
+            appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+        };
+
+        const fireApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+        const auth = getAuth(fireApp);
+        const db = getFirestore(fireApp);
+
+        const MAIL_API = 'https://nodemails.vercel.app';
+
+        // ═══════════════════════════════════════
+        // WEB PUSH (FCM)
+        // ═══════════════════════════════════════════════════════════════
+        // index.html / notifications.html jaisi hi VAPID key — teenon jagah same.
+        const HJP_VAPID_KEY = 'BHRRaV-QHpr2xMCjOcIml0ZU8czywX1cSUq4pSTpte6UAmjFwHMlazDLgjCiCHcKDZYA5TS9uIh1tDPRJWr0T38';
+
+        // Notification server (Vercel) — jahan se asli push jati hai
+        const NOTIFY_SERVER  = 'https://notication-healthjobs.vercel.app';
+        // Wahi secret jo approvals.js (admin worker) use karta hai
+        const NOTIFY_SECRET  = 'hjp-test-secret-2026';
+
+        let currentUser = null;
+        let userData = {};
+        let lastCodeSentAt = 0;
+        let resendTimer = null;
+
+        const $ = id => document.getElementById(id);
+        const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+        function showMsg(el, text, kind) {
+            if (!el) return;
+            el.textContent = text;
+            el.className = 'msg show ' + (kind || 'info');
+        }
+        function hideMsg(el) {
+            if (!el) return;
+            el.className = 'msg';
+            el.textContent = '';
+        }
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // AUTH GATE
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        onAuthStateChanged(auth, async user => {
+            if (!user) {
+                sessionStorage.setItem('redirectAfterLogin', 'settings.html');
+                window.location.replace('login.html');
+                return;
+            }
+            currentUser = user;
+
+            try {
+                const snap = await getDoc(doc(db, 'users', user.uid));
+                if (snap.exists()) userData = snap.data();
+            } catch (e) {
+                console.warn('Could not read user profile:', e);
+            }
+
+            renderSettings();
+        });
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // RENDER
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        function renderSettings() {
+            const displayName = userData.facilityName || userData.fullName || userData.name || currentUser.email || 'Your Account';
+            const initials = String(displayName).trim().charAt(0).toUpperCase() || 'U';
+            const pic = userData.profilePicUrl || userData.fromPic || '';
+
+            // Defaults â€” agar field mojood nahi to ON maan lo
+            const pref = userData.notificationPrefs || {};
+            const notifAll = pref.notifications !== false;
+            const emailJobs = pref.emailJobAlerts !== false;
+            const pushOn = pref.pushNotifications !== false;
+            // Candidate-only: CV visibility on public profile (missing field = visible)
+            const isCandidate = userData.role === 'candidate';
+            const showCv = userData.showResume !== false;
+            // Profile visibility (missing field = ON)
+            const showPhone = userData.showPhone !== false;
+            const showImages = userData.showFacilityImages !== false;
+            const allowDm = !(userData.privacySettings && userData.privacySettings.allowDM === false);
+
+            $('app').innerHTML = `
+            <div class="row" style="padding:20px 18px;border-bottom:1px solid var(--border);">
+                <img src="${pic ? esc(pic) : `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=0d9488&color=fff`}"
+                     style="width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid var(--border);"
+                     onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=0d9488&color=fff'">
+                <div class="row-body">
+                    <div class="row-title" style="font-size:15.5px;">${esc(displayName)}</div>
+                    <div class="row-sub">${esc(currentUser.email || '')}</div>
+                </div>
+            </div>
+
+            <div class="sec-head">Notifications</div>
+
+            <div class="row">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">All Notifications</div>
+                    <div class="row-sub">Likes, comments, shares and new posts</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sw-notif" ${notifAll ? 'checked' : ''} onchange="savePref('notifications', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">Email Job Alerts</div>
+                    <div class="row-sub">Get matching healthcare jobs by email</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sw-email" ${emailJobs ? 'checked' : ''} onchange="savePref('emailJobAlerts', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">Push Notifications</div>
+                    <div class="row-sub">Alerts on this device and browser</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sw-push" ${pushOn ? 'checked' : ''} onchange="savePref('pushNotifications', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-4-.9L3 21l1.9-4.9A8.4 8.4 0 0 1 4 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8 8.4Z"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">WhatsApp Alerts</div>
+                    <div class="row-sub">Job alerts straight to your WhatsApp</div>
+                </div>
+                <span class="soon">Coming Soon</span>
+            </div>
+
+            ${isCandidate ? `
+            <div class="sec-head">Profile Visibility</div>
+
+            <div class="row">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.4 2.1L8.1 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.6 2z"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">Show My Phone Number</div>
+                    <div class="row-sub" id="ph-sub">${showPhone ? 'On — your number is visible on your public profile' : 'Off — employers cannot see your phone number'}</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sw-phone" ${showPhone ? 'checked' : ''} onchange="savePrivacyFlag('showPhone', this.checked, 'ph-sub', 'On — your number is visible on your public profile', 'Off — employers cannot see your phone number')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-4-.9L3 21l1.9-4.9A8.4 8.4 0 0 1 4 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8 8.4Z"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">Allow Direct Messages</div>
+                    <div class="row-sub" id="dm-sub">${allowDm ? 'On — employers can message you from your profile' : 'Off — the Message button is hidden on your profile'}</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sw-dm" ${allowDm ? 'checked' : ''} onchange="savePrivacyFlag('allowDM', this.checked, 'dm-sub', 'On — employers can message you from your profile', 'Off — the Message button is hidden on your profile')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">Show My CV on Profile</div>
+                    <div class="row-sub" id="cv-sub">${showCv ? 'On — anyone can open and view your CV' : 'Off — your CV is hidden and cannot be opened by others'}</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sw-cv" ${showCv ? 'checked' : ''} onchange="saveCvVisibility(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            ` : `
+            <div class="sec-head">Profile Visibility</div>
+
+            <div class="row">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.4 2.1L8.1 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.6 2z"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">Show Contact Number</div>
+                    <div class="row-sub" id="ph-sub">${showPhone ? 'On — your contact number is visible on your public profile' : 'Off — candidates cannot see your contact number'}</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sw-phone" ${showPhone ? 'checked' : ''} onchange="savePrivacyFlag('showPhone', this.checked, 'ph-sub', 'On — your contact number is visible on your public profile', 'Off — candidates cannot see your contact number')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-4-.9L3 21l1.9-4.9A8.4 8.4 0 0 1 4 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8 8.4Z"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">Allow Direct Messages</div>
+                    <div class="row-sub" id="dm-sub">${allowDm ? 'On — candidates can message you from your profile' : 'Off — the Message button is hidden on your profile'}</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sw-dm" ${allowDm ? 'checked' : ''} onchange="savePrivacyFlag('allowDM', this.checked, 'dm-sub', 'On — candidates can message you from your profile', 'Off — the Message button is hidden on your profile')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 15l-5-5L5 19"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">Show Facility Images</div>
+                    <div class="row-sub" id="img-sub">${showImages ? 'On — your branch photos are visible on your public profile' : 'Off — your facility photos are hidden from everyone'}</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sw-images" ${showImages ? 'checked' : ''} onchange="savePrivacyFlag('showFacilityImages', this.checked, 'img-sub', 'On — your branch photos are visible on your public profile', 'Off — your facility photos are hidden from everyone')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            `}
+
+            <div class="sec-head">Security</div>
+
+            <div class="row clickable" onclick="openPwdSheet()">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">Change Password</div>
+                    <div class="row-sub">Verified with a 6-digit code on your email</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
+
+            <div class="row clickable" onclick="openDeactivateSheet()">
+                <div class="row-icon" style="background:#fffbeb;color:#b45309;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title" style="color:#b45309;">Deactivate Account</div>
+                    <div class="row-sub">Hide your profile and stop all activity</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
+
+            <div class="sec-head">Account</div>
+
+            <div class="row clickable" onclick="location.href='wid.html?uid=${encodeURIComponent(currentUser.uid)}'">
+                <div class="row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1-3.6 4-5.6 7-5.6s6 2 7 5.6"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title">View My Profile</div>
+                    <div class="row-sub">See how others see your profile</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
+
+            <div class="row clickable" onclick="confirmLogout()">
+                <div class="row-icon" style="background:#fef2f2;color:var(--error);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17l5-5-5-5"/><path d="M20 12H9"/><path d="M12 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6"/></svg>
+                </div>
+                <div class="row-body">
+                    <div class="row-title" style="color:var(--error);">Log Out</div>
+                    <div class="row-sub">Sign out of this device</div>
+                </div>
+            </div>
+
+            <div class="row" style="justify-content:center;border-bottom:none;padding:26px 18px;">
+                <div class="row-sub" style="text-align:center;">
+                    Health Jobs Portal &middot; v1.0<br>
+                    <a href="about.html" style="color:var(--primary);text-decoration:none;font-weight:600;">About</a>
+                    &nbsp;Â·&nbsp;
+                    <a href="privcy.html" style="color:var(--primary);text-decoration:none;font-weight:600;">Privacy</a>
+                    &nbsp;Â·&nbsp;
+                    <a href="support.html" style="color:var(--primary);text-decoration:none;font-weight:600;">Support</a>
+                </div>
+            </div>
+        `;
+
+            // Browser ki asli permission ke saath switch sync karo.
+            // "denied" ho gayi ho to switch OFF dikhega (aur ON karne par
+            // browser se dobara permission maangi jayegi).
+            syncPushSwitchWithBrowser();
+        }
+
+        // ─────────────────────────────
+        // BROWSER PUSH PERMISSION SYNC
+        // ─────────────────────────────
+        // Browser permission "denied" hai magar switch ON dikh raha ho —
+        // yeh ulta state user ko gumraah karta hai, is liye switch OFF kar do.
+        function syncPushSwitchWithBrowser() {
+            const el = $('sw-push');
+            if (!el) return;
+            if (!('Notification' in window)) { el.checked = false; el.disabled = true; return; }
+            if (Notification.permission === 'denied') el.checked = false;
+        }
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // NOTIFICATION PREFERENCES  (Firestore mein save)
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // Push ON karte waqt yahan seedhi Firestore write NAHI hoti — pehle
+        // browser se permission maangi jati hai aur FCM token save hone ke baad
+        // hi pref likhi jati hai (ensurePushEnabled dekho). Isi tarah push OFF
+        // karne par browser permission + token + pref — teenon saaf hote hain.
+        window.savePref = async function (key, value) {
+            if (!currentUser) return;
+
+            if (key === 'pushNotifications') {
+                if (value) {
+                    const ok = await ensurePushEnabled();
+                    if (!ok) {
+                        flashNotice('Notifications blocked. Allow notifications for this site in your browser settings, then try again.', true);
+                        revertSwitch('sw-push', false);
+                        return;
+                    }
+                } else {
+                    await disablePushOnThisDevice();
+                }
+                flashSaved();
+                return;
+            }
+
+            try {
+                await setDoc(doc(db, 'users', currentUser.uid), {
+                    notificationPrefs: { [key]: value },
+                    prefsUpdatedAt: serverTimestamp()
+                }, { merge: true });
+
+                // Local copy bhi update karo
+                userData.notificationPrefs = { ...(userData.notificationPrefs || {}), [key]: value };
+                flashSaved();
+            } catch (e) {
+                console.error('Preference save failed:', e);
+                alert('Could not save your preference. Please check your connection and try again.');
+            }
+        };
+
+
+        // ─────────────────────────────
+        // CV VISIBILITY (candidate only)
+        // ─────────────────────────────
+        // Firestore-cost friendly: no extra read (userData is already loaded),
+        // one single merge-write only when the value really changes, and the
+        // switch is locked while that write is in flight (no spam writes).
+        window.saveCvVisibility = async function (checked) {
+            if (!currentUser || userData.role !== 'candidate') return;
+            const sub = $('cv-sub');
+            const setSub = (on) => { if (sub) sub.textContent = on ? 'On — anyone can open and view your CV' : 'Off — your CV is hidden and cannot be opened by others'; };
+            const current = userData.showResume !== false;
+            if (checked === current) { setSub(checked); return; }   // nothing changed → no write
+            const sw = $('sw-cv');
+            if (sw) sw.disabled = true;
+            setSub(checked);
+            try {
+                await setDoc(doc(db, 'users', currentUser.uid), { showResume: checked }, { merge: true });
+                userData.showResume = checked;
+                // Keep this user's cached profile (wid.html) in sync — no Firestore read needed
+                try {
+                    const k = 'wid_profile_' + currentUser.uid;
+                    const c = localStorage.getItem(k);
+                    if (c) { const o = JSON.parse(c); o.showResume = checked; localStorage.setItem(k, JSON.stringify(o)); }
+                } catch (_) {}
+                flashSaved();
+            } catch (e) {
+                console.error('CV visibility save failed:', e);
+                revertSwitch('sw-cv', !checked);
+                setSub(!checked);
+                flashNotice('Could not save your CV setting. Please check your connection and try again.', true);
+            } finally {
+                if (sw) sw.disabled = false;
+            }
+        };
+
+        // Switch ko wapas uski sahi value par le aao (save fail hone par)
+        function revertSwitch(id, checked) {
+            const el = $(id);
+            if (el) el.checked = checked;
+        }
+
+        // ─────────────────────────────
+        // PROFILE VISIBILITY (showPhone / allowDM / showFacilityImages)
+        // Generic toggle saver — ek hi merge-write, switch lock hota hai
+        // jab tak write chal raha hai, aur fail hone par wapas revert.
+        // ─────────────────────────────
+        window.savePrivacyFlag = async function (field, checked, subId, onText, offText) {
+            if (!currentUser) return;
+            const sub = $(subId);
+            const swId = field === 'allowDM' ? 'sw-dm' : (field === 'showFacilityImages' ? 'sw-images' : 'sw-phone');
+            const sw = $(swId);
+            const currentValue = field === 'allowDM'
+                ? !(userData.privacySettings && userData.privacySettings.allowDM === false)
+                : userData[field] !== false;
+            const setSub = (on) => { if (sub) sub.textContent = on ? onText : offText; };
+            if (checked === currentValue) { setSub(checked); return; }   // nothing changed → no write
+            if (sw) sw.disabled = true;
+            setSub(checked);
+            try {
+                if (field === 'allowDM') {
+                    await setDoc(doc(db, 'users', currentUser.uid), {
+                        privacySettings: { allowDM: checked }
+                    }, { merge: true });
+                    userData.privacySettings = { ...(userData.privacySettings || {}), allowDM: checked };
+                } else {
+                    await setDoc(doc(db, 'users', currentUser.uid), { [field]: checked }, { merge: true });
+                    userData[field] = checked;
+                }
+                // wid.html ka cached profile copy bhi sync karo — no extra Firestore read
+                try {
+                    const k = 'wid_profile_' + currentUser.uid;
+                    const c = localStorage.getItem(k);
+                    if (c) {
+                        const o = JSON.parse(c);
+                        if (field === 'allowDM') { o.privacySettings = Object.assign({}, o.privacySettings || {}, { allowDM: checked }); }
+                        else { o[field] = checked; }
+                        localStorage.setItem(k, JSON.stringify(o));
+                    }
+                } catch (_) {}
+                flashSaved();
+            } catch (e) {
+                console.error('Privacy flag save failed:', e);
+                revertSwitch(swId, !checked);
+                setSub(!checked);
+                flashNotice('Could not save your visibility setting. Please check your connection and try again.', true);
+            } finally {
+                if (sw) sw.disabled = false;
+            }
+        };
+
+        // ─────────────────────────────
+        // PUSH ON — browser permission maango, phir token + pref save karo
+        // ─────────────────────────────
+        async function ensurePushEnabled() {
+            // Capacitor native app — wahan native push chalta hai, browser
+            // permission ka chakkar nahi
+            if (window.Capacitor?.isNativePlatform?.()) {
+                await savePushPref(true);
+                return true;
+            }
+            if (!('Notification' in window) || !('serviceWorker' in navigator)) return false;
+
+            let perm = Notification.permission;
+
+            // default  → browser se permission maango.
+            // denied   → browser khud dobara prompt nahi karta, magar hum try
+            //            zaroor karte hain taake user agar browser settings
+            //            mein allow kar chuka ho to turant ON ho jaye.
+            if (perm !== 'granted') {
+                try { perm = await Notification.requestPermission(); }
+                catch (_) { perm = Notification.permission; }
+            }
+            if (perm !== 'granted') { syncPushSwitchWithBrowser(); return false; }
+
+            const token = await registerFcmToken(currentUser.uid);
+            if (!token) { syncPushSwitchWithBrowser(); return false; }
+
+            await savePushPref(true);
+            return true;
+        }
+
+        // ─────────────────────────────
+        // PUSH OFF — browser permission + subscription + FCM token + pref
+        // ─────────────────────────────
+        async function disablePushOnThisDevice() {
+            // 1) Browser ki site permission revoke karo (agar supported hai).
+            //    Is se site browser settings mein "blocked" ho jati hai aur aage
+            //    koi notification nahi aati. Firefox is API ko support nahi karta
+            //    — wahan try/catch se nikal jate hain.
+            try {
+                if (navigator.permissions?.revoke) {
+                    await navigator.permissions.revoke({ name: 'notifications' });
+                }
+            } catch (_) { }
+
+            // 2) Browser push subscription unsubscribe karo
+            try {
+                const reg = (await navigator.serviceWorker?.getRegistration('/sw.js'))
+                          || (await navigator.serviceWorker?.getRegistration());
+                const sub = await reg?.pushManager?.getSubscription();
+                if (sub) await sub.unsubscribe();
+            } catch (_) { }
+
+            // 3) FCM token Firestore se delete karo — warna notification server
+            //    is device par push bhejta rehta hai
+            try {
+                await setDoc(doc(db, 'users', currentUser.uid), {
+                    fcmToken: deleteField()
+                }, { merge: true });
+            } catch (_) { }
+
+            // 4) Pref OFF likho (Firestore + local)
+            await savePushPref(false);
+        }
+
+        async function savePushPref(value) {
+            if (!currentUser) return;
+            try {
+                await setDoc(doc(db, 'users', currentUser.uid), {
+                    notificationPrefs: { pushNotifications: value },
+                    prefsUpdatedAt: serverTimestamp()
+                }, { merge: true });
+                userData.notificationPrefs = { ...(userData.notificationPrefs || {}), pushNotifications: value };
+            } catch (e) {
+                console.error('Push pref save failed:', e);
+            }
+        }
+
+        // ─────────────────────────────
+        // FCM TOKEN — notifications.html / index.html jaisa hi pattern
+        // ─────────────────────────────
+        let __fcmRegistering = false;
+        async function registerFcmToken(uid) {
+            if (__fcmRegistering || !uid) return null;
+            __fcmRegistering = true;
+            try {
+                const { getMessaging, getToken, isSupported } =
+                    await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js");
+                if (!(await isSupported())) return null;
+
+                const messaging = getMessaging(fireApp);
+                const token = await getToken(messaging, {
+                    vapidKey: HJP_VAPID_KEY,
+                    serviceWorkerRegistration: await navigator.serviceWorker.register('/sw.js')
+                });
+                if (!token) return null;
+
+                // Sirf tab likho jab token waqai badla ho (Firestore writes bachane ke liye)
+                const userRef = doc(db, 'users', uid);
+                let already = false;
+                try {
+                    const snap = await getDoc(userRef);
+                    const raw  = snap.exists() ? snap.data().fcmToken : null;
+                    already = Array.isArray(raw) ? raw.includes(token) : raw === token;
+                } catch (_) { }
+                if (!already) await setDoc(userRef, { fcmToken: token }, { merge: true });
+                return token;
+            } catch (e) {
+                console.warn('[push] token registration failed:', e?.message || e);
+                return null;
+            } finally {
+                __fcmRegistering = false;
+            }
+        }
+
+        let flashTimer = null;
+        function flashSaved() {
+            let bar = document.getElementById('save-flash');
+            if (!bar) {
+                bar = document.createElement('div');
+                bar.id = 'save-flash';
+                bar.style.cssText = 'position:fixed;left:50%;bottom:26px;transform:translateX(-50%);'
+                    + 'background:#0f172a;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;'
+                    + 'border-radius:24px;z-index:3000;box-shadow:0 6px 20px rgba(0,0,0,0.25);'
+                    + 'opacity:0;transition:opacity 0.25s;pointer-events:none;';
+                document.body.appendChild(bar);
+            }
+            bar.textContent = 'Saved';
+            requestAnimationFrame(() => { bar.style.opacity = '1'; });
+            clearTimeout(flashTimer);
+            flashTimer = setTimeout(() => { bar.style.opacity = '0'; }, 1400);
+        }
+
+        // flashSaved jaisa hi, magar warning/error text ke saath
+        function flashNotice(text, isError) {
+            let bar = document.getElementById('save-flash');
+            if (!bar) {
+                bar = document.createElement('div');
+                bar.id = 'save-flash';
+                bar.style.cssText = 'position:fixed;left:50%;bottom:26px;transform:translateX(-50%);'
+                    + 'background:#0f172a;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;'
+                    + 'border-radius:24px;z-index:3000;box-shadow:0 6px 20px rgba(0,0,0,0.25);'
+                    + 'max-width:90vw;text-align:center;'
+                    + 'opacity:0;transition:opacity 0.25s;pointer-events:none;';
+                document.body.appendChild(bar);
+            }
+            bar.style.background = isError ? 'var(--error)' : '#0f172a';
+            bar.textContent = text;
+            requestAnimationFrame(() => { bar.style.opacity = '1'; });
+            clearTimeout(flashTimer);
+            flashTimer = setTimeout(() => { bar.style.opacity = '0'; }, isError ? 4000 : 1400);
+        }
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // PASSWORD CHANGE WITH 6-DIGIT EMAIL CODE
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        const pinInputs = () => [...document.querySelectorAll('#pin-row input')];
+
+        function resetPinInputs() {
+            pinInputs().forEach(inp => {
+                inp.value = '';
+                inp.classList.remove('filled');
+                inp.disabled = false;
+            });
+        }
+
+        function readPin() {
+            return pinInputs().map(i => i.value).join('');
+        }
+
+        function setupPinInputs() {
+            const inputs = pinInputs();
+            inputs.forEach((inp, i) => {
+                inp.addEventListener('input', () => {
+                    inp.value = inp.value.replace(/\D/g, '').slice(0, 1);
+                    inp.classList.toggle('filled', !!inp.value);
+                    if (inp.value && i < inputs.length - 1) inputs[i + 1].focus();
+                    if (readPin().length === 6) hideMsg($('pwd-msg-2'));
+                });
+                inp.addEventListener('keydown', e => {
+                    if (e.key === 'Backspace' && !inp.value && i > 0) {
+                        inputs[i - 1].focus();
+                        inputs[i - 1].value = '';
+                        inputs[i - 1].classList.remove('filled');
+                        e.preventDefault();
+                    }
+                    if (e.key === 'ArrowLeft' && i > 0) inputs[i - 1].focus();
+                    if (e.key === 'ArrowRight' && i < inputs.length - 1) inputs[i + 1].focus();
+                });
+                inp.addEventListener('paste', e => {
+                    e.preventDefault();
+                    const digits = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+                    if (!digits) return;
+                    digits.split('').forEach((d, k) => {
+                        if (inputs[k]) {
+                            inputs[k].value = d;
+                            inputs[k].classList.add('filled');
+                        }
+                    });
+                    const next = Math.min(digits.length, inputs.length) - 0;
+                    (inputs[next] || inputs[inputs.length - 1]).focus();
+                    if (readPin().length === 6) hideMsg($('pwd-msg-2'));
+                });
+            });
+        }
+
+        window.openPwdSheet = function () {
+            if (!currentUser) return;
+            hideMsg($('pwd-msg-1'));
+            hideMsg($('pwd-msg-2'));
+            $('pwd-step-1').classList.remove('hidden');
+            $('pwd-step-2').classList.add('hidden');
+            $('pwd-step-3').classList.add('hidden');
+            $('pwd-email-label').textContent = currentUser.email || 'your email';
+            $('pwd-email-label-2').textContent = currentUser.email || 'your email';
+            resetPinInputs();
+            $('new-pass').value = '';
+            $('confirm-pass').value = '';
+            updatePassMeter();
+            $('pwd-sheet').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closePwdSheet = function () {
+            $('pwd-sheet').classList.remove('open');
+            document.body.style.overflow = '';
+            resetPinInputs();
+            $('new-pass').value = '';
+            $('confirm-pass').value = '';
+            if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
+        };
+
+        // Sheet backdrop par click se band
+        $('pwd-sheet').addEventListener('click', e => {
+            if (e.target === $('pwd-sheet')) closePwdSheet();
+        });
+
+        // â”€â”€ Code bhejo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        window.requestPwdCode = async function (isResend) {
+            if (!currentUser) return;
+
+            const btn = isResend ? $('btn-resend') : $('btn-send-code');
+            const spin = isResend ? null : $('send-code-spin');
+            const txt = isResend ? $('resend-text') : $('send-code-text');
+            const msgEl = isResend ? $('pwd-msg-2') : $('pwd-msg-1');
+
+            hideMsg(msgEl);
+            btn.disabled = true;
+            if (spin) spin.style.display = 'block';
+            if (txt) txt.textContent = isResend ? 'Sending...' : 'Sending...';
+
+            try {
+                const idToken = await currentUser.getIdToken();
+                const res = await fetch(`${MAIL_API}/api/request-password-change`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`
+                    }
+                });
+                const data = await res.json().catch(() => ({}));
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || `Could not send the code (HTTP ${res.status})`);
+                }
+
+                lastCodeSentAt = Date.now();
+
+                if (!isResend) {
+                    // Step 2 par jao
+                    $('pwd-step-1').classList.add('hidden');
+                    $('pwd-step-2').classList.remove('hidden');
+                    resetPinInputs();
+                    pinInputs()[0]?.focus();
+                    showMsg($('pwd-msg-2'), 'Code sent. Check your email inbox (and spam folder).', 'info');
+                } else {
+                    showMsg($('pwd-msg-2'), 'A new code has been sent to your email.', 'success');
+                }
+
+                startResendCooldown();
+
+            } catch (e) {
+                console.error('requestPwdCode:', e);
+                showMsg(msgEl, e.message || 'Something went wrong. Please try again.', 'error');
+            } finally {
+                btn.disabled = false;
+                if (spin) spin.style.display = 'none';
+                if (txt) txt.textContent = isResend ? 'Resend Code' : 'Send Verification Code';
+            }
+        };
+
+        function startResendCooldown() {
+            const btn = $('btn-resend');
+            const txt = $('resend-text');
+            if (!btn || !txt) return;
+
+            let left = 60;
+            btn.disabled = true;
+            txt.textContent = `Resend in ${left}s`;
+
+            if (resendTimer) clearInterval(resendTimer);
+            resendTimer = setInterval(() => {
+                left--;
+                if (left <= 0) {
+                    clearInterval(resendTimer);
+                    resendTimer = null;
+                    btn.disabled = false;
+                    txt.textContent = 'Resend Code';
+                } else {
+                    txt.textContent = `Resend in ${left}s`;
+                }
+            }, 1000);
+        }
+
+        // â”€â”€ Password strength meter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        function passStrength(p) {
+            let score = 0;
+            if (p.length >= 8) score++;
+            if (p.length >= 12) score++;
+            if (/[a-z]/.test(p) && /[A-Z]/.test(p)) score++;
+            if (/\d/.test(p)) score++;
+            if (/[^A-Za-z0-9]/.test(p)) score++;
+            return Math.min(score, 4);
+        }
+
+        function updatePassMeter() {
+            const p = $('new-pass').value;
+            const meter = $('pass-meter');
+            const hint = $('pass-hint');
+            if (!meter) return;
+
+            const s = passStrength(p);
+            const widths = ['0%', '30%', '55%', '80%', '100%'];
+            const colors = ['#e2e8f0', '#dc2626', '#d97706', '#0d9488', '#15803d'];
+            const labels = [
+                'Use 8+ characters with letters and numbers.',
+                'Weak â€” add more characters.',
+                'Fair â€” mix upper and lower case.',
+                'Good â€” add a number or symbol.',
+                'Strong password.'
+            ];
+
+            meter.style.width = widths[p ? s : 0];
+            meter.style.background = colors[p ? s : 0];
+            if (hint) hint.textContent = p ? labels[s] : 'Use 8+ characters with letters and numbers.';
+        }
+
+        $('new-pass').addEventListener('input', updatePassMeter);
+
+        // â”€â”€ Password confirm â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        window.confirmPwdChange = async function () {
+            if (!currentUser) return;
+
+            const code = readPin();
+            const newPass = $('new-pass').value;
+            const confirmPass = $('confirm-pass').value;
+            const btn = $('btn-confirm-pwd');
+            const spin = $('confirm-pwd-spin');
+            const txt = $('confirm-pwd-text');
+            const msgEl = $('pwd-msg-2');
+
+            hideMsg(msgEl);
+
+            if (code.length !== 6) {
+                showMsg(msgEl, 'Please enter the complete 6-digit code.', 'error');
+                return;
+            }
+            if (newPass.length < 8) {
+                showMsg(msgEl, 'Password must be at least 8 characters long.', 'error');
+                return;
+            }
+            if (newPass !== confirmPass) {
+                showMsg(msgEl, 'The two passwords do not match.', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            spin.style.display = 'block';
+            txt.textContent = 'Changing...';
+
+            try {
+                const idToken = await currentUser.getIdToken();
+                const res = await fetch(`${MAIL_API}/api/confirm-password-change`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`
+                    },
+                    body: JSON.stringify({ code, newPassword: newPass })
+                });
+                const data = await res.json().catch(() => ({}));
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || `Could not change the password (HTTP ${res.status})`);
+                }
+
+                // Success â€” step 3
+                $('pwd-step-2').classList.add('hidden');
+                $('pwd-step-3').classList.remove('hidden');
+                resetPinInputs();
+
+            } catch (e) {
+                console.error('confirmPwdChange:', e);
+                showMsg(msgEl, e.message || 'Something went wrong. Please try again.', 'error');
+            } finally {
+                btn.disabled = false;
+                spin.style.display = 'none';
+                txt.textContent = 'Change Password';
+            }
+        };
+
+        // ==========================================================
+        // DEACTIVATE ACCOUNT  (6-digit PIN verified)
+        // ==========================================================
+        // Password-change jaisa hi safe flow:
+        //   1) email par code bhejo  (POST /api/request-deactivation)
+        //   2) 6-digit PIN verify karo (POST /api/confirm-deactivation)
+        //   3) Firestore isDeactivated=true + activation request
+        //
+        // PIN kyun zaroori hai: agar koi khula phone le kar baith jaye,
+        // woh bina code ke aapka account band nahi kar sakta.
+        // Lock rules wahi hain (5 ghalat tries = 2 ghante lock).
+        // ==========================================================
+        let deactResendTimer = null;
+
+        function deactPins() {
+            return [...document.querySelectorAll('#deact-pin-row input')];
+        }
+        function readDeactPin() {
+            return deactPins().map(i => i.value).join('');
+        }
+        function resetDeactPins() {
+            deactPins().forEach(i => { i.value = ''; i.classList.remove('filled'); });
+        }
+
+        // Ek hi baar wire karo (sheet bar bar khulne par duplicate handlers na banein)
+        let deactPinsWired = false;
+        function wireDeactPins() {
+            if (deactPinsWired) return;
+            deactPinsWired = true;
+            const inputs = deactPins();
+            inputs.forEach((inp, i) => {
+                inp.oninput = () => {
+                    inp.value = inp.value.replace(/\D/g, '').slice(0, 1);
+                    inp.classList.toggle('filled', !!inp.value);
+                    if (inp.value && i < inputs.length - 1) inputs[i + 1].focus();
+                    if (readDeactPin().length === 6) hideMsg($('deact-msg-2'));
+                };
+                inp.onkeydown = e => {
+                    if (e.key === 'Backspace' && !inp.value && i > 0) {
+                        inputs[i - 1].focus(); inputs[i - 1].value = '';
+                        inputs[i - 1].classList.remove('filled'); e.preventDefault();
+                    }
+                };
+                inp.onpaste = e => {
+                    e.preventDefault();
+                    const digits = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+                    digits.split('').forEach((d, k) => {
+                        if (inputs[k]) { inputs[k].value = d; inputs[k].classList.add('filled'); }
+                    });
+                    (inputs[Math.min(digits.length, 5)] || inputs[5]).focus();
+                };
+            });
+        }
+
+        window.openDeactivateSheet = function () {
+            if (!currentUser) return;
+
+            const email = currentUser.email || 'your email';
+            $('deact-email-label').textContent = email;
+            $('deact-email-label-2').textContent = email;
+
+            $('deact-step-1').classList.remove('hidden');
+            $('deact-step-2').classList.add('hidden');
+            $('deact-step-3').classList.add('hidden');
+
+            hideMsg($('deact-msg-1'));
+            hideMsg($('deact-msg-2'));
+            resetDeactPins();
+            wireDeactPins();
+
+            $('deact-sheet').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeDeactivateSheet = function () {
+            $('deact-sheet').classList.remove('open');
+            document.body.style.overflow = '';
+            resetDeactPins();
+            if (deactResendTimer) { clearInterval(deactResendTimer); deactResendTimer = null; }
+        };
+
+        $('deact-sheet').addEventListener('click', e => {
+            if (e.target === $('deact-sheet')) closeDeactivateSheet();
+        });
+
+        // ── Step 1: code bhejo ──────────────────────────────────
+        window.requestDeactCode = async function (isResend) {
+            if (!currentUser) return;
+
+            const btn = isResend ? $('btn-deact-resend') : $('btn-deact-send');
+            const spin = isResend ? null : $('deact-send-spin');
+            const txt = isResend ? $('deact-resend-text') : $('deact-send-text');
+            const msgEl = isResend ? $('deact-msg-2') : $('deact-msg-1');
+
+            hideMsg(msgEl);
+            btn.disabled = true;
+            if (spin) spin.style.display = 'block';
+            if (txt) txt.textContent = 'Sending...';
+
+            try {
+                const idToken = await currentUser.getIdToken();
+                const res = await fetch(`${MAIL_API}/api/request-deactivation`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`
+                    }
+                });
+                const data = await res.json().catch(() => ({}));
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || `Could not send the code (HTTP ${res.status})`);
+                }
+
+                if (!isResend) {
+                    $('deact-step-1').classList.add('hidden');
+                    $('deact-step-2').classList.remove('hidden');
+                    resetDeactPins();
+                    deactPins()[0]?.focus();
+                    // Agar kuch attempts pehle se kharch ho chuke hain to batao
+                    const left = (typeof data.attemptsLeft === 'number') ? data.attemptsLeft : null;
+                    showMsg($('deact-msg-2'),
+                        left !== null
+                            ? `Code sent. ${left} attempt${left === 1 ? '' : 's'} remaining.`
+                            : 'Code sent. Check your email inbox (and spam folder).',
+                        'info');
+                } else {
+                    const left = (typeof data.attemptsLeft === 'number') ? data.attemptsLeft : null;
+                    showMsg($('deact-msg-2'),
+                        left !== null
+                            ? `A new code has been sent. ${left} attempt${left === 1 ? '' : 's'} remaining.`
+                            : 'A new code has been sent to your email.',
+                        'success');
+                }
+
+                startDeactCooldown();
+
+            } catch (e) {
+                console.error('requestDeactCode:', e);
+                showMsg(msgEl, e.message || 'Something went wrong. Please try again.', 'error');
+            } finally {
+                btn.disabled = false;
+                if (spin) spin.style.display = 'none';
+                if (txt) txt.textContent = isResend ? 'Resend Code' : 'Send Verification Code';
+            }
+        };
+
+        function startDeactCooldown() {
+            const btn = $('btn-deact-resend');
+            const txt = $('deact-resend-text');
+            if (!btn || !txt) return;
+
+            let left = 60;
+            btn.disabled = true;
+            txt.textContent = `Resend in ${left}s`;
+
+            if (deactResendTimer) clearInterval(deactResendTimer);
+            deactResendTimer = setInterval(() => {
+                left--;
+                if (left <= 0) {
+                    clearInterval(deactResendTimer);
+                    deactResendTimer = null;
+                    btn.disabled = false;
+                    txt.textContent = 'Resend Code';
+                } else {
+                    txt.textContent = `Resend in ${left}s`;
+                }
+            }, 1000);
+        }
+
+        // ── Step 2: PIN verify + deactivate ─────────────────────
+        window.confirmDeactivate = async function () {
+            if (!currentUser) return;
+
+            const code = readDeactPin();
+            const btn = $('btn-deact-confirm');
+            const spin = $('deact-confirm-spin');
+            const txt = $('deact-confirm-text');
+            const msgEl = $('deact-msg-2');
+
+            hideMsg(msgEl);
+
+            if (code.length !== 6) {
+                showMsg(msgEl, 'Please enter the complete 6-digit code.', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            spin.style.display = 'block';
+            txt.textContent = 'Deactivating...';
+
+            try {
+                const idToken = await currentUser.getIdToken();
+                const res = await fetch(`${MAIL_API}/api/confirm-deactivation`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`
+                    },
+                    body: JSON.stringify({ code })
+                });
+                const data = await res.json().catch(() => ({}));
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || `Could not deactivate the account (HTTP ${res.status})`);
+                }
+
+                // Server ne Firestore par isDeactivated=true laga diya.
+                $('deact-step-2').classList.add('hidden');
+                $('deact-step-3').classList.remove('hidden');
+                resetDeactPins();
+
+                // Local state saaf karo + sign out
+                try { localStorage.clear(); } catch (_) {}
+                try { sessionStorage.clear(); } catch (_) {}
+                setTimeout(async () => {
+                    try { await signOut(auth); } catch (_) {}
+                }, 2500);
+
+            } catch (e) {
+                console.error('confirmDeactivate:', e);
+                showMsg(msgEl, e.message || 'Something went wrong. Please try again.', 'error');
+                resetDeactPins();
+                deactPins()[0]?.focus();
+            } finally {
+                btn.disabled = false;
+                spin.style.display = 'none';
+                txt.textContent = 'Deactivate My Account';
+            }
+        };
+
+
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // LOGOUT
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        window.confirmLogout = async function () {
+            if (!confirm('Log out of this device?')) return;
+            try { await signOut(auth); } catch (_) { }
+            window.location.href = 'login.html';
+        };
+
+        // esc key se sheet band
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && $('pwd-sheet').classList.contains('open')) closePwdSheet();
+        });
+
+        // Sab init ke baad pin inputs wire karo
+        setupPinInputs();
+    </script>
+
+</body>
+
+</html>

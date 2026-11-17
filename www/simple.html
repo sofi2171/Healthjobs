@@ -9,16 +9,30 @@
     <meta name="keywords" content="medical updates Pakistan, clinical cases, healthcare news, medical discussion, Health Jobs Portal">
     
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://healthjobs-portal.web.app/simple.html" />
+    <link rel="canonical" href="https://healthjobportal.com/simple.html" />
 
     <meta property="og:title" content="Share Medical Updates | Health Jobs Portal">
-    <meta property="og:description" content="Share clinical cases and medical news with Pakistan's healthcare community.">
-    <meta property="og:image" content="https://healthjobs-portal.web.app/images/logo.png">
-    <meta property="og:url" content="https://healthjobs-portal.web.app/simple.html">
+    <meta property="og:description" content="Share clinical cases and medical news with the global healthcare community.">
+    <meta property="og:image" content="https://healthjobportal.com/images/logo.png">
+    <meta property="og:url" content="https://healthjobportal.com/simple.html">
     <meta property="og:type" content="article">
-
+<script>
+  setTimeout(function() {
+    let s1 = document.createElement('script');
+    s1.src = "https://www.googletagmanager.com/gtag/js?id=G-NC0B547PYR";
+    s1.async = true;
+    document.head.appendChild(s1);
+    let s2 = document.createElement('script');
+    s2.innerHTML = "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-NC0B547PYR');";
+    document.head.appendChild(s2);
+    let s3 = document.createElement('script');
+    s3.src = "https://analytics.ahrefs.com/analytics.js";
+    s3.setAttribute("data-key","lZziwIFYdWn//NVwsT+mUg");
+    s3.async = true;
+    document.head.appendChild(s3);
+  }, 3500);
+</script>
     <style>
-        /* Modern SaaS Theme Variables */
         :root { 
             --primary-blue: #0a66c2; 
             --hover-blue: #004182; 
@@ -33,14 +47,12 @@
         
         body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 80px; display: flex; flex-direction: column; }
 
-        /* Header */
         header { background-color: var(--bg-white); padding: 0 16px; display: flex; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 65px; z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
         .header-left { display: flex; align-items: center; gap: 15px; }
         .back-btn { background: #f1f5f9; border: none; border-radius: 50%; width: 36px; height: 36px; color: var(--text-main); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s;}
         .back-btn:active { background: #e2e8f0; transform: scale(0.95); }
         .logo-img { height: 35px; object-fit: contain; cursor: pointer; }
 
-        /* Main Form */
         main { flex: 1 0 auto; padding: 20px 15px; max-width: 600px; width: 100%; margin: 0 auto; }
         .post-card { background: var(--bg-white); padding: 20px; border-radius: 14px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); }
 
@@ -52,14 +64,16 @@
         .post-title-input { width: 100%; border: none; font-size: 18px; font-weight: 700; color: var(--text-main); outline: none; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); background: transparent;}
         .post-title-input::placeholder { color: #94a3b8; }
         
-        .post-textarea { width: 100%; border: none; font-size: 16px; outline: none; resize: none; min-height: 120px; color: var(--text-main); margin-bottom: 15px; line-height: 1.5; background: transparent;}
-        .post-textarea::placeholder { color: #94a3b8; }
+.post-editor { width: 100%; border: none; font-size: 16px; outline: none; min-height: 120px; color: var(--text-main); margin-bottom: 15px; line-height: 1.6; background: transparent; }
+.post-editor:empty:before { content: attr(data-placeholder); color: #94a3b8; pointer-events: none; display: block; }
+.post-editor h2 { font-size: 18px; font-weight: 700; color: var(--text-main); margin: 10px 0 6px; }
+.post-editor p { margin: 0 0 8px; }
+.post-editor p:empty { min-height: 1.4em; }
 
         .link-input-container { display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px; transition: 0.2s;}
         .link-input-container:focus-within { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1); }
         .link-input { border: none; background: transparent; outline: none; width: 100%; font-size: 14px; color: var(--primary-blue);}
 
-        /* Media Preview */
         .preview-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
         .preview-item { position: relative; width: calc(33.33% - 6px); aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #f1f5f9; display: flex; align-items: center; justify-content: center; flex-direction: column; border: 1px solid var(--border-color);}
         .preview-item img, .preview-item video { width: 100%; height: 100%; object-fit: cover; }
@@ -67,19 +81,18 @@
         .file-name { font-size: 10px; text-align: center; margin-top: 5px; color: var(--text-secondary); font-weight: 600; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;}
         .remove-btn { position: absolute; top: 4px; right: 4px; background: rgba(15, 23, 42, 0.7); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 14px; z-index: 10;}
 
-        /* Toolbar & Button */
         .add-media-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; background: #f0f7ff; color: var(--primary-blue); border: 1px dashed #bae6fd; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px;}
         .add-media-btn:hover { background: #e0f2fe; }
+        .add-media-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .media-hint { font-size: 11.5px; color: var(--text-secondary); margin-top: 6px; text-align: center; }
         .btn-submit { width: 100%; padding: 14px; background: var(--primary-blue); color: white; border: none; border-radius: 24px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.2s;}
         .btn-submit:active { transform: scale(0.98); background: var(--hover-blue); }
 
-        /* Loader */
         .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .spinner { width: 40px; height: 40px; border: 3px solid #e2e8f0; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         .hidden { display: none !important; }
 
-        /* Footer */
         footer { margin-top: auto; background-color: var(--bg-white); padding: 40px 20px; border-top: 1px solid var(--border-color); text-align: center; }
         .footer-logo { height: 30px; object-fit: contain; margin-bottom: 8px; opacity: 0.8; }
         .footer-tagline { font-size: 12.5px; color: var(--text-secondary); font-weight: 500; margin-bottom: 20px; }
@@ -87,6 +100,7 @@
         .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.2s; }
         .footer-links a:hover { color: var(--primary-blue); }
         .footer-copy { font-size: 12px; color: #94a3b8; font-weight: 500; }
+
     </style>
 </head>
 <body>
@@ -103,6 +117,17 @@
 
     <main>
         <div class="post-card">
+
+            <!-- Page identity -->
+            <div style="margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border-color,#e2e8f0);">
+                <p style="display:inline-flex;align-items:center;gap:6px;background:#f5f3ff;color:#6d28d9;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;border:1px solid #ddd6fe;margin:0 0 10px;letter-spacing:0.3px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                    FOR EVERYONE &middot; NOT FOR JOB POSTING OR HIRING
+                </p>
+                <h1 style="font-size:20px;font-weight:700;color:var(--primary-blue,#1d4ed8);margin:0 0 4px;">Share a General Post</h1>
+                <p style="font-size:13px;color:var(--text-secondary,#64748b);margin:0;line-height:1.5;">Share healthcare updates, case studies, news, tips or anything with the medical community. This page is <strong>not</strong> for job listings or job seekers.</p>
+            </div>
+
             <div class="post-header">
 <img src="https://ui-avatars.com/api/?name=U" id="user-display-pic" width="48" height="48" loading="lazy" class="user-avatar">
                 <div>
@@ -112,8 +137,8 @@
             </div>
 
             <input type="text" id="post-title" class="post-title-input" placeholder="Add a title (Optional)">
-            <textarea id="post-desc" class="post-textarea" placeholder="Share a medical update, case, or thoughts..."></textarea>
 
+<div id="post-desc" class="post-editor" contenteditable="true" data-placeholder="Share a medical update, case study, news or any thoughts with the healthcare community..."></div>
             <div class="link-input-container">
                 <svg viewBox="0 0 24 24" width="18" fill="var(--text-secondary)"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg>
                 <input type="url" id="post-link" class="link-input" placeholder="Attach an external link (Optional)">
@@ -122,11 +147,12 @@
             <div id="preview-container" class="preview-grid hidden"></div>
 
             <div style="margin-bottom: 10px;">
-                <button class="add-media-btn" onclick="document.getElementById('file-input').click()">
+                <button class="add-media-btn" id="add-media-btn" onclick="document.getElementById('file-input').click()">
                     <svg viewBox="0 0 24 24" width="20" fill="currentColor"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
-                    Attach Images, Videos or PDF
+                    Attach Images, Video or PDF
                 </button>
-                <input type="file" id="file-input" multiple accept="image/*,video/*,.pdf" class="hidden">
+<p class="media-hint">Max 5 (images + PDFs combined), OR 1 video (max 10MB) — video can't be mixed with others</p>
+                <input type="file" id="file-input" multiple accept="image/*,video/*,.pdf,application/pdf" class="hidden">
             </div>
 
             <button class="btn-submit" id="submit-btn">Publish Now</button>
@@ -136,7 +162,7 @@
     <footer>
         <div class="footer-content">
             <img src="images/logo.png" alt="Health Jobs" width="120" height="30" loading="lazy" class="footer-logo" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
-            <p class="footer-tagline">Pakistan's #1 Digital Healthcare Network</p>
+            <p class="footer-tagline">Digital Healthcare Network</p>
             <div class="footer-links">
                 <a href="index.html">Home</a><a href="about.html">About Us</a><a href="terms.html">Terms</a><a href="privcy.html">Privacy</a>
             </div>
@@ -152,13 +178,15 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, setDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        // 🔐 Approval gate — "Complete Your Account Setup" popup (legacy + not-approved accounts)
+        import { HJPApprovalGate } from "./approval-gate.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
             authDomain: "jobs-45cc9.firebaseapp.com",
-            databaseURL: "https://jobs-45cc9-default-rtdb.firebaseio.com", 
+            databaseURL: "https://jobs-45cc9-default-rtdb.firebaseio.com",
             projectId: "jobs-45cc9",
             storageBucket: "jobs-45cc9.firebasestorage.app",
             messagingSenderId: "21065686301",
@@ -166,12 +194,33 @@
         };
 
         const app = initializeApp(firebaseConfig);
+
+        // ===== D1-FIRST SAVE: post pehle worker ke zariye D1 database mein save hoti hai =====
+        // (Firestore mein roz shaam 6 baje worker khud copy karta hai.)
+        async function savePostToD1(user, type, data) {
+            const idToken = await user.getIdToken();
+            const res = await fetch('https://healthjobportal.com/api/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+                body: JSON.stringify({ type: type, data: data })
+            });
+            let j = null;
+            try { j = await res.json(); } catch (e) {}
+            if (!res.ok || !j || !j.ok) throw new Error((j && j.error) || ('Could not save post (' + res.status + ')'));
+            return j;
+        }
+
         const auth = getAuth(app);
         const db = getFirestore(app);
         const dbRT = getDatabase(app);
-        
-        const CLOUD_NAME = "Dr06qkbaa"; 
-        const UPLOAD_PRESET = "nearjobs_profiles"; 
+
+        // ===== R2 WORKER UPLOAD ENDPOINT (Cloudinary ki jagah) =====
+        const UPLOAD_WORKER_URL = "https://healthjobportal.sufiangsufiang50.workers.dev";
+
+// ===== MEDIA RULES =====
+        const MAX_TOTAL_IMAGES_PDFS = 5; // Images + PDFs milake max 5
+        const MAX_VIDEOS = 1;            // Video hamesha akela, max 1
+        const MAX_VIDEO_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 
         let currentUser = null, userData = null, selectedFilesArray = [];
 
@@ -187,6 +236,15 @@
                         if (userData.profilePicUrl) {
                             document.getElementById('user-display-pic').src = userData.profilePicUrl;
                         }
+
+                        // 🔒 EMPLOYER APPROVAL GATE
+                        // Employer account approve hone tak post publish nahi kar sakta.
+                        // Not-approved (legacy/uploaded) account par ab "Complete Your
+                        // Account Setup" popup khulta hai — sirf plain banner nahi.
+                        if (isEmployerBlocked(userData)) {
+                            blockPosting(userData);
+                            window.__openApprovalPopup();
+                        }
                     } else {
                         document.getElementById('user-display-name').innerText = "Member";
                     }
@@ -194,33 +252,177 @@
                     console.error("Error fetching user profile:", error);
                     document.getElementById('user-display-name').innerText = "Error Loading Name";
                 }
-            } else { 
-                window.location.replace("login.html"); 
+            } else {
+                window.location.replace("login.html");
             }
         });
 
+        /* =============================================================
+           🔒 EMPLOYER APPROVAL GATE
+           Under-review employer post publish nahi kar sakta.
+           Page par saaf banner + disabled button.
+           ============================================================= */
+        // 🔐 Shared approval-gate module init (Firebase handles pass karo)
+        try { HJPApprovalGate.init({ db, doc, getDoc, setDoc, serverTimestamp }); } catch (_) {}
+
+        window.__openApprovalPopup = function () {
+            try {
+                HJPApprovalGate.open({ uid: currentUser && currentUser.uid, userData: userData || {} });
+            } catch (e) { console.log('approval popup error:', e); }
+        };
+
+        function isEmployerBlocked(d) {
+            if (!d) return false;
+            if (d.role !== 'employer') return false;   // candidates kabhi block nahi
+            const st = String(d.accountStatus || '').toLowerCase().trim();
+            if (!st || st === 'approved' || st === 'active') return false;
+            return true;
+        }
+
+        function blockPosting(d) {
+            const st = String(d.accountStatus || '').toLowerCase().trim();
+            const isRejected = (st === 'rejected' || st === 'rejected_final');
+
+            const palette = isRejected
+                ? { bg:'#fef2f2', line:'#fecaca', accent:'#dc2626', title:'#7f1d1d', body:'#991b1b' }
+                : { bg:'#fffbeb', line:'#fde68a', accent:'#d97706', title:'#78350f', body:'#92400e' };
+            const title = isRejected ? 'Account Not Approved' : 'Account Under Review';
+            const text  = isRejected
+                ? 'Your facility account was not approved, so posting is disabled. Please check your email for the appeal link.'
+                : 'Your facility account is being reviewed by our team. You will be able to publish job posts as soon as it is approved — this usually takes less than 24 hours.';
+
+            // Banner
+            const banner = document.createElement('div');
+            banner.id = 'employer-gate-banner';
+            banner.style.cssText =
+                `background:${palette.bg};border:1px solid ${palette.line};border-left:4px solid ${palette.accent};`
+                + 'border-radius:10px;padding:15px 18px;margin:0 0 18px;';
+            banner.innerHTML =
+                `<div style="font-size:13.5px;font-weight:800;color:${palette.title};margin-bottom:5px;">${title}</div>`
+                + `<div style="font-size:12.5px;line-height:1.65;color:${palette.body};">${text}</div>`;
+
+            const host = document.querySelector('main') || document.body;
+            host.prepend(banner);
+
+            // Submit button + file input band karo
+            const btn = document.getElementById('submit-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = isRejected ? 'Posting Disabled' : 'Waiting for Approval';
+                btn.style.background = '#94a3b8';
+                btn.style.cursor = 'not-allowed';
+                btn.onclick = e => {
+                    e.preventDefault();
+                    alert(text);
+                };
+            }
+            const fileInput = document.getElementById('file-input');
+            if (fileInput) {
+                fileInput.disabled = true;
+                fileInput.closest('label')?.style.setProperty('pointer-events', 'none');
+                fileInput.closest('label')?.style.setProperty('opacity', '0.5');
+            }
+        }
+// ===== Helper: file ka category nikalna =====
+        function getFileCategory(file) {
+            if (file.type.startsWith('image/')) return 'image';
+            if (file.type.startsWith('video/')) return 'video';
+            if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) return 'pdf';
+            return 'unknown';
+        }
+
+        // ===== Helper: abhi kitni images/pdf/video selected hain =====
+        function countByCategory(category) {
+            return selectedFilesArray.filter(f => getFileCategory(f) === category).length;
+        }
+
         document.getElementById('file-input').addEventListener('change', function(e) {
-            selectedFilesArray = selectedFilesArray.concat(Array.from(e.target.files)).slice(0, 5);
-            this.value = ''; 
+            const incomingFiles = Array.from(e.target.files);
+            this.value = '';
+
+            if (incomingFiles.length === 0) return;
+
+            const hasVideo = countByCategory('video') > 0;
+            const hasImageOrPdf = countByCategory('image') > 0 || countByCategory('pdf') > 0;
+
+            for (const file of incomingFiles) {
+                const category = getFileCategory(file);
+
+                if (category === 'unknown') {
+                    alert("Yeh file type support nahi hai. Sirf image, video, ya PDF allowed hai.");
+                    continue;
+                }
+
+                // Video hamesha akela jata hai — na image, na PDF uske sath
+                if (category === 'video') {
+                    if (hasImageOrPdf || countByCategory('image') > 0 || countByCategory('pdf') > 0) {
+                        alert("Video ke sath image ya PDF nahi laga sakte. Video akela hi post hoga.");
+                        continue;
+                    }
+                    if (countByCategory('video') >= MAX_VIDEOS) {
+                        alert("Ek post mein sirf 1 video attach ki ja sakti hai.");
+                        continue;
+                    }
+                    if (file.size > MAX_VIDEO_SIZE_BYTES) {
+                        alert("Video ka size 10MB se zyada nahi hona chahiye. Chhoti video try karein.");
+                        continue;
+                    }
+                    selectedFilesArray.push(file);
+                    continue;
+                }
+
+                // Image ya PDF — video ke sath nahi ja sakte
+                if (category === 'image' || category === 'pdf') {
+                    if (countByCategory('video') > 0) {
+                        alert("Image/PDF ke sath video nahi laga sakte. Pehle video hata dein.");
+                        continue;
+                    }
+                    const totalImagesAndPdfs = countByCategory('image') + countByCategory('pdf');
+                    if (totalImagesAndPdfs >= MAX_TOTAL_IMAGES_PDFS) {
+                        alert("Images aur PDFs milake total 5 se zyada nahi ho sakte.");
+                        continue;
+                    }
+                    selectedFilesArray.push(file);
+                    continue;
+                }
+            }
+
             renderPreviews();
         });
 
         function renderPreviews() {
             const container = document.getElementById('preview-container');
-            if (selectedFilesArray.length === 0) { container.classList.add('hidden'); return; }
-            container.classList.remove('hidden'); 
+            const addBtn = document.getElementById('add-media-btn');
+
+            if (selectedFilesArray.length === 0) {
+                container.classList.add('hidden');
+                addBtn.disabled = false;
+                return;
+            }
+            container.classList.remove('hidden');
             container.innerHTML = '';
-            
+
+const videoCount = countByCategory('video');
+            const imagePdfCount = countByCategory('image') + countByCategory('pdf');
+
+            if (videoCount >= MAX_VIDEOS) {
+                addBtn.disabled = true;
+            } else if (imagePdfCount >= MAX_TOTAL_IMAGES_PDFS) {
+                addBtn.disabled = true;
+            } else {
+                addBtn.disabled = false;
+            }
+
             selectedFilesArray.forEach((file, index) => {
-                const itemDiv = document.createElement('div'); 
+                const itemDiv = document.createElement('div');
                 itemDiv.className = 'preview-item';
-                
-                const removeBtn = document.createElement('button'); 
-                removeBtn.className = 'remove-btn'; 
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
                 removeBtn.innerHTML = '&times;';
                 removeBtn.onclick = () => { selectedFilesArray.splice(index, 1); renderPreviews(); };
                 itemDiv.appendChild(removeBtn);
-                
+
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = (ev) => { const img = document.createElement('img'); img.src = ev.target.result; itemDiv.appendChild(img); };
@@ -233,7 +435,7 @@
                 container.appendChild(itemDiv);
             });
         }
-        // 🔥 AUTO IMAGE COMPRESSOR (Mobile ke andar compress karega) 🔥
+
         async function compressImageClientSide(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -243,7 +445,6 @@
                     img.src = event.target.result;
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        // Maximum width 800px rakhi hai, design kharab nahi hoga aur size chota ho jayega
                         const MAX_WIDTH = 800;
                         const scaleSize = MAX_WIDTH / img.width;
                         canvas.width = MAX_WIDTH;
@@ -252,7 +453,6 @@
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                        // 70% Quality par JPEG bana kar compress kar dega (10MB -> 100KB)
                         canvas.toBlob((blob) => {
                             const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
                                 type: 'image/jpeg',
@@ -265,56 +465,64 @@
             });
         }
 
-        // 🚀 ULTIMATE CLOUDINARY BYPASS HACK
-        // 🚀 ULTIMATE CLOUDINARY BYPASS HACK + AUTO COMPRESS
-        async function uploadToCloudinary(file) {
+        async function uploadToR2(file) {
             let uploadFile = file;
             let type = 'image';
-            let originalName = file.name;
-            let endpoint = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`;
+            const originalName = file.name;
 
-            // Agar Image hai toh pehle goli ki tarah compress karega
             if (file.type.startsWith('image/')) {
                 uploadFile = await compressImageClientSide(file);
-            } 
-            // Video ke liye
-            else if (file.type.startsWith('video/')) {
+                type = 'image';
+            } else if (file.type.startsWith('video/')) {
                 type = 'video';
-            }
-            
-            // --- BASE64 PDF ENCODER HACK ---
-            else if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+            } else if (file.type === 'application/pdf') {
                 type = 'pdf';
-                const base64String = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.readAsDataURL(file);
-                });
-                
-                const trickedString = base64String.replace("data:application/pdf", "data:text/plain");
-                uploadFile = new File([trickedString], "secure_doc.txt", { type: 'text/plain' });
-                endpoint = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`;
             }
-            // --------------------------------
 
             const formData = new FormData();
             formData.append('file', uploadFile);
-            formData.append('upload_preset', UPLOAD_PRESET);
-            
-            const res = await fetch(endpoint, { method: 'POST', body: formData });
-            const data = await res.json();
-            
-            if (data.error) throw new Error(data.error.message);
 
-            return { url: data.secure_url, type: type, name: originalName };
+            const res = await fetch(UPLOAD_WORKER_URL, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || data.error) {
+                throw new Error(data.error || "Upload failed");
+            }
+
+            return { url: data.url, type: type, name: originalName };
         }
 
 
         document.getElementById('submit-btn').onclick = async () => {
-            const desc = document.getElementById('post-desc').value.trim();
+            // Race condition fix: ensure user is authenticated before posting
+            if (!currentUser) {
+                return alert("Please wait — your account is still loading. Try again in a moment.");
+            }
+            // If userData not loaded yet, fetch it now so name/pic are always correct
+            if (!userData) {
+                try {
+                    const snap = await getDoc(doc(db, "users", currentUser.uid));
+                    if (snap.exists()) userData = snap.data();
+                } catch(e) { console.error("userData re-fetch failed:", e); }
+            }
+
+            // 🔒 APPROVAL GATE (fail-closed) — not-approved / legacy account
+            //    post publish nahi kar sakta. Popup dikhao aur yahin rok do.
+            if (!HJPApprovalGate.allowed(userData)) {
+                document.getElementById('upload-loader').classList.add('hidden');
+                window.__openApprovalPopup();
+                return;
+            }
+
+            const descEl = document.getElementById('post-desc');
+const desc = descEl.innerHTML.trim();
             const title = document.getElementById('post-title').value.trim();
             const link = document.getElementById('post-link').value.trim();
-            
+
             if(!desc && !title && selectedFilesArray.length === 0) {
                 return alert("Please add some text or media before publishing.");
             }
@@ -326,75 +534,69 @@
                 let media = [];
                 if (selectedFilesArray.length > 0) {
                     loaderMsg.innerText = "Uploading media securely...";
-                    media = await Promise.all(selectedFilesArray.map(f => uploadToCloudinary(f)));
+                    media = await Promise.all(selectedFilesArray.map(f => uploadToR2(f)));
                 }
 
                 loaderMsg.innerText = "Saving post...";
-                
-                const finalName = userData?.fullName || userData?.facilityName || "Member";
-                const finalPic = userData?.profilePicUrl || "";
 
-                const postData = {
-                    type: "general_post", 
-                    title: title, 
-                    desc: desc, 
+                const finalName = userData?.fullName || userData?.facilityName || currentUser.displayName || "Member";
+                const finalPic = userData?.profilePicUrl || currentUser.photoURL || "";
+
+                const slugTitle = title || desc.substring(0, 40);
+                const slugCity = userData?.city || "pakistan";
+                const year = new Date().getFullYear();
+                const rawSlug = `${slugTitle} ${year} ${slugCity}`
+                    .toLowerCase()
+                    .replace(/[^\w\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-|-$/g, '')
+                    .substring(0, 80);
+                const suffix = Date.now().toString(16).slice(-4);
+const postSlug = `update-${rawSlug}-${suffix}`;
+
+                const saved = await savePostToD1(currentUser, 'general_post', {
+                    slug: postSlug,
+                    title: title,
+                    desc: desc,
                     externalLink: link,
-                    posterId: currentUser.uid, 
+                    media: media,
                     posterName: finalName,
-                    posterPic: finalPic, 
-                    location: userData?.city || "Pakistan", 
-                    media: media, 
-                    likes: [],
-                    commentsCount: 0,
-                    createdAt: serverTimestamp()
-                };
+                    posterPic: finalPic
+                });
+                const docRef = { id: saved.id };
+                const finalSlug = saved.slug;
 
-                const docRef = await addDoc(collection(db, "posts"), postData);
+                // Email / push / Telegram alerts ab alag worker bhejega (jo D1 "posts" table check karta hai) - yahan se nahi.
 
-                // Notification Backend
-                try {
-fetch('https://notication-healthjobs.vercel.app/api/server', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-    title: title || "New Medical Update",
-    hospital: finalName,
-    body: desc || "Check new medical update!",
-    postId: docRef.id,
-    senderPhoto: finalPic,
-    posterId: currentUser.uid,
-    type: "general_post"
-})
-                    });
-                } catch(e) { console.log("Notification backend failed"); }
-
-                // Telegram Auto Post
-                try {
-                    await fetch("https://healthjobs-telegram-bot.vercel.app/api/send-alert", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            title: "📢 UPDATE by " + finalName,
-                            location: (title ? title : (desc ? desc.substring(0, 40) + "..." : "View update details")),
-                            link: "https://healthjobs-portal.web.app"
-                        })
-                    });
-                } catch(e) { console.log("Telegram alert failed"); }
-
-                // Live Search Index Sync
                 await set(ref(dbRT, 'search_index/' + docRef.id), {
-                    id: docRef.id, 
-                    t: title || desc.substring(0, 30), 
-                    p: finalName, 
+                    id: docRef.id,
+                    t: title || desc.substring(0, 30),
+                    p: finalName,
                     pic: finalPic,
                     loc: userData?.city || "Pakistan",
-                    type: "general_post"
+                    type: "general_post",
+                    createdAt: Date.now()
+                });
+
+                await set(ref(dbRT, 'global_sync'), {
+                    lastUpdate: Date.now(),
+                    updatedPostId: docRef.id,
+                    action: 'new'
                 });
 
                 document.getElementById('upload-loader').classList.add('hidden');
                 alert("Published Successfully!");
-                window.location.href = "index.html";
-                
+                try {
+    await fetch('https://healthjobportal.com/api/notify-index', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug: finalSlug, type: 'general_post' })
+    });
+} catch(e) {}
+                setTimeout(() => {
+    window.location.replace(`/updates/${finalSlug}`);
+}, 500);
             } catch (err) {
                 alert("Upload Error: " + err.message);
                 document.getElementById('upload-loader').classList.add('hidden');
@@ -423,30 +625,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         PushNotifications.addListener('pushNotificationReceived', async (notification) => {
             const data = notification.data || {};
-            
-            // ❌ AGAR CANCEL KA SIGNAL AAYE TOH NOTIFICATION GAYAB KAR DO
+
             if (data.action === "cancel_call") {
                 console.log("Call Cancelled! Removing Notifications...");
                 if (LocalNotifications) {
                     await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
                 }
                 await PushNotifications.removeAllDeliveredNotifications();
-                
-                // Agar user ghalti se chat.html par hi betha hai, toh UI bhi band kar do
+
                 if (typeof closeWebRTC === 'function') { closeWebRTC(); }
-                return; // Code yahin rok do
+                return;
             }
 
-            // 📞 AGAR CALL AAYE TOH NOTIFICATION DIKHAO
             if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
                 handleCallRedirect(data);
-                
+
                 if (LocalNotifications) {
                     await LocalNotifications.schedule({
                         notifications: [{
                             title: notification.title || "Incoming Call",
                             body: "Calling...",
-                            id: 999, // Yeh ID cancel karne ke kaam aati hai
+                            id: 999,
                             sound: "ringing.mp3",
                             extra: data,
                             android: {
@@ -466,6 +665,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleCallRedirect(notification.notification.extra);
             });
         }
+    }
+});
+const editor = document.getElementById('post-desc');
+
+editor.addEventListener('paste', function(e) {
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+    const lines = text.split('\n');
+    let html = '';
+    lines.forEach(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
+        const isHeading = (
+            trimmed.length < 80 &&
+            !trimmed.endsWith('.') &&
+            !trimmed.endsWith(',') &&
+            (
+                /^[A-Z\u0600-\u06FF]/.test(trimmed) &&
+                trimmed.split(' ').length <= 10
+            )
+        );
+        if (isHeading) {
+            html += `<h2>${trimmed}</h2>`;
+        } else {
+            html += `<p>${trimmed}</p>`;
+        }
+    });
+    document.execCommand('insertHTML', false, html || `<p>${text}</p>`);
+});
+
+editor.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        document.execCommand('insertHTML', false, '<p><br></p>');
     }
 });
 </script>

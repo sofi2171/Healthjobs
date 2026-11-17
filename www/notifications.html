@@ -4,234 +4,814 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Notifications | Health Jobs</title>
-    
     <style>
-        :root { 
-            --primary-blue: #0a66c2; 
-            --bg-body: #f3f2ef; 
-            --bg-white: #ffffff; 
-            --text-main: #000000e6; 
-            --text-secondary: #00000099; 
-            --border-color: #e0dfdc; 
-            --notif-bubble: #e8f3ff;
+        :root {
+            --primary-blue: #0a66c2;
+            --bg-body: #f3f2ef;
+            --bg-white: #ffffff;
+            --text-main: #000000e6;
+            --text-secondary: #00000099;
+            --border-color: #e0dfdc;
+            --notif-unread-bg: #e8f3ff;
         }
-        
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        
+
         body { background-color: var(--bg-body); color: var(--text-main); padding-top: 60px; min-height: 100vh; }
-        
-        /* HEADER STYLE */
-        header { background-color: var(--bg-white); padding: 0 15px; display: flex; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 60px; z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .back-btn { background: none; border: none; font-size: 24px; color: var(--text-secondary); margin-right: 15px; cursor: pointer; display: flex; align-items: center; transition: 0.2s;}
+
+        /* HEADER */
+        header {
+            background-color: var(--bg-white);
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .back-btn {
+            background: none; border: none;
+            font-size: 24px; color: var(--text-secondary);
+            margin-right: 15px; cursor: pointer;
+            display: flex; align-items: center;
+        }
         .back-btn:hover { color: var(--primary-blue); }
         .page-title { font-size: 18px; font-weight: 700; color: var(--text-main); }
 
         /* CONTAINER */
-        main { max-width: 580px; margin: 0 auto; background: var(--bg-white); min-height: calc(100vh - 60px); box-shadow: 0 0 10px rgba(0,0,0,0.02); }
-        
-        /* NOTIFICATION ITEMS */
-        .notif-item { display: flex; padding: 16px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: 0.2s; align-items: center; position: relative; text-decoration: none;}
+        main {
+            max-width: 580px;
+            margin: 0 auto;
+            background: var(--bg-white);
+            min-height: calc(100vh - 60px);
+            box-shadow: 0 0 10px rgba(0,0,0,0.02);
+        }
+
+        /* MARK ALL BAR */
+        #mark-all-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        #mark-all-bar label {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 13px; font-weight: 600; color: #0f172a; cursor: pointer;
+        }
+        #mark-all-bar input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; }
+        #mark-all-bar button {
+            background: var(--primary-blue); color: #fff;
+            border: none; padding: 7px 16px;
+            border-radius: 20px; font-size: 13px;
+            font-weight: 600; cursor: pointer;
+        }
+
+        /* NOTIFICATION GROUPS */
+        .notif-group { margin-bottom: 6px; }
+        .notif-group-header {
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 16px 6px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky; top: 60px; z-index: 5;
+        }
+        .notif-group-icon { font-size: 16px; }
+        .notif-group-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: #334155; }
+        .notif-group-count {
+            margin-left: auto; background: #e53935; color: #fff;
+            font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 12px;
+        }
+
+        /* NOTIFICATION ITEM */
+        .notif-item {
+            display: flex;
+            padding: 14px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            align-items: center;
+            position: relative;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
         .notif-item:hover { background: #f9fafb; }
-        
-        /* Unread State */
-        .notif-item.unread { background: var(--notif-bubble); }
-        
-        .notif-icon { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 1px solid #eee; background: #fff;}
-        .notif-content { flex: 1; padding-right: 40px; } /* Space for badge */
-        .notif-text { font-size: 14px; color: #333; line-height: 1.4;}
-        .notif-text span { font-weight: 700; color: var(--text-main);}
-        .notif-time { font-size: 11.5px; color: var(--text-secondary); margin-top: 4px; font-weight: 500;}
+        .notif-item.unread { background: var(--notif-unread-bg); }
 
-        /* 🔥 PROFESSIONAL NEW BUBBLE BADGE */
-        .new-badge { 
-            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-            background: var(--primary-blue); color: white; padding: 4px 10px; 
-            border-radius: 20px; font-size: 10px; font-weight: 800; 
+        /* HIGHLIGHT - جب notification سے آکر اس item پر land ہو */
+        @keyframes highlightPulse {
+            0%   { background-color: #fff9c4; }
+            30%  { background-color: #ffe57f; }
+            60%  { background-color: #fff9c4; }
+            100% { background-color: #fff9c4; }
+        }
+        .notif-item.highlighted {
+            animation: highlightPulse 1.2s ease 3;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .notif-icon {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 13px;
+            border: 1px solid #eee;
+            background: #fff;
+            flex-shrink: 0;
+        }
+        .notif-content { flex: 1; padding-right: 10px; }
+
+        /* 🖼️ Banner image — admin announcements / job alerts jin ke saath image ho */
+        .notif-item.has-image { flex-direction: column; align-items: stretch; }
+        .notif-item.has-image .notif-top { display: flex; align-items: center; width: 100%; }
+        .notif-banner {
+            width: 100%;
+            max-height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 10px;
+            border: 1px solid #eee;
+            background: #f3f4f6;
+        }
+        .notif-text { font-size: 14px; color: #333; line-height: 1.45; }
+        .notif-text strong { font-weight: 700; color: var(--text-main); }
+        .notif-time { font-size: 11.5px; color: var(--text-secondary); margin-top: 4px; font-weight: 500; }
+
+        /* NEW BADGE */
+        .new-badge {
+            position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+            background: #e53935; color: white;
+            padding: 3px 9px; border-radius: 20px;
+            font-size: 10px; font-weight: 800;
             text-transform: uppercase; letter-spacing: 0.5px;
-            box-shadow: 0 2px 4px rgba(10, 102, 194, 0.3);
-            animation: pulse 2s infinite;
+            box-shadow: 0 2px 6px rgba(229,57,53,0.4);
         }
 
-        @keyframes pulse {
-            0% { transform: translateY(-50%) scale(1); }
-            50% { transform: translateY(-50%) scale(1.05); }
-            100% { transform: translateY(-50%) scale(1); }
+        /* EMPTY / LOADING */
+        .empty-state {
+            text-align: center; padding: 80px 20px;
+            color: var(--text-secondary);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
         }
-        
-        /* EMPTY STATE */
-        .empty-state { text-align: center; padding: 80px 20px; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; justify-content: center;}
-        .empty-state svg { width: 64px; height: 64px; fill: #d1d5db; margin-bottom: 20px; }
+        .empty-state svg { width: 60px; height: 60px; fill: #d1d5db; margin-bottom: 18px; }
         .empty-state p { font-size: 16px; font-weight: 600; }
+
+        /* ── Call log entries (WhatsApp jaisi) ── */
+        .call-line { font-size: 13px; margin-top: 2px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .call-line.call-missed  { color: #d93025; }
+        .call-line.call-ok      { color: #188038; }
+        .call-line.call-ringing { color: var(--primary-blue); animation: ringPulse 1.4s ease-in-out infinite; }
+        .call-line.call-neutral { color: var(--text-secondary); }
+        .call-sub { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-top: 1px; }
+        @keyframes ringPulse { 0%,100% { opacity: 1; } 50% { opacity: .45; } }
+        .notif-item.call-ringing-item { border-left: 4px solid var(--primary-blue); }
+
+        /* ── Browser (web push) enable bar ── */
+        #push-bar {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 16px;
+            background: #eef6ff;
+            border-bottom: 1px solid #d8e8fb;
+            font-size: 12.5px; color: #1e3a5f; line-height: 1.45;
+        }
+        #push-bar.hidden { display: none; }
+        #push-bar .pb-icon { font-size: 17px; flex-shrink: 0; }
+        #push-bar .pb-text { flex: 1; }
+        #push-bar .pb-text b { display: block; font-size: 13px; margin-bottom: 1px; }
+        #push-bar button {
+            background: var(--primary-blue); color: #fff; border: none;
+            padding: 8px 15px; border-radius: 18px;
+            font-size: 12.5px; font-weight: 700; cursor: pointer;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        #push-bar button:hover { background: #004182; }
+        #push-bar button:disabled { opacity: 0.6; cursor: not-allowed; }
     </style>
+
 </head>
 <body>
 
-    <header>
-        <button class="back-btn" onclick="location.href='index.html'">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        </button>
-        <div class="page-title">Notifications</div>
-    </header>
+<header>
+    <button class="back-btn" onclick="location.href='index.html'">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+    </button>
+    <div class="page-title">Notifications</div>
+</header>
 
-    <main id="notif-container">
-        </main>
+<main id="notif-container">
+    <div id="push-bar" class="hidden">
+        <span class="pb-icon">🔔</span>
+        <span class="pb-text">
+            <b>Turn on browser notifications</b>
+            Get job alerts and portal updates instantly on this device.
+        </span>
+        <button id="push-enable-btn" type="button">Enable</button>
+    </div>
+    <div class="empty-state"><p>Loading...</p></div>
+</main>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const CACHE_KEY = "health_jobs_hybrid_cache";
-        const container = document.getElementById('notif-container');
-        
-        // 🔥 UID-BASED MEMORY (Taake ek account dusre ki ghanti clear na kare)
-        const myUid = localStorage.getItem('my_uid') || 'guest'; 
-        const readKey = 'last_notif_read_time_' + myUid;
-        const installKey = 'app_install_time_' + myUid;
+// ─── Time helper ─────────────────────────────────────────────────────────
+function timeAgo(ts) {
+    if (!ts) return '';
+    const ms = typeof ts === 'object' && ts.toMillis
+        ? ts.toMillis()
+        : (typeof ts === 'number' ? ts : (Date.parse(ts) || 0));
+    const diff = Date.now() - ms;
+    if (diff < 10000)    return 'Just now';
+    if (diff < 60000)    return Math.floor(diff / 1000) + 's ago';
+    if (diff < 3600000)  return Math.floor(diff / 60000) + 'm ago';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+    return Math.floor(diff / 86400000) + 'd ago';
+}
 
-        const cachedDataStr = localStorage.getItem(CACHE_KEY);
-        const lastReadTime = parseInt(localStorage.getItem(readKey)) || (Date.now() - 86400000);
-        const installTime = parseInt(localStorage.getItem(installKey)) || 0;
+// ─── Live time: har notification ka "kitni der pehle" khud update hota rahe ───
+function fullTime(ms) {
+    return new Date(ms).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
+}
+function refreshNotifTimes() {
+    document.querySelectorAll('.notif-time[data-ts]').forEach(el => {
+        const ts = Number(el.dataset.ts);
+        if (ts) el.textContent = timeAgo(ts);
+    });
+}
+setInterval(refreshNotifTimes, 15000);                                   // har 15 second
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshNotifTimes(); });
 
-        if (!cachedDataStr) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-                    <p>No notifications yet.</p>
-                </div>`;
+// ─── URL سے highlight postId لو ──────────────────────────────────────────
+const highlightPostId = new URLSearchParams(window.location.search).get('highlight') || '';
+
+// ─── Web Push (FCM) — VAPID key ──────────────────────────────────────────
+// index.html jaisi hi key — dono jagah same hona lazmi hai.
+const HJP_VAPID_KEY = 'BHRRaV-QHpr2xMCjOcIml0ZU8czywX1cSUq4pSTpte6UAmjFwHMlazDLgjCiCHcKDZYA5TS9uIh1tDPRJWr0T38';
+
+// Push bar ka HTML — jab bhi list render ho, yeh bar dobara laga di jati hai.
+function pushBarHTML(show) {
+    const visible = show !== undefined
+        ? show
+        : !document.getElementById('push-bar');
+    return `<div id="push-bar" class="${visible ? '' : 'hidden'}">
+        <span class="pb-icon">🔔</span>
+        <span class="pb-text">
+            <b>Turn on browser notifications</b>
+            Get job alerts and portal updates instantly on this device.
+        </span>
+        <button id="push-enable-btn" type="button">Enable</button>
+    </div>`;
+}
+
+// ─── Web push registration ───────────────────────────────────────────────
+// Sirf tab bar dikhati hai jab: browser support karta ho, permission abhi
+// na di gayi ho, aur yeh Capacitor app na ho (wahan native push chalta hai).
+async function setupPushBar(uid) {
+    const bar = document.getElementById('push-bar');
+    if (!bar) return;
+
+    // Capacitor native app — native push already handles yeh
+    if (window.Capacitor?.isNativePlatform?.()) { bar.classList.add('hidden'); return; }
+    if (!('Notification' in window) || !('serviceWorker' in navigator)) { bar.classList.add('hidden'); return; }
+
+    // Pehle se granted → bar ki zaroorat nahi, magar token refresh zaroor
+    if (Notification.permission === 'granted') {
+        bar.classList.add('hidden');
+        registerFcmToken(uid);
+        return;
+    }
+    if (Notification.permission === 'denied') { bar.classList.add('hidden'); return; }
+
+    // Permission abhi default hai → bar dikhao
+    bar.classList.remove('hidden');
+    const btn = document.getElementById('push-enable-btn');
+    if (btn) btn.onclick = async () => {
+        btn.disabled = true;
+        btn.textContent = 'Enabling...';
+        try {
+            const perm = await Notification.requestPermission();
+            if (perm === 'granted') {
+                await registerFcmToken(uid);
+                bar.classList.add('hidden');
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Enable';
+            }
+        } catch (_) {
+            btn.disabled = false;
+            btn.textContent = 'Enable';
+        }
+    };
+}
+
+// FCM token le kar users/{uid}.fcmToken mein likho — admin worker isi token
+// par web push bhejta hai. Sirf tab likhta hai jab token waqai badla ho
+// (Firestore writes bachane ke liye — index.html jaisa hi pattern).
+let __fcmRegistering = false;
+async function registerFcmToken(uid) {
+    if (__fcmRegistering || !uid) return;
+    __fcmRegistering = true;
+    try {
+        const { getMessaging, getToken, isSupported } =
+            await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js");
+        const { getApps, getApp, initializeApp } =
+            await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
+        const { getFirestore, doc, updateDoc, getDoc } =
+            await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+
+        if (!(await isSupported())) return;
+
+        const firebaseConfig = {
+            apiKey:            "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+            authDomain:        "jobs-45cc9.firebaseapp.com",
+            projectId:         "jobs-45cc9",
+            storageBucket:     "jobs-45cc9.firebasestorage.app",
+            messagingSenderId: "21065686301",
+            appId:             "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+        };
+        const fireApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
+        const messaging = getMessaging(fireApp);
+        const db = getFirestore(fireApp);
+
+        const token = await getToken(messaging, {
+            vapidKey: HJP_VAPID_KEY,
+            serviceWorkerRegistration: await navigator.serviceWorker.register('/sw.js')
+        });
+        if (!token) return;
+
+        // ✅ Pehle localStorage se "same token → skip" hota tha. Agar server ne token
+        // Firestore se hata diya ho (invalid token cleanup) ya kisi ne delete kar diya ho,
+        // to woh kabhi wapas nahi likha jata tha ("no device registered for push").
+        // Ab asli Firestore doc se compare hota hai — 1 read, sirf tab write jab zaroorat ho.
+        const userRef = doc(db, 'users', uid);
+        let already = false;
+        try {
+            const snap = await getDoc(userRef);
+            const raw  = snap.exists() ? snap.data().fcmToken : null;
+            already = Array.isArray(raw) ? raw.includes(token) : raw === token;
+        } catch (_) {}
+        if (already) return;
+        await updateDoc(userRef, { fcmToken: token });
+        console.log('[push] token saved for', uid);
+    } catch (e) {
+        console.warn('[push] token registration failed:', e?.message || e);
+    } finally {
+        __fcmRegistering = false;
+    }
+}
+
+// Helpers main listener سے پہلے define ہوتے ہیں تاکہ auth/Firestore callback انہیں ہمیشہ access کر سکے.
+function avatarUrl(name) {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'U')}&background=0a66c2&color=fff`;
+}
+function escHtml(str) {
+    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function picOf(n) {
+    return n.fromPic || n.actorPic || avatarUrl(n.fromName || n.actorName);
+}
+function timestampMillis(value) {
+    if (value && typeof value === 'object' && typeof value.toMillis === 'function') return value.toMillis();
+    if (typeof value === 'number') return value;
+    const parsed = Date.parse(value || '');
+    return Number.isFinite(parsed) ? parsed : 0;
+}
+function safeNotificationUrl(rawUrl, notification) {
+    if (!rawUrl) return '';
+    try {
+        const parsed = new URL(String(rawUrl), window.location.origin);
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return '';
+        // Admin ne doosra Health Jobs domain likha ho (healthjobportal.com / web.app) to path isi origin par kholo
+        const KNOWN_HOSTS = ['healthjobportal.com', 'www.healthjobportal.com', 'healthjobs-portal.web.app', 'healthjobs-portal.firebaseapp.com'];
+        if (parsed.origin !== window.location.origin && !KNOWN_HOSTS.includes(parsed.hostname)) return '';
+        return parsed.pathname + parsed.search + parsed.hash;
+    } catch (_) {
+        return notification?.postId ? `/posts.html?id=${encodeURIComponent(notification.postId)}` : '';
+    }
+}
+// ─── Call log helpers ────────────────────────────────────────────────────
+const CALL_RING_MS = 60000;   // ringing entry 60s ke baad "missed" ban jati hai
+
+function fmtCallDuration(sec) {
+    sec = Math.max(0, parseInt(sec, 10) || 0);
+    return String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(sec % 60).padStart(2, '0');
+}
+
+// Call notification ko screen ke liye (text, style, link) mein badlo
+function callView(n) {
+    const kind     = n.callType === 'video' ? 'video' : 'audio';
+    const incoming = n.callRole !== 'outgoing';
+    const uid      = encodeURIComponent(n.fromUid || n.actorUid || '');
+    const age      = Date.now() - timestampMillis(n.createdAt);
+    let status     = n.callStatus || '';
+    if (status === 'ringing' && age > CALL_RING_MS) status = 'missed';   // call khatam ho chuki
+
+    const dur = n.callDuration ? ` · ${fmtCallDuration(n.callDuration)}` : '';
+    const chatLink = `chat.html?uid=${uid}`;
+    let text, cls, link = chatLink, sub = '';
+
+    if (incoming) {
+        if (status === 'ringing') {
+            text = `📞 Incoming ${kind} call`; cls = 'call-ringing'; sub = 'Tap to answer';
+            link = `chat.html?uid=${uid}&startCall=true&callType=${kind}&incoming=true`;
+        }
+        else if (status === 'missed')   { text = `↙ Missed ${kind} call`;            cls = 'call-missed';  sub = 'Tap to call back'; }
+        else if (status === 'declined') { text = `⊘ You declined the ${kind} call`;  cls = 'call-neutral'; sub = 'Tap to call back'; }
+        else                            { text = `↙ ${kind[0].toUpperCase() + kind.slice(1)} call${dur}`; cls = 'call-ok'; }
+    } else {
+        if (status === 'no_answer')     { text = `↗ No answer`;                      cls = 'call-missed';  sub = 'Tap to try again'; }
+        else if (status === 'declined') { text = `↗ ${kind[0].toUpperCase() + kind.slice(1)} call declined`; cls = 'call-missed'; sub = 'Tap to try again'; }
+        else                            { text = `↗ Outgoing ${kind} call${dur}`;    cls = 'call-ok'; }
+    }
+    return { text, cls, link, sub, kind, ringing: status === 'ringing', chatLink };
+}
+
+// Jo ringing entries abhi live hain, 60s poore hone par unhein khud "Missed" kar do
+function scheduleRingExpiry() {
+    document.querySelectorAll('.notif-item[data-ring-ts]').forEach(el => {
+        const ts = Number(el.dataset.ringTs);
+        const left = Math.max(CALL_RING_MS - (Date.now() - ts), 0);
+        setTimeout(() => {
+            if (!el.dataset.ringTs) return;
+            const line = el.querySelector('.call-line');
+            const sub  = el.querySelector('.call-sub');
+            if (line) { line.className = 'call-line call-missed'; line.textContent = `↙ Missed ${el.dataset.callKind} call`; }
+            if (sub)  sub.textContent = 'Tap to call back';
+            el.classList.remove('call-ringing-item');
+            el.setAttribute('href', el.dataset.chatLink);
+            el.removeAttribute('data-ring-ts');
+        }, left);
+    });
+}
+
+// ─── Notification deep-link builder ─────────────────────────────
+// Har type ke liye sahi jagah: chat → sender ki chat, post → slug page
+function buildNotifUrl(n) {
+    const encode = encodeURIComponent;
+
+    // 0) CALL — hamesha us insaan ki chat (ringing ho to seedha call screen)
+    if (String(n.type || '').toLowerCase() === 'call') return callView(n).link;
+
+    // 1) Firestore mein diya gaya link pehle
+    const safe = safeNotificationUrl(n.link || n.url || '', n);
+    if (safe) return safe;
+
+    const type   = String(n.type || '').toLowerCase();
+    const postId = String(n.postId || '').trim();
+    const slug   = String(n.postSlug || '').trim();
+    const isUpdate = (n.postType === 'general_post' || n.postType === 'update');
+
+    // 2) CHAT / MESSAGE — jisne message kiya us ki chat kholo.
+    //    ⚠️ Yeh check sirf tab chale jab type waqai chat ka ho. Pehle
+    //    `|| n.chatId` bilkul bahar tha, is liye koi bhi notification
+    //    jis mein chatId ho (misal comment_reply) ghalat chat page par
+    //    chala jata tha.
+    const isChatType = (type === 'chat_request' || type === 'chat' || type === 'message');
+    if (isChatType) {
+        const otherUid = n.fromUid || n.actorUid || '';
+        // chat.html?uid=<other user> — yehhi tareeqa baqi app bhi use karti hai
+        if (otherUid) return `chat.html?uid=${encode(otherUid)}`;
+    }
+
+    // 3) COMMENT REPLY — us post par le jao jahan asal comment hai
+    //    (slug ho to seedha post page, warna posts page id se)
+    if (type === 'comment_reply') {
+        if (slug) return isUpdate ? `/updates/${encode(slug)}` : `/jobs/${encode(slug)}`;
+        if (postId) return `/posts.html?id=${encode(postId)}`;
+        if (n.fromUid) return `chat.html?uid=${encode(n.fromUid)}`;
+        return 'index.html';
+    }
+
+    // 4) POST (job / update) — slug page par le jao
+    if (slug) return isUpdate ? `/updates/${encode(slug)}` : `/jobs/${encode(slug)}`;
+
+    // 5) Slug nahi par postId hai → details / posts page
+    if (postId) {
+        const page = isUpdate ? 'details.html' : 'posts.html';
+        return `${page}?id=${encode(postId)}`;
+    }
+
+    // 6) Like / comment / share — par post reference nahi mila
+    if (type === 'like' || type === 'comment' || type === 'share' || type === 'reaction') {
+        return 'index.html';
+    }
+
+    // 7) Ads / status updates
+    if (type.startsWith('ad_')) return 'index.html';
+
+    // 8) Koi bhi baqi chat-jaisi notification (chatId mojood ho)
+    if (n.chatId && n.fromUid && n.fromUid !== 'admin') return `chat.html?uid=${encode(n.fromUid)}`;
+
+    // 9) Akhari fallback — actor ki profile
+    // Admin/portal announcements ka koi profile page nahi — link na ho to clickable hi na rakho
+    if (n.fromUid && n.fromUid !== 'admin') return `wid.html?uid=${encode(n.fromUid)}`;
+    return '';
+}
+
+function emptyHTML() {
+    return `<div class="empty-state">
+        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+        <p>No notifications yet.</p>
+    </div>`;
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('notif-container');
+
+    // Firebase
+    const { initializeApp, getApps, getApp } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
+    const { getAuth, onAuthStateChanged }     = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
+    const { getFirestore, collection, query, where, orderBy, limit, onSnapshot, updateDoc, doc, writeBatch, serverTimestamp } =
+        await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+
+    const firebaseConfig = {
+        apiKey:            "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+        authDomain:        "jobs-45cc9.firebaseapp.com",
+        projectId:         "jobs-45cc9",
+        storageBucket:     "jobs-45cc9.firebasestorage.app",
+        messagingSenderId: "21065686301",
+        appId:             "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+    };
+    const fireApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+    const auth    = getAuth(fireApp);
+    const db      = getFirestore(fireApp);
+
+    let notificationsUnsubscribe = null;
+    let activeUid = null;
+    let renderedNotificationIds = new Set();
+    let lastKnownNotifications = new Map();
+
+    onAuthStateChanged(auth, user => {
+        if (notificationsUnsubscribe) {
+            notificationsUnsubscribe();
+            notificationsUnsubscribe = null;
+        }
+        renderedNotificationIds = new Set();
+        lastKnownNotifications = new Map();
+        if (!user) {
+            activeUid = null;
+            container.innerHTML = '<div class="empty-state"><p>Please login to see notifications.</p></div>';
             return;
         }
 
-        let postsArr = JSON.parse(cachedDataStr);
-        postsArr.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+        const myUid = activeUid = user.uid;
+        const ONE_DAY = 24 * 60 * 60 * 1000;
 
-        let html = '';
-        let found = 0;
+        // ── Browser notifications set karo (agar bar visible ho) ──
+        setupPushBar(myUid);
 
-        postsArr.forEach(p => {
-            // 🔥 MAIN FIX: Meri post na ho (authorId & posterId dono check kiye hain)
-            let postOwnerId = p.posterId || p.authorId;
+        // ایک ہی realtime listener؛ index.html والا صرف badge کے لیے ہے اور list کو render نہیں کرتا.
+        const q = query(collection(db, 'notifications'), where('toUid', '==', myUid), orderBy('createdAt', 'desc'), limit(100));
+        notificationsUnsubscribe = onSnapshot(q, { includeMetadataChanges: true }, snapshot => {
+            if (activeUid !== myUid) return;
+            if (snapshot.metadata.hasPendingMetadataChanges) return;
 
-            if (postOwnerId !== myUid && p.createdAt > installTime) {
-                found++;
-                const isUnread = p.createdAt > lastReadTime;
-                
-                let timeAgo = calculateTime(p.createdAt);
-                const finalName = p.posterName || p.authorName || 'Healthcare Professional';
-                const posterPic = p.posterPic || p.authorPic || `https://ui-avatars.com/api/?name=${encodeURIComponent(finalName)}`;
-                const pType = p.type || 'unknown';
-                const link = pType === 'general_post' ? `details.html?id=${p.id}` : `posts.html?id=${p.id}`;
-
-                html += `
-                    <div class="notif-item ${isUnread ? 'unread' : ''}" onclick="openNotif('${link}', ${isUnread}, '${readKey}')">
-                        <img src="${posterPic}" class="notif-icon" onerror="this.src='https://ui-avatars.com/api/?name=U'">
-                        <div class="notif-content">
-                            <div class="notif-text"><span>${finalName}</span> uploaded a new update in <b>${p.location || 'Pakistan'}</b>.</div>
-                            <div class="notif-time">${timeAgo}</div>
-                        </div>
-                        ${isUnread ? '<div class="new-badge">New</div>' : ''}
-                    </div>
-                `;
+            // Snapshot کا مکمل، deduplicated set render کریں؛ صرف changed docs نہیں، تاکہ read update پر list خالی نہ ہو.
+            const uniqueDocs = new Map();
+            const seenFingerprints = new Set();
+            snapshot.forEach(d => {
+                const n = d.data();
+                if (!n) return;
+                // Server پر duplicate documents ایک ہی notification کی طرح صرف ایک ہی بار دکھائی جائیں گے.
+                const fingerprint = [n.fromUid || '', n.postId || '', n.chatId || '', n.type || '', n.message || '', timestampMillis(n.createdAt)].join('|');
+                if (seenFingerprints.has(fingerprint)) return;
+                seenFingerprints.add(fingerprint);
+                uniqueDocs.set(d.id, d);
+            });
+            if (renderedNotificationIds.size && !uniqueDocs.size) {
+                lastKnownNotifications = new Map();
+                renderedNotificationIds = new Set();
             }
+
+            const nextIds = new Set();
+            lastKnownNotifications = new Map();
+
+            // ─── Notifications کو type کے حساب سے groups میں تقسیم کریں ───
+            // ⚠️ Order yahan display order hai. Admin/portal announcements
+            // hamesha sab se upar rehti hain kyun ke yeh official updates hoti hain.
+            const GROUPS = [
+                { key: 'admin',   label: 'Portal Updates', icon: '📣', types: ['admin_announcement', 'admin', 'announcement', 'portal_update', 'system'] },
+                { key: 'calls',   label: 'Calls',         icon: '📞', types: ['call'] },
+                { key: 'post',    label: 'New Posts',     icon: '📝', types: ['new_post'] },
+                { key: 'like',    label: 'Likes',         icon: '👍', types: ['like', 'reaction', 'post_like'] },
+                { key: 'comment', label: 'Comments',      icon: '💬', types: ['comment', 'comment_reply', 'post_comment'] },
+                { key: 'share',   label: 'Shares',        icon: '🔁', types: ['share', 'post_share'] },
+                { key: 'chat',    label: 'Chat Requests', icon: '📨', types: ['chat_request', 'chat', 'message'] },
+                { key: 'ads',     label: 'Ads',           icon: '📢', types: ['ad_approved', 'ad_rejected', 'ad_status', 'ad_submit', 'ads'] },
+                { key: 'other',   label: 'Other',         icon: '🔔', types: [] }
+            ];
+            const typeToGroup = {};
+            GROUPS.forEach(g => g.types.forEach(t => typeToGroup[t] = g.key));
+            const grouped = {};
+            GROUPS.forEach(g => grouped[g.key] = []);
+
+            uniqueDocs.forEach((d, id) => {
+                const n = d.data();
+                if (!n) return;
+                lastKnownNotifications.set(id, n);
+                nextIds.add(id);
+                const isUnread = !n.read;
+                if (!isUnread && (Date.now() - timestampMillis(n.createdAt)) > ONE_DAY) return;
+
+                const gkey = typeToGroup[(n.type || '').toLowerCase()] || 'other';
+                // ⏱️ ts: createdAt abhi server se nahi aaya (0/null) to usay sab se naya samjho
+                const ts = timestampMillis(n.createdAt) || Date.now();
+                grouped[gkey].push({ id, n, isUnread, ts });
+            });
+            // ⏱️ Har group ke andar naye notifications upar
+            GROUPS.forEach(g => grouped[g.key].sort((a, b) => b.ts - a.ts));
+
+            const renderItem = ({ id, n, isUnread }) => {
+                // ─── Deep link — asli post / chat / profile par le jao ───
+                const link = buildNotifUrl(n);
+                const postIdAttr = n.postId ? `data-postid="${escHtml(String(n.postId))}"` : '';
+                const itemClickable = !!link && link !== '#' && !/^#/.test(link);
+                // ─── Call entry (WhatsApp jaisi) ───
+                if (String(n.type || '').toLowerCase() === 'call') {
+                    const cv = callView(n);
+                    return `
+                <a class="notif-item ${isUnread ? 'unread' : ''} ${cv.ringing ? 'call-ringing-item' : ''}"
+                   href="${escHtml(cv.link)}"
+                   data-id="${escHtml(id)}"
+                   ${cv.ringing ? `data-ring-ts="${timestampMillis(n.createdAt)}" data-call-kind="${cv.kind}" data-chat-link="${escHtml(cv.chatLink)}"` : ''}
+                   onclick="event.preventDefault();markOneRead('${escHtml(id)}', this, true)">
+                    <img src="${escHtml(picOf(n))}" class="notif-icon" loading="lazy" onerror="this.src='${avatarUrl('U')}'">
+                    <div class="notif-content">
+                        <div class="notif-text"><strong>${escHtml(n.fromName || 'Someone')}</strong></div>
+                        <div class="call-line ${cv.cls}">${escHtml(cv.text)}</div>
+                        ${cv.sub ? `<div class="call-sub">${escHtml(cv.sub)}</div>` : ''}
+                        <div class="notif-time" data-ts="${timestampMillis(n.createdAt)}" title="${fullTime(timestampMillis(n.createdAt))}">${timeAgo(n.createdAt)}</div>
+                    </div>
+                    ${isUnread ? `<div class="new-badge" id="badge-${escHtml(id)}">New</div>` : ''}
+                </a>`;
+                }
+
+                const hasImage = n.image && /^https:\/\//i.test(n.image);
+
+                return `
+                <a class="notif-item ${hasImage ? 'has-image' : ''} ${isUnread ? 'unread' : ''} ${itemClickable ? '' : 'not-clickable'}"
+                   href="${itemClickable ? escHtml(link) : '#'}"
+                   data-id="${escHtml(id)}"
+                   ${postIdAttr}
+                   ${itemClickable ? `onclick="event.preventDefault();markOneRead('${escHtml(id)}', this, true)"` : `onclick="markOneRead('${escHtml(id)}', this, false)"`}>
+                    <div class="notif-top">
+                        <img src="${escHtml(picOf(n))}" class="notif-icon" loading="lazy" onerror="this.src='${avatarUrl('U')}'">
+                        <div class="notif-content">
+                            <div class="notif-text">
+                                <strong>${escHtml(n.fromName || 'Someone')}</strong>
+                                ${escHtml(n.message || '')}
+                            </div>
+                            <div class="notif-time" data-ts="${timestampMillis(n.createdAt)}" title="${fullTime(timestampMillis(n.createdAt))}">${timeAgo(n.createdAt)}</div>
+                        </div>
+                        ${isUnread ? `<div class="new-badge" id="badge-${escHtml(id)}">New</div>` : ''}
+                    </div>
+                    ${hasImage ? `<img src="${escHtml(n.image)}" class="notif-banner" loading="lazy" onerror="this.style.display='none'">` : ''}
+                </a>`;
+            };
+
+            let html = '';
+            let groupIndex = 0;
+            // ⏱️ Jis group me sab se naya notification ho wo group sab se upar
+            // (barabar time par upar wali GROUPS ki tarteeb barqarar rehti hai — sort stable hai)
+            const orderedGroups = GROUPS
+                .filter(g => grouped[g.key] && grouped[g.key].length)
+                .sort((a, b) => grouped[b.key][0].ts - grouped[a.key][0].ts);
+            orderedGroups.forEach(g => {
+                const items = grouped[g.key];
+                if (!items || !items.length) return;
+                const unreadCount = items.filter(i => i.isUnread).length;
+                html += `
+                <div class="notif-group">
+                    <div class="notif-group-header">
+                        <span class="notif-group-icon">${g.icon}</span>
+                        <span class="notif-group-title">${g.label}</span>
+                        ${unreadCount ? `<span class="notif-group-count">${unreadCount} new</span>` : ''}
+                    </div>
+                    ${items.map(renderItem).join('')}
+                </div>`;
+            });
+
+            if (!html) { container.innerHTML = emptyHTML(); return; }
+            renderedNotificationIds = nextIds;
+            // Push bar wapas inject ho jati hai (har render par innerHTML replace hoti hai)
+            container.innerHTML = `${pushBarHTML()}
+                <div id="mark-all-bar">
+                    <label><input type="checkbox" id="select-all-chk" onchange="toggleSelectAll(this)"> Select All</label>
+                    <button onclick="markSelectedRead()">Mark Read</button>
+                </div>
+                <div id="notification-list">${html}</div>`;
+            scheduleRingExpiry();
         });
 
-        if(found > 0) {
-            container.innerHTML = html;
-        } else {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-                    <p>No new updates recently.</p>
-                </div>`;
-        }
-
-        // 🕒 Page kholne ke 2 second baad is specific user ka read time update hoga
-        setTimeout(() => {
-            localStorage.setItem(readKey, Date.now());
-        }, 2000);
-    });
-
-    window.openNotif = (url, isUnread, readKey) => {
-        // Agar unread thi, to link kholne se pehle turant read time lock kar do
-        if(isUnread && readKey) {
-            localStorage.setItem(readKey, Date.now());
-        }
-        location.href = url;
-    };
-
-    function calculateTime(ts) {
-        const diff = Date.now() - ts;
-        if(diff < 60000) return "Just now";
-        if(diff < 3600000) return Math.floor(diff/60000) + "m ago";
-        if(diff < 86400000) return Math.floor(diff/3600000) + "h ago";
-        return Math.floor(diff/86400000) + "d ago";
-    }
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.Capacitor && window.Capacitor.Plugins.PushNotifications) {
-        const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
-
-        const handleCallRedirect = (data) => {
-            if (data && (data.isCall === "true" || data.isCall === true || data.startCall === "true")) {
-                let callerUid = data.callerUid || data.uid;
-                if(callerUid) {
-                    setTimeout(() => {
-                        window.location.href = `chat.html?uid=${callerUid}&startCall=true&incoming=true`;
-                    }, 500);
+        // ─── Highlight جس notification پر click کر کے آئے ──────────────
+        if (highlightPostId) {
+            setTimeout(() => {
+                const target = document.querySelector(`[data-postid="${highlightPostId}"]`);
+                if (target) {
+                    target.classList.add('highlighted');
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-            }
+            }, 350);
+        }
+
+            // ─── Functions ───────────────────────────────────────────────────
+        window.markOneRead = (id, el, navigate = true) => {
+            if (el.dataset.clicking === '1') return;
+            el.dataset.clicking = '1';
+            document.getElementById('badge-' + id)?.remove();
+            el.classList.remove('unread');
+            const data = lastKnownNotifications.get(id);
+            if (data && !data.read) data.read = true;
+            const finish = () => {
+                const href = el.getAttribute('href');
+                if (navigate && href && href !== '#') window.location.assign(href);
+            };
+            try {
+                updateDoc(doc(db, 'notifications', id), { read: true, readAt: serverTimestamp() })
+                    .then(finish)
+                    .catch(() => finish());
+            } catch (_) { finish(); }
         };
 
-        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-            handleCallRedirect(notification.notification.data);
-        });
+        window.toggleSelectAll = chk => {
+            document.querySelectorAll('.notif-chk').forEach(c => c.checked = chk.checked);
+        };
 
-        PushNotifications.addListener('pushNotificationReceived', async (notification) => {
-            const data = notification.data || {};
-            
-            // ❌ AGAR CANCEL KA SIGNAL AAYE TOH NOTIFICATION GAYAB KAR DO
-            if (data.action === "cancel_call") {
-                console.log("Call Cancelled! Removing Notifications...");
-                if (LocalNotifications) {
-                    await LocalNotifications.cancel({ notifications: [{ id: 999 }] });
-                }
-                await PushNotifications.removeAllDeliveredNotifications();
-                
-                // Agar user ghalti se chat.html par hi betha hai, toh UI bhi band kar do
-                if (typeof closeWebRTC === 'function') { closeWebRTC(); }
-                return; // Code yahin rok do
+        window.markSelectedRead = async () => {
+            const ids = [...document.querySelectorAll('.notif-item.unread')].map(item => item.dataset.id);
+            if (!ids.length) return;
+            const chunks = [];
+            for (let i = 0; i < ids.length; i += 400) chunks.push(ids.slice(i, i + 400));
+            for (const chunk of chunks) {
+                const batch = writeBatch(db);
+                chunk.forEach(id => {
+                    batch.update(doc(db, 'notifications', id), { read: true, readAt: serverTimestamp() });
+                    document.getElementById('badge-' + id)?.remove();
+                    document.querySelector(`[data-id="${id}"]`)?.classList.remove('unread');
+                    const data = lastKnownNotifications.get(id);
+                    if (data) data.read = true;
+                });
+                try { await batch.commit(); } catch (_) {}
             }
-
-            // 📞 AGAR CALL AAYE TOH NOTIFICATION DIKHAO
-            if (data.isCall === "true" || data.isCall === true || data.startCall === "true") {
-                handleCallRedirect(data);
-                
-                if (LocalNotifications) {
-                    await LocalNotifications.schedule({
-                        notifications: [{
-                            title: notification.title || "Incoming Call",
-                            body: "Calling...",
-                            id: 999, // Yeh ID cancel karne ke kaam aati hai
-                            sound: "ringing.mp3",
-                            extra: data,
-                            android: {
-                                channelId: "high_importance_channel",
-                                importance: 5,
-                                visibility: 1,
-                                fullScreenIntent: true
-                            }
-                        }]
-                    });
-                }
-            }
-        });
-
-        if (LocalNotifications) {
-            LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
-                handleCallRedirect(notification.notification.extra);
-            });
-        }
-    }
+        };
+    });
+    window.addEventListener('pagehide', () => {
+        if (notificationsUnsubscribe) notificationsUnsubscribe();
+    }, { once: true });
 });
 </script>
+
+<!-- Push Notification Handlers (Capacitor) -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (!window.Capacitor?.Plugins?.PushNotifications) return;
+    const { PushNotifications, LocalNotifications } = window.Capacitor.Plugins;
+
+    const handleCall = data => {
+        if (!data) return;
+        const isCall = data.isCall === 'true' || data.isCall === true || data.startCall === 'true';
+        if (isCall && data.callerUid) {
+            setTimeout(() => {
+                window.location.href = `chat.html?uid=${data.callerUid}&startCall=true&callType=${data.callType || 'audio'}&incoming=true`;
+            }, 500);
+        }
+    };
+
+    PushNotifications.addListener('pushNotificationActionPerformed', n => handleCall(n.notification.data));
+
+    PushNotifications.addListener('pushNotificationReceived', async n => {
+        const data = n.data || {};
+
+        if (data.action === 'cancel_call') {
+            await LocalNotifications?.cancel({ notifications: [{ id: 999 }] });
+            await PushNotifications.removeAllDeliveredNotifications();
+            if (typeof closeWebRTC === 'function') closeWebRTC();
+            return;
+        }
+
+        handleCall(data);
+
+        if ((data.isCall === 'true' || data.startCall === 'true') && LocalNotifications) {
+            await LocalNotifications.schedule({ notifications: [{
+                title:  n.title || 'Incoming Call',
+                body:   'Tap to answer',
+                id:     999,
+                sound:  'ringing.mp3',
+                extra:  data,
+                android: { channelId: 'high_importance_channel', importance: 5, fullScreenIntent: true }
+            }]});
+        }
+    });
+
+    LocalNotifications?.addListener('localNotificationActionPerformed', n => handleCall(n.notification.extra));
+});
+</script>
+
 
 
 </body>

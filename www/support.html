@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Support | Health Jobs Portal</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+    
+    <style>
+        /* ===== CSS VARIABLES (Same as index.html) ===== */
+        :root {
+            --primary-blue: #0a66c2;
+            --hover-blue: #004182;
+            --bg-white: #ffffff;
+            --bg-body: #f8fafc;
+            --text-main: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --success-bg: #dcfce7;
+            --success-text: #059669;
+            --error-bg: #fee2e2;
+            --error-text: #dc2626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { background-color: var(--bg-body); color: var(--text-main); padding-top: 70px; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        main { flex: 1 0 auto; max-width: 580px; width: 100%; margin: 0 auto; padding: 20px 16px 80px; }
+
+        /* ===== HEADER (Same as index.html) ===== */
+        header { background-color: var(--bg-white); padding: 0 16px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 65px; z-index: 1000; border-bottom: 1px solid var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+        .logo-img { height: 38px !important; width: auto; cursor: pointer; object-fit: contain; }
+        .back-btn { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; text-decoration: none; }
+        .back-btn:hover { background: #e2e8f0; }
+        .back-btn svg { width: 20px; height: 20px; fill: var(--text-main); }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+
+        /* ===== SUPPORT CARD ===== */
+        .support-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .support-header-bg {
+            background: var(--primary-blue);
+            padding: 26px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .support-header-bg h1 {
+            font-size: 22px;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        
+        .support-header-bg p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .support-body {
+            padding: 24px 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+        
+        .form-group label .required {
+            color: #dc2626;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: #f8fafc;
+            outline: none;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary-blue);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(10,102,194,0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn-submit:hover {
+            background: var(--hover-blue);
+            transform: translateY(-1px);
+        }
+        
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
+        
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-message {
+            background: var(--success-bg);
+            color: var(--success-text);
+            padding: 14px 16px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid #86efac;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .error-message {
+            background: var(--error-bg);
+            color: var(--error-text);
+            padding: 14px 16px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid #fca5a5;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .info-note {
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .info-note a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* ===== BOTTOM NAV (Same as index.html) ===== */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-white); display: flex; justify-content: space-around; padding: 10px 0 12px; border-top: 1px solid var(--border-color); z-index: 1000; }
+        .nav-link { text-decoration: none; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; flex: 1; background: none; border: none; cursor: pointer; }
+        .nav-link.active { color: var(--primary-blue); }
+        .nav-link svg { width: 22px; height: 22px; fill: currentColor; margin-bottom: 4px; }
+        .nav-link span { font-size: 10px; font-weight: 600; }
+        
+        @media (min-width: 768px) {
+            .bottom-nav { max-width: 580px; left: 50%; transform: translateX(-50%); border-radius: 20px 20px 0 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-left">
+            <a href="javascript:history.back()" class="back-btn" title="Go Back">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </a>
+            <a href="index.html">
+                <img src="images/logo.png" alt="Health Jobs Portal" class="logo-img" onerror="this.src='https://via.placeholder.com/120x35?text=Health+Jobs'">
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="support-card">
+            <div class="support-header-bg">
+                <h1>Contact Support</h1>
+                <p>We're here to help you 24/7</p>
+            </div>
+            
+            <div class="support-body">
+                <div id="successMsg" class="success-message hidden"></div>
+                <div id="errorMsg" class="error-message hidden"></div>
+                
+                <form id="supportForm">
+                    <div class="form-group">
+                        <label>Your Email <span class="required">*</span></label>
+                        <input type="email" id="userEmail" placeholder="Enter your email address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Full Name <span class="required">*</span></label>
+                        <input type="text" id="userName" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Issue Type <span class="required">*</span></label>
+                        <select id="issueType" required>
+                            <option value="">Select issue type</option>
+                            <option value="Account Reactivation">Account Reactivation</option>
+                            <option value="Forgot Password">Forgot Password</option>
+                            <option value="Account Deletion">Account Deletion Request</option>
+                            <option value="Technical Issue">Technical Issue</option>
+                            <option value="Report User">Report User/Post</option>
+                            <option value="Partnership">Partnership/Business</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Message <span class="required">*</span></label>
+                        <textarea id="message" placeholder="Please describe your issue in detail..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <span id="btnText">Submit Ticket</span>
+                        <div class="spinner" id="btnLoader"></div>
+                    </button>
+                </form>
+                
+                <div class="info-note">
+                    We typically respond within 24-48 hours.<br>
+                    For urgent matters, contact us directly on WhatsApp at
+                    <a href="https://wa.me/923141303160" target="_blank" rel="noopener">+92 314 1303160</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- BOTTOM NAV (Same as index.html) -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-link">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="wid.html" class="nav-link">
+            <svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM14 17H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <span>My Posts</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link" onclick="window.location.href='index.html'">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            <span>Post</span>
+        </a>
+        <a href="chats-request.html" class="nav-link">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+            <span>Chats</span>
+        </a>
+        <a href="wid.html" class="nav-link">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        const WHATSAPP_NUMBER = '923141303160';
+
+        const form = document.getElementById('supportForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnLoader = document.getElementById('btnLoader');
+        const successMsg = document.getElementById('successMsg');
+        const errorMsg = document.getElementById('errorMsg');
+        
+        // Get email from URL parameter (if coming from deactivated account)
+        const urlParams = new URLSearchParams(window.location.search);
+        const emailParam = urlParams.get('email');
+        if (emailParam) {
+            document.getElementById('userEmail').value = decodeURIComponent(emailParam);
+        }
+        
+        // Issue-type pre-fill.
+        // settings.html ka "Request Activation" button (?issue=Account%20Reactivation)
+        // pehle activation.html par jata tha (jo hata diya gaya hai). Ab woh
+        // seedha yahan aata hai, aur dropdown pehle se "Account Reactivation"
+        // select ho kar aana chahiye — warna user ko khud dhoondhna parta hai
+        // aur ghalat issue type chun leta hai.
+        const issueParam = urlParams.get('issue');
+        const issueSelect = document.getElementById('issueType');
+        if (issueParam) {
+            const wanted = decodeURIComponent(issueParam).trim().toLowerCase();
+            const match = [...issueSelect.options].find(
+                o => o.value.trim().toLowerCase() === wanted
+            );
+            if (match) issueSelect.value = match.value;
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Hide previous messages
+            successMsg.classList.add('hidden');
+            errorMsg.classList.add('hidden');
+            
+            // Get form values
+            const userEmail = document.getElementById('userEmail').value.trim();
+            const userName = document.getElementById('userName').value.trim();
+            const issueType = document.getElementById('issueType').value;
+            const message = document.getElementById('message').value.trim();
+            
+            // Validate
+            if (!userEmail || !userName || !issueType || !message) {
+                errorMsg.classList.remove('hidden');
+                errorMsg.innerHTML = 'Please fill in all required fields.';
+                return;
+            }
+            
+            if (!userEmail.includes('@')) {
+                errorMsg.classList.remove('hidden');
+                errorMsg.innerHTML = 'Please enter a valid email address.';
+                return;
+            }
+            
+            // Show loader
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'block';
+            
+            // Get current date/time
+            const now = new Date();
+            const submittedAt = now.toLocaleString('en-PK', { 
+                timeZone: 'Asia/Karachi',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Build the WhatsApp message with all submitted details
+            const waText =
+                `New Support Ticket\n` +
+                `Name: ${userName}\n` +
+                `Email: ${userEmail}\n` +
+                `Issue Type: ${issueType}\n` +
+                `Message: ${message}\n` +
+                `Submitted At: ${submittedAt}`;
+
+            try {
+                const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText)}`;
+
+                // Show success message
+                successMsg.classList.remove('hidden');
+                successMsg.innerHTML = `
+                    <strong>Ticket Ready to Send</strong><br>
+                    You are being redirected to WhatsApp to send your request to our support team.
+                `;
+
+                // Clear error if any
+                errorMsg.classList.add('hidden');
+
+                // Open WhatsApp with the pre-filled message
+                window.open(waLink, '_blank');
+
+                // Reset form
+                form.reset();
+                if (emailParam) {
+                    document.getElementById('userEmail').value = decodeURIComponent(emailParam);
+                }
+
+                submitBtn.disabled = false;
+                btnText.style.display = 'block';
+                btnLoader.style.display = 'none';
+
+            } catch (error) {
+                console.error('WhatsApp redirect error:', error);
+
+                // Show error message
+                errorMsg.classList.remove('hidden');
+                errorMsg.innerHTML = `
+                    <strong>Failed to open WhatsApp!</strong><br>
+                    Please try again or contact us directly on WhatsApp at <strong>+92 314 1303160</strong>
+                `;
+
+                submitBtn.disabled = false;
+                btnText.style.display = 'block';
+                btnLoader.style.display = 'none';
+            }
+        });
+        
+        // Auto-hide messages after 5 seconds
+        setInterval(() => {
+            if (!successMsg.classList.contains('hidden')) {
+                setTimeout(() => successMsg.classList.add('hidden'), 5000);
+            }
+            if (!errorMsg.classList.contains('hidden')) {
+                setTimeout(() => errorMsg.classList.add('hidden'), 5000);
+            }
+        }, 1000);
+    </script>
+    
+    <!-- Firebase Backup (Optional - saves tickets to Firestore) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4Cfni7D2Kk_t6qeZ4jcWesIabnSM15mk",
+            authDomain: "jobs-45cc9.firebaseapp.com",
+            projectId: "jobs-45cc9",
+            storageBucket: "jobs-45cc9.firebasestorage.app",
+            messagingSenderId: "21065686301",
+            appId: "1:21065686301:web:f461ea1b8aabe2fa5895f4"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Also save to Firestore when form is submitted
+        const originalForm = document.getElementById('supportForm');
+        const originalSubmitHandler = originalForm.onsubmit;
+        
+        originalForm.addEventListener('submit', async (e) => {
+            // Small delay so this runs after the main submit handler
+            setTimeout(async () => {
+                const userEmail = document.getElementById('userEmail')?.value || '';
+                const userName = document.getElementById('userName')?.value || '';
+                const issueType = document.getElementById('issueType')?.value || '';
+                const message = document.getElementById('message')?.value || '';
+                
+                if (userEmail && userName && issueType && message) {
+                    try {
+                        await addDoc(collection(db, "support_tickets"), {
+                            email: userEmail,
+                            name: userName,
+                            issueType: issueType,
+                            message: message,
+                            status: 'pending',
+                            createdAt: serverTimestamp(),
+                            userAgent: navigator.userAgent
+                        });
+                        console.log("Ticket saved to Firestore backup");
+                    } catch(e) {
+                        console.log("Firestore backup error:", e);
+                    }
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
