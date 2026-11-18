@@ -1773,7 +1773,7 @@ a.ticker-item{text-decoration:none}
         </button>
         <div class="hjpl-dropdown" id="hjpl-dropdown">
           <a href="login.html">Login / Sign Up</a>
-          <a href="/jobmatch">Job Match</a>
+          <a href="https://healthjobportal.com/jobmatch">Job Match</a>
           <a href="about.html">About Us</a>
           <a href="privcy.html">Privacy Policy</a>
           <a href="terms.html">Terms</a>
@@ -2690,8 +2690,8 @@ window.toggleSidebar = function(show){
       </div>
       <span class="sj-badge" id="sj-new-side"></span>
     </a>
-    <!-- Job Match tool -->
-    <a href="/jobmatch" class="side-link">
+    <!-- Job Match tool (لوکل ہوسٹ/ایپ میں بھی کھلے — لائیو ورکر روٹ استعمال کرو) -->
+    <a href="https://healthjobportal.com/jobmatch" class="side-link">
       <div class="side-icon-wrap">
         <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         <span>Job Match <span style="background:#ef4444;color:#fff;font-size:7px;font-weight:800;padding:1px 4px;border-radius:3px;margin-left:4px;">NEW</span></span>
@@ -3622,7 +3622,7 @@ window.addEventListener('storage', (e) => {
 });
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, setPersistence, indexedDBLocalPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
   import { getDatabase, ref as dbRef, onValue, get as dbGet, set, onDisconnect, serverTimestamp as rtServerTimestamp, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
   // ⚡ PERF FIX: firebase-messaging.js (~80KB) ab sirf tab load hota hai jab user
   // ne notification permission di ho — page load par ye unused JS nahi banegi.
@@ -3733,6 +3733,13 @@ import { HJPApprovalGate } from "./approval-gate.js";
   };
 
   const auth = getAuth(app);
+  // ✅ FIX: login.html بھی yehi persistence use karta hai. Dono pages ka
+  // storage ek hi jagah (IndexedDB) rahega warna WebView/website par
+  // index.html ko logged-in user detect nahi hota tha.
+  (async () => {
+    try { await setPersistence(auth, indexedDBLocalPersistence); }
+    catch (e) { try { await setPersistence(auth, browserLocalPersistence); } catch (e2) {} }
+  })();
   const dbRT = getDatabase(app);
   let messaging = null;
   // ⚡ PERF FIX: messaging SDK ab lazy-load hota hai (getToken se pehle) —
@@ -7632,7 +7639,8 @@ function loadNewsTicker() {
   window.__tickerStarted = true;
 
   // news worker (/news.html?fmt=ticker) se 8 taaza titles — Firestore reads 0
-  fetch('/news.html?fmt=ticker', { headers: { accept: 'application/json' } })
+  // ✅ FIX: absolute URL — لوکل ہوسٹ/ایپ میں relative path پر JSON نہیں آتا تھا
+  fetch('https://healthjobportal.com/news.html?fmt=ticker', { headers: { accept: 'application/json' } })
     .then(r => { if (!r.ok) throw new Error('ticker ' + r.status); return r.json(); })
     .then(d => {
       const items = ((d && d.items) || []).filter(x => x && x.t && typeof x.u === 'string' && x.u.charAt(0) === '/').slice(0, 8);
@@ -8734,7 +8742,8 @@ max-width: 180px;
     seenSet(all); paint(0);
   };
   function checkNew() {
-    fetch('/jobs-page.html?fmt=json', { credentials: 'omit' })
+    // ✅ FIX: absolute URL — لوکل ہوسٹ/ایپ میں یہ endpoint صرف لائیو ورکر پر موجود ہے
+    fetch('https://healthjobportal.com/jobs-page.html?fmt=json', { credentials: 'omit' })
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (d) {
         latest = idsOf(d.html || '');
@@ -8756,7 +8765,8 @@ max-width: 180px;
   /* ---------- SAVED JOBS SECTION ---------- */
   var ids = [], offset = 0, busy = false;
   function sub() { var n = favGet().length; $('sj-sub').textContent = n + ' saved job' + (n === 1 ? '' : 's'); }
-  function url(off) { return '/jobs-page.html?fmt=json&fav=' + encodeURIComponent(ids.join(',')) + (off ? '&offset=' + off : ''); }
+  // ✅ FIX: absolute URL (لائیو ورکر) — لوکل/ایپ میں saved jobs کام کرے
+  function url(off) { return 'https://healthjobportal.com/jobs-page.html?fmt=json&fav=' + encodeURIComponent(ids.join(',')) + (off ? '&offset=' + off : ''); }
   function mark(root) {
     root.querySelectorAll('[data-fav]').forEach(function (b) {
       b.classList.add('on'); b.setAttribute('aria-pressed', 'true'); b.setAttribute('aria-label', 'Remove from saved jobs');

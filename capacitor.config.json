@@ -12,7 +12,7 @@
   },
   "plugins": {
     "App": {
-      "launchUrl": "https://healthjobportal.com"
+      "launchUrl": "index.html"
     },
     "SocialLogin": {
       "google": {
